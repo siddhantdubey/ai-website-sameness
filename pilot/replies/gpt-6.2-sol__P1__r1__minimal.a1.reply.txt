@@ -1,0 +1,235 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Daymark brings tasks, timelines, and team updates together so everyone knows what’s next.">
+<title>Daymark — Make good work happen</title>
+<style>
+:root{--paper:#f8f6ee;--ink:#24261e;--muted:#606356;--line:#dedccf;--orange:#fa6844;--sage:#e8eddc;--white:#fffefa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #a93b25;outline-offset:4px}
+.wrap{width:min(1180px,calc(100% - 72px));margin:auto}
+header{border-bottom:1px solid var(--line)}
+nav,footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+nav{min-height:76px}
+.brand{display:inline-flex;align-items:center;gap:8px;font-size:25px;font-weight:850;letter-spacing:-1.4px}
+.spark{color:#b53f27;font-size:30px;line-height:1}
+.navlink,.secondary{font-size:14px;font-weight:650}
+.navlink:hover,.secondary:hover{text-decoration:underline}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:13px;border-radius:7px;padding:11px 17px;background:var(--ink);color:white;font-size:14px;font-weight:750}
+.button:hover{background:#414536}
+.primary{background:var(--orange);color:var(--ink);padding:14px 19px}
+.primary:hover{background:#ff8264}
+.hero{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center;padding-block:82px}
+.kicker,.stage-label,.number{font:700 11px/1.4 ui-monospace,monospace;letter-spacing:.13em;text-transform:uppercase}
+.kicker{display:flex;align-items:center;gap:9px}
+.kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:#cf4c30}
+h1,h2{font-family:Georgia,serif;font-weight:400;letter-spacing:-.06em;line-height:.98;margin:18px 0}
+h1{font-size:clamp(56px,7vw,105px)}
+h1 em{color:#b54028}
+h2{font-size:clamp(42px,5.6vw,72px)}
+.lede{max-width:37ch;font-size:18px;color:var(--muted);margin:23px 0}
+.hero-actions{display:flex;align-items:center;gap:21px;flex-wrap:wrap}
+.note{margin:11px 0 0;color:var(--muted);font-size:12px}
+.stage{min-width:0;padding:17px 21px 27px;background:var(--sage) radial-gradient(#c4cbb4 1px,transparent 1px) 0 0/16px 16px;border:1px solid #dbe2cc;border-radius:13px}
+.stage-label{display:flex;justify-content:space-between;gap:10px;margin-bottom:14px;color:#47533b}
+.window{overflow:hidden;border:1px solid #d5d8ca;border-radius:9px;background:var(--white);box-shadow:0 14px 32px #29352020}
+.chrome{display:flex;align-items:center;gap:5px;padding:10px 12px;border-bottom:1px solid #ebe9e1;color:var(--muted);font-size:10px}
+.chrome i{width:7px;height:7px;border-radius:50%;background:#d7d9cb}
+.chrome i:first-child{background:#ec8a72}
+.chrome span{margin-left:auto}
+.workspace{display:grid;grid-template-columns:108px minmax(0,1fr);min-height:306px}
+aside{background:#f5f4ec;border-right:1px solid #ebe9e1;padding:13px 8px;font-size:10px}
+aside strong{display:block;margin-bottom:15px}
+aside span{display:block;padding:6px 5px}
+aside .selected{background:#e7ebdb;border-radius:4px;font-weight:700}
+aside small{display:block;margin:14px 0 3px 5px;color:var(--muted);letter-spacing:.1em}
+.project{padding:13px 12px 16px}
+.crumb{font-size:10px;color:var(--muted)}
+.project h2{font:750 22px/1.2 system-ui,sans-serif;letter-spacing:-.04em;margin:6px 0 9px}
+.tabs{display:flex;gap:14px;border-bottom:1px solid #e9e7dd;margin-bottom:11px}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:4px 0 7px;color:var(--muted);font-size:11px}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:#c4472b;font-weight:750}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.lane{background:#f3f2eb;border-radius:5px;padding:5px}
+.lane h3{font-size:10px;margin:2px 0 7px;display:flex;align-items:center;gap:4px}
+.lane h3::before{content:"";width:6px;height:6px;flex:none;border-radius:50%;background:#949488}
+.lane:nth-child(2) h3::before{background:#cc7932}
+.lane:nth-child(3) h3::before{background:#62824d}
+.task{background:white;border:1px solid #e9e7de;border-radius:4px;margin:0 0 5px;padding:5px;min-height:63px}
+.tag{display:inline-block;background:#f8e1d5;color:#763824;border-radius:3px;padding:1px 4px;font-size:8px}
+.lane:nth-child(2) .tag{background:#ece1f6;color:#5d3b74}
+.lane:nth-child(3) .tag{background:#e5eedb;color:#3b592d}
+.task p{font-size:10px;font-weight:700;line-height:1.2;margin:5px 0}
+.avatar{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#eee6d7;font-size:8px;font-weight:700}
+.row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #ebe9e1;padding:6px;font-size:11px}
+.row span{color:var(--muted)}
+.track{background:#f3f2eb;border-radius:4px;padding:4px;margin-bottom:10px;font-size:10px}
+.track span{display:block;width:max-content;min-width:46%;background:#e2e9d1;padding:5px;border-radius:3px}
+.track:nth-child(2) span{margin-left:21%;background:#ece1f6}
+.track:nth-child(3) span{margin-left:42%;background:#f8e1d5}
+.strip{background:#efede3;border-block:1px solid var(--line);padding:23px 0}
+.strip .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px 22px;color:#505546}
+.strip strong{font-size:19px;letter-spacing:-.04em}
+.strip strong:nth-of-type(2){font-family:Georgia,serif;font-style:italic}
+.strip strong:nth-of-type(3){font-family:monospace}
+.features{padding-block:72px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.feature{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:22px}
+.number{color:#a13922}
+.feature h3{margin:18px 0 6px;font-size:19px;letter-spacing:-.025em}
+.feature p,.closing p{margin:0;color:var(--muted)}
+.closing{text-align:center;padding:52px 22px;background:var(--sage);border-top:1px solid #dbe2cc}
+.closing .button{margin-top:23px}
+footer .wrap{padding-block:21px;font-size:13px;color:var(--muted)}
+footer .brand{font-size:20px;color:var(--ink)}
+@media(max-width:900px){.wrap{width:calc(100% - 46px)}.hero{gap:25px}.stage{padding-inline:12px}.workspace{grid-template-columns:84px minmax(0,1fr)}}
+@media(max-width:720px){nav{min-height:64px}.navlink{display:none}.hero{grid-template-columns:1fr;padding-block:48px 40px;gap:32px}h1{font-size:clamp(56px,12vw,85px)}.grid{grid-template-columns:1fr}.features{padding-block:50px}}
+@media(max-width:410px){.workspace{grid-template-columns:1fr}aside{display:none}.stage-label{font-size:9px}.project{padding-inline:8px}footer .wrap{align-items:flex-start;flex-direction:column;gap:4px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap" aria-label="Main navigation">
+    <a class="brand" href="#"><span class="spark" aria-hidden="true">✳</span>daymark</a>
+    <a class="navlink" href="#features">Features</a>
+    <a class="button demo" href="#preview">Try the demo <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main>
+  <section class="wrap hero" aria-labelledby="headline">
+    <div>
+      <div class="kicker">A calmer way to manage projects</div>
+      <h1 id="headline">Make good<br>work <em>happen.</em></h1>
+      <p class="lede">Bring tasks, timelines, and team updates into one place, so everyone knows what’s next.</p>
+      <div class="hero-actions">
+        <a class="button primary demo" href="#preview">Try the demo <span aria-hidden="true">↗</span></a>
+        <a class="secondary" href="#features">Explore features <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="note">No account needed. Start with a sample project.</p>
+    </div>
+    <section class="stage" id="preview" aria-label="Interactive sample workspace">
+      <div class="stage-label"><span>Live preview</span><span>01 / Workspace</span></div>
+      <div class="window">
+        <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>Daymark / Studio North</span></div>
+        <div class="workspace">
+          <aside aria-label="Sample workspace sections">
+            <strong>✳ Studio North</strong><span>Overview</span><span>My tasks</span>
+            <small>PROJECTS</small><span class="selected">Brand launch</span><span>Website</span><span>Content</span>
+          </aside>
+          <div class="project">
+            <div class="crumb">Projects / Marketing</div>
+            <h2>Brand launch</h2>
+            <div class="tabs" role="tablist" aria-label="Project view">
+              <button type="button" role="tab" id="tab-board" aria-controls="panel-board" aria-selected="true">▦ Board</button>
+              <button type="button" role="tab" id="tab-list" aria-controls="panel-list" aria-selected="false" tabindex="-1">☷ List</button>
+              <button type="button" role="tab" id="tab-timeline" aria-controls="panel-timeline" aria-selected="false" tabindex="-1">≡ Timeline</button>
+            </div>
+            <div role="tabpanel" id="panel-board" aria-labelledby="tab-board" tabindex="0">
+              <div class="board">
+                <div class="lane"><h3>To do</h3>
+                  <div class="task"><span class="tag">Design</span><p>Social templates</p><span class="avatar" title="Alex Rivera">AR</span></div>
+                  <div class="task"><span class="tag">Copy</span><p>Launch email</p><span class="avatar" title="Sam Lin">SL</span></div>
+                </div>
+                <div class="lane"><h3>In progress</h3>
+                  <div class="task"><span class="tag">Design</span><p>Visual identity</p><span class="avatar" title="Jamie Park">JP</span></div>
+                  <div class="task"><span class="tag">Content</span><p>Landing page</p><span class="avatar" title="Alex Rivera">AR</span></div>
+                </div>
+                <div class="lane"><h3>Done</h3>
+                  <div class="task"><span class="tag">Strategy</span><p>Creative brief</p><span class="avatar" title="Sam Lin">SL</span></div>
+                  <div class="task"><span class="tag">Research</span><p>Audience interviews</p><span class="avatar" title="Jamie Park">JP</span></div>
+                </div>
+              </div>
+            </div>
+            <div role="tabpanel" id="panel-list" aria-labelledby="tab-list" tabindex="0" hidden>
+              <div class="row">Social templates <span>To do</span></div>
+              <div class="row">Launch email <span>To do</span></div>
+              <div class="row">Visual identity <span>In progress</span></div>
+              <div class="row">Landing page <span>In progress</span></div>
+              <div class="row">Creative brief <span>Done</span></div>
+              <div class="row">Audience interviews <span>Done</span></div>
+            </div>
+            <div role="tabpanel" id="panel-timeline" aria-labelledby="tab-timeline" tabindex="0" hidden>
+              <div class="track"><span>Week 1 · Research</span></div>
+              <div class="track"><span>Week 2 · Design</span></div>
+              <div class="track"><span>Week 3 · Launch</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <div class="strip">
+    <div class="wrap">
+      <span class="kicker">Built for teams that make things</span>
+      <strong>✳ Design</strong><strong>Marketing</strong><strong>[ Product ]</strong><strong>↗ Operations</strong>
+    </div>
+  </div>
+  <section class="wrap features" id="features">
+    <div class="kicker">The essentials</div>
+    <h2>Less chasing. More doing.</h2>
+    <div class="grid">
+      <article class="feature"><span class="number">01 / Plan</span><h3>Give every task a home</h3><p>Assign an owner, set a due date, and keep the details right where the work happens.</p></article>
+      <article class="feature"><span class="number">02 / Track</span><h3>See what’s moving</h3><p>Switch between a board, a list, and a timeline without rebuilding your project.</p></article>
+      <article class="feature"><span class="number">03 / Share</span><h3>Keep everyone in the loop</h3><p>Share progress in the project so teammates can catch up without another meeting.</p></article>
+    </div>
+  </section>
+  <section class="closing">
+    <h2>See how a launch comes together.</h2>
+    <p>Explore a sample project, from the first creative brief to the final launch email.</p>
+    <a class="button primary demo" href="#preview">Try the demo <span aria-hidden="true">↗</span></a>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#"><span class="spark" aria-hidden="true">✳</span>daymark</a>
+    <span>Project management for teams.</span>
+  </div>
+</footer>
+<script>
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+
+function selectTab(selected) {
+  for (const tab of tabs) {
+    const active = tab === selected;
+    tab.setAttribute('aria-selected', String(active));
+    tab.tabIndex = active ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+  }
+}
+
+tabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => selectTab(tab));
+  tab.addEventListener('keydown', event => {
+    let next;
+    switch (event.key) {
+      case 'ArrowRight': next = (index + 1) % tabs.length; break;
+      case 'ArrowLeft': next = (index + tabs.length - 1) % tabs.length; break;
+      case 'Home': next = 0; break;
+      case 'End': next = tabs.length - 1; break;
+      default: return;
+    }
+    event.preventDefault();
+    selectTab(tabs[next]);
+    tabs[next].focus();
+  });
+});
+
+document.querySelectorAll('.demo').forEach(link => {
+  link.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+      document.querySelector('[role="tab"][aria-selected="true"]').focus({preventScroll:true});
+    });
+  });
+});
+</script>
+</body>
+</html>
+```

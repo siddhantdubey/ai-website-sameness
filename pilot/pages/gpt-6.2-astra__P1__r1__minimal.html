@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f7f2">
+<title>Relay — Project management for teams</title>
+<style>
+*{box-sizing:border-box}
+:root{--paper:#f8f7f2;--ink:#242722;--muted:#62655c;--line:#d9dbd1;--orange:#d64c2b}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer;color:inherit}a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #426ca8;outline-offset:4px}
+.wrap{width:min(1152px,91%);margin:auto}
+header{height:80px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.logo{display:inline-flex;gap:10px;align-items:center;font-weight:800;font-size:29px;letter-spacing:-1.8px}
+.mark{display:inline-flex;gap:3px;transform:skewX(-20deg);align-items:center;color:var(--orange)}
+.mark i{width:7px;height:23px;background:currentColor}.mark i:nth-child(2){height:32px}
+nav{display:flex;gap:28px;align-items:center;font-size:14px}nav a:hover{text-decoration:underline}
+.btn{border:1px solid var(--ink);border-radius:7px;background:var(--ink);color:white;padding:12px 20px;font-weight:600;font-size:14px}
+.btn:hover{background:#42463c}.btn span{margin-left:15px}.small{padding:9px 15px}
+.hero{text-align:center;padding:58px 0 37px}
+.eyebrow,.mono{font:700 10px/1.5 ui-monospace,Consolas,monospace;letter-spacing:1.5px;text-transform:uppercase}
+.eyebrow{display:inline-flex;align-items:center;gap:9px}.dot{width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block}
+h1{font-size:clamp(52px,7.1vw,100px);line-height:.97;letter-spacing:-.074em;margin:20px 0 19px}h1 em{font-family:Georgia,serif;font-weight:400;color:var(--orange)}
+.hero p{color:var(--muted);margin:0 auto 22px;max-width:510px;font-size:17px}.actions{display:flex;justify-content:center;gap:12px}.outline{background:transparent;color:var(--ink);border-color:#c7c9be}.outline:hover{background:#eeeee6}
+.stage{position:relative;padding:28px 34px 0;background-color:#e9ecdf;background-image:radial-gradient(#bec4b1 1px,transparent 1px);background-size:12px 12px;border:1px solid #d1d5c6;border-radius:15px;overflow:hidden}
+.app{background:#fffefa;border:1px solid #bfc4b8;border-radius:10px 10px 0 0;box-shadow:0 8px 28px #313a2414;display:grid;grid-template-columns:175px minmax(0,1fr)}
+aside{background:#f5f5ee;border-right:1px solid var(--line);padding:18px 12px}.work{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:25px}.work b{background:#343c31;color:white;padding:3px 7px;border-radius:5px}
+.side{font-size:12px;color:#5f6459;padding:7px}.side strong{display:inline-block;width:18px}.side.active{background:#e4e8da;color:#262e23;border-radius:5px;font-weight:700}
+aside .mono{margin:22px 7px 6px;color:#787c70;font-size:9px}.screen{min-width:0}
+.crumb{font-size:11px;color:#777c71;padding:12px 21px;border-bottom:1px solid var(--line)}
+.project{padding:17px 21px 12px;display:flex;align-items:center;justify-content:space-between}.project h2{font-size:25px;letter-spacing:-1.3px;margin:0}.avatars{display:flex}.avatars i,.avatar{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;font:700 9px Arial;background:#f1c6a7;color:#44392f}.avatars i{border:2px solid white;margin-left:-5px}.avatars i:nth-child(2){background:#c7d7b5}.avatars i:nth-child(3){background:#d5c8e1}
+.toolbar{display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding:0 21px}.tab,.add{background:none;border:0;font-size:12px;padding:8px 0;color:#696d61}.tab[aria-pressed=true]{border-bottom:2px solid var(--ink);color:var(--ink);font-weight:bold}.add{margin-left:auto;font-weight:bold}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:15px;background:#fbfbf7}.col{background:#f0f1eb;border-radius:7px;padding:9px}.col h3{display:flex;align-items:center;gap:7px;margin:0 0 9px;font-size:12px}.col h3:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--status)}.col h3 small{font-weight:400;color:#707469}
+.card{padding:12px;background:#fffefa;border:1px solid #dadcd3;border-radius:6px;margin-top:7px;box-shadow:0 2px 1px #25292305}.tag{display:inline-block;font:700 9px Arial;border-radius:4px;padding:4px 7px;background:var(--tag)}.card h4{font-size:14px;letter-spacing:-.35px;margin:8px 0 13px}.meta{display:flex;justify-content:space-between;align-items:center;color:#777c71;font:10px ui-monospace,monospace}.avatar{height:20px;width:20px;font-size:8px;background:var(--tag)}
+.board.list{grid-template-columns:1fr}.list .card{display:flex;align-items:center;gap:12px}.list .card h4{margin:0}.list .meta{margin-left:auto;gap:12px}
+footer{display:flex;justify-content:space-between;padding:16px 2px 25px;color:#747869;font:10px ui-monospace,monospace;letter-spacing:1px}
+dialog{width:min(410px,90vw);padding:28px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px}dialog::backdrop{background:#24272266}dialog h2{margin:0 0 8px;letter-spacing:-1px}dialog p{color:var(--muted);font-size:14px}label{display:block;font-size:13px;font-weight:bold}input{width:100%;border:1px solid #b9bdb1;border-radius:5px;padding:10px;margin:6px 0 18px}.dialog-actions{display:flex;gap:8px;justify-content:end}
+@media(max-width:800px){.app{grid-template-columns:1fr}aside{display:none}.stage{padding:18px 16px 0}.board{gap:6px;padding:9px}}
+@media(max-width:570px){header{height:65px}nav a{display:none}.hero{padding:43px 0 28px}.hero p{font-size:15px}.stage{padding:10px 7px 0}.board:not(.list){grid-template-columns:repeat(3,205px);overflow-x:auto}.btn{padding:11px 13px}.project h2{font-size:21px}footer{font-size:8px}.wrap{width:93%}}
+</style>
+</head>
+<body>
+<header class="wrap">
+<a class="logo" href="#" aria-label="Relay home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Relay</a>
+<nav><a href="#workspace">Workspace preview</a><button class="btn small" data-start>Get started <span>↗</span></button></nav>
+</header>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow"><span class="dot"></span> Project management for teams</div>
+<h1>Less noise.<br>More <em>momentum.</em></h1>
+<p>From the first idea to the final handoff, Relay keeps your projects, priorities, and people in one place.</p>
+<div class="actions"><button class="btn" data-start>Create a workspace <span>↗</span></button><a class="btn outline" href="#workspace">Explore the board ↓</a></div>
+</section>
+<section class="stage" id="workspace" aria-label="Interactive workspace preview">
+<div class="app">
+<aside><div class="work"><b>F</b><span id="team">Forma Studio</span></div><div class="side"><strong>⌂</strong> Overview</div><div class="side"><strong>☑</strong> My tasks</div><div class="mono">Workspace / Projects</div><div class="side active"><strong style="color:#ce5639">◆</strong> Website launch</div><div class="side"><strong style="color:#8496b5">◆</strong> Brand system</div><div class="side"><strong style="color:#8b9d71">◆</strong> Spring campaign</div></aside>
+<div class="screen"><div class="crumb">Workspace &nbsp; / &nbsp; Projects &nbsp; / &nbsp; Website launch</div>
+<div class="project"><h2>Website launch</h2><div class="avatars" aria-label="Three team members"><i>AL</i><i>JK</i><i>MS</i></div></div>
+<div class="toolbar"><button class="tab" aria-pressed="true" data-view="board">▥ &nbsp; Board</button><button class="tab" aria-pressed="false" data-view="list">☰ &nbsp; List</button><button class="add" id="add">＋ Add task</button></div>
+<div class="board" id="board"></div></div></div>
+</section>
+<footer><span>FIG. 01 &nbsp; / &nbsp; THE RELAY WORKSPACE</span><span>INTERACTIVE PREVIEW ↗</span></footer>
+</main>
+<dialog id="modal"><form id="form"><h2 id="heading"></h2><p id="hint"></p><label id="label" for="entry"></label><input id="entry" required maxlength="65" autocomplete="off"><div class="dialog-actions"><button class="btn outline" type="button" id="cancel">Cancel</button><button class="btn" id="submit"></button></div></form></dialog>
+<script>
+const $=s=>document.querySelector(s), groups=["To do","In progress","Done"], colors=["#9da59a","#e5a448","#78a58b"],tags={Strategy:"#e2e6ca",Design:"#e4d9ef",Content:"#f8dcbb",Development:"#d4e4ed",Planning:"#e2e6ca"};
+let tasks=[["Define launch metrics","Strategy","AL",0],["Draft homepage copy","Content","MS",0],["Design landing page","Design","JK",1],["Build component library","Development","AL",1],["Project kickoff","Planning","MS",2],["Audit existing pages","Strategy","JK",2]];
+function save(){try{localStorage.setItem("relay-preview",JSON.stringify({team:$("#team").textContent,tasks}))}catch{}}
+try{const data=JSON.parse(localStorage.getItem("relay-preview"));if(data&&Array.isArray(data.tasks)){tasks=data.tasks;$("#team").textContent=data.team}}catch{}
+function el(tag,cls,txt){const n=document.createElement(tag);n.className=cls;n.textContent=txt;return n}
+function render(){$("#board").replaceChildren();groups.forEach((g,i)=>{const col=el("section","col",""),head=el("h3","",g);col.style.setProperty("--status",colors[i]);head.append(el("small","",tasks.filter(t=>t[3]===i).length));col.append(head);tasks.forEach(([name,tag,who,status],j)=>{if(status!==i)return;const card=el("article","card",""),meta=el("div","meta","RL–"+(101+j));card.style.setProperty("--tag",tags[tag]||tags.Planning);meta.append(el("span","avatar",who));card.append(el("span","tag",tag),el("h4","",name),meta);col.append(card)});$("#board").append(col)})}render();
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));$("#board").classList.toggle("list",b.dataset.view==="list")});
+let creating=false;
+function openForm(start){creating=start;$("#heading").textContent=start?"Create your workspace":"Add a task";$("#hint").textContent=start?"Give this sample workspace a name. Your changes stay in this browser.":"Your new task will appear in the To do column.";$("#label").textContent=start?"Workspace name":"Task name";$("#submit").textContent=start?"Create workspace":"Add task";$("#entry").value="";$("#modal").showModal();$("#entry").focus()}
+document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>openForm(true));$("#add").onclick=()=>openForm(false);$("#cancel").onclick=()=>$("#modal").close();
+$("#form").onsubmit=e=>{e.preventDefault();const v=$("#entry").value.trim();if(!v){$("#entry").focus();return}if(creating){$("#team").textContent=v;$(".crumb").textContent=v+"  /  Projects  /  Website launch"}else tasks.unshift([v,"Planning","ME",0]);save();render();$("#modal").close();$("#workspace").scrollIntoView({block:"center"})};
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+Save this as `index.html` and open it in a browser:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f7f2" />
+  <title>Orbit — Make room for your best work</title>
+  <style>
+    :root {
+      --ink: #17231d;
+      --muted: #68736c;
+      --paper: #f7f7f2;
+      --white: #fff;
+      --line: #e2e7df;
+      --green: #245d42;
+      --lime: #d6edaa;
+      --lavender: #e7ddf8;
+      --peach: #f7e0d3;
+      --yellow: #fff0bb;
+      --shadow: 0 20px 70px rgba(38, 64, 46, .09);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+
+    .site-header { height: 82px; display: flex; align-items: center; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 23px; font-weight: 800; letter-spacing: -1.2px; }
+    .brand-mark { width: 29px; height: 29px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; position: relative; }
+    .brand-mark::before { content: ""; width: 9px; height: 9px; background: var(--ink); border-radius: 50%; }
+    .brand-mark::after { content: ""; position: absolute; width: 6px; height: 6px; background: var(--lime); border: 2px solid var(--ink); border-radius: 50%; top: -4px; right: 0; }
+    .nav-links, .nav-actions { display: flex; align-items: center; gap: 32px; }
+    .nav-links a, .login { font-size: 14px; font-weight: 600; color: #4d5951; }
+    .nav-links a:hover, .login:hover { color: var(--green); }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 0 20px; border: 1px solid transparent; border-radius: 9px; background: var(--ink); color: white; font-weight: 700; font-size: 14px; transition: transform .2s, background .2s; }
+    .button:hover { background: var(--green); transform: translateY(-2px); }
+    .button-light { background: white; color: var(--ink); border-color: var(--line); }
+    .button-light:hover { background: #f2f6ed; color: var(--ink); }
+    .arrow { font-size: 18px; line-height: 1; }
+
+    .hero { padding: 72px 0 0; text-align: center; overflow: hidden; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border: 1px solid #dce6d8; border-radius: 100px; color: var(--green); background: #f1f7e9; font-size: 12px; font-weight: 700; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #79a94d; }
+    h1 { max-width: 800px; margin: 25px auto 20px; font-size: clamp(48px, 7vw, 82px); line-height: 1.02; letter-spacing: -.065em; font-weight: 750; }
+    h1 span { color: #74975d; }
+    .hero-copy { max-width: 570px; margin: 0 auto; color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 29px; }
+    .hero-actions .button { min-height: 54px; padding: 0 23px; }
+    .hero-note { margin: 15px 0 0; color: #879087; font-size: 12px; }
+
+    .app-wrap { position: relative; max-width: 1030px; margin: 70px auto 0; padding: 12px; border: 1px solid #dfe7db; border-bottom: 0; border-radius: 18px 18px 0 0; background: rgba(226, 237, 220, .65); box-shadow: var(--shadow); text-align: left; }
+    .app { min-height: 450px; display: grid; grid-template-columns: 205px 1fr; overflow: hidden; border: 1px solid #e6ebe3; border-radius: 11px 11px 0 0; background: white; }
+    .sidebar { padding: 22px 15px; background: #fafbf8; border-right: 1px solid #edf0ea; }
+    .workspace { display: flex; align-items: center; gap: 9px; margin-bottom: 30px; font-size: 13px; font-weight: 750; }
+    .workspace-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: var(--green); color: white; font-size: 13px; }
+    .chevron { margin-left: auto; color: #9da79e; }
+    .side-label { margin: 24px 8px 10px; color: #a3aca2; font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+    .side-item { display: flex; align-items: center; gap: 10px; padding: 9px; color: #78837a; font-size: 12px; font-weight: 600; border-radius: 6px; }
+    .side-item.active { color: var(--green); background: #eaf2e5; }
+    .side-icon { width: 15px; text-align: center; font-size: 14px; }
+    .project-dot { width: 8px; height: 8px; border-radius: 3px; background: #b9a5dc; }
+    .app-main { padding: 25px 28px 0; min-width: 0; }
+    .app-top { display: flex; align-items: center; justify-content: space-between; color: #98a197; font-size: 11px; }
+    .avatar-stack { display: flex; padding-left: 8px; }
+    .avatar { width: 25px; height: 25px; margin-left: -7px; display: grid; place-items: center; border: 2px solid white; border-radius: 50%; color: #4c514b; background: #ead4c2; font-size: 8px; font-weight: 800; }
+    .avatar:nth-child(2) { background: #d5e1c5; }
+    .avatar:nth-child(3) { background: #e2d5ee; }
+    .app-heading { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin-top: 31px; }
+    .app-heading h2 { margin: 0 0 7px; font-size: 23px; letter-spacing: -.04em; }
+    .app-heading p { margin: 0; color: #98a197; font-size: 11px; }
+    .mini-button { padding: 9px 12px; border-radius: 6px; color: white; background: var(--green); font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .tabs { display: flex; gap: 23px; margin-top: 30px; border-bottom: 1px solid #edf0eb; color: #a1aaa0; font-size: 11px; font-weight: 600; }
+    .tabs span { padding-bottom: 12px; }
+    .tabs .selected { color: var(--green); border-bottom: 2px solid var(--green); }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; padding-top: 20px; }
+    .column { min-width: 0; padding: 10px; border-radius: 8px; background: #f7f9f5; }
+    .column-title { display: flex; align-items: center; gap: 7px; padding: 2px 1px 12px; font-size: 10px; font-weight: 750; }
+    .column-title i { width: 7px; height: 7px; border-radius: 50%; background: #c4a7e4; }
+    .column:nth-child(2) .column-title i { background: #e5b276; }
+    .column:nth-child(3) .column-title i { background: #8ebc80; }
+    .count { color: #adb6ab; font-weight: 500; }
+    .plus { margin-left: auto; color: #aab4a8; font-size: 16px; }
+    .task { padding: 12px; margin-bottom: 8px; border: 1px solid #edf0eb; border-radius: 7px; background: white; box-shadow: 0 2px 5px rgba(28, 53, 33, .025); }
+    .tag { display: inline-block; padding: 4px 6px; border-radius: 4px; color: #8664a1; background: var(--lavender); font-size: 8px; font-weight: 700; }
+    .tag.design { color: #aa7048; background: var(--peach); }
+    .tag.dev { color: #5f8a51; background: #e0efda; }
+    .task h3 { margin: 10px 0 8px; font-size: 11px; line-height: 1.35; }
+    .task p { margin: 0 0 14px; color: #a4ada2; font-size: 9px; line-height: 1.5; }
+    .task-bottom { display: flex; align-items: center; justify-content: space-between; color: #a5aea3; font-size: 9px; }
+    .task-bottom .avatar { width: 20px; height: 20px; margin: 0; font-size: 7px; }
+
+    .trust { padding: 48px 0 70px; text-align: center; border-bottom: 1px solid var(--line); }
+    .trust p { margin: 0 0 25px; color: #89938a; font-size: 12px; font-weight: 600; }
+    .logos { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 30px 65px; color: #7e8a80; font-size: 18px; font-weight: 750; letter-spacing: -.05em; }
+    .logos span:nth-child(2) { font-family: Georgia, serif; font-style: italic; }
+    .logos span:nth-child(4) { letter-spacing: .08em; font-size: 15px; }
+
+    .features { padding: 110px 0; }
+    .section-intro { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 42px; }
+    .section-label { color: #769166; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .section-intro h2, .cta h2 { max-width: 580px; margin: 14px 0 0; font-size: clamp(35px, 4.5vw, 54px); line-height: 1.08; letter-spacing: -.055em; }
+    .section-intro p { max-width: 320px; margin: 0 0 4px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature-card { min-height: 265px; padding: 28px; border: 1px solid #e7ebe3; border-radius: 13px; background: white; }
+    .feature-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px; background: #e9f2e1; color: var(--green); font-size: 22px; }
+    .feature-card:nth-child(2) .feature-icon { background: #f0e9fa; color: #8a70a3; }
+    .feature-card:nth-child(3) .feature-icon { background: #fbecdb; color: #b6804f; }
+    .feature-card h3 { margin: 28px 0 10px; font-size: 19px; letter-spacing: -.035em; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .cta { padding: 68px 30px; border-radius: 18px; background: #e4efd9; text-align: center; }
+    .cta h2 { margin: 0 auto; }
+    .cta p { margin: 18px auto 25px; color: #64745f; font-size: 15px; line-height: 1.6; }
+    footer { padding: 65px 0 30px; }
+    .footer-top { display: flex; justify-content: space-between; gap: 30px; padding-bottom: 45px; }
+    .footer-copy { max-width: 250px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 25px; color: #68736c; font-size: 13px; font-weight: 600; }
+    .footer-bottom { padding-top: 22px; border-top: 1px solid var(--line); color: #98a198; font-size: 12px; }
+
+    @media (max-width: 760px) {
+      .container { width: min(100% - 32px, 1180px); }
+      .site-header { height: 70px; }
+      .nav-links, .login { display: none; }
+      .nav-actions { gap: 0; }
+      .nav-actions .button { min-height: 42px; padding: 0 14px; font-size: 12px; }
+      .hero { padding-top: 55px; }
+      .hero-copy { font-size: 15px; }
+      .app-wrap { margin-top: 50px; padding: 7px; }
+      .app { grid-template-columns: 1fr; min-height: 390px; }
+      .sidebar { display: none; }
+      .app-main { padding: 20px 16px 0; }
+      .board { gap: 7px; }
+      .column { padding: 6px; }
+      .task { padding: 8px; }
+      .task p { display: none; }
+      .task h3 { font-size: 10px; }
+      .trust { padding: 40px 0 55px; }
+      .logos { gap: 24px 34px; font-size: 16px; }
+      .features { padding: 75px 0; }
+      .section-intro { display: block; }
+      .section-intro p { margin-top: 17px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: 0; }
+      .feature-card h3 { margin-top: 20px; }
+      .footer-top { flex-direction: column; }
+    }
+    @media (max-width: 420px) {
+      h1 { font-size: 46px; }
+      .app-heading h2 { font-size: 19px; }
+      .tabs { gap: 15px; }
+      .task-bottom { font-size: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Orbit home"><span class="brand-mark" aria-hidden="true"></span>orbit</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#get-started">Get started</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="login" href="#get-started">Log in</a>
+        <a class="button" href="#get-started">Get started <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="how-it-works">
+      <div class="container">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> A little more clarity, every day</div>
+        <h1>Make room for your <span>best work.</span></h1>
+        <p class="hero-copy">Bring your projects, people, and plans together in one calm space. Less chasing updates, more making things happen.</p>
+        <div class="hero-actions">
+          <a class="button" href="#get-started">Get started for free <span class="arrow">→</span></a>
+          <a class="button button-light" href="#features">Explore Orbit <span class="arrow">↗</span></a>
+        </div>
+        <p class="hero-note">Free to get started · No credit card required</p>
+
+        <div class="app-wrap" aria-label="Preview of the Orbit project board">
+          <div class="app">
+            <aside class="sidebar" aria-hidden="true">
+              <div class="workspace"><span class="workspace-icon">✳</span> Studio workspace <span class="chevron">⌄</span></div>
+              <div class="side-item"><span class="side-icon">⌂</span> Home</div>
+              <div class="side-item"><span class="side-icon">▣</span> My tasks</div>
+              <div class="side-item"><span class="side-icon">◷</span> Inbox</div>
+              <div class="side-label">Workspace</div>
+              <div class="side-item active"><span class="side-icon">▦</span> All projects</div>
+              <div class="side-item"><span class="side-icon">♧</span> Team</div>
+              <div class="side-label">Favorites</div>
+              <div class="side-item"><span class="project-dot"></span> Website refresh</div>
+              <div class="side-item"><span class="project-dot" style="background:#e7bc8c"></span> Brand campaign</div>
+            </aside>
+            <div class="app-main">
+              <div class="app-top">
+                <span>Projects &nbsp; / &nbsp; Website refresh</span>
+                <div class="avatar-stack" aria-label="Three project members">
+                  <span class="avatar">AL</span><span class="avatar">MK</span><span class="avatar">SJ</span>
+                </div>
+              </div>
+              <div class="app-heading">
+                <div><h2>Website refresh ✳</h2><p>A fresh new home for everything we do.</p></div>
+                <span class="mini-button">+ &nbsp; Add task</span>
+              </div>
+              <div class="tabs"><span>Overview</span><span class="selected">Board</span><span>List</span><span>Timeline</span></div>
+              <div class="board" aria-hidden="true">
+                <div class="column">
+                  <div class="column-title"><i></i> To do <span class="count">3</span><span class="plus">+</span></div>
+                  <div class="task"><span class="tag">Research</span><h3>Gather inspiration</h3><p>Collect ideas for the new direction.</p><div class="task-bottom"><span>◷ &nbsp; Jun 12</span><span class="avatar">AL</span></div></div>
+                  <div class="task"><span class="tag design">Design</span><h3>Update brand assets</h3><div class="task-bottom"><span>◷ &nbsp; Jun 15</span><span class="avatar">MK</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-title"><i></i> In progress <span class="count">2</span><span class="plus">+</span></div>
+                  <div class="task"><span class="tag design">Design</span><h3>Design homepage</h3><p>Bring the new visual direction to life.</p><div class="task-bottom"><span>◷ &nbsp; Jun 18</span><span class="avatar">MK</span></div></div>
+                  <div class="task"><span class="tag">Content</span><h3>Write page copy</h3><div class="task-bottom"><span>◷ &nbsp; Jun 20</span><span class="avatar">SJ</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-title"><i></i> Done <span class="count">2</span><span class="plus">+</span></div>
+                  <div class="task"><span class="tag dev">Planning</span><h3>Project kickoff</h3><p>Align on goals, scope, and timeline.</p><div class="task-bottom"><span>✓ &nbsp; Jun 04</span><span class="avatar">AL</span></div></div>
+                  <div class="task"><span class="tag dev">Planning</span><h3>Define project goals</h3><div class="task-bottom"><span>✓ &nbsp; Jun 06</span><span class="avatar">SJ</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="container">
+        <p>Made for thoughtful teams, wherever they work</p>
+        <div class="logos" aria-label="Example teams"><span>◈ northstar</span><span>goodthings</span><span>◒ layers</span><span>STUDIO NINE</span><span>✳ daybreak</span></div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-intro">
+          <div><span class="section-label">A better way to work</span><h2>Everything in its right place.</h2></div>
+          <p>From the big picture to the smallest detail, Orbit gives your team the space to do great work together.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">▦</div>
+            <h3>See the whole picture</h3>
+            <p>Keep projects organized with flexible boards, clear owners, and due dates everyone can see.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">✳</div>
+            <h3>Stay in sync</h3>
+            <p>Bring conversations and updates closer to the work, so everyone knows what’s happening.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">↗</div>
+            <h3>Keep things moving</h3>
+            <p>Turn big ideas into manageable next steps and celebrate progress along the way.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="get-started">
+      <div class="cta">
+        <h2>Good work starts here.</h2>
+        <p>Give your team a little more space to do what they do best.</p>
+        <a class="button" href="mailto:hello@example.com?subject=Getting%20started%20with%20Orbit">Get started with Orbit <span class="arrow">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span>orbit</a><p class="footer-copy">A calmer space for teams to do their best work, together.</p></div>
+        <nav class="footer-links" aria-label="Footer navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#get-started">Get started</a></nav>
+      </div>
+      <div class="footer-bottom">© 2026 Orbit. Made for the work that matters.</div>
+    </div>
+  </footer>
+</body>
+</html>
+```
