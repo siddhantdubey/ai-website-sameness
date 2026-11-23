@@ -2,7 +2,7 @@
 
 A test of the claim that every AI-built website looks the same: 12 models, 5 prompts, 5 runs each, generated under the same conditions and measured by script.
 
-**Status: pilot only.** One page per model on prompt P1, for the 9 Claude and OpenAI models. The Gemini models and the full 300-page run are not done yet. Nothing below is a result; with one page per model it is a first look.
+**Status: pilot only.** One page per model on prompt P1, for all 12 models. The full 300-page run is not done yet. Nothing below is a result; with one page per model it is a first look.
 
 ## The pilot prompt (sent verbatim, nothing added)
 
@@ -23,24 +23,29 @@ Each model was run twice: once with the CLI's own built-in instructions ("defaul
 | GPT-6.1 Sol | ![](docs/pilot/gpt-6.1-sol__P1__r1.jpg) | ![](docs/pilot/gpt-6.1-sol__P1__r1__minimal.jpg) |
 | GPT-6.1 Terra | ![](docs/pilot/gpt-6.1-terra__P1__r1.jpg) | ![](docs/pilot/gpt-6.1-terra__P1__r1__minimal.jpg) |
 | GPT-6 Luna | ![](docs/pilot/gpt-6-luna__P1__r1.jpg) | ![](docs/pilot/gpt-6-luna__P1__r1__minimal.jpg) |
+| Gemini 4 Neon | ![](docs/pilot/neon__P1__r1.jpg) | not possible |
+| Gemini 4 Argon | ![](docs/pilot/argon__P1__r1.jpg) | not possible |
+| Gemini 4 Hydrogen | ![](docs/pilot/hydrogen__P1__r1.jpg) | not possible |
 
 The pages themselves are in [`pilot/pages/`](pilot/pages), the unedited model replies in [`pilot/replies/`](pilot/replies), and the measurements in [`pilot/results.csv`](pilot/results.csv).
 
 Screenshots were taken on a Linux server. Pages that ask for Mac or Windows system fonts (`-apple-system`, `Iowan Old Style`, `Georgia`) are drawn here with Liberation and DejaVu substitutes, so they look slightly different from what a visitor on a Mac would see. The measurements record the font each page *asked for* separately from the font that was drawn.
 
-## What the 18 pilot pages measured (n = 1 per model per arm)
+## What the 21 pilot pages measured (n = 1 per model per arm)
 
 | Measure | Count |
 |---|---|
-| Light theme | 18 of 18 |
-| Off-white or cream background (none pure white, none dark) | 18 of 18 |
-| Purple/indigo primary button | 2 of 18 (both Haiku 5.5) |
-| Emoji used as icons | 2 of 18 (both Haiku 5.5) |
-| Serif headline font requested | 8 of 18 |
-| External fonts loaded | 2 of 18 (both GPT-6.1 Sol, Google Fonts) |
-| CSS framework used | 0 of 18 |
+| Light theme | 20 of 21 (the dark one is Gemini 4 Argon) |
+| Off-white or cream background, none pure white | 20 of 21 |
+| Purple/indigo primary button | 2 of 21 (both Haiku 5.5) |
+| Emoji used as icons | 3 of 21 (both Haiku 5.5, one GPT-6.1 Sol) |
+| Serif headline font requested (Iowan Old Style or Georgia) | 8 of 21 |
+| Headline centred on the page | 13 of 21 |
+| Gradient somewhere in the first viewport | 12 of 21 |
+| External fonts loaded | 3 of 21 (both GPT-6.1 Sol, Gemini 4 Argon; all Google Fonts) |
+| CSS framework used | 0 of 21 |
 
-The script also flagged a three-across card row on all 18 pages. That rule has not been checked by eye against real pages yet, so it is not in the table.
+The script also flagged a three-across card row on all 21 pages. That rule has not been checked by eye against real pages yet, so it is not in the table.
 
 ## Models and settings
 
@@ -55,9 +60,9 @@ The script also flagged a three-across card row on all 18 pages. That rule has n
 | GPT-6.1 Sol | Codex CLI 0.171.0 | `gpt-6.1-sol` | catalog default: low |
 | GPT-6.1 Terra | Codex CLI 0.171.0 | `gpt-6.1-terra` | catalog default: low |
 | GPT-6 Luna | Codex CLI 0.171.0 | `gpt-6-luna` | catalog default: medium |
-| Gemini 4 Neon | Antigravity 1.3.0 | pending | pending |
-| Gemini 4 Argon | Antigravity 1.3.0 | pending | pending |
-| Gemini 4 Hydrogen | Antigravity 1.3.0 | pending | pending |
+| Gemini 4 Neon | Antigravity 1.3.0 | `gemini-4-neon-high` | High (part of the model ID) |
+| Gemini 4 Argon | Antigravity 1.3.0 | `gemini-4-argon-high` | High (part of the model ID) |
+| Gemini 4 Hydrogen | Antigravity 1.3.0 | `gemini-4-hydrogen-high` | High (part of the model ID) |
 
 Changes from the original list of 11: "6.1 Luna" does not exist on the Codex subscription (`gpt-6.1-luna` is rejected), so GPT-6 Luna and GPT-6.1 Sol are used; Gemini Carbon is not offered by Antigravity, so Argon is used.
 
@@ -78,10 +83,17 @@ Every page is one fresh session, one turn, run from a new empty folder outside a
 - The built-in instructions (about 27,700 characters) include a **"Frontend Design Guidance"** section: advice on visuals and text, and a list of about 65 suggested fonts. In the default arm the OpenAI models see that text. The minimal arm replaces it (`model_instructions_file`).
 - Could not disable: the shell tool (read-only sandbox; 3 of the 10 pilot runs executed commands before answering), the multi-agent tools and their instructions, and the built-in skills list.
 
-**Antigravity (Gemini)**: pending. Through the T3 Code agent it was given extra tools and tried to open a browser to check its own page, so a direct client with no tools attached is being built.
+**Antigravity (Gemini)** (the Antigravity ACP server driven directly by `agy_once.py`: fresh server process, clean home folder, no MCP servers, no file or terminal access offered by the client)
+
+- Antigravity has no neutral reasoning default: the tier is part of the model ID. All three run at High.
+- Could not disable: the system prompt. There is no setting, flag or protocol field for it, so there is no minimal arm for Gemini. Asked to describe it, the model reported a coding-agent identity ("Antigravity"), formatting rules and an artifact system, and nothing about how to design web pages.
+- Could not disable: the prompt is wrapped in request tags with the current local time appended.
+- Tools: all built-in tools can be switched off, but Neon and Hydrogen then fail on build prompts (they still try to call a tool and the server gives up). So one tool is left on, `create_file`, and every call to it is rejected. In the pilot all three models called it once.
+- Which output is kept: the first file the model tried to create, saved word for word. The reply the model writes after the rejection is a second attempt made with the first in view, so it is kept in `pilot/replies/` but not used.
 
 ## Files
 
+- [`agy_once.py`](agy_once.py): the direct Antigravity client used for the Gemini models.
 - [`gen.py`](gen.py): the runner. Shuffled job order, one fresh session per page, raw output kept, one rerun on failure.
 - [`measure.mjs`](measure.mjs), [`lib/`](lib): the measuring script (headless Chromium, 1440x900). Every column is defined in [`MEASURES.md`](MEASURES.md).
 - [`pilot/runlog.jsonl`](pilot/runlog.jsonl): every attempt, including the failed ones, with the exact command, timing and token counts.

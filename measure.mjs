@@ -112,10 +112,13 @@ async function settle(page, notes) {
   try {
     await withTimeout(page.evaluate(async () => {
       const H = () => Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0);
-      for (let y = 0, i = 0; y < H() && i < 40; y += 700, i++) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
-      window.scrollTo(0, H());
+      // behavior:'instant' so pages with `scroll-behavior: smooth` are not caught mid-scroll by the screenshot
+      const go = (y) => window.scrollTo({ top: y, left: 0, behavior: 'instant' });
+      for (let y = 0, i = 0; y < H() && i < 40; y += 700, i++) { go(y); await new Promise((r) => setTimeout(r, 120)); }
+      go(H());
       await new Promise((r) => setTimeout(r, 250));
-      window.scrollTo(0, 0);
+      go(0);
+      for (let i = 0; i < 20 && window.scrollY !== 0; i++) { go(0); await new Promise((r) => setTimeout(r, 100)); }
       await new Promise((r) => setTimeout(r, 400));
     }), 20000, 'scroll pass');
   } catch (e) { notes.push('scroll-pass-failed:' + e.message.split('\n')[0]); }
