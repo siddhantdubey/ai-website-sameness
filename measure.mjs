@@ -13,7 +13,7 @@ import { measureInPage } from './lib/inpage.js';
 import { hueBucket, hueFamily, hexToRgb, luminance, rgbToHex } from './lib/colour.mjs';
 import { normaliseSection, detectFrameworks, FONT_CSS_HOSTS } from './lib/tables.mjs';
 
-const TOOL_VERSION = '1.0.0';
+const TOOL_VERSION = '1.1.0';
 const VIEWPORT = { width: 1440, height: 900 };
 const LOAD_TIMEOUT_MS = 15000;
 const IDLE_WAIT_MS = 4000;
@@ -64,6 +64,9 @@ const COLUMNS = [
   'frameworks', 'external_requests', 'external_hosts', 'has_external_images', 'external_image_hosts', 'failed_requests',
   'nav_present', 'hero_has_image', 'word_count',
   'load_error', 'console_error_count', 'page_error_count', 'measure_notes', 'viewport_shot', 'full_shot',
+  // added in tool 1.1.0 (appended so existing column positions do not move)
+  'arm', 'three_up_any', 'three_up_pricing', 'three_up_testimonials', 'three_up_steps', 'three_up_in_mockup', 'three_up_stats',
+  'buttons_in_viewport_mockup', 'mockup_present',
 ];
 function csvCell(v) {
   if (v === null || v === undefined) return '';
@@ -72,10 +75,53 @@ function csvCell(v) {
 }
 const yn = (b) => (b === null || b === undefined ? 'na' : b ? 'y' : 'n');
 
+// id = model__prompt__run[__arm]; arm defaults to 'default'.
 function parseId(id) {
   const parts = id.split('__');
-  if (parts.length === 3) return { model: parts[0], prompt: parts[1], run: parts[2].replace(/^r/, '') };
-  return { model: 'na', prompt: 'na', run: 'na', bad: true };
+  if (parts.length === 3 || parts.length === 4) return { model: parts[0], prompt: parts[1], run: parts[2].replace(/^r/, ''), arm: parts[3] || 'default' };
+  return { model: 'na', prompt: 'na', run: 'na', arm: 'na', bad: true };
+}
+
+// ---------- card-row and section classification (definitions in MEASURES.md) ----------
+const kwLabel = (eyebrow, heading) => {
+  const e = eyebrow ? normaliseSection(eyebrow) : 'other';
+  return e !== 'other' ? e : normaliseSection(heading);
+};
+const STEP_TOKENS = ['step', 'steps', 'process', 'pipeline', 'timeline', 'workflow', 'onboarding'];
+const PRICE_TOKENS = ['pricing', 'price', 'prices', 'plans', 'plan', 'tiers', 'tier'];
+const QUOTE_TOKENS = ['testimonial', 'testimonials', 'quote', 'quotes', 'review', 'reviews'];
+// Each card row gets exactly one kind, first match wins:
+//  inside-mockup > pricing > testimonials > stats > steps > hero-region (in_mockup) > feature
+function classifyRow(r, blocks) {
+  const sec = r.sectionIdx >= 0 && blocks[r.sectionIdx] ? blocks[r.sectionIdx] : null;
+  const kw = sec ? kwLabel(sec.eyebrow, sec.text) : 'hero';
+  const tok = (list) => r.classTokens.some((t) => list.includes(t));
+  const why = [];
+  let kind;
+  if (r.mockup) { kind = 'in_mockup'; why.push('inside-mockup:' + r.mockup); }
+  else if (r.priceCards >= 2 || kw === 'pricing' || tok(PRICE_TOKENS)) { kind = 'pricing'; why.push(`price-cards=${r.priceCards},section=${kw}`); }
+  else if (r.quoteCards >= 2 || kw === 'testimonials' || tok(QUOTE_TOKENS)) { kind = 'testimonials'; why.push(`quote-cards=${r.quoteCards},section=${kw}`); }
+  else if (r.statCards >= 2) { kind = 'stats'; why.push(`stat-cards=${r.statCards}`); }
+  else if (kw === 'how-it-works' || tok(STEP_TOKENS) || (r.numberedCards >= 2 && kw !== 'features')) { kind = 'steps'; why.push(`numbered-cards=${r.numberedCards},section=${kw}`); }
+  else if (r.heroRegion) { kind = 'in_mockup'; why.push('hero-region:before-first-h2'); }
+  else { kind = 'feature'; why.push(`section=${kw}` + (r.numberedCards ? `,numbered-cards=${r.numberedCards}` : '')); }
+  return { kind, why: why.join(','), sectionKeyword: kw };
+}
+// Section label: keyword on eyebrow, then on heading; if 'other', content rules in order:
+//  >=3 questions or any <details> -> faq; >=2 price matches -> pricing; any quote -> testimonials;
+//  a card row of kind steps -> how-it-works; a card row of kind feature -> features;
+//  last heading with < 120 words and a button/input/form -> cta.
+function sectionLabel(b, i, blocks, rowKinds) {
+  const kw = kwLabel(b.eyebrow, b.text);
+  if (kw !== 'other') return { label: kw, via: b.eyebrow && normaliseSection(b.eyebrow) !== 'other' ? 'eyebrow' : 'heading' };
+  if (b.questions >= 3 || b.details > 0) return { label: 'faq', via: 'content:questions' };
+  if (b.price >= 2) return { label: 'pricing', via: 'content:prices' };
+  if (b.quotes > 0) return { label: 'testimonials', via: 'content:quotes' };
+  const kinds = rowKinds.filter((x) => x.sectionIdx === i).map((x) => x.kind);
+  if (kinds.includes('steps')) return { label: 'how-it-works', via: 'content:step-row' };
+  if (kinds.includes('feature')) return { label: 'features', via: 'content:feature-row' };
+  if (i === blocks.length - 1 && b.words < 120 && b.hasAction) return { label: 'cta', via: 'content:last-short-with-action' };
+  return { label: 'other', via: 'none' };
 }
 
 // Dominant colour of a rectangle of a PNG: quantise to 4 bits/channel, take the
@@ -260,8 +306,8 @@ function flatten(rec, cols) {
   const m = rec.raw || {};
   const notes = [...(rec.notes || []), ...((m.notes) || [])];
   const id = parseId(rec.id);
-  if (id.bad) notes.push('id-not-model__prompt__run');
-  const row = { id: rec.id, model: id.model, prompt: id.prompt, run: id.run, file_bytes: rec.file_bytes, source_notes: rec.source_notes };
+  if (id.bad) notes.push('id-not-model__prompt__run[__arm]');
+  const row = { id: rec.id, model: id.model, prompt: id.prompt, run: id.run, arm: id.arm, file_bytes: rec.file_bytes, source_notes: rec.source_notes };
   if (rec.fatal) notes.push('fatal:' + rec.fatal);
   row.color_scheme = m.colorSchemeDark === undefined ? 'na' : m.colorSchemeDark ? 'dark' : 'light';
   row.compat_mode = m.compatMode || 'na';
@@ -352,16 +398,33 @@ function flatten(rec, cols) {
     row.buttons_in_viewport = m.buttons.inViewport;
     row.buttons_in_viewport_nav = m.buttons.nav;
     row.buttons_in_viewport_nonnav = m.buttons.nonNav;
-  } else row.buttons_in_viewport = row.buttons_in_viewport_nav = row.buttons_in_viewport_nonnav = 'na';
+    row.buttons_in_viewport_mockup = m.buttons.inMockup ?? 'na';
+  } else row.buttons_in_viewport = row.buttons_in_viewport_nav = row.buttons_in_viewport_nonnav = row.buttons_in_viewport_mockup = 'na';
 
   // Cards
+  const blocks = (m.sections && m.sections.blocks) || [];
+  let rowKinds = [];
   if (m.cards) {
-    row.three_card_grid = yn(m.cards.threeUp);
-    row.max_cards_in_row = m.cards.maxInRow;
-    row.rows_3up = m.cards.rows3;
-    row.rows_4up = m.cards.rows4;
-    row.grid_cards_total = m.cards.totalsFor3up.length ? m.cards.totalsFor3up : '0';
-  } else for (const k of ['three_card_grid', 'max_cards_in_row', 'rows_3up', 'rows_4up', 'grid_cards_total']) row[k] = 'na';
+    const rows = m.cards.rows;
+    rowKinds = rows.map((r) => ({ ...r, ...classifyRow(r, blocks) }));
+    rec.card_rows = rowKinds; // audit trail in JSONL
+    const sizes = rows.map((r) => r.size);
+    const three = rowKinds.filter((r) => r.size === 3);
+    const has = (k) => three.some((r) => r.kind === k);
+    row.three_card_grid = yn(has('feature'));
+    row.max_cards_in_row = sizes.length ? Math.max(...sizes) : 0;
+    row.rows_3up = sizes.filter((n) => n === 3).length;
+    row.rows_4up = sizes.filter((n) => n === 4).length;
+    const featContainers = [...new Set(three.filter((r) => r.kind === 'feature').map((r) => r.containerId))];
+    row.grid_cards_total = featContainers.length ? featContainers.map((c) => rowKinds.filter((r) => r.containerId === c && r.kind === 'feature').reduce((a, r) => a + r.size, 0)) : '0';
+    row.three_up_any = yn(three.length > 0);
+    row.three_up_pricing = yn(has('pricing'));
+    row.three_up_testimonials = yn(has('testimonials'));
+    row.three_up_steps = yn(has('steps'));
+    row.three_up_in_mockup = yn(has('in_mockup'));
+    row.three_up_stats = yn(has('stats'));
+  } else for (const k of ['three_card_grid', 'max_cards_in_row', 'rows_3up', 'rows_4up', 'grid_cards_total', 'three_up_any', 'three_up_pricing', 'three_up_testimonials', 'three_up_steps', 'three_up_in_mockup', 'three_up_stats']) row[k] = 'na';
+  row.mockup_present = m.mockups ? yn(m.mockups.length > 0) : 'na';
 
   // Emoji / icons
   if (m.emoji) {
@@ -375,7 +438,12 @@ function flatten(rec, cols) {
   // Sections
   if (m.sections) {
     row.section_order = m.sections.labels.join(' | ');
-    const norm = m.sections.labels.map(normaliseSection);
+    let norm;
+    if (m.sections.via === 'h2' && blocks.length === m.sections.labels.length) {
+      const labs = blocks.map((b, i) => sectionLabel(b, i, blocks, rowKinds));
+      rec.section_labels = labs.map((l, i) => ({ heading: blocks[i].text, eyebrow: blocks[i].eyebrow, ...l }));
+      norm = labs.map((l) => l.label);
+    } else norm = m.sections.labels.map(normaliseSection);
     if (m.h1 && m.h1.inViewport) norm.unshift('hero');
     if (m.sections.footer) norm.push('footer');
     row.section_order_norm = norm.join(' | ');

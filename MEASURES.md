@@ -43,10 +43,11 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 - **First viewport**: the rectangle (0,0)–(1440,900) at scrollY = 0. An element is "in the first viewport" if its box intersects that rectangle.
 - **Button-like element**: a visible `a`, `button`, `[role=button]` or `input[type=submit|button]` that meets all of these:
   - box between 16x16 and 600x120 px
-  - **and** either a background (colour alpha × opacity ≥ 0.1, or a gradient background) or a border on all four sides (≥ 1 px, colour alpha ≥ 0.3)
+  - **and** either a background (colour alpha × opacity ≥ 0.1, or a gradient background) or a border on all four sides (≥ 1 px, colour alpha ≥ 0.3; or alpha 0.08–0.3 if, composited over what is behind the button, it differs from that backdrop by RGB distance ≥ 15 — faint borders on dark themes; since 1.1.0)
   - **and** horizontal padding ≥ 12 px total, or vertical padding ≥ 8 px total, or height ≥ 28 px.
 
   A plain text link with no background and no border is not button-like. Nested button-likes (an `<a>` wrapping a `<button>`) count once.
+- **Product mock-up** (fake app window / preview): a visible element ≥ 300x200 px, at most 1.6 viewports tall, that does not contain the page's h1, and that EITHER has a class or id token (split on `-`, `_`, spaces and camelCase) in {mock, mockup, mocks, preview, window, app, board, kanban, screen, screenshot, browser, device, dashboard, demo, sandbox}, OR is `aria-hidden="true"` or `role="img"`, OR is the nearest qualifying ancestor of "window dots" (≥ 3 sibling elements 4–16 px, square, border-radius ≥ 30 % of width, no text). Only outermost mock-ups are kept; the JSONL lists each one with its reason (`raw.mockups`). Elements inside a mock-up are excluded from `buttons_in_viewport`, from primary-button/accent selection, from `emoji_icon_count`, and from section headings.
 - **Nav element**: inside `nav` or `[role=navigation]`; or inside a `header` that is ≤ 200 px tall; or inside a `position: fixed/sticky` ancestor that sits at top ≤ 10 px, is ≤ 200 px tall and is ≥ 50 % of the viewport wide. A tall `<header class="hero">` therefore does not count as nav.
 - **Paint-stack resolution at a point (x, y)**: walk `document.elementsFromPoint(x, y)` from top to bottom, with `pointer-events` forced on for the duration so decorative overlays are not skipped. Elements smaller than a minimum area are skipped (see each use).
   - An element (or a full-cover `::before`/`::after`) with a `url()` background, or an `img`, `video`, `canvas`, `iframe` or `picture` (or an `svg` covering ≥ 10 % of the viewport), stops the walk as **image**.
@@ -59,7 +60,7 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 
 | column | definition |
 |---|---|
-| `id`, `model`, `prompt`, `run` | File name without `.html`, split on `__` into model, prompt and run. The leading `r` is stripped from run. If the id does not have 3 parts, all three are `na` and a note is added. |
+| `id`, `model`, `prompt`, `run`, `arm` | File name without `.html`, split on `__` into model, prompt, run and an optional fourth part, the arm (e.g. `fable-5.2__P1__r1__minimal`). `arm` is `default` when there is no fourth part. The leading `r` is stripped from run. Any other number of parts → all `na` plus a note. (`arm` is appended at the end of the CSV so existing column positions do not move.) |
 | `file_bytes` | Size of the file on disk. |
 | `source_notes` | Static checks on the source text: `empty-file`, `whitespace-only`, `markdown-fence-in-source` (file starts or ends with ```` ``` ````; the page is still rendered as-is, so the fence text shows on the page), `no-<html>-tag`, `no-doctype`, `no-closing-</html>-at-end(truncated?)`. |
 | `color_scheme` | `matchMedia('(prefers-color-scheme: dark)')` inside the page: `light` or `dark`. Always `light` under the default setup. |
@@ -80,25 +81,28 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 | `h1_count` | Number of `h1` elements in the DOM, visible or not. |
 | `h1_text` | Whitespace-collapsed `innerText` of the first visible `h1`. `na` when there is none (note `h1:none` or `h1:present-but-not-visible`). |
 | `h1_in_viewport` | The first visible `h1` intersects the first viewport. |
-| `h1_centered` | `y` iff the h1 is in the first viewport **and** every rendered line of its text (a Range over its contents, fragments merged per line) has a midpoint within 4 % of the viewport width (57.6 px) of x = 720, **and** either computed `text-align` is `center`, or the text's leftmost edge is ≥ 10 % of the viewport width from the left (a shrink-wrapped, margin-centred block). *This is stricter than "text-align: center"*: centred text inside a left column of a split hero is `n` (noted `h1:text-align-center-but-not-centred-on-page`). Use `h1_text_align` for the looser reading. |
+| `h1_centered` | `y` iff the h1 is in the first viewport **and** every rendered line of its text (a Range over its contents, fragments merged per line) has a midpoint within 4 % of the viewport width (57.6 px) of x = 720, **and** either computed `text-align` is `center`, or the h1 is a **single line** in a shrink-wrapped box (box narrower than 90 % of its parent's content width, box midpoint within the same 4 % of x = 720, text starting ≥ 10 % of the width from the left; noted `h1:centred-via-shrink-wrapped-single-line`). A multi-line left-aligned h1 whose lines happen to sit near the middle is `n` (since tool 1.1.0; the fable-5.2 pilot page was a false `y` under the old rule). *This is stricter than "text-align: center"*: centred text inside a left column of a split hero is `n` (noted `h1:text-align-center-but-not-centred-on-page`). Use `h1_text_align` for the looser reading. |
 | `h1_text_align` | Computed `text-align` of the h1 (`start`, `left`, `center` …). |
 | `h1_font_declared`, `body_font_declared` | First family in the computed `font-family` stack, quotes stripped. This can be a generic family (`sans-serif`, `system-ui`, `ui-sans-serif`). |
 | `h1_font_rendered`, `body_font_rendered` | The platform font that actually drew the most glyphs, from CDP `CSS.getPlatformFontsForNode` summed over the element and its descendants. Style suffixes (`SemiBold`, `ExtraLight`, `Italic`, `Variable` …) are stripped. Google variable fonts report their default instance name, e.g. "Source Sans 3 ExtraLight", which is cleaned to "Source Sans 3". The raw list with glyph counts is in the JSONL (`h1_fonts`, `body_fonts`). **Body element** = the first visible `<p>` with ≥ 40 characters that is not inside nav, footer, a link, a button or a heading; else the first visible `p/li/span/div/td/dd/blockquote` with ≥ 40 characters of its own text (noted); else `na`. See the environment note: system-font stacks render as DejaVu or Liberation here. |
 | `external_fonts` | Font families loaded from outside the file. Sources: `family=` parameters of Google Fonts or Bunny Fonts URLs in `<link>` and `@import`; `@font-face` rules with a remote `url(http…)` in readable stylesheets; and, when a font file was fetched over the network and some stylesheet was cross-origin and unreadable, every family in `document.fonts` with status `loaded` that is not defined by a `data:` URI (this is how Font Awesome on cdnjs shows up). Fontshare and Typekit family names are not parsed (noted). |
 | `external_font_hosts` | Hosts that served a request of type `font`, plus known font-CSS hosts (fonts.googleapis.com, fonts.bunny.net, api.fontshare.com, use.typekit.net, rsms.me …) seen in requests or links. |
-| `buttons_in_viewport` | Count of button-like elements intersecting the first viewport. `_nav` and `_nonnav` split it by the nav rule. |
+| `buttons_in_viewport` | Count of button-like elements intersecting the first viewport, **excluding those inside a product mock-up and announcement pills** (since 1.1.0). An announcement pill is a non-nav button-like element whose box lies entirely above the first visible h1 ("New: … →"); it is never the primary button either.  `_nav` and `_nonnav` split it by the nav rule. `buttons_in_viewport_mockup` (appended column) counts the excluded ones. The JSONL has every candidate (`raw.buttons.list`: text, nav, mock, rect, background, border). |
 | `primary_button_text` | Collapsed text (or `value`, or `aria-label`) of the chosen primary button. `na` when the accent came from the fallback. |
-| `three_card_grid` | `y` if the page has at least one **3-up card row**, excluding anything inside `footer` or `nav`. A card row is found inside any container: its visible children (looking through `display: contents`) are grouped into rows by top edge (±12 px). A row of ≥ 2 children counts only if the children do not overlap horizontally, max width / min width ≤ 1.2, and **every** child is card-like. Card-like means ≥ 120x60 px, containing a heading (`h2`–`h6`, `[role=heading]`, `strong`, `b`, `dt`, or a leaf element with weight ≥ 600, size ≥ 15 px and ≤ 80 characters) and ≥ 20 characters of text outside that heading. Pricing tiers and testimonial triples that fit the shape count too (the JSONL lists each row's container and nearest section heading). |
-| `max_cards_in_row` | Largest card row found (0 if none). |
-| `rows_3up`, `rows_4up` | Number of card rows with exactly 3 and exactly 4 cards. A 6-card grid at 3 per row gives `rows_3up=2`. |
-| `grid_cards_total` | For each container that has a 3-up row, the total cards in its card rows (`;`-joined; `0` if none). 6-card 3x2 grid → `6`. |
-| `emoji_icon_count` | Emoji used as icons: (a) visible elements whose whole text is 1–2 emoji graphemes (only the innermost such element counts), plus (b) visible headings whose text starts with an emoji followed by words. |
+| `three_card_grid` | `y` if the page has at least one **3-up card row of kind `feature`** (see *Card rows* below). A 6-card feature grid laid out 3 per row counts. Since tool 1.1.0; before that it meant `three_up_any`. |
+| `three_up_any` | `y` if any card row has exactly 3 cards, whatever its kind (the old, loose meaning of `three_card_grid`). |
+| `three_up_pricing`, `three_up_testimonials`, `three_up_steps`, `three_up_in_mockup`, `three_up_stats` | `y` if a 3-card row of that kind exists. Each row has exactly one kind, so these plus `three_card_grid` split `three_up_any`. |
+| `max_cards_in_row` | Largest card row of any kind (0 if none). |
+| `rows_3up`, `rows_4up` | Number of card rows (any kind) with exactly 3 and exactly 4 cards. A 6-card grid at 3 per row gives `rows_3up=2`. |
+| `grid_cards_total` | For each container that has a 3-up **feature** row, the total cards in its feature rows (`;`-joined; `0` if none). 6-card 3x2 grid → `6`. |
+| `mockup_present` | `y` if at least one product mock-up was detected (definition above). |
+| `emoji_icon_count` | Emoji used as icons: (a) visible elements whose whole text is 1–2 emoji graphemes (only the innermost such element counts), plus (b) visible headings whose text starts with an emoji followed by words. Elements inside a product mock-up are not counted (since 1.1.0; counted separately in `raw.emoji.iconElementsInMockup`). |
 | `emoji_total` | Emoji graphemes in `body.innerText`. A grapheme is an emoji if it contains an `Emoji_Presentation` code point, or an `Extended_Pictographic` one that has VS16 (U+FE0F) or is ≥ U+1F000. So ©, ®, ™, ✓ and ★ are not counted; ✅, ⚡ and ✨ are. |
 | `svg_icon_count` | Visible outermost inline `<svg>` sized 8–64 px in both dimensions. `svg_total` = all visible outermost inline svgs. |
 | `icon_font_count` | Visible `<i>`/`<span>` elements whose own or `::before` font-family matches Font Awesome, Material Icons/Symbols, bootstrap-icons, remixicon, Phosphor, Ionicons, icomoon, feather, lucide or tabler. |
 | `img_icon_count` | Visible `<img>` ≤ 64x64 px. |
-| `section_order` | Collapsed texts of visible `h2` elements in document order, joined with ` \| `. If there are no h2s: the first `h1`–`h4` of each outermost `section`, `[role=region]` or `article` (noted). |
-| `section_order_norm` | Each label mapped through `SECTION_KEYWORDS` in `lib/tables.mjs` (an ordered regex table; first match wins; unmatched → `other`). Then `hero` is **prepended** if a visible h1 is in the first viewport, and `footer` is **appended** if a visible `footer`/`[role=contentinfo]` exists. These two are structural, not keyword matches. |
+| `section_order` | Collapsed texts of visible `h2` elements in document order, joined with ` \| `. If there are no h2s outside mock-ups: the first `h2`–`h4` (not in a mock-up) of each outermost `section`, `[role=region]` or `article` (noted). |
+| `section_order_norm` | Each section heading gets a label: (1) its **eyebrow** — the element right before the h2 (previous sibling, or previous sibling of up to two wrapper levels) if it is not a heading, has 2–48 characters, font-size ≤ 16 px and is shown in upper case (`text-transform: uppercase` or all-caps text), e.g. "FEATURES", "HOW IT WORKS" mapped through `SECTION_KEYWORDS` in `lib/tables.mjs` (an ordered regex table; first match wins); if that gives `other`, (2) the h2 text through the same table; if still `other`, (3) content rules on the heading's block (the highest ancestor containing no other section heading), in order: ≥ 3 question-mark headings/summaries or any `<details>` → `faq`; ≥ 2 price matches → `pricing`; any quote → `testimonials`; a card row of kind `steps` → `how-it-works`; a card row of kind `feature` → `features`; the last heading, with < 120 words and a button, text/email input or form → `cta`; else `other`. The label and which step produced it are in the JSONL (`section_labels`). h2s inside a product mock-up are not section headings (noted). Then `hero` is **prepended** if a visible h1 is in the first viewport, and `footer` is **appended** if a visible `footer`/`[role=contentinfo]` exists. These two are structural, not keyword matches. |
 | `n_h2` | Visible h2 count. |
 | `n_sections` | Visible outermost `<section>` elements. |
 | `frameworks` | Labels from the `FRAMEWORKS` regex table in `lib/tables.mjs`, matched against every `<link href>`, `<script src>`, `@import` URL, ES-module import URL in inline scripts, and every URL actually requested. Generic CDN hosts (unpkg, jsdelivr, cdnjs, skypack, esm.sh …) are added as `cdn:<host>`. |
@@ -115,6 +119,29 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 | `viewport_shot`, `full_shot` | Screenshot file names in `--shots`. |
 
 `na` means could not be determined or not applicable (no h1, fatal page). An empty cell in a list column means an empty list.
+
+### Card rows and their kinds
+
+**Finding rows** (unchanged since 1.0.0): outside `footer` and `nav`, every container's visible children (looking through `display: contents`) are grouped by top edge (±12 px). A group of ≥ 2 is a card row if the children do not overlap horizontally, max width / min width ≤ 1.2, and **every** child is card-like: ≥ 120x60 px, containing a heading (`h2`–`h6`, `[role=heading]`, `strong`, `b`, `dt`, or a leaf element with weight ≥ 600, size ≥ 15 px and ≤ 80 characters) plus ≥ 20 characters of text outside that heading; or, with no heading, a card that holds a quote (see *quote* below) and ≥ 40 characters of text (testimonial cards). Inside a product mock-up the heading test is relaxed to "the first visible leaf element with ≤ 40 characters" (fake UI text is small and rarely bold), so kanban columns are found.
+
+**Per-card signals** (in-page, `lib/inpage.js`):
+- *price*: the card text matches `[$€£¥₹] digit`, `digit €/£`, `/mo`, `/month`, `/yr`, `/year`, `/user`, `/seat`, `/person`, `/member`, or `per user/seat/month/year/person/member`.
+- *quote*: the card contains `<blockquote>` or `<q>`, or its text has ≥ 20 characters between quote marks (“ " « „ … ” " »).
+- *numbered*: a visible leaf element with ≤ 30 characters reading like `1`, `01`, `Step 2`, `03.`, `01 / PLAN`, `02 — Track` (regex `^(step\s*)?0?\d{1,2}(\s*[.):/—–-].{0,24})?$`), or a `::before` whose `content` uses `counter()`.
+- *stat*: the card's first visible leaf text is a bare figure such as `31%`, `4.8/5`, `12k+`, `2.8x`, `48ms`, `5 min` — but not a bare 1–2 digit number like `01` or `2`, which is read as a step number.
+
+**Row context**: the row's *section* is the last section heading (h2, not in a mock-up) before it in document order. Its section keyword is the eyebrow/heading keyword label described under `section_order_norm` (steps 1–2 only, no content rules). The row's *class tokens* are the class/id tokens of the container and up to 3 ancestors.
+
+**Kind**: first match wins:
+1. `in_mockup`: the container is inside a product mock-up.
+2. `pricing`: ≥ 2 price cards, or section keyword `pricing`, or a class token in {pricing, price, prices, plans, plan, tiers, tier}.
+3. `testimonials`: ≥ 2 quote cards, or section keyword `testimonials`, or a class token in {testimonial(s), quote(s), review(s)}.
+4. `stats`: ≥ 2 stat cards.
+5. `steps`: section keyword `how-it-works`, or a class token in {step, steps, process, pipeline, timeline, workflow, onboarding}, or ≥ 2 numbered cards **unless** the section keyword is `features` (numbered feature cards, e.g. "01 / PLAN" under "The essentials", stay features).
+6. `in_mockup` (hero region): the row sits before the page's first section heading, provided the page has at least one h2.
+7. `feature`: anything else.
+
+The JSONL `card_rows` lists every row with its container, size, signals, card headings, kind and the reason.
 
 ### Hue buckets (`lib/colour.mjs`)
 

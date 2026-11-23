@@ -38,14 +38,16 @@ Screenshots were taken on a Linux server. Pages that ask for Mac or Windows syst
 | Light theme | 20 of 21 (the dark one is Gemini 4 Argon) |
 | Off-white or cream background, none pure white | 20 of 21 |
 | Purple/indigo primary button | 2 of 21 (both Haiku 5.5) |
-| Emoji used as icons | 3 of 21 (both Haiku 5.5, one GPT-6.1 Sol) |
+| Emoji used as icons | 2 of 21 (both Haiku 5.5) |
 | Serif headline font requested (Iowan Old Style or Georgia) | 8 of 21 |
-| Headline centred on the page | 13 of 21 |
+| Headline centred on the page | 12 of 21 |
+| Three-across row of feature cards | 11 of 21 |
+| Three-across row of pricing tiers | 11 of 21 |
 | Gradient somewhere in the first viewport | 12 of 21 |
 | External fonts loaded | 3 of 21 (both GPT-6.1 Sol, Gemini 4 Argon; all Google Fonts) |
 | CSS framework used | 0 of 21 |
 
-The script also flagged a three-across card row on all 21 pages. That rule has not been checked by eye against real pages yet, so it is not in the table.
+The three-card, centred-headline, button, accent and emoji measures were checked by eye against all 21 pages ([`pilot/eye-check.csv`](pilot/eye-check.csv)). Every page has *some* three-across row (pricing tiers, steps, testimonials, or the columns of a fake app board in the hero); only rows of feature cards count in the table. The rules were tuned on these 21 pages, all for one prompt, so expect misses on the other prompts.
 
 ## Models and settings
 
