@@ -47,10 +47,10 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
   - **and** horizontal padding ≥ 12 px total, or vertical padding ≥ 8 px total, or height ≥ 28 px.
 
   A plain text link with no background and no border is not button-like. Nested button-likes (an `<a>` wrapping a `<button>`) count once.
-- **Product mock-up** (fake app window / preview): a visible element ≥ 300x200 px, at most 1.6 viewports tall, that does not contain the page's h1, and that EITHER has a class or id token (split on `-`, `_`, spaces and camelCase) in {mock, mockup, mocks, preview, window, app, board, kanban, screen, screenshot, browser, device, dashboard, demo, sandbox}, OR is `aria-hidden="true"` or `role="img"`, OR is the nearest qualifying ancestor of "window dots" (≥ 3 sibling elements 4–16 px, square, border-radius ≥ 30 % of width, no text). Only outermost mock-ups are kept; the JSONL lists each one with its reason (`raw.mockups`). Elements inside a mock-up are excluded from `buttons_in_viewport`, from primary-button/accent selection, from `emoji_icon_count`, and from section headings.
+- **Product mock-up** (fake app window / preview): a visible element ≥ 300x200 px, at most 1.6 viewports tall, that does not contain the page's h1, and that EITHER has a class or id token (split on `-`, `_`, spaces and camelCase) in {mock, mockup, mocks, preview, window, app, board, kanban, screen, screenshot, browser, device, dashboard, demo, sandbox}, OR is `aria-hidden="true"` or `role="img"`, OR is the nearest qualifying ancestor of "window dots" (≥ 3 sibling elements 4–16 px, square, border-radius ≥ 30 % of width, no text). Since 1.2.0 the class-token / aria-hidden / role=img routes also require the element to **start above the first visible h2** (the hero region) and to contain **≥ 3 visible text leaf elements outside `<svg>`** (UI text); window dots alone still qualify anywhere. This stops restaurant menu boards further down the page, gallery tiles and bare illustrations/canvas art from being taken for app previews. Only outermost mock-ups are kept; the JSONL lists each one with its reason (`raw.mockups`). Elements inside a mock-up are excluded from `buttons_in_viewport`, from primary-button/accent selection, from `emoji_icon_count`, and from section headings.
 - **Nav element**: inside `nav` or `[role=navigation]`; or inside a `header` that is ≤ 200 px tall; or inside a `position: fixed/sticky` ancestor that sits at top ≤ 10 px, is ≤ 200 px tall and is ≥ 50 % of the viewport wide. A tall `<header class="hero">` therefore does not count as nav.
 - **Paint-stack resolution at a point (x, y)**: walk `document.elementsFromPoint(x, y)` from top to bottom, with `pointer-events` forced on for the duration so decorative overlays are not skipped. Elements smaller than a minimum area are skipped (see each use).
-  - An element (or a full-cover `::before`/`::after`) with a `url()` background, or an `img`, `video`, `canvas`, `iframe` or `picture` (or an `svg` covering ≥ 10 % of the viewport), stops the walk as **image**.
+  - An element (or a full-cover `::before`/`::after`) with a `url()` background, or an `img`, `video`, `canvas`, `iframe` or `picture` (or an `svg` covering ≥ 10 % of the viewport) that is **full-bleed** (visible width ≥ 95 % of the viewport; since 1.2.0), stops the walk as **image**. A framed media element inside the page margins is content, not background, and is looked through.
   - A gradient with all stops opaque stops it as **gradient**. A gradient with any translucent stop is remembered and the walk continues: if an image is found underneath, the result is **image** (note `bg:image-under-translucent-gradient`), otherwise **gradient**.
   - A background colour with alpha × opacity ≥ 0.95 stops it as a **solid** colour. Translucent colours are alpha-composited over whatever is found below.
   - If nothing stops the walk, the root canvas applies: `html`'s background, or `body`'s if `html` is transparent (CSS background propagation), or white if both are transparent (**browser-default**).
@@ -69,11 +69,11 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 | `bg_source` | `css-solid`, `gradient` (sampled), `image` (sampled), `browser-default` (no CSS background anywhere, so white is what the browser paints; noted), `sampled` (DOM resolution failed, so the whole viewport was sampled; noted) or `na`. |
 | `bg_coverage` | Share of the 80 grid points that the winning background covers (0–1). Low values mean a split first viewport; the JSONL has the runners-up. |
 | `bg_hue_bucket`, `accent_hue_bucket` | See *Hue buckets* below. |
-| `bg_hue_family`, `accent_hue_family` | The pure hue range (table below), ignoring lightness: `neutral` if HSL S < 0.12, L ≤ 0.08 or L ≥ 0.99. Example: `#0f172a` is bucket `dark-navy`, family `blue`. |
+| `bg_hue_family`, `accent_hue_family` | The pure hue range (table below), ignoring lightness: `neutral` if HSL S < 0.12, L ≤ 0.08, L ≥ 0.99, or chroma < 0.04 with L ≥ 0.85 (1.2.0). Example: `#0f172a` is bucket `dark-navy`, family `blue`. |
 | `bg_lightness` | CIE L\*/100 of `bg_color` (perceived lightness, 0–1). |
 | `bg_luminance` | WCAG relative luminance Y of `bg_color` (0–1). |
 | `theme` | `light` if `bg_lightness` ≥ 0.5, else `dark`. L\* = 50 corresponds to Y ≈ 0.18. |
-| `accent_color` | Background colour of the primary button. Candidates are button-like elements intersecting the first viewport that are **filled**: either a gradient background, or background alpha × opacity ≥ 0.5 **and** an RGB distance ≥ 40 from the colour behind the button (paint-stack resolution at the button centre, excluding the button; if what is behind is an image or gradient, any opaque fill counts). Non-nav filled buttons are preferred (`hero-button`), then nav filled buttons (`nav-button`). Within a group the largest area wins; near-ties (within 2 %) go to the first in DOM order. A translucent fill is composited over its backdrop. A gradient button reports its **first colour stop** and sets `accent_gradient=y`; if the first stop is transparent, the first opaque stop is used and noted. **Fallback** when no filled button exists: the most common chromatic (HSL S ≥ 0.12, 0.08 < L < 0.95) text colour among visible non-button `a`, `h1`, `h2`, `h3` elements (`link-colour-fallback`). If that finds nothing too: `na` with source `none`. |
+| `accent_color` | Background colour of the primary button. Candidates are button-like elements intersecting the first viewport that are **filled**: either a gradient background, or background alpha × opacity ≥ 0.5 **and** an RGB distance ≥ 40 from the colour behind the button (paint-stack resolution at the button centre, excluding the button; if what is behind is an image or gradient, any opaque fill counts). Non-nav filled buttons are preferred (`hero-button`), then nav filled buttons (`nav-button`). Within a group the largest area wins; near-ties (within 2 %) go to the first in DOM order. A translucent fill is composited over its backdrop. A gradient button reports its **first colour stop** and sets `accent_gradient=y`; if the first stop is transparent, the first opaque stop is used and noted. **Fallback** when no filled button exists: the most common chromatic (HSL S ≥ 0.12, 0.08 < L < 0.95, and chroma max−min ≥ 0.10 — since 1.2.0, so near-white or near-black text with an inflated HSL S is not picked) text colour among visible non-button `a`, `h1`, `h2`, `h3` elements (`link-colour-fallback`). If that finds nothing too: `na` with source `none`. |
 | `accent_source` | `hero-button`, `nav-button`, `link-colour-fallback` or `none`. "hero" here means "in the first viewport and not in nav". |
 | `accent_gradient` | `y` if the chosen button's background is a gradient. |
 | `gradient_present`, `gradient_where` | `y` if any visible element (or its `::before`/`::after`) intersecting the first viewport, or `html`/`body`, has a `linear-`, `radial-` or `conic-gradient` (including `repeating-`) in computed `background-image` and is at least 16x16 px. `where` (multi-valued, `;`-joined): `text` (`background-clip: text`), `button` (inside a button-like element), `hero-bg` (`html`/`body`, the background winner, or covering ≥ 25 % of the viewport), `other` (badges, cards, blobs, dividers). Gradients drawn inside SVG `<linearGradient>` or on canvas are **not** counted. |
@@ -91,7 +91,7 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 | `primary_button_text` | Collapsed text (or `value`, or `aria-label`) of the chosen primary button. `na` when the accent came from the fallback. |
 | `three_card_grid` | `y` if the page has at least one **3-up card row of kind `feature`** (see *Card rows* below). A 6-card feature grid laid out 3 per row counts. Since tool 1.1.0; before that it meant `three_up_any`. |
 | `three_up_any` | `y` if any card row has exactly 3 cards, whatever its kind (the old, loose meaning of `three_card_grid`). |
-| `three_up_pricing`, `three_up_testimonials`, `three_up_steps`, `three_up_in_mockup`, `three_up_stats` | `y` if a 3-card row of that kind exists. Each row has exactly one kind, so these plus `three_card_grid` split `three_up_any`. |
+| `three_up_pricing`, `three_up_testimonials`, `three_up_steps`, `three_up_in_mockup`, `three_up_stats`, `three_up_menu`, `three_up_team`, `three_up_gallery` | `y` if a 3-card row of that kind exists. Each row has exactly one kind, so these plus `three_card_grid` split `three_up_any`. |
 | `max_cards_in_row` | Largest card row of any kind (0 if none). |
 | `rows_3up`, `rows_4up` | Number of card rows (any kind) with exactly 3 and exactly 4 cards. A 6-card grid at 3 per row gives `rows_3up=2`. |
 | `grid_cards_total` | For each container that has a 3-up **feature** row, the total cards in its feature rows (`;`-joined; `0` if none). 6-card 3x2 grid → `6`. |
@@ -126,20 +126,36 @@ Alerts and confirms are dismissed (noted) and popups are closed (noted). **Each 
 
 **Per-card signals** (in-page, `lib/inpage.js`):
 - *price*: the card text matches `[$€£¥₹] digit`, `digit €/£`, `/mo`, `/month`, `/yr`, `/year`, `/user`, `/seat`, `/person`, `/member`, or `per user/seat/month/year/person/member`.
-- *quote*: the card contains `<blockquote>` or `<q>`, or its text has ≥ 20 characters between quote marks (“ " « „ … ” " »).
+- *quote*: the card contains `<blockquote>` or `<q>`; or its text has ≥ 20 characters between curly quotes or guillemets (“ « „ … ” »); or the text starts with a straight `"` quote of ≥ 20 characters; or it holds a straight-quoted capitalised sentence of ≥ 40 characters after a space. (1.2.0: plain `"…"` anywhere used to match code snippets.)
 - *numbered*: a visible leaf element with ≤ 30 characters reading like `1`, `01`, `Step 2`, `03.`, `01 / PLAN`, `02 — Track` (regex `^(step\s*)?0?\d{1,2}(\s*[.):/—–-].{0,24})?$`), or a `::before` whose `content` uses `counter()`.
-- *stat*: the card's first visible leaf text is a bare figure such as `31%`, `4.8/5`, `12k+`, `2.8x`, `48ms`, `5 min` — but not a bare 1–2 digit number like `01` or `2`, which is read as a step number.
+- *stat*: the card's first visible leaf text is a bare figure such as `31%`, `4.8/5`, `12k+`, `2.8x`, `48ms`, `5 min`, `38`. Exception (row-level): if every card in the row opens with a bare integer and they run 0,1,2… or 1,2,3… (`01`, `02`, `03`), they are sequence numbers and the row has 0 stat cards.
+- *gallery*: media (img, picture, video, canvas, svg, or an element with a CSS `url()` background) covers ≥ 40 % of the card's area and the card has < 80 characters of text outside its first heading/caption.
 
 **Row context**: the row's *section* is the last section heading (h2, not in a mock-up) before it in document order. Its section keyword is the eyebrow/heading keyword label described under `section_order_norm` (steps 1–2 only, no content rules). The row's *class tokens* are the class/id tokens of the container and up to 3 ancestors.
 
 **Kind**: first match wins:
 1. `in_mockup`: the container is inside a product mock-up.
-2. `pricing`: ≥ 2 price cards, or section keyword `pricing`, or a class token in {pricing, price, prices, plans, plan, tiers, tier}.
-3. `testimonials`: ≥ 2 quote cards, or section keyword `testimonials`, or a class token in {testimonial(s), quote(s), review(s)}.
-4. `stats`: ≥ 2 stat cards.
-5. `steps`: section keyword `how-it-works`, or a class token in {step, steps, process, pipeline, timeline, workflow, onboarding}, or ≥ 2 numbered cards **unless** the section keyword is `features` (numbered feature cards, e.g. "01 / PLAN" under "The essentials", stay features).
-6. `in_mockup` (hero region): the row sits before the page's first section heading, provided the page has at least one h2.
-7. `feature`: anything else.
+2. `menu`: section keyword `menu`, or a class token in {menu, dish, dishes}. (1.2.0)
+3. `pricing`: ≥ 2 price cards, or section keyword `pricing`, or a class token in {pricing, price, prices, plans, plan, tiers, tier}.
+4. `testimonials`: ≥ 2 quote cards, or section keyword `testimonials`, or a class token in {testimonial(s), quote(s), review(s)}.
+5. `team`: section keyword `team`, or a class token in {team, people, attorneys, lawyers, staff, founders, bios, bio, members, chefs}. (1.2.0)
+6. `stats`: ≥ 2 stat cards.
+7. `steps`: section keyword `how-it-works`, or a class token in {step, steps, process, pipeline, timeline, workflow, onboarding}.
+8. `gallery`: ≥ 2 gallery cards, or a class token in {gallery, portfolio, photos, photo, plates, frames, archive}. (1.2.0)
+9. `feature`: anything else.
+
+Changes in 1.2.0, from the eye check on 79 pages of the main run (P2–P5):
+- **Numbering no longer makes a row `steps`.** Numbered labels ("01 / PEOPLE", "01 Estate planning") decorate services, practice areas and feature cards at least as often as process steps; steps now need a how-it-works keyword (heading or eyebrow, incl. "from X to Y", "process", "N steps") or a step-like class.
+- **The hero-region rule is gone.** It turned legitimate feature strips just under a restaurant or law-firm hero (three short heading+text items) into `in_mockup`.
+- New kinds `menu`, `team`, `gallery`, each with its own column.
+
+**Non-SaaS equivalents** — what `three_card_grid` does with them:
+- Three services / practice areas / photography commissions without prices (heading + description each): **feature** → counts. With prices ("From $350", "$1,200") they are `pricing`.
+- Three menu dishes (name, price, description): `menu` (if the section or container says menu/dishes) or `pricing` (price signal) → never `three_card_grid`.
+- Three gallery photos with a title and a caption line: `gallery` → never counts. Photos with no heading+text are not card rows at all.
+- Three attorneys / team members with bios: `team` → never counts.
+- Three "principles" or "why us" items (heading + text) and three short highlight items under a hero ("Walk-ins welcome / Garden patio / Sunday supper"): **feature** → count, by the literal definition.
+- Three case results / representative matters with heading + text: **feature** → count (literal definition; no separate kind).
 
 The JSONL `card_rows` lists every row with its container, size, signals, card headings, kind and the reason.
 
@@ -150,7 +166,8 @@ HSL is computed from the hex (h in degrees; s, l in 0–1), with chroma c = max 
 1. `black`: L ≤ 0.08
 2. `white`: L ≥ 0.95 and c ≤ 0.06 (includes barely tinted whites such as #fdf2f8 and #f8fafc; the tint shows in `_hue_family`)
 3. `cream/beige`: L ≥ 0.80, hue in [20°, 65°), 0.03 < c ≤ 0.16
-4. `gray`: S < 0.12
+4. `white` / `gray` for very low chroma light colours: c < 0.04 and L ≥ 0.85 → `white` if L ≥ 0.93, else `gray` (1.2.0: near-whites such as #f5f3ee have an inflated HSL S and were landing in `yellow`/`orange`)
+4b. `gray`: S < 0.12
 5. `dark-navy`: L ≤ 0.22, hue in [195°, 235°)
 6. `dark-tinted`: L ≤ 0.22, any other hue (e.g. #1e1b4b; its family is still `purple/indigo`)
 7. Hue ranges:

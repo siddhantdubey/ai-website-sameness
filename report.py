@@ -1026,7 +1026,9 @@ def classify_v1(reply):
 
 
 def write_runlog(run, out, rows, planned, page_files, escaped_all=()):
-    R = load_jsonl(run / "runlog.jsonl")
+    R_all = load_jsonl(run / "runlog.jsonl")
+    EV = [r for r in R_all if "event" in r]      # e.g. re-extraction of a saved page; not an attempt
+    R = [r for r in R_all if "event" not in r]
     A = load_jsonl(run / "agy_log.jsonl")
     L = ["# Run log\n", f"Computed by report.py from `{run}/runlog.jsonl` ({len(R)} records), `agy_log.jsonl` "
          f"({len(A)} records) and the raw replies. All times UTC.\n"]
@@ -1275,6 +1277,16 @@ def write_runlog(run, out, rows, planned, page_files, escaped_all=()):
                  "runner's `bare` capture saved that text as it stood. Browsers show these pages as unstyled text. "
                  "The record that produced each page:\n")
         L.append(md_table(["id", "attempt", "started", "capture", "capture version"], tab))
+        L.append("")
+    if EV:
+        L.append(f"**(d) Pages re-extracted from their saved reply.** {len(EV)} page files were replaced by a second "
+                 "extraction from the same saved reply. No new generation was made and the reply files were not changed. "
+                 "The earlier page files are kept in `pages_escaped_v1/` in the run folder. Two causes: the model wrote "
+                 "its page inside a written-out tool call as a JSON string, which the first capture saved still escaped "
+                 "(capture `json-string` decodes it); or the saved file ran past the first closing html tag into "
+                 "written-out tool-call text (capture `bare` now stops at the first closing tag).\n")
+        L.append(md_table(["id", "reply file", "capture", "note"],
+                          [[e.get("id"), e.get("from"), e.get("capture"), e.get("note")] for e in EV]))
         L.append("")
     L.append("## Could not be disabled (copied from README, \"Keeping the harness out of it\")\n")
     L.extend(readme_cannot_disable())

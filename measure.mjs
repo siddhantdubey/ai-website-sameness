@@ -13,7 +13,7 @@ import { measureInPage } from './lib/inpage.js';
 import { hueBucket, hueFamily, hexToRgb, luminance, rgbToHex } from './lib/colour.mjs';
 import { normaliseSection, detectFrameworks, FONT_CSS_HOSTS } from './lib/tables.mjs';
 
-const TOOL_VERSION = '1.1.0';
+const TOOL_VERSION = '1.2.0';
 const VIEWPORT = { width: 1440, height: 900 };
 const LOAD_TIMEOUT_MS = 15000;
 const IDLE_WAIT_MS = 4000;
@@ -67,6 +67,8 @@ const COLUMNS = [
   // added in tool 1.1.0 (appended so existing column positions do not move)
   'arm', 'three_up_any', 'three_up_pricing', 'three_up_testimonials', 'three_up_steps', 'three_up_in_mockup', 'three_up_stats',
   'buttons_in_viewport_mockup', 'mockup_present',
+  // added in tool 1.2.0
+  'three_up_menu', 'three_up_team', 'three_up_gallery',
 ];
 function csvCell(v) {
   if (v === null || v === undefined) return '';
@@ -90,8 +92,14 @@ const kwLabel = (eyebrow, heading) => {
 const STEP_TOKENS = ['step', 'steps', 'process', 'pipeline', 'timeline', 'workflow', 'onboarding'];
 const PRICE_TOKENS = ['pricing', 'price', 'prices', 'plans', 'plan', 'tiers', 'tier'];
 const QUOTE_TOKENS = ['testimonial', 'testimonials', 'quote', 'quotes', 'review', 'reviews'];
-// Each card row gets exactly one kind, first match wins:
-//  inside-mockup > pricing > testimonials > stats > steps > hero-region (in_mockup) > feature
+const MENU_TOKENS = ['menu', 'dish', 'dishes'];
+const GALLERY_TOKENS = ['gallery', 'portfolio', 'photos', 'photo', 'plates', 'frames', 'archive'];
+const TEAM_TOKENS = ['team', 'people', 'attorneys', 'lawyers', 'staff', 'founders', 'bios', 'bio', 'members', 'chefs'];
+// Each card row gets exactly one kind, first match wins (v1.2.0):
+//  in_mockup > menu > pricing > testimonials > team > stats > steps > gallery > feature
+// Numbering ("01", "Step 2") no longer decides steps on its own: on the main run it marked
+// numbered services / practice areas / feature cards as steps. Steps need a how-it-works
+// section keyword or a step-like class token.
 function classifyRow(r, blocks) {
   const sec = r.sectionIdx >= 0 && blocks[r.sectionIdx] ? blocks[r.sectionIdx] : null;
   const kw = sec ? kwLabel(sec.eyebrow, sec.text) : 'hero';
@@ -99,11 +107,13 @@ function classifyRow(r, blocks) {
   const why = [];
   let kind;
   if (r.mockup) { kind = 'in_mockup'; why.push('inside-mockup:' + r.mockup); }
+  else if (kw === 'menu' || tok(MENU_TOKENS)) { kind = 'menu'; why.push(`section=${kw}`); }
   else if (r.priceCards >= 2 || kw === 'pricing' || tok(PRICE_TOKENS)) { kind = 'pricing'; why.push(`price-cards=${r.priceCards},section=${kw}`); }
   else if (r.quoteCards >= 2 || kw === 'testimonials' || tok(QUOTE_TOKENS)) { kind = 'testimonials'; why.push(`quote-cards=${r.quoteCards},section=${kw}`); }
+  else if (kw === 'team' || tok(TEAM_TOKENS)) { kind = 'team'; why.push(`section=${kw}`); }
   else if (r.statCards >= 2) { kind = 'stats'; why.push(`stat-cards=${r.statCards}`); }
-  else if (kw === 'how-it-works' || tok(STEP_TOKENS) || (r.numberedCards >= 2 && kw !== 'features')) { kind = 'steps'; why.push(`numbered-cards=${r.numberedCards},section=${kw}`); }
-  else if (r.heroRegion) { kind = 'in_mockup'; why.push('hero-region:before-first-h2'); }
+  else if (kw === 'how-it-works' || tok(STEP_TOKENS)) { kind = 'steps'; why.push(`section=${kw},numbered-cards=${r.numberedCards}`); }
+  else if ((r.galleryCards || 0) >= 2 || tok(GALLERY_TOKENS)) { kind = 'gallery'; why.push(`gallery-cards=${r.galleryCards}`); }
   else { kind = 'feature'; why.push(`section=${kw}` + (r.numberedCards ? `,numbered-cards=${r.numberedCards}` : '')); }
   return { kind, why: why.join(','), sectionKeyword: kw };
 }
@@ -423,7 +433,10 @@ function flatten(rec, cols) {
     row.three_up_steps = yn(has('steps'));
     row.three_up_in_mockup = yn(has('in_mockup'));
     row.three_up_stats = yn(has('stats'));
-  } else for (const k of ['three_card_grid', 'max_cards_in_row', 'rows_3up', 'rows_4up', 'grid_cards_total', 'three_up_any', 'three_up_pricing', 'three_up_testimonials', 'three_up_steps', 'three_up_in_mockup', 'three_up_stats']) row[k] = 'na';
+    row.three_up_menu = yn(has('menu'));
+    row.three_up_team = yn(has('team'));
+    row.three_up_gallery = yn(has('gallery'));
+  } else for (const k of ['three_card_grid', 'max_cards_in_row', 'rows_3up', 'rows_4up', 'grid_cards_total', 'three_up_any', 'three_up_pricing', 'three_up_testimonials', 'three_up_steps', 'three_up_in_mockup', 'three_up_stats', 'three_up_menu', 'three_up_team', 'three_up_gallery']) row[k] = 'na';
   row.mockup_present = m.mockups ? yn(m.mockups.length > 0) : 'na';
 
   // Emoji / icons
