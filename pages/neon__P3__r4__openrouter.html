@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elena Moreau — Editorial, Portrait & Architectural Photographer</title>
+  <meta name="description" content="Portfolio of Elena Moreau, freelance editorial, portrait, and architectural photographer based between Paris and New York." />
+
+  <!-- Editorial Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       Design Tokens & Base Setup
+       ========================================================================== */
+    :root {
+      --bg: #F6F5F0;
+      --bg-elevated: #EFECE4;
+      --ink: #141413;
+      --ink-muted: #65635C;
+      --ink-light: #9A978E;
+      --border: rgba(20, 20, 19, 0.12);
+      --border-strong: rgba(20, 20, 19, 0.28);
+      --accent: #8A6B4E;
+      --dark-bg: #0E0E0D;
+      --dark-ink: #F4F2EC;
+
+      --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --container: 1380px;
+      --nav-height: 76px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.6;
+      background-color: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 1.5px solid var(--ink);
+      outline-offset: 3px;
+    }
+
+    /* Utility Classes */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+    }
+
+    .eyebrow {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--ink);
+      z-index: 120;
+      pointer-events: none;
+      transition: width 0.08s linear;
+    }
+
+    /* ==========================================================================
+       Navigation
+       ========================================================================== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      z-index: 100;
+      transition: background-color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+      border-bottom: 1px solid transparent;
+    }
+
+    .site-header.scrolled {
+      background-color: rgba(246, 245, 240, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom-color: var(--border);
+    }
+
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .brand-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .brand-tag {
+        display: inline-block;
+      }
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      position: relative;
+      padding-block: 0.25rem;
+      transition: color 0.25s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--ink);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s var(--ease-out);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--ink);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-cta {
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.25rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      background-color: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    /* Mobile Hamburger */
+    .menu-toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      width: 36px;
+      height: 36px;
+      padding: 4px;
+      z-index: 110;
+    }
+
+    @media (min-width: 768px) {
+      .menu-toggle {
+        display: none;
+      }
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: var(--ink);
+      transition: transform 0.35s var(--ease-out), opacity 0.25s ease;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:first-child {
+      transform: translateY(3.5px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] span:last-child {
+      transform: translateY(-3.5px) rotate(-45deg);
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 95;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6.5rem 1.75rem 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-out);
+    }
+
+    .mobile-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .mobile-nav-list a {
+      font-family: var(--font-serif);
+      font-size: clamp(2.25rem, 9vw, 3.25rem);
+      font-weight: 300;
+      line-height: 1.1;
+      display: inline-block;
+    }
+
+    .mobile-drawer-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    /* ==========================================================================
+       Hero Section
+       ========================================================================== */
+    .hero {
+      padding-top: calc(var(--nav-height) + clamp(2.5rem, 6vh, 5rem));
+      padding-bottom: clamp(4rem, 9vh, 7.5rem);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: end;
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: center;
+      }
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .availability-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      width: fit-content;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #4A7C59;
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.18);
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6.4vw, 5.8rem);
+      font-weight: 300;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      max-width: 46ch;
+      font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+      color: var(--ink-muted);
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.25rem 2rem;
+      padding-top: 0.5rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.95rem 1.8rem;
+      background-color: var(--ink);
+      color: var(--bg);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      transition: transform 0.3s var(--ease-out), background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2A2926;
+      transform: translateY(-2px);
+    }
+
+    .btn-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid var(--border-strong);
+      transition: border-color 0.25s ease, gap 0.25s ease;
+    }
+
+    .btn-text:hover {
+      border-color: var(--ink);
+      gap: 0.8rem;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      padding-top: 2rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-value {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--ink);
+    }
+
+    /* Hero Featured Frame */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-frame {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background-color: var(--bg-elevated);
+      cursor: pointer;
+    }
+
+    .hero-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.1s var(--ease-out);
+    }
+
+    .hero-frame:hover img {
+      transform: scale(1.03);
+    }
+
+    .hero-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding-top: 0.85rem;
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+    }
+
+    .hero-caption strong {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       Selected Work / Portfolio Section
+       ========================================================================== */
+    .section {
+      padding-block: clamp(4.5rem, 9vw, 8rem);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    @media (min-width: 860px) {
+      .section-header.split {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 4.8vw, 4rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      margin-top: 0.5rem;
+    }
+
+    /* Filter Bar & View Toggle */
+    .work-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.05rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--ink);
+      border-color: var(--border);
+    }
+
+    .filter-btn.active {
+      background-color: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .filter-count {
+      font-size: 0.65rem;
+      opacity: 0.65;
+      margin-left: 0.25rem;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .view-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      transition: all 0.25s ease;
+    }
+
+    .view-btn.active {
+      background: var(--bg-elevated);
+      color: var(--ink);
+    }
+
+    /* Editorial Masonry / Curated Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem) clamp(1.25rem, 2.5vw, 2.5rem);
+      align-items: start;
+    }
+
+    .gallery-item {
+      grid-column: span 12;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.4s ease, transform 0.5s var(--ease-out);
+    }
+
+    @media (min-width: 640px) {
+      .gallery-item {
+        grid-column: span 6;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .gallery-item.layout-wide {
+        grid-column: span 7;
+      }
+      .gallery-item.layout-narrow {
+        grid-column: span 5;
+      }
+      .gallery-item.layout-third {
+        grid-column: span 4;
+      }
+      .gallery-item.layout-half {
+        grid-column: span 6;
+      }
+      .gallery-item.offset-top {
+        margin-top: 3.5rem;
+      }
+    }
+
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-elevated);
+      aspect-ratio: 4 / 5;
+    }
+
+    .gallery-item.aspect-landscape .photo-frame {
+      aspect-ratio: 3 / 2;
+    }
+
+    .gallery-item.aspect-square .photo-frame {
+      aspect-ratio: 1 / 1;
+    }
+
+    .gallery-item.aspect-tall .photo-frame {
+      aspect-ratio: 3 / 4;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.02);
+      transition: transform 0.9s var(--ease-out), opacity 0.6s ease, filter 0.5s ease;
+    }
+
+    .photo-frame img.loaded {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .gallery-item:hover .photo-frame img.loaded {
+      transform: scale(1.045);
+    }
+
+    .photo-frame.is-monochrome img {
+      filter: grayscale(100%) contrast(1.12);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14, 14, 13, 0.52) 0%, transparent 45%);
+      opacity: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 1.25rem;
+      color: var(--dark-ink);
+      transition: opacity 0.35s ease;
+    }
+
+    .gallery-item:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .photo-expand {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid rgba(244, 242, 236, 0.45);
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .photo-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .photo-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .photo-sub {
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 0.15rem;
+    }
+
+    .photo-year {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-light);
+      white-space: nowrap;
+    }
+
+    /* Index / Archive List View */
+    .gallery-index {
+      display: none;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+
+    .gallery-index.active {
+      display: flex;
+    }
+
+    .gallery-grid.hidden {
+      display: none;
+    }
+
+    .index-row {
+      display: grid;
+      grid-template-columns: 56px 1.6fr 1fr auto;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.15rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.25s ease, padding-inline 0.25s ease;
+    }
+
+    .index-row:hover {
+      background-color: var(--bg-elevated);
+      padding-inline: 1rem;
+    }
+
+    .index-thumb {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      background: var(--bg-elevated);
+    }
+
+    .index-thumb.is-monochrome {
+      filter: grayscale(100%) contrast(1.12);
+    }
+
+    .index-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+    }
+
+    .index-details {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      display: none;
+    }
+
+    @media (min-width: 720px) {
+      .index-details {
+        display: block;
+      }
+    }
+
+    .index-cat {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      text-align: right;
+    }
+
+    /* ==========================================================================
+       About & Editorial Statement
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2.5rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    @media (min-width: 900px) {
+      .about-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+      }
+    }
+
+    .portrait-card {
+      position: relative;
+    }
+
+    .portrait-frame {
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--bg-elevated);
+    }
+
+    .portrait-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.03);
+    }
+
+    .portrait-note {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .about-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pull-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3vw, 2.55rem);
+      font-weight: 300;
+      line-height: 1.22;
+      color: var(--ink);
+    }
+
+    .pull-quote em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .about-text {
+      color: var(--ink-muted);
+      font-size: 0.98rem;
+      line-height: 1.78;
+      max-width: 60ch;
+    }
+
+    .credentials-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (min-width: 600px) {
+      .credentials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .credential-list {
+      list-style: none;
+      margin-top: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .credential-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .credential-list span {
+      color: var(--ink-light);
+      font-size: 0.78rem;
+    }
+
+    /* ==========================================================================
+       Services / Commissions
+       ========================================================================== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (min-width: 860px) {
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .service-card {
+      padding: clamp(2rem, 4vw, 3rem) 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    @media (min-width: 860px) {
+      .service-card {
+        padding: clamp(2rem, 3.5vw, 3rem);
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+      }
+      .service-card:first-child {
+        padding-left: 0;
+      }
+      .service-card:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+    }
+
+    .service-num {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .service-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+
+    .service-desc {
+      font-size: 0.92rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+    }
+
+    .service-deliverables {
+      margin-top: auto;
+      padding-top: 1rem;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    /* ==========================================================================
+       Contact & Inquiry Section
+       ========================================================================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(3rem, 6vw, 5.5rem);
+    }
+
+    @media (min-width: 900px) {
+      .contact-grid {
+        grid-template-columns: 0.95fr 1.05fr;
+      }
+    }
+
+    .contact-direct {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .email-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-top: 0.5rem;
+    }
+
+    .email-link {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3.4vw, 2.65rem);
+      font-weight: 300;
+      line-height: 1.1;
+      border-bottom: 1px solid var(--border-strong);
+      width: fit-content;
+      padding-bottom: 0.2rem;
+      transition: color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .email-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      width: fit-content;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 0.35rem 0;
+      transition: color 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--ink);
+    }
+
+    .studio-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+    }
+
+    .studio-details strong {
+      display: block;
+      font-weight: 400;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 0.35rem;
+    }
+
+    /* Inquiry Form */
+    .inquiry-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background: var(--bg-elevated);
+      padding: clamp(1.75rem, 4vw, 3rem);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .field label {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-strong);
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: transparent;
+      transition: border-color 0.25s ease;
+      border-radius: 0;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-bottom-color: var(--ink);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .form-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.5rem;
+    }
+
+    .form-note {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .form-status {
+      font-size: 0.85rem;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+      display: none;
+    }
+
+    .form-status.visible {
+      display: block;
+    }
+
+    /* ==========================================================================
+       Footer
+       ========================================================================== */
+    .site-footer {
+      padding-block: 2.5rem;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       Full-Screen Museum Lightbox
+       ========================================================================== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background-color: rgba(11, 11, 10, 0.97);
+      color: var(--dark-ink);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-out);
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem clamp(1.25rem, 3.5vw, 2.5rem);
+      border-bottom: 1px solid rgba(244, 242, 236, 0.1);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .lightbox-close {
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(244, 242, 236, 0.25);
+      border-radius: 999px;
+      color: var(--dark-ink);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .lightbox-close:hover {
+      background: var(--dark-ink);
+      color: var(--dark-bg);
+    }
+
+    .lightbox-stage {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      user-select: none;
+      transition: opacity 0.28s ease;
+    }
+
+    .lightbox-img.is-monochrome {
+      filter: grayscale(100%) contrast(1.12);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(244, 242, 236, 0.2);
+      background: rgba(14, 14, 13, 0.55);
+      color: var(--dark-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(244, 242, 236, 0.15);
+      border-color: rgba(244, 242, 236, 0.6);
+    }
+
+    .lightbox-prev {
+      left: clamp(0.75rem, 2.5vw, 2rem);
+    }
+
+    .lightbox-next {
+      right: clamp(0.75rem, 2.5vw, 2rem);
+    }
+
+    .lightbox-caption {
+      padding: 1.25rem clamp(1.25rem, 3.5vw, 2.5rem) 1.6rem;
+      border-top: 1px solid rgba(244, 242, 236, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem 2rem;
+    }
+
+    .lightbox-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+      font-weight: 300;
+    }
+
+    .lightbox-story {
+      font-size: 0.85rem;
+      color: rgba(244, 242, 236, 0.68);
+      margin-top: 0.2rem;
+    }
+
+    .lightbox-specs {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(244, 242, 236, 0.55);
+    }
+
+    /* ==========================================================================
+       Scroll Reveal Animations
+       ========================================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       Navigation
+       ======================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-inner">
+      <a href="#top" class="brand" aria-label="Elena Moreau Home">
+        <span class="brand-name">Elena Moreau</span>
+        <span class="brand-tag">Photography</span>
+      </a>
+
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#work">Selected Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#commissions">Commissions</a></li>
+          <li><a href="#contact" class="nav-cta">Inquire</a></li>
+        </ul>
+      </nav>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mobileDrawer">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <ul class="mobile-nav-list">
+      <li><a href="#work" class="mobile-link">Selected Work</a></li>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#commissions" class="mobile-link">Commissions</a></li>
+      <li><a href="#contact" class="mobile-link">Inquire</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <span>Paris &amp; New York — Available Worldwide</span>
+      <a href="mailto:studio@elenamoreau.com">studio@elenamoreau.com</a>
+    </div>
+  </div>
+
+  <main id="top">
+    <!-- ======================================================================
+         Hero Section
+         ====================================================================== -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content reveal">
+          <div class="availability-pill">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>Booking Q3 / Q4 Editorial &amp; Campaigns</span>
+          </div>
+
+          <h1 class="hero-title">
+            Quiet studies in <em>light</em>, form &amp; human presence.
+          </h1>
+
+          <p class="hero-lead">
+            Freelance photographer working across medium-format film and digital. Creating unhurried editorial stories, architectural studies, and intimate portraiture for publications, designers, and cultural institutions.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#work" class="btn-primary">
+              View Portfolio
+              <span aria-hidden="true">&darr;</span>
+            </a>
+            <a href="#contact" class="btn-text">
+              Commission a project
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <div>
+              <span class="meta-label">Based In</span>
+              <span class="meta-value">Paris &amp; NYC</span>
+            </div>
+            <div>
+              <span class="meta-label">Mediums</span>
+              <span class="meta-value">120 Film / Digital</span>
+            </div>
+            <div>
+              <span class="meta-label">Archive</span>
+              <span class="meta-value">2018 — 2025</span>
+            </div>
+          </div>
+        </div>
+
+        <figure class="hero-visual reveal">
+          <div class="hero-frame" id="heroFeatureTrigger" role="button" tabindex="0" aria-label="Open featured photograph in lightbox">
+            <img
+              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1400&q=85"
+              alt="Editorial portrait bathed in warm afternoon light"
+              loading="eager"
+              data-fallback-title="Solstice Study IV"
+            />
+          </div>
+          <figcaption class="hero-caption">
+            <span><strong>Solstice Study IV</strong> — Vogue Italia</span>
+            <span>Mamiya 7II · Kodak Portra 400</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Selected Work / Portfolio Gallery
+         ====================================================================== -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-header split reveal">
+          <div>
+            <span class="eyebrow">01 / Portfolio</span>
+            <h2 class="section-title">Selected Works</h2>
+          </div>
+          <p class="about-text" style="max-width: 42ch;">
+            An ongoing edit of commissioned assignments and personal series. Select any plate to examine full-frame with technical notes.
+          </p>
+        </div>
+
+        <!-- Category Filters & View Switcher -->
+        <div class="work-controls reveal">
+          <div class="filter-group" id="filterGroup" role="tablist" aria-label="Filter photography by category">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <div class="view-toggle" role="group" aria-label="Gallery layout">
+            <button class="view-btn active" id="gridViewBtn" aria-pressed="true">Grid</button>
+            <button class="view-btn" id="indexViewBtn" aria-pressed="false">Index</button>
+          </div>
+        </div>
+
+        <!-- Grid View -->
+        <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
+
+        <!-- Index / Archive View -->
+        <div class="gallery-index" id="galleryIndex" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         About & Publications
+         ====================================================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">02 / Practice</span>
+          <h2 class="section-title">About Elena</h2>
+        </div>
+
+        <div class="about-grid">
+          <figure class="portrait-card reveal">
+            <div class="portrait-frame">
+              <img
+                src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1000&q=85"
+                alt="Elena Moreau holding a camera in natural studio light"
+                loading="lazy"
+                data-fallback-title="Studio Portrait"
+              />
+            </div>
+            <figcaption class="portrait-note">
+              <span>Studio Portrait, Le Marais</span>
+              <span>35mm Archive</span>
+            </figcaption>
+          </figure>
+
+          <div class="about-copy reveal">
+            <p class="pull-quote">
+              “I am interested in the <em>pause</em> between gestures—when architecture softens into atmosphere and a subject forgets the lens.”
+            </p>
+
+            <p class="about-text">
+              Born in Lyon and trained in fine-art printmaking in Paris, Elena Moreau approaches commercial and editorial assignments with the patience of a documentary observer. Working primarily with natural light, her imagery balances tactile analog grain with disciplined spatial composition.
+            </p>
+
+            <p class="about-text">
+              Over the past seven years, she has collaborated with independent fashion houses, architectural practices, and international magazines across Europe, North America, and Japan. Limited-edition archival pigment prints are available upon inquiry.
+            </p>
+
+            <div class="credentials-grid">
+              <div>
+                <span class="eyebrow">Selected Clients &amp; Press</span>
+                <ul class="credential-list">
+                  <li>Kinfolk Magazine <span>Editorial</span></li>
+                  <li>Architectural Digest <span>Spaces</span></li>
+                  <li>Aesop <span>Campaign</span></li>
+                  <li>Cereal Magazine <span>Feature</span></li>
+                  <li>The New York Times <span>Portraits</span></li>
+                  <li>Lemaire <span>Lookbook</span></li>
+                </ul>
+              </div>
+
+              <div>
+                <span class="eyebrow">Exhibitions &amp; Recognition</span>
+                <ul class="credential-list">
+                  <li>Rencontres d'Arles <span>2024</span></li>
+                  <li>Foam Talent Shortlist <span>2023</span></li>
+                  <li>Galerie Vu', Paris (Solo) <span>2023</span></li>
+                  <li>Aperture Photobook Award <span>2022</span></li>
+                  <li>Tokyo Art Book Fair <span>2021</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Commissions / Freelance Offerings
+         ====================================================================== -->
+    <section class="section" id="commissions">
+      <div class="container">
+        <div class="section-header split reveal">
+          <div>
+            <span class="eyebrow">03 / Freelance Services</span>
+            <h2 class="section-title">Commissions</h2>
+          </div>
+          <p class="about-text" style="max-width: 44ch;">
+            Available for local and international assignments. Full production support—including location scouting, film lab processing, and hand-toned color grading—can be arranged per brief.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <article class="service-card reveal">
+            <span class="service-num">I.</span>
+            <h3 class="service-title">Editorial &amp; Campaigns</h3>
+            <p class="service-desc">
+              Visual storytelling for print publications, fashion lookbooks, and independent lifestyle brands seeking tactile, timeless imagery that endures beyond seasonal trends.
+            </p>
+            <div class="service-deliverables">Full-day &amp; multi-day · Film &amp; Digital</div>
+          </article>
+
+          <article class="service-card reveal">
+            <span class="service-num">II.</span>
+            <h3 class="service-title">Portraiture</h3>
+            <p class="service-desc">
+              Intimate environmental and studio portraits for artists, writers, musicians, and creative founders. Unrushed sessions tailored to natural light and genuine presence.
+            </p>
+            <div class="service-deliverables">On-location or Studio · Editorial Licensing</div>
+          </article>
+
+          <article class="service-card reveal">
+            <span class="service-num">III.</span>
+            <h3 class="service-title">Architecture &amp; Interiors</h3>
+            <p class="service-desc">
+              Considered documentation of residential spaces, hospitality projects, and cultural venues—tracking how light transforms materiality from dawn to dusk.
+            </p>
+            <div class="service-deliverables">Tilt-Shift Digital &amp; 4×5 Large Format</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Contact & Booking Inquiry
+         ====================================================================== -->
+    <section class="section" id="contact" style="border-bottom: none;">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">04 / Contact</span>
+          <h2 class="section-title">Start a Conversation</h2>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-direct reveal">
+            <p class="about-text">
+              For commercial commissions, editorial assignments, print inquiries, or syndication requests, please reach out directly or submit a brief using the form. Responses are typically sent within 24 hours.
+            </p>
+
+            <div class="email-block">
+              <span class="eyebrow">Direct Studio Email</span>
+              <a href="mailto:studio@elenamoreau.com" class="email-link">studio@elenamoreau.com</a>
+              <button type="button" class="copy-btn" id="copyEmailBtn">
+                <span id="copyEmailText">Copy email address</span>
+                <span aria-hidden="true">&#8599;</span>
+              </button>
+            </div>
+
+            <div class="studio-details">
+              <div>
+                <strong>Paris Studio</strong>
+                14 Rue de Turenne<br />
+                75004 Paris, France
+              </div>
+              <div>
+                <strong>Representation</strong>
+                Atelier Nord Agency<br />
+                +33 (0)1 42 78 90 14
+              </div>
+              <div>
+                <strong>Social</strong>
+                <a href="#contact" onclick="return false;">Instagram (@elenamoreau)</a><br />
+                <a href="#contact" onclick="return false;">Are.na Archive</a>
+              </div>
+              <div>
+                <strong>Local Time (Paris)</strong>
+                <span id="parisClock">--:-- CET</span>
+              </div>
+            </div>
+          </div>
+
+          <form class="inquiry-form reveal" id="inquiryForm" novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Your Name *</label>
+                <input type="text" id="name" name="name" placeholder="Claire Laurent" required />
+              </div>
+              <div class="field">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="claire@publication.com" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="projectType">Assignment Type</label>
+                <select id="projectType" name="projectType">
+                  <option value="Editorial / Magazine">Editorial / Magazine</option>
+                  <option value="Brand Campaign">Brand Campaign</option>
+                  <option value="Portrait Session">Portrait Session</option>
+                  <option value="Architecture & Interiors">Architecture &amp; Interiors</option>
+                  <option value="Fine Art Print Inquiry">Fine Art Print Inquiry</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="timeline">Target Dates / Location</label>
+                <input type="text" id="timeline" name="timeline" placeholder="e.g. October 2025, Milan" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="message">Project Brief *</label>
+              <textarea id="message" name="message" placeholder="Tell me about the concept, deliverables, usage, and approximate budget..." required></textarea>
+            </div>
+
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+
+            <div class="form-footer">
+              <span class="form-note">All inquiries are treated confidentially.</span>
+              <button type="submit" class="btn-primary">
+                Send Inquiry
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; <span id="currentYear"></span> Elena Moreau. All photographs copyrighted.</span>
+      <div class="footer-links">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#commissions">Commissions</a>
+        <a href="#top">Back to top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       Full-Screen Lightbox Modal
+       ======================================================================== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Photograph Lightbox">
+    <div class="lightbox-bar">
+      <span id="lightboxCounter">01 / 12</span>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">Close (Esc)</button>
+    </div>
+
+    <div class="lightbox-stage" id="lightboxStage">
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photograph">&#8592;</button>
+      <img src="" alt="" class="lightbox-img" id="lightboxImg" />
+      <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photograph">&#8594;</button>
+    </div>
+
+    <div class="lightbox-caption">
+      <div>
+        <h3 class="lightbox-title" id="lightboxTitle"></h3>
+        <p class="lightbox-story" id="lightboxStory"></p>
+      </div>
+      <div class="lightbox-specs" id="lightboxSpecs"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       JavaScript — Gallery Engine, Lightbox, Navigation & Utilities
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ----------------------------------------------------------------------
+         1. Curated Portfolio Dataset
+         ---------------------------------------------------------------------- */
+      const PORTFOLIO = [
+        {
+          id: 'solstice-iv',
+          title: 'Solstice Study IV',
+          client: 'Vogue Italia',
+          category: 'Editorial',
+          year: '2025',
+          location: 'Provence, France',
+          camera: 'Mamiya 7II · Kodak Portra 400',
+          story: 'Late-afternoon study exploring sculptural drapery and warm limestone reflections.',
+          src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-wide',
+          aspect: 'aspect-tall',
+          monochrome: false
+        },
+        {
+          id: 'villa-courtyard',
+          title: 'Pavilion of Silence',
+          client: 'Architectural Digest',
+          category: 'Architecture',
+          year: '2024',
+          location: 'Mallorca, Spain',
+          camera: 'Leica SL2-S · 28mm Summilux',
+          story: 'Minimalist interior geometry shaped solely by midday Mediterranean light.',
+          src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-narrow offset-top',
+          aspect: 'aspect-square',
+          monochrome: false
+        },
+        {
+          id: 'camille-portrait',
+          title: 'Portrait of Camille',
+          client: 'Kinfolk Magazine',
+          category: 'Portraits',
+          year: '2024',
+          location: 'Paris, France',
+          camera: 'Hasselblad 500C/M · Portra 160',
+          story: 'Shot in a north-facing apartment in Saint-Germain during winter rain.',
+          src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-third',
+          aspect: 'aspect-tall',
+          monochrome: false
+        },
+        {
+          id: 'brutalist-facade',
+          title: 'Concrete Rhythm III',
+          client: 'Cereal Magazine',
+          category: 'Monochrome',
+          year: '2024',
+          location: 'Zurich, Switzerland',
+          camera: 'Mamiya 7II · Ilford HP5 Plus',
+          story: 'Architectural study of shadow progression across cast concrete louvers.',
+          src: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-third offset-top',
+          aspect: 'aspect-tall',
+          monochrome: true
+        },
+        {
+          id: 'julian-atelier',
+          title: 'Julian in the Studio',
+          client: 'The New York Times',
+          category: 'Monochrome',
+          year: '2024',
+          location: 'Brooklyn, New York',
+          camera: 'Leica M6 · Kodak Tri-X 400',
+          story: 'Sculptor Julian Mercer photographed immediately after casting bronze.',
+          src: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-third',
+          aspect: 'aspect-tall',
+          monochrome: true
+        },
+        {
+          id: 'autumn-tailoring',
+          title: 'Lemaire Autumn Study',
+          client: 'Lemaire Paris',
+          category: 'Editorial',
+          year: '2023',
+          location: 'Antwerp, Belgium',
+          camera: 'Contax 645 · Portra 400',
+          story: 'Movement and muted palette captured along quiet cobblestone courtyards.',
+          src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-narrow',
+          aspect: 'aspect-tall',
+          monochrome: false
+        },
+        {
+          id: 'northern-mist',
+          title: 'Highland Stillness',
+          client: 'Personal Archive',
+          category: 'Editorial',
+          year: '2023',
+          location: 'Isle of Skye, Scotland',
+          camera: 'Chamonix 45F-2 · 4×5 Film',
+          story: 'First light breaking through coastal fog over volcanic valleys.',
+          src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-wide offset-top',
+          aspect: 'aspect-landscape',
+          monochrome: false
+        },
+        {
+          id: 'concrete-curve',
+          title: 'Aperture & Vault',
+          client: 'Aesop Spaces',
+          category: 'Architecture',
+          year: '2023',
+          location: 'Kyoto, Japan',
+          camera: 'Fujifilm GFX 100S · 45mm',
+          story: 'Curved concrete threshold balancing shadow density and tactile plaster.',
+          src: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-half',
+          aspect: 'aspect-landscape',
+          monochrome: false
+        },
+        {
+          id: 'ana-window',
+          title: 'Ana by the Window',
+          client: 'Self Service',
+          category: 'Portraits',
+          year: '2023',
+          location: 'Lisbon, Portugal',
+          camera: 'Pentax 67 · Kodak Gold 200',
+          story: 'Quiet morning portrait bathed in diffused coastal sunlight.',
+          src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-half offset-top',
+          aspect: 'aspect-square',
+          monochrome: false
+        },
+        {
+          id: 'monochrome-gaze',
+          title: 'Nocturne Portrait II',
+          client: 'Galerie Vu\' Exhibition',
+          category: 'Monochrome',
+          year: '2022',
+          location: 'Paris, France',
+          camera: 'Hasselblad 500C/M · Ilford Delta 400',
+          story: 'Silver-gelatin print from the solo exhibition "Quiet Intervals".',
+          src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-narrow',
+          aspect: 'aspect-tall',
+          monochrome: true
+        },
+        {
+          id: 'house-horizon',
+          title: 'Nordic Horizon House',
+          client: 'Wallpaper*',
+          category: 'Architecture',
+          year: '2022',
+          location: 'Aarhus, Denmark',
+          camera: 'Leica SL2-S · 35mm APO',
+          story: 'Timber and brick residence photographed at dusk under overcast skies.',
+          src: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-wide offset-top',
+          aspect: 'aspect-landscape',
+          monochrome: false
+        },
+        {
+          id: 'editorial-silk',
+          title: 'Movement in Ochre',
+          client: 'Harper\'s Bazaar France',
+          category: 'Portraits',
+          year: '2022',
+          location: 'Milan, Italy',
+          camera: 'Contax G2 · Portra 800',
+          story: 'Backstage portrait captured on 35mm film moments before the runway.',
+          src: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&w=1400&q=85',
+          thumb: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&w=800&q=80',
+          layout: 'layout-half',
+          aspect: 'aspect-landscape',
+          monochrome: false
+        }
+      ];
+
+      /* Graceful SVG Fallback Generator (ensures zero broken images offline) */
+      function createFallbackImage(title) {
+        const safeTitle = (title || 'Archive Plate').replace(/[<>&'"]/g, '');
+        const svg = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+            <rect width="800" height="1000" fill="#E6E2D8"/>
+            <rect x="40" y="40" width="720" height="920" fill="none" stroke="#141413" stroke-opacity="0.14" stroke-width="1"/>
+            <text x="400" y="490" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#141413" fill-opacity="0.72">${safeTitle}</text>
+            <text x="400" y="535" text-anchor="middle" font-family="sans-serif" font-size="13" letter-spacing="4" fill="#65635C">ELENA MOREAU ARCHIVE</text>
+          </svg>
+        `;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.trim());
+      }
+
+      function attachImageFallback(img, fallbackTitle) {
+        img.addEventListener('error', () => {
+          if (img.dataset.fallbackApplied) return;
+          img.dataset.fallbackApplied = 'true';
+          img.src = createFallbackImage(fallbackTitle);
+          img.classList.add('loaded');
+        });
+        img.addEventListener('load', () => {
+          img.classList.add('loaded');
+        });
+        if (img.complete && img.naturalWidth > 0) {
+          img.classList.add('loaded');
+        }
+      }
+
+      /* Apply fallback to static hero & portrait images */
+      document.querySelectorAll('img[data-fallback-title]').forEach((img) => {
+        attachImageFallback(img, img.dataset.fallbackTitle);
+      });
+
+      /* ----------------------------------------------------------------------
+         2. Portfolio Filtering & View Rendering
+         ---------------------------------------------------------------------- */
+      const CATEGORIES = ['All', 'Editorial', 'Portraits', 'Architecture', 'Monochrome'];
+      let activeCategory = 'All';
+      let filteredItems = [...PORTFOLIO];
+
+      const filterGroup = document.getElementById('filterGroup');
+      const galleryGrid = document.getElementById('galleryGrid');
+      const galleryIndex = document.getElementById('galleryIndex');
+      const gridViewBtn = document.getElementById('gridViewBtn');
+      const indexViewBtn = document.getElementById('indexViewBtn');
+
+      function renderFilters() {
+        filterGroup.innerHTML = '';
+        CATEGORIES.forEach((cat) => {
+          const count = cat === 'All'
+            ? PORTFOLIO.length
+            : PORTFOLIO.filter((item) => item.category === cat).length;
+
+          const btn = document.createElement('button');
+          btn.className = 'filter-btn' + (cat === activeCategory ? ' active' : '');
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-selected', String(cat === activeCategory));
+          btn.innerHTML = `${cat}<span class="filter-count">${count}</span>`;
+
+          btn.addEventListener('click', () => {
+            if (activeCategory === cat) return;
+            activeCategory = cat;
+            filteredItems = cat === 'All'
+              ? [...PORTFOLIO]
+              : PORTFOLIO.filter((item) => item.category === cat);
+            renderFilters();
+            renderGallery();
+          });
+
+          filterGroup.appendChild(btn);
+        });
+      }
+
+      function renderGallery() {
+        galleryGrid.innerHTML = '';
+        galleryIndex.innerHTML = '';
+
+        filteredItems.forEach((item, idx) => {
+          // 1) Grid Card
+          const article = document.createElement('article');
+          const layoutClass = activeCategory === 'All' ? item.layout : (idx % 2 === 0 ? 'layout-half' : 'layout-half offset-top');
+          article.className = `gallery-item ${layoutClass} ${item.aspect}`;
+          article.setAttribute('tabindex', '0');
+          article.setAttribute('role', 'button');
+          article.setAttribute('aria-label', `View ${item.title}, ${item.client}`);
+
+          const frame = document.createElement('div');
+          frame.className = 'photo-frame' + (item.monochrome ? ' is-monochrome' : '');
+
+          const img = document.createElement('img');
+          img.src = item.thumb;
+          img.alt = `${item.title} — ${item.story}`;
+          img.loading = 'lazy';
+          attachImageFallback(img, item.title);
+
+          const overlay = document.createElement('div');
+          overlay.className = 'photo-overlay';
+          overlay.innerHTML = `
+            <span class="eyebrow" style="color: rgba(244,242,236,0.85);">${item.category}</span>
+            <span class="photo-expand">Inspect</span>
+          `;
+
+          frame.appendChild(img);
+          frame.appendChild(overlay);
+
+          const meta = document.createElement('div');
+          meta.className = 'photo-meta';
+          meta.innerHTML = `
+            <div>
+              <h3 class="photo-title">${item.title}</h3>
+              <p class="photo-sub">${item.client} &middot; ${item.camera}</p>
+            </div>
+            <span class="photo-year">${item.year}</span>
+          `;
+
+          article.appendChild(frame);
+          article.appendChild(meta);
+
+          const openHandler = () => openLightbox(idx);
+          article.addEventListener('click', openHandler);
+          article.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openHandler();
+            }
+          });
+
+          galleryGrid.appendChild(article);
+
+          // 2) Index Row
+          const row = document.createElement('div');
+          row.className = 'index-row';
+          row.setAttribute('tabindex', '0');
+          row.setAttribute('role', 'button');
+          row.setAttribute('aria-label', `Open ${item.title} in lightbox`);
+
+          const thumbImg = document.createElement('img');
+          thumbImg.src = item.thumb;
+          thumbImg.alt = item.title;
+          thumbImg.loading = 'lazy';
+          thumbImg.className = 'index-thumb' + (item.monochrome ? ' is-monochrome' : '');
+          attachImageFallback(thumbImg, item.title);
+
+          row.appendChild(thumbImg);
+          row.insertAdjacentHTML('beforeend', `
+            <div>
+              <div class="index-title">${item.title}</div>
+              <div class="photo-sub">${item.client} &middot; ${item.location}</div>
+            </div>
+            <div class="index-details">${item.camera}</div>
+            <div class="index-cat">${item.category} · ${item.year}</div>
+          `);
+
+          row.addEventListener('click', openHandler);
+          row.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openHandler();
+            }
+          });
+
+          galleryIndex.appendChild(row);
+        });
+      }
+
+      /* View Switcher (Grid vs Index) */
+      gridViewBtn.addEventListener('click', () => {
+        gridViewBtn.classList.add('active');
+        gridViewBtn.setAttribute('aria-pressed', 'true');
+        indexViewBtn.classList.remove('active');
+        indexViewBtn.setAttribute('aria-pressed', 'false');
+        galleryGrid.classList.remove('hidden');
+        galleryIndex.classList.remove('active');
+      });
+
+      indexViewBtn.addEventListener('click', () => {
+        indexViewBtn.classList.add('active');
+        indexViewBtn.setAttribute('aria-pressed', 'true');
+        gridViewBtn.classList.remove('active');
+        gridViewBtn.setAttribute('aria-pressed', 'false');
+        galleryGrid.classList.add('hidden');
+        galleryIndex.classList.add('active');
+      });
+
+      /* ----------------------------------------------------------------------
+         3. Museum Lightbox (Keyboard + Touch Swipe Support)
+         ---------------------------------------------------------------------- */
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxTitle = document.getElementById('lightboxTitle');
+      const lightboxStory = document.getElementById('lightboxStory');
+      const lightboxSpecs = document.getElementById('lightboxSpecs');
+      const lightboxCounter = document.getElementById('lightboxCounter');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
+      const lightboxStage = document.getElementById('lightboxStage');
+
+      let currentLightboxIndex = 0;
+      let lastFocusedEl = null;
+
+      function updateLightboxView() {
+        const item = filteredItems[currentLightboxIndex];
+        if (!item) return;
+
+        lightboxImg.style.opacity = '0.25';
+        lightboxImg.classList.toggle('is-monochrome', item.monochrome);
+
+        const nextImg = new Image();
+        nextImg.onload = () => {
+          lightboxImg.src = item.src;
+          lightboxImg.alt = `${item.title} — ${item.story}`;
+          lightboxImg.style.opacity = '1';
+        };
+        nextImg.onerror = () => {
+          lightboxImg.src = createFallbackImage(item.title);
+          lightboxImg.alt = item.title;
+          lightboxImg.style.opacity = '1';
+        };
+        nextImg.src = item.src;
+
+        lightboxTitle.textContent = `${item.title} — ${item.client}`;
+        lightboxStory.textContent = item.story;
+        lightboxSpecs.textContent = `${item.location} · ${item.camera} · ${item.year}`;
+
+        const num = String(currentLightboxIndex + 1).padStart(2, '0');
+        const total = String(filteredItems.length).padStart(2, '0');
+        lightboxCounter.textContent = `${num} / ${total}`;
+      }
+
+      function openLightbox(index) {
+        lastFocusedEl = document.activeElement;
+        currentLightboxIndex = index;
+        updateLightboxView();
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('no-scroll');
+        lightboxClose.focus();
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('no-scroll');
+        if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+          lastFocusedEl.focus();
+        }
+      }
+
+      function stepLightbox(delta) {
+        currentLightboxIndex = (currentLightboxIndex + delta + filteredItems.length) % filteredItems.length;
+        updateLightboxView();
+      }
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightboxPrev.addEventListener('click', () => stepLightbox(-1));
+      lightboxNext.addEventListener('click', () => stepLightbox(1));
+
+      lightboxStage.addEventListener('click', (e) => {
+        if (e.target === lightboxStage) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') stepLightbox(-1);
+        if (e.key === 'ArrowRight') stepLightbox(1);
+      });
+
+      /* Touch swipe support for mobile lightbox */
+      let touchStartX = 0;
+      lightboxStage.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      lightboxStage.addEventListener('touchend', (e) => {
+        const diff = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(diff) > 45) {
+          stepLightbox(diff > 0 ? -1 : 1);
+        }
+      }, { passive: true });
+
+      /* Hero featured photo also opens the lightbox */
+      const heroFeatureTrigger = document.getElementById('heroFeatureTrigger');
+      function openHeroLightbox() {
+        activeCategory = 'All';
+        filteredItems = [...PORTFOLIO];
+        renderFilters();
+        renderGallery();
+        openLightbox(0);
+      }
+      heroFeatureTrigger.addEventListener('click', openHeroLightbox);
+      heroFeatureTrigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openHeroLightbox();
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         4. Header Scroll, Progress Bar & Mobile Navigation
+         ---------------------------------------------------------------------- */
+      const siteHeader = document.getElementById('siteHeader');
+      const scrollProgress = document.getElementById('scrollProgress');
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+
+      function onScroll() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        siteHeader.classList.toggle('scrolled', scrollTop > 24);
+
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+        scrollProgress.style.width = pct + '%';
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      function setMobileMenu(isOpen) {
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        mobileDrawer.classList.toggle('open', isOpen);
+        mobileDrawer.setAttribute('aria-hidden', String(!isOpen));
+        document.body.classList.toggle('no-scroll', isOpen);
+      }
+
+      menuToggle.addEventListener('click', () => {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+        setMobileMenu(!isOpen);
+      });
+
+      document.querySelectorAll('.mobile-link').forEach((link) => {
+        link.addEventListener('click', () => setMobileMenu(false));
+      });
+
+      /* ----------------------------------------------------------------------
+         5. Scroll Reveal Observer
+         ---------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        revealEls.forEach((el) => observer.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add('visible'));
+      }
+
+      /* ----------------------------------------------------------------------
+         6. Copy Email, Live Paris Clock & Inquiry Form
+         ---------------------------------------------------------------------- */
+      const copyEmailBtn = document.getElementById('copyEmailBtn');
+      const copyEmailText = document.getElementById('copyEmailText');
+
+      copyEmailBtn.addEventListener('click', async () => {
+        const email = 'studio@elenamoreau.com';
+        try {
+          await navigator.clipboard.writeText(email);
+          copyEmailText.textContent = 'Copied to clipboard';
+        } catch {
+          copyEmailText.textContent = email;
+        }
+        setTimeout(() => {
+          copyEmailText.textContent = 'Copy email address';
+        }, 2200);
+      });
+
+      /* Live Paris Time */
+      const parisClock = document.getElementById('parisClock');
+      function updateParisTime() {
+        try {
+          const formatter = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/Paris',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZoneName: 'short'
+          });
+          parisClock.textContent = formatter.format(new Date());
+        } catch {
+          parisClock.textContent = 'Paris, CET';
+        }
+      }
+      updateParisTime();
+      setInterval(updateParisTime, 30000);
+
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      /* Inquiry Form Validation & Feedback */
+      const inquiryForm = document.getElementById('inquiryForm');
+      const formStatus = document.getElementById('formStatus');
+
+      inquiryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = inquiryForm.name.value.trim();
+        const email = inquiryForm.email.value.trim();
+        const message = inquiryForm.message.value.trim();
+        const projectType = inquiryForm.projectType.value;
+
+        if (!name || !email || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          formStatus.textContent = 'Please complete your name, a valid email address, and a brief description of your project.';
+          formStatus.classList.add('visible');
+          return;
+        }
+
+        formStatus.textContent = `Thank you, ${name}. Your ${projectType.toLowerCase()} inquiry has been received—Elena's studio will reply to ${email} within 24 hours.`;
+        formStatus.classList.add('visible');
+        inquiryForm.reset();
+      });
+
+      /* Initialize Portfolio */
+      renderFilters();
+      renderGallery();
+    })();
+  </script>
+</body>
+</html>

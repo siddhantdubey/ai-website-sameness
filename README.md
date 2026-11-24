@@ -2,7 +2,9 @@
 
 A test of the claim that every AI-built website looks the same: 12 models, 5 prompts, 5 runs each, generated under the same conditions and measured by script.
 
-**Status: run complete.** 297 of 300 pages exist. The 3 missing pages are all Gemini 4 Neon on the photographer prompt; each timed out twice at 30 minutes with no output.
+**Status: run complete.** 297 of 300 pages came from the three CLIs, and every count below is over those 297. The 3 missing pages are all Gemini 4 Neon on the photographer prompt: each timed out twice at 30 minutes with no output, a third attempt with a 60-minute limit ended in a "502 Bad Gateway" from Antigravity's backend on two of them, and the subscription then hit its usage limit (reset in about six days) before the third could run.
+
+Those 3 pages were then generated through the OpenRouter API instead (`neon__P3__r1__openrouter`, `r2`, `r4`). They are in `pages/` and `results.csv` as a separate arm, `openrouter`, and are **left out of every count and of both walls**, because the conditions differ: no system prompt and no tools, where the other Gemini pages had Antigravity's system prompt and a file-writing tool. All 3 load external fonts (Cormorant Garamond on each); the 2 Neon photographer pages from Antigravity load none. Details are in section (f) of the run log.
 
 Everything was run on the three CLIs' **default built-in instructions** (see "Keeping the harness out of it"), so the OpenAI pages were written with Codex's frontend design guidance in view.
 
@@ -10,7 +12,7 @@ Everything was run on the three CLIs' **default built-in instructions** (see "Ke
 - [`results/results.csv`](results/results.csv): one row per page
 - [`results/runlog.md`](results/runlog.md): model IDs, CLI versions, settings, every failure, what could not be disabled
 - [`results/wall.png`](results/wall.png), [`results/wall_p5.png`](results/wall_p5.png): full-size walls
-- [`pages/`](pages): the 297 pages; [`replies/`](replies): the unedited model replies, including failed attempts
+- [`pages/`](pages): the 297 pages plus the 3 OpenRouter pages; [`replies/`](replies): the unedited model replies, including failed attempts; [`logs/openrouter/`](logs/openrouter): the OpenRouter requests and responses
 
 ## Prompts (sent verbatim, nothing added)
 

@@ -1,6 +1,6 @@
 # Run log
 
-Computed by report.py from `<scratch>/main/runlog.jsonl` (431 records), `agy_log.jsonl` (172 records) and the raw replies. All times UTC.
+Computed by report.py from `<scratch>/main/runlog.jsonl` (433 records), `agy_log.jsonl` (191 records) and the raw replies. All times UTC.
 
 ## CLIs, models and settings
 
@@ -23,7 +23,7 @@ Temperature cannot be set in any of the three CLIs and was not set.
 
 Claude Code also made a small `claude-haiku-5-5` call inside the Fable, Opus and Sonnet sessions (found in 96 raw session records; 16-25 output tokens each, median 16). This is the CLI's own side request, not the page; `usage.output_tokens` in the run log is the main model's count only. (For Haiku sessions the two cannot be told apart.)
 
-Model reported by the Antigravity server in each Gemini call summary (`agy/*.summary.json`, main run, including usage-limit calls): `gemini-4-argon-high` x53, `gemini-4-hydrogen-high` x60, `gemini-4-neon-high` x59.
+Model reported by the Antigravity server in each Gemini call summary (`agy/*.summary.json`, main run, including usage-limit calls): `gemini-4-argon-high` x53, `gemini-4-hydrogen-high` x60, `gemini-4-neon-high` x78.
 
 ### Exact command lines
 
@@ -45,7 +45,7 @@ Claude Code and Codex: as logged in `runlog.jsonl` (`cmd`, prompt removed; it is
 
 - Claude Code 2.1.325: first record 2026-11-23T19:41:35Z, last record 2026-11-24T03:14:37Z.
 - Codex CLI 0.171.0: first record 2026-11-23T19:41:35Z, last record 2026-11-24T01:46:56Z.
-- Antigravity ACP server 1.3.0: first record 2026-11-23T21:08:58Z, last record 2026-11-24T12:52:17Z (Gemini `started` is the time the reply was ingested).
+- Antigravity ACP server 1.3.0: first record 2026-11-23T21:08:58Z, last record 2026-11-24T16:17:00Z (Gemini `started` is the time the reply was ingested).
 
 ## Per model
 
@@ -62,7 +62,7 @@ Counting rule (the one `gen.py` and `agy_run.py` apply): every record in `runlog
 | GPT-6.1 Sol | 25 of 25 | 25 | 25 | 0 | 25 | 0 of 25 | 171,304 | 6,969 | 0.98 h (25 calls) | 143 s |
 | GPT-6.1 Terra | 25 of 25 | 25 | 25 | 0 | 25 | 0 of 25 | 157,571 | 6,313 | 0.85 h (25 calls) | 120 s |
 | GPT-6 Luna | 25 of 25 | 25 | 27 | 0 | 27 | 2 of 25 | 179,506 | 6,954 | 0.98 h (27 calls) | 130 s |
-| Gemini 4 Neon | 22 of 25 | 22 | 60 | 32 | 28 | 3 of 25 | not reported | – | 7.04 h (28 calls) | 676 s |
+| Gemini 4 Neon | 22 of 25 | 22 | 62 | 32 | 30 | 3 of 25 | not reported | – | 8.84 h (30 calls) | 783 s |
 | Gemini 4 Argon | 25 of 25 | 25 | 53 | 28 | 25 | 0 of 25 | not reported | – | 2.15 h (25 calls) | 289 s |
 | Gemini 4 Hydrogen | 25 of 25 | 25 | 61 | 36 | 25 | 0 of 25 | not reported | – | 1.64 h (25 calls) | 232 s |
 
@@ -112,10 +112,12 @@ Gemini pages ingested by `agy_run.py`, by what was kept: first create_file paylo
 | neon__P3__r2 | 4 | 2026-11-24T08:47:48Z | empty reply | 0 | – |  |
 | neon__P3__r4 | 3 | 2026-11-24T12:05:44Z | empty reply | 0 | – |  |
 | neon__P3__r4 | 4 | 2026-11-24T12:35:50Z | empty reply | 0 | – |  |
+| neon__P3__r1 | 5 | 2026-11-24T15:22:36Z | reply contained no HTML document | 132 | – | Agent execution error: model unreachable: Error 502, Message: Bad Gateway: Failed to connect to backend API, Status: 502 Bad Gateway |
+| neon__P3__r2 | 5 | 2026-11-24T16:17:00Z | reply contained no HTML document | 132 | – | Agent execution error: model unreachable: Error 502, Message: Bad Gateway: Failed to connect to backend API, Status: 502 Bad Gateway |
 
 Gemini usage-limit notices saved as replies (not counted as attempts): 96 records for 48 pages, ingested 2026-11-24T00:49:03Z to 2026-11-24T01:03:56Z. Pages: argon__P1__r3, argon__P1__r4, argon__P2__r1, argon__P2__r2, argon__P2__r3, argon__P2__r4, argon__P3__r2, argon__P3__r3, argon__P4__r1, argon__P4__r2, argon__P5__r2, argon__P5__r3, argon__P5__r4, argon__P5__r5, hydrogen__P1__r2, hydrogen__P1__r3, hydrogen__P1__r4, hydrogen__P1__r5, hydrogen__P2__r1, hydrogen__P2__r3, hydrogen__P2__r5, hydrogen__P3__r1, hydrogen__P3__r2, hydrogen__P3__r3, hydrogen__P3__r4, hydrogen__P3__r5, hydrogen__P4__r1, hydrogen__P4__r2, hydrogen__P4__r3, hydrogen__P4__r4, hydrogen__P5__r3, hydrogen__P5__r4, neon__P1__r2, neon__P1__r3, neon__P1__r4, neon__P1__r5, neon__P2__r1, neon__P2__r3, neon__P2__r5, neon__P3__r1, neon__P3__r2, neon__P3__r4, neon__P4__r1, neon__P4__r2, neon__P4__r4, neon__P4__r5, neon__P5__r1, neon__P5__r3.
 
-Usage-limit calls caught by the current `agy_run.py` before ingest (logged in `agy_log.jsonl` with `quota: true`, never saved as replies): 1, for 1 pages, total wait 2.2 h.
+Usage-limit calls caught by the current `agy_run.py` before ingest (logged in `agy_log.jsonl` with `quota: true`, never saved as replies): 18, for 2 pages, total wait 2.9 h.
 
 ## Incidents
 
@@ -139,6 +141,22 @@ Claude attempts that failed under capture v2 (counted normally): 3 (fable-5.2__P
 | haiku-5.5__P5__r4 | haiku-5.5__P5__r4.a1.reply.txt | json-string | page was saved JSON-escaped; decoded from the same reply, no new generation |
 | sonnet-5.5__P1__r3 | sonnet-5.5__P1__r3.a2.reply.txt | bare | saved page ran past the closing html tag into pretend tool-call text; cut at the first closing tag, same reply, no new generation |
 | sonnet-5.5__P5__r2 | sonnet-5.5__P5__r2.a1.reply.txt | bare | saved page ran past the closing html tag into pretend tool-call text; cut at the first closing tag, same reply, no new generation |
+
+**(e) Extra attempts beyond the one-rerun rule.** 3 pages were given a further attempt in a fresh session at the user's request. These attempts appear in the failure table above.
+
+| id | note |
+|---|---|
+| neon__P3__r1 | Sid asked on 2026-11-24 for the three missing Neon photographer pages; one further attempt each in a fresh session with a 60-minute timeout (earlier attempts: two each, 30-minute timeouts, no output) |
+| neon__P3__r2 | Sid asked on 2026-11-24 for the three missing Neon photographer pages; one further attempt each in a fresh session with a 60-minute timeout (earlier attempts: two each, 30-minute timeouts, no output) |
+| neon__P3__r4 | Sid asked on 2026-11-24 for the three missing Neon photographer pages; one further attempt each in a fresh session with a 60-minute timeout (earlier attempts: two each, 30-minute timeouts, no output) |
+
+**(f) Pages generated outside the three CLIs (other arms).** 3 attempts, 3 pages, reported cost $1.60. These pages are in `pages/` with the arm as a fourth part of the id, have rows in `results.csv`, and are left out of every count in the summary and of both walls. Arm `openrouter`: the OpenRouter chat completions API on a paid key, with the prompt as the only message, no system prompt, no tools, reasoning effort `high`, all other settings at the provider default. This differs from the Antigravity pages, which had Antigravity's system prompt and one file-writing tool. One further request (for `neon__P3__r2__openrouter`) was cut off by a local job time limit before its reply was saved and has no record.
+
+| id | attempt | started | model | provider | ok | capture | reply chars | seconds | output tokens | cost $ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| neon__P3__r1__openrouter | 1 | 2026-11-24T19:30:29Z | google/gemini-4-neon | Google | True | fence | 128438 | 345 | 48269 | 0.724191 |
+| neon__P3__r2__openrouter | 1 | 2026-11-24T19:40:37Z | google/gemini-4-neon | Google | True | fence | 100610 | 272 | 33301 | 0.499671 |
+| neon__P3__r4__openrouter | 1 | 2026-11-24T19:45:09Z | google/gemini-4-neon | Google | True | fence | 74162 | 216 | 24999 | 0.375141 |
 
 ## Could not be disabled (copied from README, "Keeping the harness out of it")
 

@@ -1027,8 +1027,11 @@ def classify_v1(reply):
 
 def write_runlog(run, out, rows, planned, page_files, escaped_all=()):
     R_all = load_jsonl(run / "runlog.jsonl")
-    EV = [r for r in R_all if "event" in r]      # e.g. re-extraction of a saved page; not an attempt
-    R = [r for r in R_all if "event" not in r]
+    EV_all = [r for r in R_all if "event" in r]  # not attempts
+    EV = [r for r in EV_all if r["event"] != "extra-attempt-authorised"]   # re-extraction of a saved page
+    EXTRA = [r for r in EV_all if r["event"] == "extra-attempt-authorised"]
+    OR = [r for r in R_all if "event" not in r and r.get("arm", "default") != "default"]  # other arms, e.g. openrouter
+    R = [r for r in R_all if "event" not in r and r.get("arm", "default") == "default"]
     A = load_jsonl(run / "agy_log.jsonl")
     L = ["# Run log\n", f"Computed by report.py from `{run}/runlog.jsonl` ({len(R)} records), `agy_log.jsonl` "
          f"({len(A)} records) and the raw replies. All times UTC.\n"]
@@ -1287,6 +1290,27 @@ def write_runlog(run, out, rows, planned, page_files, escaped_all=()):
                  "written-out tool-call text (capture `bare` now stops at the first closing tag).\n")
         L.append(md_table(["id", "reply file", "capture", "note"],
                           [[e.get("id"), e.get("from"), e.get("capture"), e.get("note")] for e in EV]))
+        L.append("")
+    if EXTRA:
+        L.append(f"**(e) Extra attempts beyond the one-rerun rule.** {len(EXTRA)} pages were given a further attempt "
+                 "in a fresh session at the user's request. These attempts appear in the failure table above.\n")
+        L.append(md_table(["id", "note"], [[e.get("id"), e.get("note")] for e in EXTRA]))
+        L.append("")
+    if OR:
+        cost = sum(((r.get("usage") or {}).get("cost") or 0) for r in OR)
+        L.append(f"**(f) Pages generated outside the three CLIs (other arms).** {len(OR)} attempts, "
+                 f"{sum(1 for r in OR if r['ok'])} pages, reported cost ${cost:.2f}. These pages are in `pages/` with the arm "
+                 "as a fourth part of the id, have rows in `results.csv`, and are left out of every count in the summary "
+                 "and of both walls. Arm `openrouter`: the OpenRouter chat completions API on a paid key, with the prompt as "
+                 "the only message, no system prompt, no tools, reasoning effort `high`, all other settings at the provider "
+                 "default. This differs from the Antigravity pages, which had Antigravity's system prompt and one file-writing "
+                 "tool. One further request (for `neon__P3__r2__openrouter`) was cut off by a local job time limit before "
+                 "its reply was saved and has no record.\n")
+        L.append(md_table(["id", "attempt", "started", "model", "provider", "ok", "capture", "reply chars", "seconds",
+                           "output tokens", "cost $"],
+                          [[r["id"], r["attempt"], r.get("started"), r.get("model_id"), r.get("provider"), r["ok"],
+                            r.get("capture"), r.get("reply_chars"), r.get("secs"),
+                            (r.get("usage") or {}).get("completion_tokens"), (r.get("usage") or {}).get("cost")] for r in OR]))
         L.append("")
     L.append("## Could not be disabled (copied from README, \"Keeping the harness out of it\")\n")
     L.extend(readme_cannot_disable())
