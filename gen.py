@@ -83,6 +83,19 @@ def extract_html(text):
     docs = [f for f in fences if re.search(r"<html|<!doctype", f, re.I)]
     if docs:
         return max(docs, key=len).strip() + "\n", "fence"
+    # A model without tools sometimes writes its file-write call out as JSON
+    # ("content": "<!DOCTYPE html>\n..."). Decode that string to get the file it wrote.
+    m = re.search(r'"(?=\s*(?:<!doctype html|<html))', text, re.I)
+    if m:
+        try:
+            doc, _ = json.JSONDecoder().raw_decode(text, m.start())
+            if isinstance(doc, str) and re.search(r"</html>", doc, re.I):
+                d = re.search(r"(<!doctype html.*?</html>|<html.*?</html>)", doc, re.S | re.I)
+                first = re.search(r"<!doctype html|<html", text, re.I)
+                if d and first and first.start() > m.start():  # the JSON copy is the first document
+                    return d.group(1).strip() + "\n", "json-string"
+        except Exception:
+            pass
     # first complete document: a model may write it out once (often inside a pretend
     # file-write call when it has no tools) and then again or summarise it afterwards
     m = re.search(r"(<!doctype html.*?</html>|<html.*?</html>)", text, re.S | re.I)
@@ -230,7 +243,7 @@ def main():
         html, how = extract_html(reply)
         rec = {"id": a.id, "attempt": n, "vendor": "gemini", "model_id": MODELS[job["model"]][1],
                "arm": job["arm"], "prompt": job["prompt"], "run": job["run"],
-               "capture": how, "reply_chars": len(reply), "ok": bool(html), "via": "t3 delegate_task",
+               "capture": how, "reply_chars": len(reply), "ok": bool(html), "via": "agy_once.py (direct Antigravity ACP client)",
                "started": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         if html:
             (base / "pages" / f"{a.id}.html").write_text(html)
