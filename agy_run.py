@@ -13,6 +13,9 @@ import gen
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--name", required=True)
+ap.add_argument("--only", default="", help="comma-separated ids; run only these")
+ap.add_argument("--max-real", type=int, default=2, help="real attempts allowed per page (usage-limit notices excluded)")
+ap.add_argument("--timeout", type=int, default=1800, help="seconds per attempt")
 a = ap.parse_args()
 base = gen.ROOT / a.name
 agy = base / "agy"
@@ -23,6 +26,8 @@ for k, v in gen.PROMPTS.items():
 
 jobs = [json.loads(l) for l in (base / "jobs.jsonl").read_text().splitlines()]
 jobs = [j for j in jobs if gen.MODELS[j["model"]][0] == "gemini"]
+if a.only:
+    jobs = [j for j in jobs if j["id"] in a.only.split(",")]
 QUOTA = "Usage Limit Reached"
 
 
@@ -43,7 +48,7 @@ for j in jobs:
             break
         prior = sorted((base / "raw").glob(f"{jid}.a*.reply.txt"))
         real = [x for x in prior if not is_quota(x)]  # usage-limit notices do not use up an attempt
-        if len(real) >= 2:
+        if len(real) >= a.max_real:
             break
         attempt = len(list(agy.glob(f"{jid}.a*.summary.json"))) + 1
         tag = f"{jid}.a{attempt}"
@@ -51,7 +56,7 @@ for j in jobs:
         t0 = time.time()
         p = subprocess.run([sys.executable, str(here / "agy_once.py"), "--model", gen.MODELS[j["model"]][1],
                             "--prompt-file", str(agy / f"{j['prompt']}.txt"), "--out", str(out),
-                            "--log", str(agy / f"{tag}.events.jsonl"), "--timeout", "1800",
+                            "--log", str(agy / f"{tag}.events.jsonl"), "--timeout", str(a.timeout),
                             "--tools", "create_file"], capture_output=True, text=True)
         (agy / f"{tag}.summary.json").write_text(p.stdout)
         (agy / f"{tag}.err").write_text(p.stderr)
