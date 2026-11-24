@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quarry: project management for teams that finish things</title>
+<meta name="description" content="Quarry is project management for small teams. Boards, deadlines and handoffs without the ceremony.">
+<style>
+  :root{
+    --paper:#f4f1e9;
+    --card:#fbfaf6;
+    --ink:#1c1a17;
+    --muted:#676156;
+    --line:#d7d0c1;
+    --rust:#a94f25;
+    --moss:#4d6b4a;
+    --ochre:#c9962f;
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans: "Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono: ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font:17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* Nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line)}
+  .mark{font:italic 600 26px/1 var(--serif);letter-spacing:-.01em;text-decoration:none}
+  .mark span{color:var(--rust)}
+  nav ul{display:flex;gap:28px;list-style:none;font-size:15px;color:var(--muted)}
+  nav ul a{text-decoration:none}
+  nav ul a:hover{color:var(--ink)}
+
+  /* Buttons */
+  .btn{display:inline-block;padding:13px 20px;font:600 15px/1 var(--sans);text-decoration:none;border:1.5px solid var(--ink);border-radius:2px;background:var(--ink);color:var(--paper);transition:background .15s,border-color .15s,color .15s}
+  .btn:hover{background:var(--rust);border-color:var(--rust);color:#fff}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:transparent;color:var(--rust);border-color:var(--rust)}
+  .actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;padding:88px 0 96px}
+  .eyebrow{font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--rust);margin-bottom:24px}
+  h1{font:400 64px/1.02 var(--serif);letter-spacing:-.02em}
+  h1 em{color:var(--rust)}
+  .lede{font-size:19px;color:var(--muted);max-width:31em;margin-top:26px}
+  .fine{font:13px/1.4 var(--mono);color:var(--muted);margin-top:20px}
+
+  /* Board preview */
+  .board{background:var(--card);border:1px solid var(--line);box-shadow:8px 8px 0 var(--line)}
+  .board-head{display:flex;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);font:500 12px var(--mono);color:var(--muted)}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr)}
+  .col{padding:16px 12px;border-right:1px solid var(--line);min-height:330px}
+  .col:last-child{border-right:0}
+  .col h4{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between}
+  .task{background:#fff;border:1px solid var(--line);padding:10px 11px;margin-bottom:10px;font-size:13.5px;line-height:1.35}
+  .task b{font-weight:600;display:block;margin-bottom:8px}
+  .meta{display:flex;justify-content:space-between;align-items:center;font:11px var(--mono);color:var(--muted)}
+  .av{width:20px;height:20px;border-radius:50%;display:inline-grid;place-items:center;font:600 9px var(--sans);color:#fff}
+  .late{color:var(--rust)}
+  .tag{display:inline-block;width:8px;height:8px;margin-right:6px}
+
+  /* Sections */
+  section{border-top:1px solid var(--line);padding:88px 0}
+  .split{display:grid;grid-template-columns:1fr 2fr;gap:56px}
+  .label{font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+  h2{font:400 42px/1.1 var(--serif);letter-spacing:-.015em;max-width:18em}
+  h2 + p{color:var(--muted);max-width:36em;margin-top:16px}
+
+  /* Numbered features */
+  .feat{display:grid;grid-template-columns:70px 1fr 1fr;gap:32px;padding:34px 0;border-top:1px solid var(--line)}
+  .feat:first-of-type{border-top:0;padding-top:0}
+  .num{font:500 14px var(--mono);color:var(--rust);padding-top:8px}
+  .feat h3{font:400 26px/1.2 var(--serif);margin-bottom:8px}
+  .feat p{color:var(--muted)}
+  .feat ul{list-style:none;font-size:15px;color:var(--ink)}
+  .feat li{padding:6px 0;border-bottom:1px dotted var(--line)}
+  .feat li:last-child{border-bottom:0}
+
+  /* Week timeline */
+  .week{display:grid;grid-template-columns:repeat(4,1fr);margin-top:48px;border-top:2px solid var(--ink)}
+  .day{padding:22px 22px 0 0}
+  .day .d{font:500 12px var(--mono);color:var(--rust);text-transform:uppercase;letter-spacing:.1em}
+  .day h4{font:400 22px/1.25 var(--serif);margin:10px 0 8px}
+  .day p{font-size:15px;color:var(--muted)}
+
+  /* Pricing */
+  .prices{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink);margin-top:48px;background:var(--card)}
+  .plan{padding:40px 36px}
+  .plan + .plan{border-left:1px solid var(--ink)}
+  .plan h3{font:400 28px var(--serif)}
+  .price{font:400 56px/1 var(--serif);margin:22px 0 4px;letter-spacing:-.02em}
+  .price small{font:14px var(--sans);color:var(--muted);letter-spacing:0}
+  .plan ul{list-style:none;margin:26px 0 34px;font-size:15px}
+  .plan li{padding:9px 0 9px 22px;position:relative;border-bottom:1px solid var(--line)}
+  .plan li::before{content:"";position:absolute;left:0;top:17px;width:10px;height:1.5px;background:var(--moss)}
+  .plan .btn{width:100%;text-align:center}
+
+  /* FAQ */
+  details{border-top:1px solid var(--line);padding:22px 0}
+  details:last-child{border-bottom:1px solid var(--line)}
+  summary{font:400 21px var(--serif);cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font:300 26px var(--sans);color:var(--rust);line-height:1}
+  details[open] summary::after{content:"\2212"}
+  details p{margin-top:12px;color:var(--muted);max-width:40em}
+
+  /* Closing band */
+  .band{background:var(--ink);color:var(--paper);padding:96px 0}
+  .band h2{color:var(--paper);font-size:52px}
+  .band h2 em{color:var(--ochre)}
+  .band p{color:#b9b2a5;margin-top:18px;font-size:18px;max-width:34em}
+  .band .btn{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+  .band .btn:hover{background:var(--ochre);border-color:var(--ochre);color:var(--ink)}
+  .band .btn.ghost{background:transparent;color:var(--paper);border-color:#5b564d}
+  .band .btn.ghost:hover{border-color:var(--ochre);color:var(--ochre);background:transparent}
+
+  footer{padding:36px 0;font:13px var(--mono);color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--ink)}
+
+  @media (max-width:900px){
+    h1{font-size:48px}
+    .hero,.split{grid-template-columns:1fr;gap:40px}
+    .board{box-shadow:none}
+    .feat{grid-template-columns:1fr;gap:12px}
+    .week{grid-template-columns:1fr 1fr}
+    .prices{grid-template-columns:1fr}
+    .plan + .plan{border-left:0;border-top:1px solid var(--ink)}
+    nav ul{display:none}
+    h2{font-size:34px}
+    .band h2{font-size:40px}
+  }
+  @media (max-width:560px){
+    .cols{grid-template-columns:1fr}
+    .col{border-right:0;border-bottom:1px solid var(--line);min-height:0}
+    .week{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="mark" href="#">Quarry<span>.</span></a>
+    <ul>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#week">A week in Quarry</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">Questions</a></li>
+    </ul>
+    <a class="btn ghost" href="#">Log in</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Project management for teams of 2 to 40</p>
+      <h1>Plans that people <em>actually</em> finish.</h1>
+      <p class="lede">Quarry keeps the board, the deadlines and the handoffs in one place, and stays out of your way. No story points, no twelve-step workflow setup, no status meetings to prep for the status meeting.</p>
+      <div class="actions">
+        <a class="btn" href="#">Start a free board</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <p class="fine">Free for teams up to eight. Import from Trello, Asana or a CSV in about ten minutes.</p>
+    </div>
+
+    <div class="board" aria-label="Example Quarry board">
+      <div class="board-head"><span>Spring launch</span><span>14 open · 3 due this week</span></div>
+      <div class="cols">
+        <div class="col">
+          <h4>Next <span>3</span></h4>
+          <div class="task"><b>Migrate billing emails to new domain</b>
+            <div class="meta"><span>Jun 3</span><span class="av" style="background:var(--moss)">RK</span></div></div>
+          <div class="task"><b>Write onboarding copy for trial users</b>
+            <div class="meta"><span>Jun 5</span><span class="av" style="background:var(--rust)">AM</span></div></div>
+          <div class="task"><b>Audit webhook retry logic</b>
+            <div class="meta"><span>Jun 9</span><span class="av" style="background:#6b5b8a">JO</span></div></div>
+        </div>
+        <div class="col">
+          <h4>Doing <span>2</span></h4>
+          <div class="task"><b>Pricing page experiment: annual toggle</b>
+            <div class="meta"><span class="late">Due today</span><span class="av" style="background:var(--ochre)">SD</span></div></div>
+          <div class="task"><b>Rebuild invoice PDF template</b>
+            <div class="meta"><span>Jun 4</span><span class="av" style="background:var(--moss)">RK</span></div></div>
+        </div>
+        <div class="col">
+          <h4>Review <span>1</span></h4>
+          <div class="task"><b>Customer export as CSV, with filters</b>
+            <div class="meta"><span>Shipped Tue</span><span class="av" style="background:#6b5b8a">JO</span></div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section id="how">
+  <div class="wrap split">
+    <div>
+      <p class="label">How it works</p>
+    </div>
+    <div>
+      <h2>A board, a calendar and a list, all looking at the same tasks.</h2>
+      <p>Most tools make you choose a view before you know what you need. Quarry keeps them in sync, so a date changed on the calendar shows up on the card and in the weekly summary without anyone re-entering it.</p>
+
+      <div style="margin-top:56px">
+        <div class="feat">
+          <div class="num">01</div>
+          <div>
+            <h3>Boards that stay readable</h3>
+            <p>Columns are whatever your team says they are. Cards show an owner, a date and nothing else until you open them.</p>
+          </div>
+          <ul>
+            <li>Custom columns, no required statuses</li>
+            <li>Drag cards between lanes or use the keyboard</li>
+            <li>Work-in-progress limits per column</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="num">02</div>
+          <div>
+            <h3>Deadlines that mean something</h3>
+            <p>Dates are attached to the work, not to a separate project plan that goes stale by Thursday.</p>
+          </div>
+          <ul>
+            <li>Dependencies warn you before a slip</li>
+            <li>Shared calendar with per-person feeds</li>
+            <li>Overdue items roll up to one list</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="num">03</div>
+          <div>
+            <h3>Handoffs without a meeting</h3>
+            <p>When work moves from design to engineering, the context moves with it: attachments, comments and the decision that started it.</p>
+          </div>
+          <ul>
+            <li>Assign with a written note, not just a name</li>
+            <li>Threads stay attached to the card</li>
+            <li>Email digests for anything that changed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="week">
+  <div class="wrap">
+    <div class="split" style="grid-template-columns:1fr">
+      <div>
+        <p class="label">A week in Quarry</p>
+        <h2 style="margin-top:14px">What the tool does, and what it leaves alone.</h2>
+      </div>
+    </div>
+    <div class="week">
+      <div class="day">
+        <div class="d">Monday</div>
+        <h4>Plan the week</h4>
+        <p>Pull unfinished work onto the board. Quarry flags anything that was due last week and has not moved.</p>
+      </div>
+      <div class="day">
+        <div class="d">Wednesday</div>
+        <h4>Check the middle</h4>
+        <p>The overdue list is the standup. Nobody has to ask who is blocked. The blocked tag is already there.</p>
+      </div>
+      <div class="day">
+        <div class="d">Friday</div>
+        <h4>Close the loop</h4>
+        <p>One digest of what shipped, what slipped and why. Send it to whoever needs it, or to nobody.</p>
+      </div>
+      <div class="day">
+        <div class="d">Always</div>
+        <h4>Nothing else</h4>
+        <p>No timesheets, no mandatory fields, no notifications about notifications. You can turn off anything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="split" style="grid-template-columns:1fr">
+      <div>
+        <p class="label">Pricing</p>
+        <h2 style="margin-top:14px">Two plans. Both include every feature.</h2>
+        <p>The only real difference is how many people you bring in and whether you need admin controls. Prices are in US dollars and billed monthly, or yearly at a discount.</p>
+      </div>
+    </div>
+    <div class="prices">
+      <div class="plan">
+        <h3>Starter</h3>
+        <div class="price">$0<small> / forever</small></div>
+        <p style="color:var(--muted)">For a small team that is getting its first real project organized.</p>
+        <ul>
+          <li>Up to 8 people</li>
+          <li>Unlimited boards and cards</li>
+          <li>30 days of history</li>
+          <li>Email digests</li>
+        </ul>
+        <a class="btn ghost" href="#">Start free</a>
+      </div>
+      <div class="plan">
+        <h3>Team</h3>
+        <div class="price">$9<small> / person / month</small></div>
+        <p style="color:var(--muted)">For teams that have outgrown guesswork and need the audit trail.</p>
+        <ul>
+          <li>Unlimited people</li>
+          <li>Full history and export</li>
+          <li>Admin roles and SSO</li>
+          <li>Priority support, usually a same-day reply</li>
+        </ul>
+        <a class="btn" href="#">Start a 30-day trial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap split">
+    <div>
+      <p class="label">Questions</p>
+    </div>
+    <div>
+      <details open>
+        <summary>Do we have to change how we work to use it?</summary>
+        <p>No. Quarry gives you columns, cards and dates, and you name them. If your team uses something unusual, like a review lane that loops back twice, you can model that directly.</p>
+      </details>
+      <details>
+        <summary>Can we bring our existing projects over?</summary>
+        <p>Yes. Trello and Asana exports import directly, and any CSV with a title, owner and due date works. Imports keep the original creation dates so your history stays honest.</p>
+      </details>
+      <details>
+        <summary>Where is our data stored?</summary>
+        <p>In the EU or the US, whichever you choose at signup. Backups run nightly and are kept for thirty days. Team plans can export everything as JSON at any time.</p>
+      </details>
+      <details>
+        <summary>What happens when we go over eight people?</summary>
+        <p>Nothing breaks. You will be asked to move to Team when you add the ninth person, and you can do that at any point, including mid-month. Billing is prorated.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="border:0;padding:96px 0">
+  <div class="wrap split" style="grid-template-columns:1.4fr 1fr;align-items:end">
+    <div>
+      <h2>Your next project does not need <em>a setup week.</em></h2>
+      <p>Start a board now, invite the people you actually work with, and see whether it earns its place by Friday.</p>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end">
+      <a class="btn" href="#">Start a free board</a>
+      <a class="btn ghost" href="#">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <span>Quarry &middot; Made in Lisbon and Toronto</span>
+    <span><a href="#">Status</a> &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a> &nbsp;·&nbsp; <a href="#">Changelog</a></span>
+  </footer>
+</div>
+
+</body>
+</html>

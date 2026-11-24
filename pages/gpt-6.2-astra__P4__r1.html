@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163c36">
+  <meta name="description" content="Alder & Finch is a boutique law firm focused on business counsel, estate planning, and civil disputes.">
+  <title>Alder & Finch | Attorneys at Law</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f3ea;
+      --ink: #172f2a;
+      --green: #163c36;
+      --muted: #52645b;
+      --line: #c9cec2;
+      --cream: #fffdf5;
+      --serif: "Baskerville", "Palatino Linotype", Georgia, serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans) }
+    a { color: inherit; text-decoration: none }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #bb7036; outline-offset: 5px }
+    .skip { position: absolute; left: 1rem; top: -5rem; z-index: 5; background: white; padding: .6rem }
+    .skip:focus { top: 1rem }
+    .wrap { width: min(1280px, 89%); margin-inline: auto }
+    header { border-bottom: 1px solid var(--line) }
+    .bar, nav, .brand, .actions, .section-head, .contact-inner, footer .wrap {
+      display: flex; align-items: center
+    }
+    .bar { min-height: 84px; justify-content: space-between; gap: 1.5rem }
+    .brand { gap: .7rem; font: 1.65rem var(--serif); letter-spacing: -.055em }
+    .mark { width: 33px; height: 36px; color: var(--green) }
+    nav { gap: clamp(1rem, 3vw, 3rem); font-size: .87rem }
+    nav a:hover, .text-link:hover, footer a:hover { text-decoration: underline; text-underline-offset: .3em }
+    .nav-contact { border: 1px solid #93a399; padding: .55rem 1rem }
+    .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 5%; align-items: center; padding-block: clamp(3rem, 6vw, 6rem) }
+    .eyebrow { display: flex; align-items: center; gap: .7rem; color: var(--muted); font: 700 .67rem/1.5 var(--sans); letter-spacing: .16em; text-transform: uppercase }
+    .eyebrow::before { content: ""; width: 2rem; height: 1px; background: currentColor }
+    h1, h2, h3, p, figure { margin: 0 }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400 }
+    h1 { font-size: clamp(3.5rem, 6.5vw, 6.5rem); line-height: .99; letter-spacing: -.065em; margin: 1.5rem 0 }
+    h1 em { color: #486353; font-weight: 400 }
+    .intro { max-width: 32rem; color: var(--muted); font-size: 1.06rem }
+    .actions { gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 1.2rem; background: var(--green); color: white; padding: .95rem 1.25rem; font-size: .88rem; font-weight: 600 }
+    .button:hover { background: #28544a }
+    .text-link { font-size: .88rem; border-bottom: 1px solid #829487 }
+    .art { overflow: hidden; background: #24473d; border-radius: 48% 48% 2px 2px / 39% 39% 2px 2px }
+    .art svg { display: block; width: 100%; height: auto }
+    .practice { padding: 3.5rem 0 4.5rem; border-top: 1px solid var(--line) }
+    h2 { font-size: clamp(2.4rem, 4.3vw, 4rem); line-height: 1.06; letter-spacing: -.055em }
+    .section-head { justify-content: space-between; gap: 1rem; margin-bottom: 2.2rem }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem }
+    details { align-self: start; border-top: 2px solid #819786; padding-top: 1.1rem }
+    summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; font: 1.62rem/1.2 var(--serif); letter-spacing: -.035em }
+    summary::-webkit-details-marker { display: none }
+    summary::after { content: "+"; font: 1.3rem var(--sans); color: var(--muted) }
+    details[open] summary::after { content: "−" }
+    details p { margin-top: .9rem; color: var(--muted); max-width: 34ch }
+    .firm { background: #e8ece2; padding: clamp(3rem, 6vw, 6rem) 0 }
+    .firm-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 7%; align-items: center }
+    .firm h2 { margin-top: .9rem }
+    .firm p { color: #41564c; max-width: 50ch }
+    .contact { background: var(--green); color: var(--cream); padding-block: 3rem }
+    .contact-inner { justify-content: space-between; gap: 2rem }
+    .contact h2 { font-size: clamp(2.1rem, 3.5vw, 3.3rem) }
+    .contact p { color: #d0dbcf; margin-top: .6rem }
+    .contact .button { background: var(--paper); color: var(--green); white-space: nowrap }
+    .contact .button:hover { background: #e0e7d9 }
+    footer .wrap { justify-content: space-between; gap: 1rem; padding-block: 1.3rem; font-size: .76rem; color: var(--muted) }
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; gap: 2.25rem }
+      .art { width: min(100%, 490px); justify-self: center }
+      .cards, .firm-inner { grid-template-columns: 1fr; gap: 1.5rem }
+      .contact-inner { align-items: flex-start; flex-direction: column }
+      .practice { padding-block: 2.7rem }
+      .bar { flex-wrap: wrap; padding-block: 1rem; gap: .8rem }
+      nav { flex-wrap: wrap }
+    }
+    @media (max-width: 440px) {
+      .bar { align-items: flex-start; flex-direction: column }
+      nav { width: 100%; justify-content: space-between }
+      .section-head { align-items: flex-start; flex-direction: column-reverse }
+      h1 { font-size: clamp(2.9rem, 13vw, 3.6rem) }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } }
+  </style>
+</head>
+<body id="top">
+  <!-- Fictional firm. Replace the example email address before publishing. -->
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="wrap bar">
+      <a class="brand" href="#top" aria-label="Alder and Finch home">
+        <svg class="mark" viewBox="0 0 36 40" fill="none" aria-hidden="true">
+          <path d="M3 36 17 4l15 32M9 24h17M16 36l9-20 9 20" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Alder &amp; Finch
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#practice">Practice areas</a>
+        <a href="#firm">Our firm</a>
+        <a class="nav-contact" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Attorneys at law</p>
+        <h1 id="hero-title">Clear counsel.<br><em>Steady hands.</em></h1>
+        <p class="intro">We help families and business owners make sense of legal decisions, from signing a first lease to planning what comes next.</p>
+        <div class="actions">
+          <a class="button" href="#contact">Request a consultation <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#practice">Explore our practice</a>
+        </div>
+      </div>
+      <figure class="art" aria-label="Architectural illustration of a sunlit stone colonnade">
+        <svg viewBox="0 0 560 476" role="img" aria-label="Cream stone arches receding into deep green shadow">
+          <defs>
+            <linearGradient id="wall" x2="1" y2=".7">
+              <stop stop-color="#f3e9cf"/><stop offset="1" stop-color="#cbbb95"/>
+            </linearGradient>
+            <linearGradient id="floor" x2="1" y2="1">
+              <stop stop-color="#a99e7d"/><stop offset="1" stop-color="#eee3c6"/>
+            </linearGradient>
+            <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse">
+              <path d="m0 5 5-5" stroke="#403f2f" opacity=".14" stroke-width=".7"/>
+            </pattern>
+            <filter id="grain">
+              <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/>
+            </filter>
+          </defs>
+          <path fill="#29483d" d="M0 0h560v476H0z"/>
+          <path fill="url(#floor)" d="m0 438 560-152v190H0z"/>
+          <path fill="#84917a" d="M0 0h560v294l-20 6v-84c0-34-35-33-35 4v90l-26 8V201c0-57-53-54-53 5v126l-36 11V172c0-81-80-77-80 7v186L0 446z"/>
+          <path fill="#aeaa8e" d="M0 0h402v340l-26 7V170c0-67-68-66-68 8v188l-56 16V134c0-106-94-100-94 8v265L0 451z"/>
+          <path fill="#696f59" d="m0 454 158-47 86 69H59zm249-72 58-16 139 110h-76zm129-36 25-7 157 112v25h-15z"/>
+          <path fill="#9f987a" d="M0 0h267v380l-37 11V138C230 24 83 28 83 156v280L0 461z"/>
+          <path fill="url(#wall)" d="M0 0h235v389l-25 8V146C210 35 67 37 67 161v280L0 461z"/>
+          <path fill="url(#hatch)" d="m235 0 32 0v380l-32 9zM67 162c0-84 66-131 121-90-61-21-105 24-105 84v280l-16 5z"/>
+          <g fill="none" stroke="#938b70" opacity=".53">
+            <path d="M0 163h66m-66 71h66m-66 71h66m-66 72h66m144-177h25m-25 70h25m-25 72h25M20 102l53 18M51 43l48 40M116 15l10 46m52-48-11 47"/>
+          </g>
+          <path fill="#655f4a" opacity=".55" d="M0 461 235 389l32-9L0 470z"/>
+          <path fill="#fff" opacity=".065" filter="url(#grain)" d="M0 0h560v476H0z"/>
+        </svg>
+      </figure>
+    </section>
+    <section id="practice" class="practice wrap" aria-labelledby="practice-title">
+      <div class="section-head">
+        <h2 id="practice-title">Our practice areas</h2>
+        <span class="eyebrow">How we can help</span>
+      </div>
+      <div class="cards">
+        <details>
+          <summary>Business counsel</summary>
+          <p>From choosing a business structure to reviewing a lease, we help owners understand what they’re signing and where they have room to negotiate.</p>
+        </details>
+        <details>
+          <summary>Estate planning</summary>
+          <p>We prepare wills, trusts, and powers of attorney that reflect your wishes and give the people you trust clear instructions.</p>
+        </details>
+        <details>
+          <summary>Civil disputes</summary>
+          <p>When a contract or property dispute arises, we help you weigh the costs of negotiation, mediation, and litigation and decide how to proceed.</p>
+        </details>
+      </div>
+    </section>
+    <section id="firm" class="firm" aria-labelledby="firm-title">
+      <div class="wrap firm-inner">
+        <div>
+          <span class="eyebrow">Our firm</span>
+          <h2 id="firm-title">Work directly with<br>your attorney.</h2>
+        </div>
+        <p>At Alder &amp; Finch, the conversation starts with what matters to you. Your attorney walks you through your options, explains the fees, and stays in touch as your matter moves forward.</p>
+      </div>
+    </section>
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap contact-inner">
+        <div>
+          <h2 id="contact-title">Let’s talk it through.</h2>
+          <p>Email us with your name and a good time to reach you.</p>
+        </div>
+        <a class="button" href="mailto:hello@alderfinch.example?subject=Consultation%20request">Email the firm <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>Alder &amp; Finch · Attorneys at Law</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+</body>
+</html>

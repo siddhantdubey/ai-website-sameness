@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f3e7">
+  <meta name="description" content="Casa Oliva is a neighborhood Italian kitchen serving handmade pasta and seasonal plates.">
+  <title>Casa Oliva | Neighborhood Italian Kitchen</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f3e7;
+      --ink: #273b2c;
+      --red: #9b382b;
+      --line: #d6cdbb;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans); }
+    a { color: inherit; text-underline-offset: .24em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    h1, h2, h3, p, figure { margin: 0; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-block: 1.15rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .wordmark { font: bold 1.5rem/1 var(--serif); text-decoration: none; }
+    nav { display: flex; flex-wrap: wrap; gap: .65rem 1.4rem; font-size: .9rem; }
+    nav a { text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+      padding-block: clamp(2.75rem, 8vw, 7rem);
+    }
+    .eyebrow {
+      font-size: .75rem;
+      font-weight: 750;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .hero .eyebrow { color: var(--red); }
+    h1 { margin-block: .65rem 1.1rem; font: 400 clamp(4rem, 9vw, 8rem)/.87 var(--serif); letter-spacing: -.075em; }
+    h1 em { display: block; font-weight: 400; }
+    .intro { max-width: 31ch; font-size: 1.12rem; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.4rem; margin-top: 1.6rem; }
+    .button { display: inline-block; padding: .75rem 1.2rem; background: var(--red); color: white; text-decoration: none; }
+    .button:hover { background: #79291f; }
+
+    .art {
+      display: grid;
+      place-items: center;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border-radius: 48% 48% .25rem .25rem;
+      background-color: #bd5c4d;
+      background-image:
+        repeating-linear-gradient(0deg, #ffe3c940 0 18px, transparent 18px 36px),
+        repeating-linear-gradient(90deg, #ffe3c940 0 18px, transparent 18px 36px);
+    }
+    .plate {
+      position: relative;
+      width: 78%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f5e9d3 0 56%, #dbcdb1 57%, #fff4df 60% 72%);
+      box-shadow: 10px 16px 24px #51271c66, inset 0 0 0 3px #e4d5b9;
+    }
+    .plate::before {
+      content: "";
+      position: absolute;
+      inset: 6%;
+      border-radius: 50%;
+      border: 4px double #52735e;
+    }
+    .pasta {
+      position: absolute;
+      inset: 23%;
+      border-radius: 43% 52% 47% 53%;
+      background: radial-gradient(ellipse at 35% 30%, #c85b30, #a23620 70%, #782619);
+      box-shadow: 2px 5px 10px #a4482c66;
+    }
+    .ribbon {
+      position: absolute;
+      width: 39%;
+      height: 17%;
+      top: var(--y);
+      left: var(--x);
+      rotate: var(--turn);
+      border-radius: 36% 15% 34% 12%;
+      background: repeating-linear-gradient(0deg, #c16f24 0 1px, #efb65c 2px 4px, #ffd389 5px 6px);
+      box-shadow: 1px 2px 3px #782b1d99;
+    }
+    .basil {
+      position: absolute;
+      top: 41%;
+      left: 45%;
+      width: 19%;
+      height: 10%;
+      border-radius: 80% 0;
+      background: linear-gradient(156deg, #567a39 48%, #779951 50%, #34582e 53%);
+      rotate: -18deg;
+      box-shadow: 1px 2px 3px #4a2a1d70;
+    }
+    .basil + .basil { top: 49%; left: 38%; rotate: 60deg; }
+
+    .menu { border-top: 1px solid var(--line); padding-block: clamp(2.5rem, 6vw, 4.75rem); }
+    h2 { font: 400 clamp(2.4rem, 5vw, 4.1rem)/1.05 var(--serif); letter-spacing: -.045em; }
+    .menu-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6rem; margin-top: 1.8rem; }
+    .dish { border-top: 1px solid var(--line); padding-top: .9rem; }
+    .dish-head { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; }
+    h3 { font: 400 1.4rem/1.15 var(--serif); }
+    .price { color: var(--red); font-weight: 700; }
+    .dish p { margin-top: .45rem; font-size: .92rem; }
+
+    .visit { background: var(--ink); color: var(--paper); padding-block: clamp(2.75rem, 7vw, 5rem); }
+    .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem 3rem; }
+    .visit h2 { margin-bottom: .85rem; }
+    .hours { display: grid; grid-template-columns: 1fr auto; gap: .55rem 1rem; margin: .65rem 0 0; max-width: 27rem; }
+    .hours dd { margin: 0; text-align: right; }
+    footer { padding-block: 1.2rem; font-size: .85rem; }
+
+    @media (max-width: 680px) {
+      .hero, .visit-grid, .menu-grid { grid-template-columns: 1fr; }
+      .art { width: min(100%, 420px); }
+      .menu-grid { gap: 1.2rem; }
+    }
+    @media (max-width: 360px) {
+      .wrap { width: calc(100% - 32px); }
+      .header { align-items: flex-start; }
+      h1 { font-size: 3.55rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header wrap">
+    <a class="wordmark" href="#home">Casa Oliva</a>
+    <nav aria-label="Main navigation">
+      <a href="#menu">Menu</a>
+      <a href="#visit">Hours &amp; walk-ins</a>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero wrap" aria-labelledby="restaurant-name">
+      <div>
+        <p class="eyebrow">Neighborhood Italian kitchen</p>
+        <h1 id="restaurant-name">Casa <em>Oliva</em></h1>
+        <p class="intro">Handmade pasta, seasonal plates, and a good glass of wine around the corner.</p>
+        <div class="actions">
+          <a class="button" href="#menu">Explore the menu</a>
+          <a href="#visit">Plan a visit</a>
+        </div>
+      </div>
+
+      <figure class="art" role="img" aria-label="An illustrated plate of ribbon pasta with tomato sauce and basil on a red gingham tablecloth">
+        <div class="plate" aria-hidden="true">
+          <div class="pasta">
+            <span class="ribbon" style="--x:20%;--y:13%;--turn:-18deg"></span>
+            <span class="ribbon" style="--x:44%;--y:17%;--turn:26deg"></span>
+            <span class="ribbon" style="--x:9%;--y:30%;--turn:32deg"></span>
+            <span class="ribbon" style="--x:42%;--y:33%;--turn:-34deg"></span>
+            <span class="ribbon" style="--x:52%;--y:49%;--turn:35deg"></span>
+            <span class="ribbon" style="--x:12%;--y:53%;--turn:-18deg"></span>
+            <span class="ribbon" style="--x:31%;--y:63%;--turn:29deg"></span>
+            <span class="ribbon" style="--x:46%;--y:73%;--turn:-23deg"></span>
+            <span class="ribbon" style="--x:16%;--y:72%;--turn:17deg"></span>
+          </div>
+          <span class="basil"></span>
+          <span class="basil"></span>
+        </div>
+      </figure>
+    </section>
+
+    <section class="menu wrap" id="menu" aria-labelledby="menu-title">
+      <h2 id="menu-title">From the kitchen</h2>
+      <div class="menu-grid">
+        <article class="dish">
+          <div class="dish-head"><h3>Burrata &amp; Peppers</h3><span class="price">$16</span></div>
+          <p>Roasted sweet peppers, basil, and grilled sourdough.</p>
+        </article>
+        <article class="dish">
+          <div class="dish-head"><h3>Pappardelle al Ragù</h3><span class="price">$26</span></div>
+          <p>Hand-cut pasta, slow-braised beef, and Parmigiano Reggiano.</p>
+        </article>
+        <article class="dish">
+          <div class="dish-head"><h3>Tiramisù</h3><span class="price">$11</span></div>
+          <p>Espresso-soaked ladyfingers, mascarpone, and dark cocoa.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <div class="wrap visit-grid">
+        <div>
+          <h2 id="visit-title">Come for dinner</h2>
+          <p>Walk in any evening we’re open. We seat guests in order of arrival.</p>
+        </div>
+        <div>
+          <h3>Dinner hours</h3>
+          <dl class="hours">
+            <dt>Tuesday–Thursday</dt><dd>5–9 pm</dd>
+            <dt>Friday–Saturday</dt><dd>5–10 pm</dd>
+            <dt>Sunday</dt><dd>4–8 pm</dd>
+            <dt>Monday</dt><dd>Closed</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">Casa Oliva</footer>
+</body>
+</html>

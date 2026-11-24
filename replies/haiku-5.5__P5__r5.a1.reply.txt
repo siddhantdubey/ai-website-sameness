@@ -1,0 +1,687 @@
+Here's a single-file landing page for a fictional project management app called Tallyboard. It uses no external fonts, scripts, or images, so it works offline.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tallyboard — Project management for teams that ship</title>
+<meta name="description" content="Tallyboard keeps plans, owners, and blockers in one place, without the ceremony.">
+<style>
+  :root {
+    --paper: #f5f2ea;
+    --paper-deep: #ebe6d8;
+    --ink: #1e1c18;
+    --ink-soft: #5b564b;
+    --rule: #d6cfbd;
+    --rust: #b44a26;
+    --rust-ink: #8f3a1c;
+    --moss: #4e6b3a;
+    --card: #fffdf7;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* Nav */
+  nav {
+    border-bottom: 1px solid var(--rule);
+  }
+  nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--rust); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    font-size: 15px;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 11px 20px;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--paper);
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn:hover { background: transparent; color: var(--ink); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+  /* Hero */
+  .hero {
+    padding: 88px 0 72px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--rust-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.07;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 30em;
+    margin-bottom: 36px;
+  }
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cta-note {
+    width: 100%;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  /* Board mockup */
+  .board {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 18px;
+    box-shadow: 0 1px 0 rgba(30,28,24,0.04), 0 18px 40px -22px rgba(30,28,24,0.28);
+  }
+  .board-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 4px 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 14px;
+  }
+  .board-top strong {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .col-head {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 11px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .avatar {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--paper);
+  }
+  .blocked {
+    border-left: 3px solid var(--rust);
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    background: var(--paper-deep);
+    color: var(--ink-soft);
+  }
+  .tag.rust { background: #f3dccf; color: var(--rust-ink); }
+
+  /* Sections */
+  section {
+    padding: 80px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--rust-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    max-width: 22em;
+    margin-bottom: 20px;
+  }
+  .section-intro {
+    color: var(--ink-soft);
+    max-width: 36em;
+    margin-bottom: 48px;
+  }
+
+  /* Numbered features */
+  .features {
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .features li {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 32px;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .features .num {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .features h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .features p {
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  /* Workflow strip */
+  .workflow {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .workflow section, .workflow.sec { border-top: none; }
+  .workflow .section-label { color: #e9a684; }
+  .workflow .section-intro { color: #bdb6a5; }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .step-n {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 700;
+    color: #e9a684;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .step h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .step p {
+    color: #bdb6a5;
+    font-size: 15px;
+  }
+
+  /* Specifics */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .fact {
+    padding: 28px 24px 28px 0;
+  }
+  .fact + .fact {
+    padding-left: 24px;
+    border-left: 1px solid var(--rule);
+  }
+  .fact-val {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .fact-label {
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  /* Pricing */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .plan {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 30px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .plan.featured {
+    border: 1.5px solid var(--ink);
+  }
+  .plan-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .plan-desc {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    min-height: 3em;
+  }
+  .plan-price {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .plan-price small {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+  }
+  .plan ul {
+    list-style: none;
+    margin: 22px 0 28px;
+    font-size: 15px;
+    flex: 1;
+  }
+  .plan li {
+    padding: 7px 0 7px 22px;
+    position: relative;
+    border-top: 1px solid var(--paper-deep);
+  }
+  .plan li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 15px;
+    width: 8px;
+    height: 2px;
+    background: var(--moss);
+  }
+  .plan .btn { text-align: center; }
+
+  /* Final CTA */
+  .closing {
+    padding: 96px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .closing-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .closing h2 { margin-bottom: 0; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  footer .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer nav-links, .foot-links { display: flex; gap: 22px; }
+  .foot-links a { text-decoration: none; }
+  .foot-links a:hover { color: var(--ink); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .features li { grid-template-columns: 48px 1fr; gap: 12px 20px; }
+    .features li p { grid-column: 2; }
+    .steps { grid-template-columns: 1fr; gap: 32px; }
+    .facts { grid-template-columns: 1fr 1fr; }
+    .fact:nth-child(3) { padding-left: 0; border-left: none; }
+    .fact:nth-child(n+3) { border-top: 1px solid var(--rule); }
+    .plans { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .nav-links a.hide-sm { display: none; }
+    .columns { grid-template-columns: 1fr; }
+    .columns .col:nth-child(n+3) { display: none; }
+    .hero { padding: 56px 0 48px; }
+    section { padding: 56px 0; }
+    .facts { grid-template-columns: 1fr; }
+    .fact { padding: 22px 0 !important; border-left: none !important; border-top: 1px solid var(--rule); }
+    .fact:first-child { border-top: none; }
+    .features li { grid-template-columns: 1fr; }
+    .features li .num { margin-bottom: -6px; }
+    .features li p { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">Tally<span>board</span></a>
+    <div class="nav-links">
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="#features" class="hide-sm">Features</a>
+      <a href="#pricing" class="hide-sm">Pricing</a>
+      <a href="#login">Log in</a>
+      <a href="#start" class="btn">Start a free trial</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Project management, minus the ceremony</p>
+      <h1>See what's stuck before your Monday standup.</h1>
+      <p class="lede">Tallyboard keeps every plan, owner, and dependency in one place, and flags work that has stalled for more than a day. Your team spends less time updating the tool and more time shipping.</p>
+      <div class="cta-row">
+        <a href="#start" class="btn">Start a 30-day trial</a>
+        <a href="#features" class="btn btn-ghost">See how boards work</a>
+        <p class="cta-note">No credit card. Import from Jira, Trello, or a spreadsheet in about ten minutes.</p>
+      </div>
+    </div>
+
+    <div class="board" aria-label="Example Tallyboard project board">
+      <div class="board-top">
+        <strong>Checkout rebuild</strong>
+        <span>Sprint 14 · 6 days left</span>
+      </div>
+      <div class="columns">
+        <div class="col">
+          <div class="col-head"><span>To do</span><span>3</span></div>
+          <div class="card">
+            Migrate saved carts to new schema
+            <div class="meta"><span class="tag">backend</span><span class="avatar" style="background:#4e6b3a">MR</span></div>
+          </div>
+          <div class="card">
+            Empty-state copy for zero-item cart
+            <div class="meta"><span class="tag">design</span><span class="avatar" style="background:#7a5c3c">JO</span></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="col-head"><span>In progress</span><span>2</span></div>
+          <div class="card blocked">
+            Payment provider webhook retries
+            <div class="meta"><span class="tag rust">blocked 2d</span><span class="avatar" style="background:#b44a26">AK</span></div>
+          </div>
+          <div class="card">
+            Address autocomplete on mobile
+            <div class="meta"><span class="tag">frontend</span><span class="avatar" style="background:#3c5a7a">SL</span></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="col-head"><span>Review</span><span>1</span></div>
+          <div class="card">
+            Tax rounding for multi-currency orders
+            <div class="meta"><span class="tag">backend</span><span class="avatar" style="background:#4e6b3a">MR</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap">
+    <p class="section-label">How it works</p>
+    <h2>Plans live next to the work, not in a slide deck.</h2>
+    <p class="section-intro">Most project tools ask you to maintain a second copy of reality. Tallyboard reads the state of your tasks and tells you where it has drifted from the plan.</p>
+    <ul class="features" id="features">
+      <li>
+        <span class="num">01</span>
+        <h3>Blockers are first-class</h3>
+        <p>Mark a task as blocked by another task, a person, or an outside vendor. Blocked items surface at the top of the board and in your daily digest, with how long they have been waiting.</p>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <h3>Owners on every card</h3>
+        <p>Each task has one owner. Reassigning moves the card, notifies the new owner, and updates the workload view so nobody quietly ends up with eleven things open.</p>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <h3>Timelines that update themselves</h3>
+        <p>When a dependency slips, the dates on everything downstream move with it. You see the consequence before you commit to a new date in front of stakeholders.</p>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <h3>A digest instead of a meeting</h3>
+        <p>Every morning, each person gets a short list: what they own, what is waiting on them, and what changed overnight. Standups become a five-minute check of exceptions.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="workflow">
+  <div class="wrap">
+    <p class="section-label">Getting started</p>
+    <h2 style="color: var(--paper);">Running a project in three steps.</h2>
+    <div class="steps" style="margin-top: 48px;">
+      <div class="step">
+        <div class="step-n">1</div>
+        <h3>Import what you have</h3>
+        <p>Bring in tasks from Jira, Trello, Asana, or a CSV. Statuses and assignees map across automatically, and you can review the mapping before anything is written.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <h3>Set the dependencies</h3>
+        <p>Draw the links that matter: what must finish before something else can start. Tallyboard calculates the critical path and highlights the tasks that would move the date.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <h3>Let the digest run</h3>
+        <p>Your team gets a daily summary by email or Slack. Leads open the board only when the digest flags something, which for most teams is a few times a week.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="facts">
+      <div class="fact">
+        <div class="fact-val">4.2 hrs</div>
+        <div class="fact-label">Median time saved per team lead each week, from our 2026 customer survey of 140 teams.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-val">38%</div>
+        <div class="fact-label">Fewer tasks sitting in a blocked state for over three days after the first month.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-val">99.95%</div>
+        <div class="fact-label">Uptime over the last twelve months, with status history at tallyboard.example/status.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-val">SOC 2</div>
+        <div class="fact-label">Type II report available under NDA. Data stays in the region you choose.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <p class="section-label">Pricing</p>
+    <h2>Priced per team, not per seat.</h2>
+    <p class="section-intro">Add guests to review work at no cost. Every plan includes the full dependency graph and the daily digest.</p>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <p class="plan-desc">For a single team running one or two projects at a time.</p>
+        <div class="plan-price">$0 <small>/ month, up to 10 people</small></div>
+        <ul>
+          <li>Unlimited tasks and boards</li>
+          <li>Dependencies and blocker tracking</li>
+          <li>Daily digest by email</li>
+          <li>30 days of history</li>
+        </ul>
+        <a href="#start" class="btn btn-ghost">Create a workspace</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-name">Team</div>
+        <p class="plan-desc">For groups coordinating several projects with shared milestones.</p>
+        <div class="plan-price">$12 <small>/ month, per team</small></div>
+        <ul>
+          <li>Everything in Starter</li>
+          <li>Critical path and timeline recalculation</li>
+          <li>Slack digests and integrations</li>
+          <li>Workload view across projects</li>
+          <li>Unlimited history and exports</li>
+        </ul>
+        <a href="#start" class="btn">Start a 30-day trial</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Organization</div>
+        <p class="plan-desc">For companies that need SSO, audit logs, and a named contact.</p>
+        <div class="plan-price">Custom</div>
+        <ul>
+          <li>Everything in Team</li>
+          <li>SAML SSO and SCIM provisioning</li>
+          <li>Audit logs and data residency</li>
+          <li>Dedicated onboarding</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing" id="start">
+  <div class="wrap closing-inner">
+    <h2>Your next plan can start this afternoon.</h2>
+    <div class="cta-row">
+      <a href="#start" class="btn">Start a 30-day trial</a>
+      <a href="#contact" class="btn btn-ghost">Book a 20-minute walkthrough</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Tallyboard Inc. Made in Portland.</span>
+    <div class="foot-links">
+      <a href="#">Changelog</a>
+      <a href="#">Security</a>
+      <a href="#">Privacy</a>
+      <a href="#">Status</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+```
+
+Notes on the choices:
+
+- **Look:** A warm off-white paper background, a serif headline face (Georgia or the system equivalent), and one rust accent. It avoids the gradients, glassmorphism, emoji icons, and rounded "feature card" grid that usually signal generated output.
+- **Copy:** Specific claims tied to how the product works ("blocked 2d", daily digest, per-team pricing), in place of generic promises.
+- **Stats:** The figures are placeholders. Replace them with real numbers before launch, or remove that section, since a landing page with invented metrics is a liability.
+- **Self-contained:** No external fonts, images, or scripts. The only JavaScript-free behavior is the anchor scrolling, and it's enabled with CSS.
+- **Responsive:** Breakpoints at 900px and 640px collapse the layout to a single column.

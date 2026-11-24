@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juno Asante — Photographer</title>
+<meta name="description" content="Juno Asante is a freelance photographer working in landscape, portrait, editorial and architecture.">
+<style>
+  :root{
+    --paper:#f3efe7;
+    --paper-2:#e9e3d7;
+    --ink:#1b1a17;
+    --ink-soft:#5d5850;
+    --rule:#cfc7b8;
+    --accent:#b4532a;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    --pad:clamp(1.25rem,4vw,3.5rem);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+  .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:.5rem 1rem;z-index:100}
+  .skip:focus{left:1rem}
+
+  /* ---------- Header ---------- */
+  header.site{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:center;
+    padding:1rem var(--pad);background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);
+    border-bottom:1px solid transparent;transition:border-color .3s}
+  header.site.scrolled{border-bottom-color:var(--rule)}
+  .logo{font-family:var(--serif);font-size:1.35rem;text-decoration:none;letter-spacing:-.01em}
+  .logo span{color:var(--accent)}
+  nav ul{display:flex;gap:2rem;list-style:none}
+  nav a{text-decoration:none;position:relative}
+  nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-3px;height:1px;background:currentColor;transition:right .3s}
+  nav a:hover::after,nav a.active::after{right:0}
+  .menu-btn{display:none}
+  @media (max-width:760px){
+    .menu-btn{display:block}
+    nav ul{position:fixed;inset:60px 0 auto 0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--rule);
+      padding:.5rem var(--pad) 1.5rem;transform:translateY(-130%);transition:transform .35s}
+    nav ul.open{transform:none}
+    nav li{border-top:1px solid var(--rule)}
+    nav a{display:block;padding:1rem 0}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(3rem,8vw,7rem) var(--pad) clamp(2rem,5vw,4rem);display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,5vw,5rem);align-items:end}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.8rem,7.5vw,6.6rem);line-height:.95;letter-spacing:-.03em}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero p.lede{max-width:34ch;margin-top:2rem;font-size:1.1rem;color:var(--ink-soft)}
+  .hero .meta{display:flex;gap:2rem;margin-top:2.5rem;flex-wrap:wrap}
+  .hero .meta div{border-top:1px solid var(--ink);padding-top:.5rem;min-width:8rem}
+  .hero .meta strong{display:block;font-family:var(--serif);font-weight:400;font-size:1.6rem}
+  .hero-frame{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--paper-2)}
+  .hero-frame img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);animation:settle 2.4s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes settle{to{transform:scale(1)}}
+  .hero-frame figcaption{position:absolute;left:0;bottom:0;right:0;padding:1rem;color:#fff;display:flex;justify-content:space-between;
+    background:linear-gradient(transparent,rgba(0,0,0,.45))}
+  @media (max-width:860px){.hero{grid-template-columns:1fr}.hero-frame{aspect-ratio:3/2}}
+
+  /* ---------- Section scaffolding ---------- */
+  section.block{padding:clamp(3.5rem,8vw,7rem) var(--pad);border-top:1px solid var(--rule)}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:clamp(2rem,4vw,3.5rem)}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,4.5vw,3.4rem);letter-spacing:-.02em;line-height:1}
+  .sec-head h2 .num{font-family:var(--mono);font-size:.8rem;color:var(--accent);vertical-align:top;margin-right:.6rem;letter-spacing:.05em}
+
+  /* ---------- Gallery ---------- */
+  .filters{display:flex;gap:.4rem;flex-wrap:wrap}
+  .filters button{padding:.45rem .9rem;border:1px solid var(--rule);border-radius:999px;transition:all .2s}
+  .filters button:hover{border-color:var(--ink)}
+  .filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .gallery{columns:3 280px;column-gap:1.25rem}
+  .tile{break-inside:avoid;margin-bottom:1.25rem;display:block;width:100%;text-align:left;
+    opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
+  .tile.in{opacity:1;transform:none}
+  .tile.hidden{display:none}
+  .tile .ph{overflow:hidden;background:var(--paper-2)}
+  .tile img{width:100%;height:auto;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .4s}
+  .tile:hover img{transform:scale(1.035)}
+  .tile .cap{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0 0}
+  .tile .cap span:first-child{font-family:var(--serif);font-size:1.02rem}
+  .tile .cap .mono{color:var(--ink-soft);padding-top:.2rem;white-space:nowrap}
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{position:fixed;inset:0;z-index:90;background:rgba(18,17,15,.96);color:#eee;display:grid;
+    grid-template-rows:auto 1fr auto;opacity:0;pointer-events:none;transition:opacity .3s}
+  .lightbox.open{opacity:1;pointer-events:auto}
+  .lb-top,.lb-bottom{display:flex;justify-content:space-between;align-items:center;padding:1rem var(--pad)}
+  .lb-stage{display:flex;align-items:center;justify-content:center;padding:0 clamp(3rem,8vw,6rem);min-height:0}
+  .lb-stage img{max-height:100%;max-width:100%;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:3rem;height:3rem;border:1px solid rgba(255,255,255,.25);border-radius:50%;
+    display:grid;place-items:center;font-size:1.2rem;transition:background .2s}
+  .lb-nav:hover{background:rgba(255,255,255,.1)}
+  .lb-prev{left:1rem}.lb-next{right:1rem}
+  .lb-title{font-family:var(--serif);font-size:1.25rem}
+  .lb-close{font-size:1.6rem;line-height:1}
+
+  /* ---------- About ---------- */
+  .about{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,6vw,6rem)}
+  .about .portrait{aspect-ratio:3/4;overflow:hidden}
+  .about .portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+  .about .copy p{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.45rem);line-height:1.5;margin-bottom:1.2rem;max-width:38ch}
+  .about .copy p:first-child::first-letter{float:left;font-size:4.2em;line-height:.85;padding:.08em .1em 0 0;color:var(--accent)}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1.5rem;margin-top:2.5rem;border-top:1px solid var(--rule);padding-top:1.5rem}
+  .facts dt{color:var(--ink-soft)}
+  .facts dd{margin-top:.25rem}
+  @media (max-width:760px){.about{grid-template-columns:1fr}.about .portrait{aspect-ratio:4/3}}
+
+  /* ---------- Services ---------- */
+  .services{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));border-top:1px solid var(--ink)}
+  .svc{padding:2rem 1.75rem 2.25rem 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:1rem}
+  .svc + .svc{padding-left:1.75rem;border-left:1px solid var(--rule)}
+  @media (max-width:1100px){.svc + .svc{border-left:0;padding-left:0}}
+  .svc h3{font-family:var(--serif);font-weight:400;font-size:1.6rem}
+  .svc ul{list-style:none;color:var(--ink-soft);font-size:.95rem}
+  .svc li{padding:.35rem 0;border-top:1px dashed var(--rule)}
+  .svc .price{margin-top:auto;font-family:var(--serif);font-size:1.25rem}
+  .svc .price small{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase;display:block}
+
+  /* ---------- Clients / Testimonials ---------- */
+  .clients{display:flex;flex-wrap:wrap;gap:1rem 3rem;justify-content:space-between;padding:2rem 0;border-block:1px solid var(--rule);margin-bottom:3.5rem}
+  .clients span{font-family:var(--serif);font-size:1.3rem;color:var(--ink-soft);font-style:italic}
+  .quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2.5rem}
+  blockquote p{font-family:var(--serif);font-size:1.3rem;line-height:1.45}
+  blockquote p::before{content:"“";color:var(--accent);font-size:2.4rem;line-height:0;vertical-align:-.45em;margin-right:.1em}
+  blockquote footer{margin-top:1rem;color:var(--ink-soft)}
+
+  /* ---------- Contact ---------- */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,6rem)}
+  .contact h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,6vw,4.8rem);line-height:.98;letter-spacing:-.03em}
+  .contact h2 em{color:var(--accent)}
+  .contact .direct{margin-top:2rem;display:grid;gap:.4rem}
+  .contact .direct a{font-family:var(--serif);font-size:1.3rem;text-decoration:none;border-bottom:1px solid var(--rule);width:fit-content}
+  .contact .direct a:hover{border-color:var(--accent)}
+  .avail{display:inline-flex;align-items:center;gap:.5rem;margin-top:2rem}
+  .avail::before{content:"";width:8px;height:8px;border-radius:50%;background:#4b8b3b;box-shadow:0 0 0 4px rgba(75,139,59,.18)}
+  form{display:grid;gap:1.25rem}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  label{display:grid;gap:.35rem}
+  input,select,textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--ink-soft);padding:.55rem 0;border-radius:0;width:100%}
+  textarea{resize:vertical;min-height:7rem}
+  input:focus,select:focus,textarea:focus{outline:none;border-bottom-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+  .err{color:var(--accent);font-size:.8rem;min-height:1em}
+  .submit{justify-self:start;background:var(--ink);color:var(--paper);padding:.95rem 1.8rem;display:inline-flex;gap:.8rem;align-items:center;transition:background .2s}
+  .submit:hover{background:var(--accent)}
+  .form-ok{padding:1.5rem;border:1px solid var(--ink);font-family:var(--serif);font-size:1.2rem;display:none}
+  @media (max-width:760px){.contact,.row{grid-template-columns:1fr}}
+
+  footer.site{padding:2rem var(--pad);border-top:1px solid var(--rule);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;color:var(--ink-soft)}
+  footer.site a{text-decoration:none}
+  footer.site a:hover{color:var(--ink)}
+  footer.site .socials{display:flex;gap:1.5rem}
+</style>
+</head>
+<body>
+<a href="#work" class="skip">Skip to work</a>
+
+<header class="site" id="top">
+  <a href="#top" class="logo">Juno Asante<span>.</span></a>
+  <nav aria-label="Primary">
+    <button class="menu-btn mono" aria-expanded="false" aria-controls="nav-list">Menu</button>
+    <ul id="nav-list">
+      <li><a href="#work" class="mono">Work</a></li>
+      <li><a href="#about" class="mono">About</a></li>
+      <li><a href="#services" class="mono">Services</a></li>
+      <li><a href="#contact" class="mono">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <p class="mono" style="color:var(--ink-soft);margin-bottom:1.5rem">Freelance photographer — Lisbon &amp; on assignment</p>
+      <h1 id="hero-title">Light, patience, and the <em>quiet</em> second before.</h1>
+      <p class="lede">Landscape, portrait, editorial and architectural photography for publications, brands and people who care how things look.</p>
+      <div class="meta">
+        <div><strong>11 yrs</strong><span class="mono">Behind the lens</span></div>
+        <div><strong>34</strong><span class="mono">Countries shot</span></div>
+        <div><strong>120+</strong><span class="mono">Commissions</span></div>
+      </div>
+    </div>
+    <figure class="hero-frame">
+      <img id="hero-img" alt="Layered mountain ridges at dusk under a low amber sun">
+      <figcaption class="mono"><span>Ridge Line, Dolomites</span><span>2025</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="block" id="work" aria-labelledby="work-title">
+    <div class="sec-head">
+      <h2 id="work-title"><span class="num">01</span>Selected work</h2>
+      <div class="filters" role="group" aria-label="Filter by category">
+        <button class="mono" data-filter="all" aria-pressed="true">All</button>
+        <button class="mono" data-filter="landscape" aria-pressed="false">Landscape</button>
+        <button class="mono" data-filter="portrait" aria-pressed="false">Portrait</button>
+        <button class="mono" data-filter="architecture" aria-pressed="false">Architecture</button>
+        <button class="mono" data-filter="editorial" aria-pressed="false">Editorial</button>
+      </div>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="block" id="about" aria-labelledby="about-title">
+    <div class="sec-head"><h2 id="about-title"><span class="num">02</span>About</h2></div>
+    <div class="about">
+      <figure class="portrait"><img id="about-img" alt="Portrait of Juno Asante"></figure>
+      <div>
+        <div class="copy">
+          <p>I started photographing at fourteen with a borrowed film camera and a habit of waking before sunrise. Neither has changed much.</p>
+          <p>My work is slow by design: I scout, wait, and return. For portraits, that means time spent talking before any shutter moves. For places, it means learning the light until it does something worth keeping.</p>
+          <p>I've shot for travel magazines, architecture studios and independent brands, and I still take on a handful of personal commissions each year.</p>
+        </div>
+        <dl class="facts">
+          <div><dt class="mono">Based in</dt><dd>Lisbon, Portugal</dd></div>
+          <div><dt class="mono">Kit</dt><dd>Medium format digital, 35mm film</dd></div>
+          <div><dt class="mono">Languages</dt><dd>English, Portuguese, French</dd></div>
+          <div><dt class="mono">Recognition</dt><dd>Sony World Photography shortlist, 2024</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="services" aria-labelledby="svc-title">
+    <div class="sec-head">
+      <h2 id="svc-title"><span class="num">03</span>Services</h2>
+      <p class="mono" style="color:var(--ink-soft)">Rates in EUR · travel quoted separately</p>
+    </div>
+    <div class="services">
+      <article class="svc">
+        <h3>Portrait sessions</h3>
+        <ul><li>2–3 hour session, one location</li><li>25 fully retouched images</li><li>Private online gallery</li><li>Personal print licence</li></ul>
+        <p class="price"><small>From</small>€650</p>
+      </article>
+      <article class="svc">
+        <h3>Editorial</h3>
+        <ul><li>Magazine &amp; publication features</li><li>Half or full day rates</li><li>Art direction collaboration</li><li>Usage per publication brief</li></ul>
+        <p class="price"><small>Day rate</small>€1,400</p>
+      </article>
+      <article class="svc">
+        <h3>Architecture</h3>
+        <ul><li>Interiors &amp; exteriors</li><li>Blue hour &amp; twilight coverage</li><li>Perspective-corrected files</li><li>Commercial licence included</li></ul>
+        <p class="price"><small>Per project</small>€1,800</p>
+      </article>
+      <article class="svc">
+        <h3>Brand &amp; product</h3>
+        <ul><li>Lifestyle and still life</li><li>Studio or on location</li><li>Social &amp; web crops delivered</li><li>12-month usage licence</li></ul>
+        <p class="price"><small>From</small>€2,200</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="clients-title">
+    <div class="sec-head"><h2 id="clients-title"><span class="num">04</span>Kind words</h2></div>
+    <div class="clients" aria-label="Selected clients">
+      <span>Northbound Travel</span><span>Atelier Ferro</span><span>The Slow Review</span><span>Casa Mira</span><span>Field &amp; Fold</span>
+    </div>
+    <div class="quotes">
+      <blockquote><p>Juno found frames in our building we hadn't noticed in six years of designing it.</p><footer class="mono">— Atelier Ferro, Architecture</footer></blockquote>
+      <blockquote><p>Calm, prepared, and the images ran as our cover story without a single reshoot.</p><footer class="mono">— The Slow Review, Features Desk</footer></blockquote>
+      <blockquote><p>The first portraits of my family I actually want on the wall.</p><footer class="mono">— Private client, Porto</footer></blockquote>
+    </div>
+  </section>
+
+  <section class="block" id="contact" aria-labelledby="contact-title">
+    <div class="contact">
+      <div>
+        <h2 id="contact-title">Have something worth <em>looking at?</em></h2>
+        <p class="avail mono">Booking from February 2027</p>
+        <div class="direct">
+          <a href="mailto:hello@junoasante.example">hello@junoasante.example</a>
+          <a href="tel:+351210000000">+351 21 000 0000</a>
+        </div>
+      </div>
+      <div>
+        <form id="contact-form" novalidate>
+          <div class="row">
+            <label><span class="mono">Name</span><input name="name" autocomplete="name" required><span class="err" aria-live="polite"></span></label>
+            <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required><span class="err" aria-live="polite"></span></label>
+          </div>
+          <div class="row">
+            <label><span class="mono">Project type</span>
+              <select name="type">
+                <option>Portrait</option><option>Editorial</option><option>Architecture</option><option>Brand &amp; product</option><option>Something else</option>
+              </select><span class="err"></span>
+            </label>
+            <label><span class="mono">Preferred date</span><input name="date" type="date"><span class="err"></span></label>
+          </div>
+          <label><span class="mono">Tell me about it</span><textarea name="message" required></textarea><span class="err" aria-live="polite"></span></label>
+          <button class="submit mono" type="submit">Send enquiry <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="form-ok" id="form-ok" role="status">Thank you — your note is in. I reply to every enquiry within two working days.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site mono">
+  <span>© <span id="year"></span> Juno Asante Photography</span>
+  <div class="socials"><a href="#">Instagram</a><a href="#">Behance</a><a href="#">Journal</a></div>
+  <a href="#top">Back to top ↑</a>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" aria-hidden="true">
+  <div class="lb-top"><span class="mono" id="lb-count"></span><button class="lb-close" id="lb-close" aria-label="Close viewer">×</button></div>
+  <div class="lb-stage"><img id="lb-img" alt=""></div>
+  <div class="lb-bottom"><span class="lb-title" id="lb-title"></span><span class="mono" id="lb-meta"></span></div>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">←</button>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Next image">→</button>
+</div>
+
+<script>
+/* =========================================================
+   Procedural placeholder "photographs" (replace with real
+   images by setting `src` on each work item below).
+   ========================================================= */
+function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^(s>>>15),2246822507)^Math.imul(s^(s>>>13),3266489909),(s^=s>>>16)>>>0)/4294967296)}
+const uri = svg => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+const grain = `<filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .09 0"/></filter>`;
+const vignette = `<radialGradient id="v" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>`;
+const finish = (W,H) => `<rect width="${W}" height="${H}" fill="url(#v)"/><rect width="${W}" height="${H}" filter="url(#g)"/>`;
+
+function ridge(r,W,y,amp,steps){let d=`M0 ${H_(y)}`;function H_(v){return v.toFixed(1)}
+  let pts=[];for(let i=0;i<=steps;i++){pts.push([W*i/steps, y - r()*amp])}
+  d=`M0 ${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [x,yy]=pts[i];const px=pts[i-1][0];d+=` Q${(px+x)/2+ (r()-.5)*20} ${yy-(r()*amp*.4)} ${x} ${yy}`}
+  return d}
+
+const palettes = {
+  dusk:["#f6c27a","#e07a4f","#6b3f5e","#2d2340","#17142a"],
+  dawn:["#fde6c8","#f2b5a0","#9aa7c7","#56618a","#272c4a"],
+  fog:["#e8e6e1","#c9cbc8","#9da3a2","#6b7472","#3c4342"],
+  desert:["#f7e0b5","#e9a86b","#c06a3e","#7d3a28","#3b1d17"],
+  sea:["#dcebf0","#9cc3cf","#5d8fa3","#2f5a6e","#152f3b"],
+};
+
+function landscape(seed,W,H){
+  const r=rng(seed);const keys=Object.keys(palettes);const p=palettes[keys[Math.floor(r()*keys.length)]];
+  const sunX=W*(.25+r()*.5), sunY=H*(.3+r()*.2), sunR=Math.min(W,H)*(.06+r()*.06);
+  let layers="";const n=4+Math.floor(r()*2);
+  for(let i=0;i<n;i++){const y=H*(.5+i*(.5/n));const d=ridge(r,W,y,H*(.14-i*.015),5+i*2)+` L${W} ${H} L0 ${H} Z`;
+    const c=p[Math.min(1+i,p.length-1)];layers+=`<path d="${d}" fill="${c}" opacity="${.75+i*.06}"/>`}
+  return uri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs>
+    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[3]}"/><stop offset=".55" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[0]}"/></linearGradient>
+    <radialGradient id="sun"><stop offset="0" stop-color="#fff8e6"/><stop offset=".35" stop-color="${p[0]}" stop-opacity=".9"/><stop offset="1" stop-color="${p[0]}" stop-opacity="0"/></radialGradient>${grain}${vignette}</defs>
+    <rect width="${W}" height="${H}" fill="url(#s)"/><circle cx="${sunX}" cy="${sunY}" r="${sunR*3.2}" fill="url(#sun)"/><circle cx="${sunX}" cy="${sunY}" r="${sunR*.55}" fill="#fff6dc" opacity=".9"/>
+    ${layers}${finish(W,H)}</svg>`);
+}
+
+function portrait(seed,W,H,mono){
+  const r=rng(seed);const hues=[[18,40],[200,30],[340,30],[150,20],[35,55]];const [h,s]=hues[Math.floor(r()*hues.length)];
+  const bg1=mono?"#2a2a2a":`hsl(${h} ${s}% 22%)`, bg2=mono?"#8a8a8a":`hsl(${(h+30)%360} ${s}% 55%)`;
+  const skin=mono?"#b9b9b9":`hsl(${20+r()*15} ${30+r()*25}% ${35+r()*35}%)`;
+  const dark=mono?"#151515":`hsl(${h} 20% 10%)`;
+  let bokeh="";for(let i=0;i<14;i++){bokeh+=`<circle cx="${r()*W}" cy="${r()*H*.7}" r="${10+r()*45}" fill="${mono?'#fff':`hsl(${(h+r()*60)%360} 70% 80%)`}" opacity="${.06+r()*.14}"/>`}
+  const cx=W*(.4+r()*.2), hy=H*.38, hr=W*.15;
+  return uri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs>
+    <radialGradient id="b" cx="${(.3+r()*.4).toFixed(2)}" cy=".3" r=".9"><stop offset="0" stop-color="${bg2}"/><stop offset="1" stop-color="${bg1}"/></radialGradient>
+    <linearGradient id="k" x1="0" x2="1"><stop offset="0" stop-color="${skin}"/><stop offset="1" stop-color="${dark}" stop-opacity=".9"/></linearGradient>
+    <filter id="bl"><feGaussianBlur stdDeviation="6"/></filter>${grain}${vignette}</defs>
+    <rect width="${W}" height="${H}" fill="url(#b)"/><g filter="url(#bl)">${bokeh}</g>
+    <path d="M${cx-W*.42} ${H} C${cx-W*.38} ${H*.72} ${cx-W*.2} ${H*.62} ${cx} ${H*.62} C${cx+W*.2} ${H*.62} ${cx+W*.38} ${H*.72} ${cx+W*.42} ${H} Z" fill="${dark}"/>
+    <rect x="${cx-hr*.38}" y="${hy+hr*.7}" width="${hr*.76}" height="${hr*1.1}" fill="url(#k)"/>
+    <ellipse cx="${cx}" cy="${hy}" rx="${hr*.82}" ry="${hr}" fill="url(#k)"/>
+    <path d="M${cx-hr*.9} ${hy-hr*.05} C${cx-hr} ${hy-hr*1.35} ${cx+hr} ${hy-hr*1.35} ${cx+hr*.9} ${hy-hr*.05} C${cx+hr*.6} ${hy-hr*.75} ${cx-hr*.6} ${hy-hr*.75} ${cx-hr*.9} ${hy-hr*.05} Z" fill="${dark}"/>
+    ${finish(W,H)}</svg>`);
+}
+
+function architecture(seed,W,H){
+  const r=rng(seed);const night=r()>.5;
+  const sky1=night?"#0f1b2e":"#cfd9de", sky2=night?"#36506e":"#f1ece2";
+  let blds="";let x=-20;
+  while(x<W){const w=60+r()*140, h=H*(.3+r()*.55), y=H-h;const shade=night?`hsl(220 20% ${8+r()*10}%)`:`hsl(30 8% ${55+r()*30}%)`;
+    blds+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${shade}"/>`;
+    const cols=Math.max(2,Math.floor(w/22)), rows=Math.floor(h/28);
+    for(let c=0;c<cols;c++)for(let rr=0;rr<rows;rr++){if(r()<(night?.38:.85)){
+      blds+=`<rect x="${x+8+c*(w-12)/cols}" y="${y+10+rr*28}" width="${(w-12)/cols-8}" height="16" fill="${night?(r()>.3?'#f4c86a':'#9fd2ff'):'#2b3236'}" opacity="${night?.5+r()*.5:.18+r()*.25}"/>`}}
+    x+=w+2+r()*10}
+  return uri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs>
+    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky1}"/><stop offset="1" stop-color="${sky2}"/></linearGradient>${grain}${vignette}</defs>
+    <rect width="${W}" height="${H}" fill="url(#s)"/>${blds}${finish(W,H)}</svg>`);
+}
+
+function editorial(seed,W,H){
+  const r=rng(seed);const bgs=["#e8d8c3","#d6dccf","#1f2a2e","#c9b8a8","#efe6d6","#283330"];
+  const bg=bgs[Math.floor(r()*bgs.length)];const darkBg=parseInt(bg.slice(1,3),16)<100;
+  const cols=darkBg?["#c46a3d","#e9d6b6","#7a8f7b"]:["#b4532a","#2b3a3c","#d9a441","#6d7f6a"];
+  let shapes="";const n=3+Math.floor(r()*3);
+  for(let i=0;i<n;i++){const c=cols[Math.floor(r()*cols.length)];const t=r();const cx=W*(.2+r()*.6),cy=H*(.25+r()*.55),s=Math.min(W,H)*(.12+r()*.18);
+    shapes+= t<.4?`<circle cx="${cx}" cy="${cy}" r="${s}" fill="${c}"/>`:
+             t<.75?`<rect x="${cx-s*.6}" y="${cy-s}" width="${s*1.2}" height="${s*2}" rx="${s*.6}" fill="${c}"/>`:
+             `<path d="M${cx-s} ${cy+s} L${cx} ${cy-s} L${cx+s} ${cy+s} Z" fill="${c}"/>`;
+    shapes+=`<ellipse cx="${cx+s*.25}" cy="${H*.86}" rx="${s*.9}" ry="${s*.12}" fill="#000" opacity=".18"/>`}
+  return uri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs>
+    <linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg}"/><stop offset="1" stop-color="${bg}" stop-opacity=".8"/></linearGradient>${grain}${vignette}</defs>
+    <rect width="${W}" height="${H}" fill="${bg}"/><rect y="${H*.82}" width="${W}" height="${H*.18}" fill="#000" opacity=".08"/>${shapes}${finish(W,H)}</svg>`);
+}
+
+const gen = {landscape, portrait, architecture, editorial};
+
+/* ---------- Portfolio data ---------- */
+const works = [
+  {t:"Ridge Line",          c:"landscape",    p:"Dolomites, IT",     y:2025, w:1200,h:1500, s:7},
+  {t:"Mariana, Studio II",  c:"portrait",     p:"Lisbon, PT",        y:2025, w:1000,h:1300, s:12},
+  {t:"Night Grid",          c:"architecture", p:"Hong Kong",         y:2024, w:1200,h:900,  s:31},
+  {t:"Still, No. 4",        c:"editorial",    p:"The Slow Review",   y:2024, w:1000,h:1000, s:44},
+  {t:"Low Tide",            c:"landscape",    p:"Azores, PT",        y:2023, w:1400,h:900,  s:58},
+  {t:"The Ceramicist",      c:"portrait",     p:"Field & Fold",      y:2024, w:1000,h:1250, s:63},
+  {t:"Facade Study",        c:"architecture", p:"Atelier Ferro",     y:2025, w:1000,h:1300, s:72},
+  {t:"Desert Hours",        c:"landscape",    p:"Wadi Rum, JO",      y:2022, w:1200,h:800,  s:89},
+  {t:"Objects at Rest",     c:"editorial",    p:"Casa Mira",         y:2025, w:1000,h:1300, s:91},
+  {t:"Twin Brothers",       c:"portrait",     p:"Porto, PT",         y:2023, w:1200,h:900,  s:105},
+  {t:"Morning Fog",         c:"landscape",    p:"Sintra, PT",        y:2025, w:1000,h:1250, s:117},
+  {t:"Blue Hour Tower",     c:"architecture", p:"Rotterdam, NL",     y:2023, w:1000,h:1400, s:126},
+];
+works.forEach(w=>{ if(!w.src) w.src = gen[w.c](w.s, w.w, w.h, false); });
+
+document.getElementById("hero-img").src = works[0].src;
+document.getElementById("about-img").src = portrait(2024, 900, 1200, true);
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ---------- Gallery ---------- */
+const gallery = document.getElementById("gallery");
+works.forEach((w,i)=>{
+  const b=document.createElement("button");
+  b.className="tile";b.dataset.cat=w.c;b.dataset.i=i;
+  b.setAttribute("aria-label",`Open “${w.t}”, ${w.c}, ${w.p}`);
+  b.innerHTML=`<div class="ph"><img src="${w.src}" width="${w.w}" height="${w.h}" alt="" loading="lazy"></div>
+    <div class="cap"><span>${w.t}</span><span class="mono">${w.c} · ${w.y}</span></div>`;
+  b.addEventListener("click",()=>openLB(i));
+  gallery.appendChild(b);
+});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{rootMargin:"0px 0px -5% 0px"});
+document.querySelectorAll(".tile").forEach(t=>io.observe(t));
+
+document.querySelectorAll(".filters button").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".filters button").forEach(b=>b.setAttribute("aria-pressed",b===btn));
+  const f=btn.dataset.filter;
+  document.querySelectorAll(".tile").forEach(t=>t.classList.toggle("hidden",f!=="all"&&t.dataset.cat!==f));
+}));
+
+/* ---------- Lightbox ---------- */
+const lb=document.getElementById("lightbox"), lbImg=document.getElementById("lb-img");
+let cur=0, lastFocus=null;
+const visible=()=>[...document.querySelectorAll(".tile:not(.hidden)")].map(t=>+t.dataset.i);
+function show(i){const w=works[i];cur=i;lbImg.src=w.src;lbImg.alt=w.t;
+  document.getElementById("lb-title").textContent=w.t;
+  document.getElementById("lb-meta").textContent=`${w.p} · ${w.y}`;
+  const v=visible();document.getElementById("lb-count").textContent=`${String(v.indexOf(i)+1).padStart(2,"0")} / ${String(v.length).padStart(2,"0")}`}
+function openLB(i){lastFocus=document.activeElement;show(i);lb.classList.add("open");lb.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";document.getElementById("lb-close").focus()}
+function closeLB(){lb.classList.remove("open");lb.setAttribute("aria-hidden","true");document.body.style.overflow="";lastFocus&&lastFocus.focus()}
+function step(d){const v=visible();show(v[(v.indexOf(cur)+d+v.length)%v.length])}
+document.getElementById("lb-close").onclick=closeLB;
+document.getElementById("lb-prev").onclick=()=>step(-1);
+document.getElementById("lb-next").onclick=()=>step(1);
+lb.addEventListener("click",e=>{if(e.target===lb||e.target.classList.contains("lb-stage"))closeLB()});
+document.addEventListener("keydown",e=>{if(!lb.classList.contains("open"))return;
+  if(e.key==="Escape")closeLB();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1);
+  else if(e.key==="Tab"){const f=[...lb.querySelectorAll("button")];const i=f.indexOf(document.activeElement);
+    e.preventDefault();f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus()}});
+let tx=null;lb.addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
+lb.addEventListener("touchend",e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)step(dx<0?1:-1);tx=null});
+
+/* ---------- Header / nav ---------- */
+const header=document.querySelector("header.site");
+addEventListener("scroll",()=>header.classList.toggle("scrolled",scrollY>10),{passive:true});
+const menuBtn=document.querySelector(".menu-btn"), navList=document.getElementById("nav-list");
+menuBtn.addEventListener("click",()=>{const o=navList.classList.toggle("open");menuBtn.setAttribute("aria-expanded",o);menuBtn.textContent=o?"Close":"Menu"});
+navList.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{navList.classList.remove("open");menuBtn.setAttribute("aria-expanded",false);menuBtn.textContent="Menu"}));
+const secs=["work","about","services","contact"].map(id=>document.getElementById(id));
+const navIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){navList.querySelectorAll("a").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id))}}),{rootMargin:"-45% 0px -50% 0px"});
+secs.forEach(s=>navIO.observe(s));
+
+/* ---------- Contact form ---------- */
+const form=document.getElementById("contact-form");
+form.addEventListener("submit",e=>{
+  e.preventDefault();let ok=true;
+  const checks={name:v=>v.trim()?"":"Please add your name.",
+    email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?"":"A valid email, please.",
+    message:v=>v.trim().length>=10?"":"A few more words about the project."};
+  for(const [n,fn] of Object.entries(checks)){const el=form.elements[n];const msg=fn(el.value);
+    el.closest("label").querySelector(".err").textContent=msg;el.setAttribute("aria-invalid",!!msg);if(msg&&ok){el.focus();ok=false}}
+  if(!ok)return;
+  // Hook up to a real endpoint (Formspree, Netlify Forms, your own API) here.
+  form.style.display="none";document.getElementById("form-ok").style.display="block";
+});
+</script>
+</body>
+</html>

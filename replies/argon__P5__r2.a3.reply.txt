@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datum — Specification-driven project tracking for engineering teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F6F5F1;
+      --surface: #FFFFFF;
+      --surface-alt: #EFECE6;
+      --ink: #141413;
+      --ink-secondary: #575652;
+      --ink-tertiary: #878681;
+      --line: #DEDCD5;
+      --line-dark: #222220;
+      --accent: #C83E2B;
+      --accent-soft: #FBECE9;
+      --green: #1E6F4E;
+      --green-soft: #E5F3EC;
+      --amber: #B2620F;
+      --amber-soft: #FDF3E7;
+      --blue: #1D4ED8;
+      --blue-soft: #EFF4FF;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --serif: 'Instrument Serif', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Architectural outer grid container */
+    .frame {
+      max-width: 1280px;
+      margin: 0 auto;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+
+    /* Top technical status ribbon */
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      background: var(--surface-alt);
+    }
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .topbar a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(246, 245, 241, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      background: var(--ink);
+      color: var(--bg);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 16px;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.12s ease;
+    }
+    .btn-ghost {
+      color: var(--ink);
+      background: transparent;
+      border-color: var(--line);
+    }
+    .btn-ghost:hover {
+      background: var(--surface-alt);
+      border-color: var(--ink-tertiary);
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-accent:hover {
+      background: #ad3120;
+    }
+    .kbd {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 1px 5px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 2px;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-left {
+      padding: 64px 48px 56px 40px;
+      border-right: 1px solid var(--line);
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(46px, 5.2vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--ink-secondary);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--ink-secondary);
+      max-width: 540px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .cli-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 9px 14px;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+    .cli-box:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .hero-right {
+      padding: 40px;
+      background: var(--surface-alt);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .spec-note {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 20px;
+      box-shadow: 4px 4px 0px rgba(20, 20, 19, 0.06);
+    }
+    .spec-note-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .spec-note-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .spec-diff {
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.65;
+      background: #FAF9F6;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+    }
+    .diff-del {
+      color: #9E2A2B;
+      background: #FDE8E8;
+      display: block;
+      padding: 0 4px;
+    }
+    .diff-add {
+      color: #1B5E20;
+      background: #E7F5E8;
+      display: block;
+      padding: 0 4px;
+    }
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .metric-val {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .metric-lbl {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      margin-top: 2px;
+    }
+
+    /* Interactive App Workbench */
+    .workbench-wrap {
+      padding: 32px 40px 48px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .workbench-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .view-tabs {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .view-tab {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 7px 14px;
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-right: 1px solid var(--line);
+    }
+    .view-tab:last-child {
+      border-right: none;
+    }
+    .view-tab.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .workbench-hint {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .app-window {
+      border: 1px solid var(--ink);
+      background: var(--surface);
+      box-shadow: 8px 8px 0px rgba(20, 20, 19, 0.1);
+    }
+    .app-header {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .app-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .app-breadcrumbs span.muted {
+      color: #8E8D8A;
+    }
+    .cycle-meter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress-bar {
+      width: 110px;
+      height: 6px;
+      background: #333330;
+      position: relative;
+    }
+    .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 68%;
+      background: #4ADE80;
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 210px 1fr 330px;
+      min-height: 450px;
+    }
+    .app-sidebar {
+      border-right: 1px solid var(--line);
+      background: #FAF9F5;
+      padding: 14px 0;
+      font-size: 13px;
+    }
+    .sidebar-section {
+      padding: 0 14px;
+      margin-bottom: 18px;
+    }
+    .sidebar-heading {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-tertiary);
+      margin-bottom: 8px;
+    }
+    .sidebar-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 8px;
+      color: var(--ink-secondary);
+      border-radius: 2px;
+      font-size: 12.5px;
+    }
+    .sidebar-item.active {
+      background: var(--surface-alt);
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .sidebar-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    /* Issue Table */
+    .app-main {
+      border-right: 1px solid var(--line);
+      overflow-x: auto;
+    }
+    .issue-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .issue-table th {
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-tertiary);
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #FAF9F5;
+    }
+    .issue-row {
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .issue-row:hover {
+      background: #F8F7F2;
+    }
+    .issue-row.selected {
+      background: #F1EFE8;
+    }
+    .issue-row td {
+      padding: 11px 14px;
+      vertical-align: middle;
+    }
+    .issue-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-tertiary);
+      white-space: nowrap;
+    }
+    .issue-title {
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+    .badge-progress {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid #F3D5B5;
+    }
+    .badge-review {
+      background: var(--blue-soft);
+      color: var(--blue);
+      border: 1px solid #C7D9FE;
+    }
+    .badge-blocked {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #F5C6BF;
+    }
+    .badge-done {
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid #BCE3CF;
+    }
+    .branch-pill {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      background: var(--surface-alt);
+      padding: 2px 6px;
+    }
+
+    /* Inspector Drawer */
+    .app-inspector {
+      padding: 18px;
+      background: #FCFBF9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .inspector-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+    .inspector-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+    .inspector-meta {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      row-gap: 8px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .inspector-meta dt {
+      color: var(--ink-tertiary);
+      font-family: var(--mono);
+    }
+    .inspector-meta dd {
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .inspector-spec {
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .inspector-commits {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .commit-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .commit-line:last-child {
+      border-bottom: none;
+    }
+    .commit-sha {
+      color: var(--accent);
+    }
+
+    /* Logos / Social Proof Strip */
+    .proof-strip {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      border-bottom: 1px solid var(--line);
+    }
+    .proof-label {
+      padding: 24px 40px;
+      border-right: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+    }
+    .proof-logos {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+    }
+    .proof-logo-item {
+      padding: 24px 20px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      border-right: 1px solid var(--line);
+      letter-spacing: -0.02em;
+    }
+    .proof-logo-item:last-child {
+      border-right: none;
+    }
+
+    /* Section Header */
+    .section-head {
+      padding: 64px 40px 40px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(34px, 3.8vw, 50px);
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--ink-secondary);
+      max-width: 480px;
+    }
+
+    /* Opinionated Architecture Grid */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+    .arch-card {
+      padding: 40px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .arch-card:last-child {
+      border-right: none;
+    }
+    .arch-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .arch-card h3 {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .arch-card p {
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .arch-diagram {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+    }
+    .kbd-flow {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .keycap {
+      background: var(--surface-alt);
+      border: 1px solid var(--ink-tertiary);
+      border-bottom-width: 2px;
+      padding: 2px 7px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Comparison Ledger (What we left out) */
+    .manifesto-split {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      border-bottom: 1px solid var(--line);
+    }
+    .manifesto-left {
+      padding: 56px 40px;
+      border-right: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .manifesto-left h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 38px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .manifesto-left p {
+      color: #B8B6B0;
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+    .quote-attr {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #8E8D8A;
+      border-top: 1px solid #2E2E2B;
+      padding-top: 16px;
+    }
+    .manifesto-right {
+      padding: 0;
+    }
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .ledger-table th {
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--ink-tertiary);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-alt);
+    }
+    .ledger-table td {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    .ledger-table tr:last-child td {
+      border-bottom: none;
+    }
+    .bad-pattern {
+      color: var(--ink-tertiary);
+      text-decoration: line-through;
+      font-family: var(--mono);
+      font-size: 12.5px;
+    }
+    .good-pattern {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+    .price-col {
+      padding: 40px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .price-col:last-child {
+      border-right: none;
+    }
+    .price-col.featured {
+      background: var(--surface);
+    }
+    .tier-name {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+      margin-bottom: 12px;
+    }
+    .price-amount {
+      font-family: var(--serif);
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-amount span {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--ink-tertiary);
+    }
+    .price-note {
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .price-features {
+      list-style: none;
+      margin-bottom: 32px;
+      font-size: 13.5px;
+    }
+    .price-features li {
+      padding: 7px 0;
+      color: var(--ink-secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .price-features li::before {
+      content: "→";
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 48px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--ink-secondary);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .footer-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: var(--ink);
+    }
+
+    /* Command Palette Modal */
+    .cmd-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 19, 0.45);
+      display: none;
+      place-items: start center;
+      padding-top: 12vh;
+      z-index: 100;
+    }
+    .cmd-backdrop.open {
+      display: grid;
+    }
+    .cmd-modal {
+      width: 100%;
+      max-width: 540px;
+      background: var(--surface);
+      border: 1px solid var(--ink);
+      box-shadow: 10px 10px 0px rgba(20, 20, 19, 0.2);
+    }
+    .cmd-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      padding: 16px 18px;
+      font-family: var(--mono);
+      font-size: 14px;
+      outline: none;
+      background: var(--surface);
+    }
+    .cmd-list {
+      list-style: none;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+    .cmd-item {
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .cmd-item:hover {
+      background: var(--surface-alt);
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .proof-strip,
+      .section-head,
+      .arch-grid,
+      .manifesto-split,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-left,
+      .proof-label,
+      .arch-card,
+      .manifesto-left,
+      .price-col {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+      .app-sidebar {
+        display: none;
+      }
+      .proof-logos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Technical changelog ribbon -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <span class="status-dot"></span>
+        <span>REL v2.14.0 — SQLite local-first sync engine &amp; stacked PR dependency tracking</span>
+      </div>
+      <div>
+        <span>US-EAST / EU-CENTRAL: 99.994%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Navigation -->
+  <header>
+    <div class="nav-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark">D/</span>
+        <span>Datum</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#workbench">Workbench</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#manifesto">Omissions</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" id="openCmdBtn" title="Press Cmd+K">
+          <span>Command</span>
+          <span class="kbd" style="background: var(--surface-alt); color: var(--ink); border-color: var(--line);">⌘K</span>
+        </button>
+        <a href="#pricing" class="btn btn-primary">Start workspace →</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="frame">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">
+          <span>// SPEC-DRIVEN ISSUE LEDGER</span>
+        </div>
+        <h1>Software slips when specs and tickets <em>drift apart.</em></h1>
+        <p class="hero-sub">
+          Datum binds technical RFCs, cycle capacity, and Git branches into a single local-first ledger. Built for engineering teams that hate backlog theater.
+        </p>
+        <div class="hero-ctas">
+          <a href="#pricing" class="btn btn-accent">Deploy team workspace</a>
+          <div class="cli-box" id="copyCli" title="Click to copy CLI installer">
+            <span>$ brew install datum-hq/tap/datum</span>
+            <span id="copyStatus" style="color: var(--accent); font-weight: 500;">COPY</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="spec-note">
+          <div class="spec-note-header">
+            <span>RFC-042 // STORAGE_ENGINE.MD</span>
+            <span>LINKED TO 4 ISSUES</span>
+          </div>
+          <div class="spec-note-title">§3.2 Write-ahead batching threshold</div>
+          <div class="spec-diff">
+            <span class="diff-del">- Flush WAL buffer every 250ms on main thread</span>
+            <span class="diff-add">+ Flush WAL on 64KB watermark via dedicated worker</span>
+          </div>
+          <div style="margin-top: 12px; font-family: var(--mono); font-size: 11px; color: var(--ink-secondary); display: flex; justify-content: space-between;">
+            <span>Triggered scope flag on <strong>ENG-402</strong></span>
+            <span style="color: var(--green);">✓ PR #1184 merged</span>
+          </div>
+        </div>
+
+        <div class="hero-metrics">
+          <div>
+            <div class="metric-val">&lt; 16ms</div>
+            <div class="metric-lbl">IndexedDB local query latency</div>
+          </div>
+          <div>
+            <div class="metric-val">100%</div>
+            <div class="metric-lbl">Plaintext Markdown exportable</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Workbench Preview -->
+    <section class="workbench-wrap" id="workbench">
+      <div class="workbench-controls">
+        <div class="view-tabs" role="tablist">
+          <button class="view-tab active" data-filter="all">All Cycle Issues (6)</button>
+          <button class="view-tab" data-filter="blocked">Scope Drift / Blocked (2)</button>
+          <button class="view-tab" data-filter="review">In PR Review (2)</button>
+        </div>
+        <div class="workbench-hint">
+          ↑↓ OR CLICK ANY ROW TO INSPECT LINKED RFC &amp; COMMITS
+        </div>
+      </div>
+
+      <div class="app-window">
+        <div class="app-header">
+          <div class="app-breadcrumbs">
+            <span>datum-core</span>
+            <span class="muted">/</span>
+            <span>Cycle 18 (Nov 18 – Dec 02)</span>
+          </div>
+          <div class="cycle-meter">
+            <span>CAPACITY: 28 / 34 PTS</span>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="app-body">
+          <!-- Left Sidebar -->
+          <aside class="app-sidebar">
+            <div class="sidebar-section">
+              <div class="sidebar-heading">Active Cycle</div>
+              <div class="sidebar-item active">
+                <span>Cycle 18 · Current</span>
+                <span class="sidebar-count">14</span>
+              </div>
+              <div class="sidebar-item">
+                <span>Cycle 19 · Staging</span>
+                <span class="sidebar-count">9</span>
+              </div>
+              <div class="sidebar-item">
+                <span>Cooldown Queue</span>
+                <span class="sidebar-count">5</span>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <div class="sidebar-heading">Specifications</div>
+              <div class="sidebar-item">
+                <span>RFC-042 WAL Sync</span>
+                <span class="sidebar-count">4</span>
+              </div>
+              <div class="sidebar-item">
+                <span>RFC-039 Auth Tokens</span>
+                <span class="sidebar-count">6</span>
+              </div>
+              <div class="sidebar-item">
+                <span>RFC-036 Zero-Downtime</span>
+                <span class="sidebar-count">4</span>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Center Table -->
+          <div class="app-main">
+            <table class="issue-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>TITLE</th>
+                  <th>STATUS</th>
+                  <th>BRANCH</th>
+                  <th>EST</th>
+                </tr>
+              </thead>
+              <tbody id="issueTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right Inspector Drawer -->
+          <aside class="app-inspector" id="issueInspector">
+            <!-- Populated by JS -->
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Engineering Teams Strip -->
+    <div class="proof-strip">
+      <div class="proof-label">
+        Used daily by systems &amp; infrastructure teams at
+      </div>
+      <div class="proof-logos">
+        <div class="proof-logo-item">OXIDE_LABS</div>
+        <div class="proof-logo-item">MODAL.SH</div>
+        <div class="proof-logo-item">CHRONICLE</div>
+        <div class="proof-logo-item">RAYCAST</div>
+        <div class="proof-logo-item">TURSO_DB</div>
+      </div>
+    </div>
+
+    <!-- Architecture Section -->
+    <section id="architecture">
+      <div class="section-head">
+        <div>
+          <span class="section-num">01 // SYSTEM ARCHITECTURE</span>
+          <h2>Built like a developer tool, not an enterprise portal.</h2>
+        </div>
+        <p class="section-desc">
+          Most project trackers degrade into slow form-builders full of mandatory dropdowns. Datum is modeled after Git and plain text.
+        </p>
+      </div>
+
+      <div class="arch-grid">
+        <div class="arch-card">
+          <div>
+            <div class="arch-tag">
+              <span>SPEC-LINKED GRAPH</span>
+              <span>RFC ↔ PR</span>
+            </div>
+            <h3>Paragraph-level traceability</h3>
+            <p>
+              Highlight any requirement inside a technical RFC to spawn an issue directly anchored to that paragraph. When the spec edits, owners of downstream tickets get a diff alert.
+            </p>
+          </div>
+          <div class="arch-diagram">
+            <div>RFC-042.md#L84 ──► ENG-402</div>
+            <div style="color: var(--accent); margin-top: 4px;">⚠ Spec modified 14m ago by @linus</div>
+          </div>
+        </div>
+
+        <div class="arch-card">
+          <div>
+            <div class="arch-tag">
+              <span>ZERO-MOUSE TRIAGE</span>
+              <span>&lt; 16MS</span>
+            </div>
+            <h3>Keyboard-complete ergonomics</h3>
+            <p>
+              Every state transition, cycle assignment, blocker link, and estimate happens without lifting your hands from home row. Backed by an in-browser SQLite replica.
+            </p>
+          </div>
+          <div class="arch-diagram">
+            <div class="kbd-flow">
+              <span class="keycap">X</span>
+              <span>select</span>
+              <span class="keycap">S</span>
+              <span>status</span>
+              <span class="keycap">B</span>
+              <span>mark blocker</span>
+              <span class="keycap">⌘K</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-card">
+          <div>
+            <div class="arch-tag">
+              <span>BI-DIRECTIONAL GIT</span>
+              <span>CLI + WEBHOOK</span>
+            </div>
+            <h3>Two-way repository sync</h3>
+            <p>
+              Specs live in `.datum/` inside your monorepo or sync automatically on push. Stacked pull requests update ticket states from `In Progress` to `Merged` without human bookkeeping.
+            </p>
+          </div>
+          <div class="arch-diagram">
+            <div>$ datum commit ENG-405</div>
+            <div style="color: var(--green); margin-top: 4px;">✓ Linked branch feat/wal-worker</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What we deliberately omitted -->
+    <section class="manifesto-split" id="manifesto">
+      <div class="manifesto-left">
+        <span class="section-num" style="color: #E06D5B;">02 // OPINIONATED DEFAULTS</span>
+        <h3>What we deliberately refused to build.</h3>
+        <p>
+          Every configuration knob you add to a project tool creates another meeting about how to configure the tool. We removed custom workflow states and performative burndown charts so engineers can ship code.
+        </p>
+        <div class="quote-attr">
+          "We migrated 140 engineers off Jira in an afternoon. Our weekly triage meeting dropped from 60 minutes to 15."
+          <br><br>
+          <strong style="color: #fff;">— Mara Vance, VP Engineering at Chronicle</strong>
+        </div>
+      </div>
+
+      <div class="manifesto-right">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>LEGACY TRACKER ANTI-PATTERN</th>
+              <th>THE DATUM STANDARD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="bad-pattern">18 custom workflow columns per squad</span></td>
+              <td>
+                <div class="good-pattern">5 immutable states tied to Git events</div>
+                <div style="font-size: 13px; color: var(--ink-secondary); margin-top: 4px;">Triage, Queued, Active, In Review, Done. Automatically transitions on branch push and merge.</div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="bad-pattern">300-ticket "Someday/Maybe" graveyard</span></td>
+              <td>
+                <div class="good-pattern">Auto-archiving 60-day decay queue</div>
+                <div style="font-size: 13px; color: var(--ink-secondary); margin-top: 4px;">If an unscheduled issue isn't pulled into a cycle within 60 days, Datum closes it cleanly. Important problems resurface.</div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="bad-pattern">Story point inflation &amp; velocity policing</span></td>
+              <td>
+                <div class="good-pattern">Hard cycle capacity &amp; scope-creep flags</div>
+                <div style="font-size: 13px; color: var(--ink-secondary); margin-top: 4px;">Tracks unplanned tickets added mid-cycle and highlights upstream spec churn rather than punishing individual velocity.</div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="bad-pattern">Proprietary rich-text lock-in</span></td>
+              <td>
+                <div class="good-pattern">Plain CommonMark files in your repo</div>
+                <div style="font-size: 13px; color: var(--ink-secondary); margin-top: 4px;">Leave Datum anytime—your entire issue history and RFC graph already live as human-readable Markdown in Git.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+      <div class="section-head">
+        <div>
+          <span class="section-num">03 // STRAIGHTFORWARD LICENSING</span>
+          <h2>Predictable pricing. No per-module upsells.</h2>
+        </div>
+        <p class="section-desc">
+          Every plan includes unlimited read-only guests, GitHub/GitLab integration, and full CLI access.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="price-col">
+          <div>
+            <div class="tier-name">01 / Small Team</div>
+            <div class="price-amount">$0 <span>/ forever</span></div>
+            <div class="price-note">For early teams up to 8 active contributors.</div>
+            <ul class="price-features">
+              <li>Unlimited issues, cycles &amp; RFC docs</li>
+              <li>2-way GitHub &amp; GitLab sync</li>
+              <li>Full CLI &amp; local SQLite offline mode</li>
+              <li>Markdown repository mirroring</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn-ghost">Create free workspace</a>
+        </div>
+
+        <div class="price-col featured">
+          <div>
+            <div class="tier-name" style="color: var(--accent);">02 / Engineering Org</div>
+            <div class="price-amount">$12 <span>/ user / mo</span></div>
+            <div class="price-note">For scaling product and infrastructure teams.</div>
+            <ul class="price-features">
+              <li>Everything in Small Team, unlimited seats</li>
+              <li>Multi-team cycle dependency graph</li>
+              <li>Spec drift alerts &amp; stacked PR tracking</li>
+              <li>SAML SSO &amp; Linear/Jira 1-click importer</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn-primary">Start 30-day trial →</a>
+        </div>
+
+        <div class="price-col">
+          <div>
+            <div class="tier-name">03 / Self-Hosted Binary</div>
+            <div class="price-amount">$450 <span>/ flat / mo</span></div>
+            <div class="price-note">Single Docker image or air-gapped binary for up to 50 seats.</div>
+            <ul class="price-features">
+              <li>Runs on your VPC with Postgres or SQLite</li>
+              <li>Zero external telemetry or phone-home</li>
+              <li>Audit log streaming (SIEM compatible)</li>
+              <li>Dedicated Slack channel with core engineers</li>
+            </ul>
+          </div>
+          <a href="#" class="btn btn-ghost">Download container spec</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="brand-mark">D/</span>
+        <span>Datum Systems Inc. — San Francisco &amp; Zurich</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">DOCS</a>
+        <a href="#">CLI_MANUAL</a>
+        <a href="#">CHANGELOG</a>
+        <a href="#">SECURITY.TXT</a>
+        <a href="#">STATUS</a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Command Palette Modal -->
+  <div class="cmd-backdrop" id="cmdBackdrop">
+    <div class="cmd-modal" role="dialog" aria-label="Quick command palette">
+      <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command or jump to section... (ESC to close)" />
+      <ul class="cmd-list">
+        <li class="cmd-item" data-action="filter-blocked">
+          <span>Filter Workbench: Show Blocked / Scope Drift Issues</span>
+          <span style="font-family: var(--mono); color: var(--ink-tertiary);">WORKBENCH</span>
+        </li>
+        <li class="cmd-item" data-action="copy-brew">
+          <span>Copy Homebrew CLI install command</span>
+          <span style="font-family: var(--mono); color: var(--ink-tertiary);">CLI</span>
+        </li>
+        <li class="cmd-item" data-action="jump-pricing">
+          <span>Jump to Licensing &amp; Self-Hosted Pricing</span>
+          <span style="font-family: var(--mono); color: var(--ink-tertiary);">SECTION 03</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const issues = [
+      {
+        id: 'ENG-402',
+        title: 'Move WAL flush threshold to 64KB dedicated worker',
+        status: 'In Review',
+        statusClass: 'badge-review',
+        category: 'review',
+        branch: 'feat/wal-worker',
+        est: '5 pt',
+        owner: '@linus_k',
+        rfc: 'RFC-042 §3.2',
+        specExcerpt: 'Requirement updated 14m ago: Flush write-ahead log on 64KB watermark rather than 250ms main-thread interval to eliminate UI jitter.',
+        commits: [
+          { sha: '9f3a1c2', msg: 'spawn dedicated WAL worker thread', time: '2h ago' },
+          { sha: '4d81e0b', msg: 'add backpressure ring buffer tests', time: '45m ago' }
+        ]
+      },
+      {
+        id: 'ENG-398',
+        title: 'Backfill Ed25519 signature verification on sync frames',
+        status: 'Scope Drift',
+        statusClass: 'badge-blocked',
+        category: 'blocked',
+        branch: 'sec/frame-sig',
+        est: '8 pt',
+        owner: '@sara_m',
+        rfc: 'RFC-039 §1.4',
+        specExcerpt: 'FLAGGED: RFC-039 edited after issue entered Active state. Added requirement for key rotation grace period (+3 pts estimated scope).',
+        commits: [
+          { sha: '1c77a09', msg: 'verify frame header with libsodium', time: '1d ago' }
+        ]
+      },
+      {
+        id: 'ENG-405',
+        title: 'Deterministic conflict resolution for offline status edits',
+        status: 'Active',
+        statusClass: 'badge-progress',
+        category: 'active',
+        branch: 'fix/hlc-merge',
+        est: '3 pt',
+        owner: '@devon_r',
+        rfc: 'RFC-042 §4.1',
+        specExcerpt: 'Use Hybrid Logical Clocks (HLC) per field mutation so offline status transitions merge without clobbering concurrent title edits.',
+        commits: [
+          { sha: '7b29d44', msg: 'implement monotonic HLC timestamp', time: '3h ago' }
+        ]
+      },
+      {
+        id: 'ENG-409',
+        title: 'Zero-downtime Postgres migration runner for self-hosted binary',
+        status: 'Blocked',
+        statusClass: 'badge-blocked',
+        category: 'blocked',
+        branch: 'ops/pg-migrate',
+        est: '5 pt',
+        owner: '@kaito_t',
+        rfc: 'RFC-036 §2.0',
+        specExcerpt: 'Blocked by ENG-398. Requires signed sync frame migration before dual-write trigger can be enabled in production containers.',
+        commits: [
+          { sha: 'e03b12c', msg: 'draft expand/contract schema lock check', time: '2d ago' }
+        ]
+      },
+      {
+        id: 'ENG-401',
+        title: 'Expose keyboard shortcut chord map in JSON config',
+        status: 'In Review',
+        statusClass: 'badge-review',
+        category: 'review',
+        branch: 'feat/keymap-json',
+        est: '2 pt',
+        owner: '@elena_v',
+        rfc: 'RFC-031 §1.1',
+        specExcerpt: 'Allow users to override default vim-style navigation chords via ~/.config/datum/keymap.json with live reload.',
+        commits: [
+          { sha: '8a11f90', msg: 'parse custom chord tree on startup', time: '5h ago' }
+        ]
+      },
+      {
+        id: 'ENG-395',
+        title: 'Bidirectional Markdown export for GitHub Enterprise hooks',
+        status: 'Merged',
+        statusClass: 'badge-done',
+        category: 'done',
+        branch: 'main',
+        est: '5 pt',
+        owner: '@linus_k',
+        rfc: 'RFC-042 §1.0',
+        specExcerpt: 'Completed & verified against GitHub Enterprise Server 3.12 webhook payloads. Zero drift between repo .datum/ folder and UI.',
+        commits: [
+          { sha: '3f55c81', msg: 'merge PR #1179 into main', time: '2d ago' }
+        ]
+      }
+    ];
+
+    let selectedId = issues[0].id;
+    let currentFilter = 'all';
+
+    const tbody = document.getElementById('issueTableBody');
+    const inspector = document.getElementById('issueInspector');
+
+    function renderInspector(issue) {
+      const commitsHtml = issue.commits
+        .map(c => `<div class="commit-line"><span class="commit-sha">${c.sha}</span><span>${c.msg}</span><span style="color:var(--ink-tertiary)">${c.time}</span></div>`)
+        .join('');
+
+      inspector.innerHTML = `
+        <div>
+          <div class="inspector-top">
+            <span>INSPECTOR // ${issue.id}</span>
+            <span>${issue.rfc}</span>
+          </div>
+          <div class="inspector-title">${issue.title}</div>
+          <dl class="inspector-meta">
+            <dt>STATUS</dt>
+            <dd><span class="badge ${issue.statusClass}">${issue.status}</span></dd>
+            <dt>ASSIGNEE</dt>
+            <dd>${issue.owner}</dd>
+            <dt>GIT BRANCH</dt>
+            <dd><span class="branch-pill">${issue.branch}</span></dd>
+            <dt>ESTIMATE</dt>
+            <dd>${issue.est}</dd>
+          </dl>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--ink-tertiary); text-transform:uppercase; margin-bottom:6px;">
+            ANCHORED SPECIFICATION EXCERPT
+          </div>
+          <p class="inspector-spec">${issue.specExcerpt}</p>
+        </div>
+        <div>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--ink-tertiary); text-transform:uppercase; margin-bottom:6px;">
+            LINKED GIT ACTIVITY
+          </div>
+          <div class="inspector-commits">
+            ${commitsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTable() {
+      const filtered = issues.filter(item => {
+        if (currentFilter === 'all') return true;
+        return item.category === currentFilter;
+      });
+
+      if (!filtered.some(i => i.id === selectedId) && filtered.length > 0) {
+        selectedId = filtered[0].id;
+      }
+
+      tbody.innerHTML = filtered.map(issue => `
+        <tr class="issue-row ${issue.id === selectedId ? 'selected' : ''}" data-id="${issue.id}">
+          <td class="issue-id">${issue.id}</td>
+          <td class="issue-title">${issue.title}</td>
+          <td><span class="badge ${issue.statusClass}">${issue.status}</span></td>
+          <td><span class="branch-pill">${issue.branch}</span></td>
+          <td style="font-family:var(--mono); font-size:12px; color:var(--ink-secondary);">${issue.est}</td>
+        </tr>
+      `).join('');
+
+      const activeIssue = issues.find(i => i.id === selectedId) || issues[0];
+      renderInspector(activeIssue);
+
+      document.querySelectorAll('.issue-row').forEach(row => {
+        row.addEventListener('click', () => {
+          selectedId = row.getAttribute('data-id');
+          renderTable();
+        });
+      });
+    }
+
+    // Filter tabs
+    document.querySelectorAll('.view-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.getAttribute('data-filter');
+        renderTable();
+      });
+    });
+
+    // CLI Copy button
+    const copyCli = document.getElementById('copyCli');
+    const copyStatus = document.getElementById('copyStatus');
+    copyCli.addEventListener('click', () => {
+      navigator.clipboard?.writeText('brew install datum-hq/tap/datum');
+      copyStatus.textContent = 'COPIED ✓';
+      setTimeout(() => { copyStatus.textContent = 'COPY'; }, 1800);
+    });
+
+    // Command Palette (Cmd+K)
+    const cmdBackdrop = document.getElementById('cmdBackdrop');
+    const cmdInput = document.getElementById('cmdInput');
+    const openCmdBtn = document.getElementById('openCmdBtn');
+
+    function openCmd() {
+      cmdBackdrop.classList.add('open');
+      cmdInput.value = '';
+      cmdInput.focus();
+    }
+    function closeCmd() {
+      cmdBackdrop.classList.remove('open');
+    }
+
+    openCmdBtn.addEventListener('click', openCmd);
+    cmdBackdrop.addEventListener('click', (e) => {
+      if (e.target === cmdBackdrop) closeCmd();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        cmdBackdrop.classList.contains('open') ? closeCmd() : openCmd();
+      } else if (e.key === 'Escape') {
+        closeCmd();
+      }
+    });
+
+    document.querySelectorAll('.cmd-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const action = item.getAttribute('data-action');
+        closeCmd();
+        if (action === 'filter-blocked') {
+          document.querySelector('[data-filter="blocked"]').click();
+          document.getElementById('workbench').scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'copy-brew') {
+          copyCli.click();
+        } else if (action === 'jump-pricing') {
+          document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>

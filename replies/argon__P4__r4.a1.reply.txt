@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vance, Sterling & Hale LLP — Trial & Business Counsel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-paper: #F7F5F0;
+      --bg-card: #FFFFFF;
+      --bg-dark: #111815;
+      --bg-dark-card: #19221E;
+      --ink-primary: #141917;
+      --ink-secondary: #4E5652;
+      --ink-muted: #7C8480;
+      --gold: #9A7440;
+      --gold-light: #C6A26E;
+      --gold-bg: #F1EBE0;
+      --border: #DFDBD1;
+      --border-dark: #28342F;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --container: 1220px;
+      --transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-primary);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* Top utility bar */
+    .topbar {
+      background-color: var(--bg-dark);
+      color: #D2D8D5;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 28px;
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    .topbar-left {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .topbar-badge {
+      color: var(--gold-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .topbar-right a:hover {
+      color: var(--gold-light);
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(247, 245, 240, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 86px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-monogram {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--ink-primary);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .brand-monogram::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid var(--gold);
+      pointer-events: none;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-secondary);
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 4px 0;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink-primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1.5px;
+      background-color: var(--gold);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 24px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background-color: var(--bg-dark);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--gold);
+      color: #FFFFFF;
+    }
+
+    .btn-outline {
+      border-color: var(--ink-primary);
+      color: var(--ink-primary);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: var(--ink-primary);
+      color: #FFFFFF;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 72px 0 88px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background-color: var(--gold);
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.85rem, 5vw, 4.45rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      margin-bottom: 26px;
+      color: var(--ink-primary);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold);
+    }
+
+    .hero-lead {
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      max-width: 580px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-val {
+      font-family: var(--serif);
+      font-size: 2.3rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink-primary);
+      margin-bottom: 6px;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+      line-height: 1.35;
+    }
+
+    /* Hero Right Column Dossier Card */
+    .hero-visual {
+      position: relative;
+    }
+
+    .architectural-frame {
+      background-color: var(--bg-dark);
+      color: #FFFFFF;
+      padding: 40px;
+      position: relative;
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 24px 48px rgba(17, 24, 21, 0.12);
+    }
+
+    .architectural-frame::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      bottom: 12px;
+      left: 12px;
+      border: 1px solid var(--gold);
+      z-index: -1;
+    }
+
+    .dossier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-dark);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .dossier-quote {
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      line-height: 1.3;
+      font-weight: 400;
+      font-style: italic;
+      margin-bottom: 28px;
+      color: #F4F1EA;
+    }
+
+    .dossier-cases {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .dossier-case-item {
+      background: var(--bg-dark-card);
+      border-left: 2px solid var(--gold);
+      padding: 14px 16px;
+    }
+
+    .dossier-case-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold-light);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .dossier-case-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #E7ECE9;
+    }
+
+    .dossier-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-dark);
+      font-size: 0.82rem;
+      color: #B4BEB9;
+    }
+
+    /* Section Defaults */
+    section {
+      padding: 96px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 56px;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 3.6vw, 3.1rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .section-desc {
+      max-width: 460px;
+      color: var(--ink-secondary);
+      font-size: 0.98rem;
+    }
+
+    /* Practice Areas */
+    .practice-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 9px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--ink-primary);
+      color: #FFFFFF;
+      border-color: var(--ink-primary);
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .practice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .practice-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(20, 25, 23, 0.06);
+    }
+
+    .practice-num {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .practice-category-tag {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--gold-bg);
+      color: var(--ink-primary);
+      padding: 4px 9px;
+      font-weight: 600;
+    }
+
+    .practice-card h3 {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .practice-card p {
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+    }
+
+    .practice-list {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      font-size: 0.83rem;
+      color: var(--ink-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .practice-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .practice-list li::before {
+      content: '▪';
+      color: var(--gold);
+    }
+
+    /* Why Small Firm / Philosophy */
+    .philosophy-section {
+      background-color: var(--bg-dark);
+      color: #F4F1EA;
+    }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .philosophy-left h2 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 3.6vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 22px;
+    }
+
+    .philosophy-left p {
+      color: #B4BEB9;
+      font-size: 1rem;
+      margin-bottom: 32px;
+    }
+
+    .comparison-box {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-dark);
+      padding: 28px;
+    }
+
+    .comparison-box h4 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+    }
+
+    .comparison-box p {
+      font-size: 0.88rem;
+      color: #CBD2CE;
+      margin-bottom: 0;
+    }
+
+    .pillars {
+      display: grid;
+      gap: 24px;
+    }
+
+    .pillar-item {
+      background: var(--bg-dark-card);
+      border: 1px solid var(--border-dark);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 20px;
+    }
+
+    .pillar-index {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--gold);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      color: var(--gold-light);
+    }
+
+    .pillar-item h3 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      color: #FFFFFF;
+    }
+
+    .pillar-item p {
+      font-size: 0.92rem;
+      color: #B4BEB9;
+    }
+
+    /* Attorneys Section */
+    .attorneys-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .attorney-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .attorney-portrait {
+      height: 290px;
+      background: #1C2521;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .portrait-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .attorney-role-badge {
+      position: relative;
+      z-index: 2;
+      background: rgba(17, 24, 21, 0.88);
+      color: var(--gold-light);
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 1px solid var(--gold);
+    }
+
+    .attorney-body {
+      padding: 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .attorney-name {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .attorney-focus {
+      font-size: 0.82rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .attorney-bio {
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+      margin-bottom: 20px;
+    }
+
+    .attorney-meta {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .attorney-meta strong {
+      color: var(--ink-primary);
+    }
+
+    /* Representative Matters & Testimonials */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .ledger-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .ledger-row {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .ledger-row:last-child {
+      border-bottom: none;
+    }
+
+    .ledger-amount {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--ink-primary);
+      line-height: 1.1;
+    }
+
+    .ledger-type {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-weight: 700;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .ledger-detail {
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+    }
+
+    .testimonial-box {
+      background: var(--gold-bg);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
+    }
+
+    .testimonial-text {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      line-height: 1.38;
+      font-style: italic;
+      color: var(--ink-primary);
+      margin-bottom: 24px;
+    }
+
+    .testimonial-author {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--ink-primary);
+    }
+
+    .testimonial-role {
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+    }
+
+    .testimonial-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .t-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--ink-primary);
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: var(--transition);
+    }
+
+    .t-btn:hover {
+      background: var(--ink-primary);
+      color: #FFFFFF;
+    }
+
+    /* FAQ Accordion */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 56px;
+    }
+
+    .faq-list {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 24px 0;
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .faq-icon {
+      font-family: var(--sans);
+      font-size: 1.2rem;
+      color: var(--gold);
+      transition: transform 0.25s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-answer-inner {
+      padding-bottom: 24px;
+      font-size: 0.94rem;
+      color: var(--ink-secondary);
+    }
+
+    /* Consultation Form */
+    .contact-section {
+      background: linear-gradient(180deg, var(--bg-paper) 0%, #EFECE4 100%);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 64px;
+    }
+
+    .contact-info-list {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .contact-info-item {
+      border-left: 2px solid var(--gold);
+      padding-left: 18px;
+    }
+
+    .contact-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .contact-value {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+    }
+
+    .contact-sub {
+      font-size: 0.84rem;
+      color: var(--ink-secondary);
+    }
+
+    .consult-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 44px;
+      box-shadow: 0 20px 40px rgba(20, 25, 23, 0.05);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-secondary);
+    }
+
+    .form-control {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      color: var(--ink-primary);
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: #FFFFFF;
+    }
+
+    textarea.form-control {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .confidential-note {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-feedback {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      background: #E8F2EC;
+      border-left: 3px solid #2A6F48;
+      color: #163C26;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      color: #9BA6A1;
+      padding: 72px 0 40px;
+      font-size: 0.86rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-light);
+    }
+
+    .footer-bottom {
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.78rem;
+      color: #6E7873;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .philosophy-grid,
+      .results-grid,
+      .faq-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .practice-grid,
+      .attorneys-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 86px;
+        left: 0;
+        right: 0;
+        background: var(--bg-paper);
+        flex-direction: column;
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+        gap: 18px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .mobile-toggle {
+        display: inline-block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+      }
+
+      .practice-grid,
+      .attorneys-grid,
+      .hero-metrics,
+      .form-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ledger-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .consult-card {
+        padding: 28px 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <span class="topbar-badge">Boston &amp; Providence</span>
+        <span>450 Boylston Street, Suite 600, Boston, MA</span>
+      </div>
+      <div class="topbar-right">
+        <a href="tel:+16175550194">Direct: (617) 555-0194</a>
+        <a href="#consultation">Client Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <div class="brand-monogram">VS</div>
+        <div class="brand-text">
+          <span class="brand-name">Vance, Sterling &amp; Hale</span>
+          <span class="brand-sub">Attorneys &amp; Counselors at Law</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#practice-areas">Practice Areas</a>
+        <a href="#approach">Firm Philosophy</a>
+        <a href="#attorneys">Partners</a>
+        <a href="#results">Case Ledger</a>
+        <a href="#faq">FAQ</a>
+        <a href="#consultation" class="btn btn-primary">Schedule Consultation</a>
+      </nav>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">Menu</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Boutique Litigation &amp; Advisory</div>
+        <h1>Principled counsel for high-consequence <em>disputes &amp; transactions.</em></h1>
+        <p class="hero-lead">
+          We combine the courtroom pedigree of a national firm with the responsiveness, direct partner authorship, and cost clarity of a dedicated three-partner practice.
+        </p>
+        <div class="hero-actions">
+          <a href="#consultation" class="btn btn-primary">Request Confidential Evaluation</a>
+          <a href="#practice-areas" class="btn btn-outline">Explore Practice Areas</a>
+        </div>
+
+        <div class="hero-metrics">
+          <div>
+            <div class="metric-val">$145M+</div>
+            <div class="metric-label">Judgments, settlements &amp; transactions structured</div>
+          </div>
+          <div>
+            <div class="metric-val">100%</div>
+            <div class="metric-label">Matters led directly by a named senior partner</div>
+          </div>
+          <div>
+            <div class="metric-val">22 Yrs</div>
+            <div class="metric-label">Combined federal &amp; state courtroom leadership</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="architectural-frame">
+          <div class="dossier-header">
+            <span>Firm Charter · Est. 2014</span>
+            <span>Ref. VSH-2026</span>
+          </div>
+          <blockquote class="dossier-quote">
+            “Clients hire lawyers, not logos. When your company or estate is on the line, your matter is never handed down to a junior associate.”
+          </blockquote>
+          <div class="dossier-cases">
+            <div class="dossier-case-item">
+              <span class="dossier-case-tag">Recent Trial Verdict · Suffolk Superior</span>
+              <div class="dossier-case-title">Complete defense verdict in $18M shareholder freeze-out claim</div>
+            </div>
+            <div class="dossier-case-item">
+              <span class="dossier-case-tag">Commercial Real Estate</span>
+              <div class="dossier-case-title">Structured $34M mixed-use acquisition &amp; zoning variance package</div>
+            </div>
+          </div>
+          <div class="dossier-footer">
+            <span>Elena Vance, Managing Partner</span>
+            <span>Direct Response &lt; 24 hrs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice Areas -->
+  <section id="practice-areas">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Core Capabilities</div>
+          <h2 class="section-title">Focused Disciplines</h2>
+        </div>
+        <p class="section-desc">
+          We deliberately limit our caseload to six interrelated areas where our partners hold deep statutory and courtroom command.
+        </p>
+      </div>
+
+      <div class="practice-tabs" role="tablist">
+        <button class="filter-btn active" data-filter="all">All Disciplines (6)</button>
+        <button class="filter-btn" data-filter="litigation">Disputes &amp; Litigation</button>
+        <button class="filter-btn" data-filter="corporate">Business &amp; Real Estate</button>
+        <button class="filter-btn" data-filter="private">Private Client &amp; Estates</button>
+      </div>
+
+      <div class="practice-grid" id="practiceGrid">
+        <!-- Card 1 -->
+        <article class="practice-card" data-category="litigation">
+          <div>
+            <div class="practice-num">
+              <span>01</span>
+              <span class="practice-category-tag">Disputes</span>
+            </div>
+            <h3>Commercial &amp; Partnership Litigation</h3>
+            <p>Strategic prosecution and defense of complex contract breaches, fiduciary duty claims, and closely held business divorces.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Minority shareholder &amp; LLC member disputes</li>
+            <li>Unfair trade practices (Chapter 93A)</li>
+            <li>Emergency injunctions &amp; asset freezes</li>
+          </ul>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="practice-card" data-category="corporate">
+          <div>
+            <div class="practice-num">
+              <span>02</span>
+              <span class="practice-category-tag">Business</span>
+            </div>
+            <h3>Outside General Counsel &amp; M&amp;A</h3>
+            <p>Day-to-day executive advisory, entity governance, and buy-side or sell-side transactions for founder-led enterprises ($5M–$75M).</p>
+          </div>
+          <ul class="practice-list">
+            <li>Asset &amp; stock purchase agreements</li>
+            <li>Operating &amp; shareholder buy-sell agreements</li>
+            <li>Commercial vendor &amp; licensing contracts</li>
+          </ul>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="practice-card" data-category="corporate">
+          <div>
+            <div class="practice-num">
+              <span>03</span>
+              <span class="practice-category-tag">Real Estate</span>
+            </div>
+            <h3>Commercial Real Estate &amp; Land Use</h3>
+            <p>Representation of developers, property owners, and commercial tenants across acquisitions, financing, leasing, and municipal boards.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Commercial acquisitions &amp; 1031 exchanges</li>
+            <li>Retail, industrial &amp; office lease negotiation</li>
+            <li>Zoning appeals &amp; abutter litigation</li>
+          </ul>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="practice-card" data-category="litigation">
+          <div>
+            <div class="practice-num">
+              <span>04</span>
+              <span class="practice-category-tag">Employment</span>
+            </div>
+            <h3>Executive Employment &amp; Trade Secrets</h3>
+            <p>Counseling employers and C-suite executives on restrictive covenants, severance negotiations, and sensitive internal investigations.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Non-compete &amp; non-solicitation enforcement</li>
+            <li>Executive compensation &amp; exit packages</li>
+            <li>MCAD &amp; federal discrimination defense</li>
+          </ul>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="practice-card" data-category="private">
+          <div>
+            <div class="practice-num">
+              <span>05</span>
+              <span class="practice-category-tag">Private Client</span>
+            </div>
+            <h3>Trusts, Estates &amp; Business Succession</h3>
+            <p>Sophisticated wealth transfer and succession blueprints designed to preserve family enterprises across generations and minimize tax exposure.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Revocable &amp; irrevocable trust architecture</li>
+            <li>Family business succession planning</li>
+            <li>Estate tax mitigation &amp; charitable trusts</li>
+          </ul>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="practice-card" data-category="private">
+          <div>
+            <div class="practice-num">
+              <span>06</span>
+              <span class="practice-category-tag">Fiduciary Disputes</span>
+            </div>
+            <h3>Probate &amp; Trust Litigation</h3>
+            <p>Vigorous representation of trustees, executors, and beneficiaries in contested wills, undue influence claims, and fiduciary accountings.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Will contests &amp; capacity challenges</li>
+            <li>Breach of fiduciary duty &amp; trustee removal</li>
+            <li>Partition actions for inherited real property</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy / Small Firm Advantage -->
+  <section id="approach" class="philosophy-section">
+    <div class="container philosophy-grid">
+      <div class="philosophy-left">
+        <div class="eyebrow">The Boutique Advantage</div>
+        <h2>Why discerning clients leave 500-lawyer firms for ours.</h2>
+        <p>
+          Large firms rely on pyramid leverage—billing you for four attorneys to attend a single hearing while first-year associates draft your briefs. We built Vance, Sterling &amp; Hale as the antidote.
+        </p>
+        <div class="comparison-box">
+          <h4>Predictable Fee Architecture</h4>
+          <p>
+            In addition to traditional hourly representation, over 60% of our corporate, real estate, and pre-trial engagements utilize milestone flat fees, hybrid contingencies, or capped monthly retainers.
+          </p>
+        </div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar-item">
+          <div class="pillar-index">I</div>
+          <div>
+            <h3>Partner-Authored Strategy &amp; Briefs</h3>
+            <p>The partner you meet during your initial consultation is the attorney who writes your motions, negotiates your terms, and stands before the judge.</p>
+          </div>
+        </div>
+        <div class="pillar-item">
+          <div class="pillar-index">II</div>
+          <div>
+            <h3>Trial-Ready Leverage From Day One</h3>
+            <p>Opposing counsel know which firms settle out of fear and which firms try cases to verdict. Preparing every dispute as if it will reach a jury produces superior early settlements.</p>
+          </div>
+        </div>
+        <div class="pillar-item">
+          <div class="pillar-index">III</div>
+          <div>
+            <h3>Commercial Pragmatism</h3>
+            <p>We never litigate for sport. Every legal expenditure is weighed against your balance sheet, reputational objectives, and operational bandwidth.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attorneys Section -->
+  <section id="attorneys">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Leadership</div>
+          <h2 class="section-title">Named Partners</h2>
+        </div>
+        <p class="section-desc">
+          Former federal clerks and BigLaw practice leaders committed to hands-on advocacy.
+        </p>
+      </div>
+
+      <div class="attorneys-grid">
+        <!-- Partner 1 -->
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <svg class="portrait-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1E2B25"/>
+                  <stop offset="100%" stop-color="#0F1512"/>
+                </linearGradient>
+              </defs>
+              <rect width="400" height="300" fill="url(#g1)"/>
+              <circle cx="200" cy="115" r="46" fill="#2D3E36" stroke="#9A7440" stroke-width="1.5"/>
+              <path d="M115 280 C115 205, 285 205, 285 280" fill="#25342D" stroke="#9A7440" stroke-width="1.5"/>
+              <line x1="30" y1="30" x2="370" y2="30" stroke="#9A7440" stroke-opacity="0.25"/>
+            </svg>
+            <span class="attorney-role-badge">Managing Partner</span>
+          </div>
+          <div class="attorney-body">
+            <div>
+              <h3 class="attorney-name">Elena R. Vance</h3>
+              <div class="attorney-focus">Commercial Litigation &amp; Shareholder Disputes</div>
+              <p class="attorney-bio">
+                For two decades, Elena has tried complex business, trade secret, and partnership disputes before state and federal courts across New England. Former clerk to the U.S. District Court for the District of Massachusetts.
+              </p>
+            </div>
+            <div class="attorney-meta">
+              <span><strong>Education:</strong> Harvard Law School, J.D., <em>cum laude</em></span>
+              <span><strong>Admissions:</strong> MA, RI, U.S. Court of Appeals (1st Cir.)</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Partner 2 -->
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <svg class="portrait-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#17201C"/>
+              <circle cx="200" cy="115" r="46" fill="#26352E" stroke="#9A7440" stroke-width="1.5"/>
+              <path d="M110 280 C110 200, 290 200, 290 280" fill="#212E28" stroke="#9A7440" stroke-width="1.5"/>
+              <line x1="30" y1="30" x2="370" y2="30" stroke="#9A7440" stroke-opacity="0.25"/>
+            </svg>
+            <span class="attorney-role-badge">Senior Partner</span>
+          </div>
+          <div class="attorney-body">
+            <div>
+              <h3 class="attorney-name">Arthur M. Sterling</h3>
+              <div class="attorney-focus">Corporate Transactions &amp; Commercial Real Estate</div>
+              <p class="attorney-bio">
+                Arthur serves as outside general counsel to family-owned enterprises, architectural groups, and regional developers. He has closed more than 180 middle-market acquisitions and commercial financings.
+              </p>
+            </div>
+            <div class="attorney-meta">
+              <span><strong>Education:</strong> Boston College Law School, J.D.</span>
+              <span><strong>Admissions:</strong> Massachusetts, New York</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Partner 3 -->
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <svg class="portrait-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#1A2420"/>
+              <circle cx="200" cy="115" r="46" fill="#2B3B33" stroke="#9A7440" stroke-width="1.5"/>
+              <path d="M118 280 C118 205, 282 205, 282 280" fill="#23302A" stroke="#9A7440" stroke-width="1.5"/>
+              <line x1="30" y1="30" x2="370" y2="30" stroke="#9A7440" stroke-opacity="0.25"/>
+            </svg>
+            <span class="attorney-role-badge">Partner</span>
+          </div>
+          <div class="attorney-body">
+            <div>
+              <h3 class="attorney-name">Marcus T. Hale</h3>
+              <div class="attorney-focus">Trusts &amp; Estates, Probate Litigation &amp; Employment</div>
+              <p class="attorney-bio">
+                Fellow of the American College of Trust and Estate Counsel. Marcus architects succession plans for closely held companies and represents fiduciaries and beneficiaries in high-value probate contests.
+              </p>
+            </div>
+            <div class="attorney-meta">
+              <span><strong>Education:</strong> University of Virginia School of Law, J.D.</span>
+              <span><strong>Admissions:</strong> Massachusetts, Rhode Island, Connecticut</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Representative Results & Testimonials -->
+  <section id="results">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Proven Track Record</div>
+          <h2 class="section-title">Representative Matters</h2>
+        </div>
+        <p class="section-desc">
+          A sample of recent courtroom verdicts, negotiated resolutions, and closed transactions.
+        </p>
+      </div>
+
+      <div class="results-grid">
+        <div class="ledger-table">
+          <div class="ledger-row">
+            <div>
+              <div class="ledger-amount">$14.2M</div>
+              <span class="ledger-type">Settlement</span>
+            </div>
+            <div class="ledger-detail">
+              Recovered for a precision manufacturing founder in a post-acquisition earnout and fraud dispute in Delaware and Massachusetts courts.
+            </div>
+          </div>
+          <div class="ledger-row">
+            <div>
+              <div class="ledger-amount">Defense</div>
+              <span class="ledger-type">Jury Verdict</span>
+            </div>
+            <div class="ledger-detail">
+              Complete exoneration after a three-week Business Litigation Session trial on claims of trade secret misappropriation and breach of fiduciary duty.
+            </div>
+          </div>
+          <div class="ledger-row">
+            <div>
+              <div class="ledger-amount">$28.5M</div>
+              <span class="ledger-type">M&amp;A Exit</span>
+            </div>
+            <div class="ledger-detail">
+              Lead transaction counsel for the sale of a multi-state healthcare logistics company to a strategic private equity buyer.
+            </div>
+          </div>
+          <div class="ledger-row">
+            <div>
+              <div class="ledger-amount">$9.4M</div>
+              <span class="ledger-type">Trust Reform</span>
+            </div>
+            <div class="ledger-detail">
+              Successfully petitioned the Probate &amp; Family Court to remove a conflicted trustee and restore misallocated commercial real estate assets.
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-box">
+          <div class="eyebrow">Client Perspectives</div>
+          <p class="testimonial-text" id="testimonialText">
+            “When a national competitor attempted to poach our engineering team and invalidate our IP, Elena obtained a temporary restraining order in 72 hours. Their precision saved our company.”
+          </p>
+          <div>
+            <div class="testimonial-author" id="testimonialAuthor">David K. Mercer</div>
+            <div class="testimonial-role" id="testimonialRole">Chief Executive Officer, Mercer Photonics Inc.</div>
+          </div>
+          <div class="testimonial-controls">
+            <button class="t-btn" id="prevTestimonial" aria-label="Previous Testimonial">&larr;</button>
+            <button class="t-btn" id="nextTestimonial" aria-label="Next Testimonial">&rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <div class="container faq-grid">
+      <div>
+        <div class="eyebrow">Clarity &amp; Process</div>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc" style="margin-top: 18px;">
+          Selecting legal counsel is an important decision. Here is how we conduct conflict checks, structure fees, and onboard new clients.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-question">
+            <span>What happens during the initial consultation?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer" style="max-height: 200px;">
+            <div class="faq-answer-inner">
+              After a rapid conflict-of-interest check, you will speak directly with the partner whose practice aligns with your matter. We review key documents, evaluate your legal leverage, outline realistic timelines, and propose a transparent fee structure before you commit.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How do you structure legal fees and billing?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              We offer tailored structures depending on the engagement: fixed project fees for estate plans, leases, and corporate formations; predictable monthly retainers for outside general counsel; and hourly or hybrid-contingency arrangements for commercial litigation.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Will my matter be delegated to junior associates?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Never. Our firm model is built on low client-to-partner ratios. While we utilize experienced paralegals for filing and document organization to keep your costs efficient, every strategic call, negotiation, and brief is authored by your partner.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Can you collaborate with our existing CPAs or financial advisors?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes. Whether structuring a tax-efficient business sale or an estate plan, we routinely coordinate directly with your accountants, wealth managers, and insurance underwriters so all advisors work from a unified playbook.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consultation / Intake Form -->
+  <section id="consultation" class="contact-section">
+    <div class="container contact-grid">
+      <div>
+        <div class="eyebrow">Initiate Dialogue</div>
+        <h2 class="section-title">Request a Confidential Consultation</h2>
+        <p class="section-desc" style="margin-top: 16px;">
+          Contact our Boston or Providence office to arrange an in-person or video consultation with a partner. All inquiries are answered within one business day.
+        </p>
+
+        <div class="contact-info-list">
+          <div class="contact-info-item">
+            <div class="contact-label">Boston Headquarters</div>
+            <div class="contact-value">450 Boylston Street, Suite 600</div>
+            <div class="contact-sub">Boston, MA 02116 · Back Bay</div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-label">Providence Office</div>
+            <div class="contact-value">100 Westminster Street, Suite 910</div>
+            <div class="contact-sub">Providence, RI 02903 · By Appointment</div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-label">Direct Telephone &amp; Clerk</div>
+            <div class="contact-value">(617) 555-0194</div>
+            <div class="contact-sub">counsel@vancesterlinghale.com · Mon–Fri 8:30am–6:30pm</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="consult-card">
+        <form id="consultForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" class="form-control" placeholder="Jonathan Reed" required />
+            </div>
+            <div class="form-group">
+              <label for="company">Company / Organization</label>
+              <input type="text" id="company" class="form-control" placeholder="Reed Holdings LLC (Optional)" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" class="form-control" placeholder="jreed@company.com" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Telephone Number *</label>
+              <input type="tel" id="phone" class="form-control" placeholder="(617) 555-0100" required />
+            </div>
+            <div class="form-group full">
+              <label for="practiceArea">Primary Matter Category *</label>
+              <select id="practiceArea" class="form-control" required>
+                <option value="">Select a discipline...</option>
+                <option value="Commercial Litigation">Commercial &amp; Partnership Litigation</option>
+                <option value="Corporate & M&A">Outside General Counsel / M&amp;A</option>
+                <option value="Real Estate">Commercial Real Estate &amp; Land Use</option>
+                <option value="Employment">Executive Employment &amp; Restrictive Covenants</option>
+                <option value="Estate Planning">Trusts, Estates &amp; Business Succession</option>
+                <option value="Probate Litigation">Probate &amp; Fiduciary Litigation</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label for="summary">Brief Overview &amp; Opposing Parties (For Conflict Check) *</label>
+              <textarea id="summary" class="form-control" placeholder="Please share the general nature of your matter and the names of any involved entities so we may run a preliminary conflict check. Do not include confidential trade secrets." required></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry to Managing Clerk</button>
+          <div class="confidential-note">
+            <span>&#128274;</span>
+            <span>Encrypted transmission. Submitting this form does not create an attorney-client relationship until a written engagement letter is signed.</span>
+          </div>
+          <div class="form-feedback" id="formFeedback"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand" style="margin-bottom: 16px;">
+            <div class="brand-monogram" style="background: #19221E; color: #FFF; border-color: #9A7440;">VS</div>
+            <div class="brand-text">
+              <span class="brand-name" style="color: #FFF;">Vance, Sterling &amp; Hale LLP</span>
+            </div>
+          </div>
+          <p style="color: #88938E; line-height: 1.65;">
+            Trial lawyers and corporate advisors serving closely held businesses, executives, property owners, and families across Massachusetts and Rhode Island.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Practice Areas</h4>
+          <ul class="footer-links">
+            <li><a href="#practice-areas">Commercial Litigation</a></li>
+            <li><a href="#practice-areas">Corporate &amp; M&amp;A</a></li>
+            <li><a href="#practice-areas">Commercial Real Estate</a></li>
+            <li><a href="#practice-areas">Executive Employment</a></li>
+            <li><a href="#practice-areas">Trusts &amp; Estates</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>The Firm</h4>
+          <ul class="footer-links">
+            <li><a href="#approach">Our Philosophy</a></li>
+            <li><a href="#attorneys">Partners</a></li>
+            <li><a href="#results">Representative Matters</a></li>
+            <li><a href="#faq">Client FAQ</a></li>
+            <li><a href="#consultation">Contact &amp; Directions</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Bar &amp; Admissions</h4>
+          <ul class="footer-links">
+            <li>Commonwealth of Massachusetts</li>
+            <li>State of Rhode Island</li>
+            <li>U.S. District Court (D. Mass.)</li>
+            <li>U.S. Court of Appeals (1st Cir.)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Vance, Sterling &amp; Hale LLP. All rights reserved. Attorney Advertising. Prior results do not guarantee a similar outcome.</div>
+        <div>Privacy Notice · Disclaimer · Accessibility</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Menu Toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      mobileToggle.textContent = navLinks.classList.contains('open') ? 'Close' : 'Menu';
+    });
+
+    // Practice Area Filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const practiceCards = document.querySelectorAll('.practice-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+
+        practiceCards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Testimonials Carousel
+    const testimonials = [
+      {
+        text: "“When a national competitor attempted to poach our engineering team and invalidate our IP, Elena obtained a temporary restraining order in 72 hours. Their precision saved our company.”",
+        author: "David K. Mercer",
+        role: "Chief Executive Officer, Mercer Photonics Inc."
+      },
+      {
+        text: "“Arthur Sterling guided our family through a $28 million generational sale. He anticipated every tax and indemnity trap while keeping the deal on schedule with zero drama.”",
+        author: "Claire & Thomas Whitaker",
+        role: "Principals, Whitaker New England Distribution"
+      },
+      {
+        text: "“After two years of stalemate at a massive downtown firm, Marcus Hale stepped in, restructured our family trust litigation strategy, and resolved the estate within four months.”",
+        author: "Dr. Julian V. Prescott",
+        role: "Trustee & Private Client, Brookline, MA"
+      }
+    ];
+
+    let currentTestimonial = 0;
+    const tText = document.getElementById('testimonialText');
+    const tAuthor = document.getElementById('testimonialAuthor');
+    const tRole = document.getElementById('testimonialRole');
+
+    function updateTestimonial(index) {
+      tText.textContent = testimonials[index].text;
+      tAuthor.textContent = testimonials[index].author;
+      tRole.textContent = testimonials[index].role;
+    }
+
+    document.getElementById('nextTestimonial').addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+      updateTestimonial(currentTestimonial);
+    });
+
+    document.getElementById('prevTestimonial').addEventListener('click', () => {
+      currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+      updateTestimonial(currentTestimonial);
+    });
+
+    // FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const btn = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      btn.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        faqItems.forEach(other => {
+          other.classList.remove('open');
+          other.querySelector('.faq-answer').style.maxHeight = null;
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Consultation Form Handler
+    const consultForm = document.getElementById('consultForm');
+    const formFeedback = document.getElementById('formFeedback');
+
+    consultForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('fullName').value.trim();
+      const area = document.getElementById('practiceArea').value;
+      const refCode = 'VSH-' + Math.floor(100000 + Math.random() * 900000);
+
+      formFeedback.style.display = 'block';
+      formFeedback.innerHTML = `Thank you, <strong>${name}</strong>. Your conflict-check inquiry regarding <strong>${area}</strong> has been logged under Reference <strong>${refCode}</strong>. A named partner will contact you within one business day.`;
+      consultForm.reset();
+    });
+  </script>
+</body>
+</html>

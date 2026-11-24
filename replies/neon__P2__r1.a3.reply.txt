@@ -1,0 +1,2818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trattoria Fiorini — Neighborhood Italian Kitchen · Carroll Gardens</title>
+  <meta name="description" content="Trattoria Fiorini is a neighborhood Italian restaurant on Henry Street serving handmade pasta, wood-fired specialties, and small-grower regional wines since 1984." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-paper: #F7F2E8;
+      --bg-linen: #EFE8D8;
+      --bg-card: #FBF8F1;
+      --bg-chalk: #222B23;
+      --bg-espresso: #1E1815;
+      --ink: #231C18;
+      --ink-muted: #5E5249;
+      --ink-soft: #85776C;
+      --terracotta: #A93829;
+      --terracotta-dark: #87291D;
+      --terracotta-soft: rgba(169, 56, 41, 0.1);
+      --olive: #495A42;
+      --olive-soft: rgba(73, 90, 66, 0.12);
+      --ochre: #B68841;
+      --line: rgba(35, 28, 24, 0.14);
+      --line-strong: rgba(35, 28, 24, 0.28);
+      --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --radius-sm: 4px;
+      --radius-md: 10px;
+      --radius-lg: 18px;
+      --shadow-soft: 0 12px 32px rgba(30, 24, 21, 0.06);
+      --shadow-lift: 0 18px 42px rgba(30, 24, 21, 0.11);
+      --max-w: 1180px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      background-color: var(--bg-paper);
+      background-image:
+        radial-gradient(rgba(35, 28, 24, 0.03) 1px, transparent 0),
+        radial-gradient(rgba(169, 56, 41, 0.025) 1px, transparent 0);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--terracotta);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: min(var(--max-w), calc(100% - 2.5rem));
+      margin-inline: auto;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Announcement Strip */
+    .top-strip {
+      background: var(--bg-espresso);
+      color: #EAE1D2;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .top-strip-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem 0;
+      flex-wrap: wrap;
+    }
+
+    .top-strip-note {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #8CB369;
+      box-shadow: 0 0 0 4px rgba(140, 179, 105, 0.2);
+      flex-shrink: 0;
+    }
+
+    .top-strip-note em {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: #F4D59B;
+    }
+
+    .top-strip-hours {
+      color: #C7BBAE;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    /* Header & Navigation */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(247, 242, 232, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      transition: box-shadow 0.25s ease;
+    }
+
+    .site-header.scrolled {
+      box-shadow: 0 6px 24px rgba(30, 24, 21, 0.07);
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 0.95rem 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      position: relative;
+      padding: 0.2rem 0;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 1.5px;
+      background: var(--terracotta);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.18s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--terracotta);
+      color: #FDF9F3;
+      border-color: var(--terracotta);
+    }
+
+    .btn-primary:hover {
+      background: var(--terracotta-dark);
+      border-color: var(--terracotta-dark);
+      box-shadow: 0 8px 20px rgba(169, 56, 41, 0.24);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-linen);
+      border-color: var(--ink);
+    }
+
+    .btn-light {
+      background: #FBF8F1;
+      color: var(--ink);
+      border-color: #FBF8F1;
+    }
+
+    .btn-light:hover {
+      background: #EFE8D8;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .mobile-drawer {
+      display: none;
+      border-top: 1px solid var(--line);
+      background: var(--bg-paper);
+      padding: 1.25rem 0 1.5rem;
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .mobile-drawer a {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      color: var(--ink);
+    }
+
+    /* Typography Helpers */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--terracotta);
+      margin-bottom: 0.9rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+
+    .section-title {
+      font-size: clamp(2.15rem, 3.8vw, 3.2rem);
+      letter-spacing: -0.01em;
+    }
+
+    .section-lead {
+      font-size: 1.03rem;
+      color: var(--ink-muted);
+      max-width: 56ch;
+      margin: 0.9rem 0 0;
+    }
+
+    .section {
+      padding: clamp(4rem, 7vw, 6.2rem) 0;
+    }
+
+    /* Hero */
+    .hero {
+      padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5.2rem);
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+      gap: clamp(2.2rem, 5vw, 4.5rem);
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.85rem, 5.6vw, 4.65rem);
+      line-height: 1.02;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--terracotta);
+      font-weight: 500;
+    }
+
+    .hero-copy {
+      margin: 1.35rem 0 2rem;
+      font-size: 1.06rem;
+      color: var(--ink-muted);
+      max-width: 48ch;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      align-items: center;
+    }
+
+    .hero-meta {
+      margin-top: 2.4rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .hero-meta-item strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .hero-meta-item span {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    /* Hero Art Card */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      box-shadow: var(--shadow-lift);
+      position: relative;
+    }
+
+    .hero-frame-inner {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #F4ECD9;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-stamp {
+      position: absolute;
+      top: -16px;
+      right: -12px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: #FAF4E8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: var(--font-serif);
+      line-height: 1.05;
+      box-shadow: 0 10px 24px rgba(169, 56, 41, 0.28);
+      border: 2px dashed rgba(250, 244, 232, 0.55);
+      transform: rotate(9deg);
+      z-index: 3;
+    }
+
+    .hero-stamp span:first-child {
+      font-size: 0.65rem;
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      opacity: 0.9;
+    }
+
+    .hero-stamp strong {
+      font-size: 1.45rem;
+      font-weight: 600;
+    }
+
+    .hero-note-card {
+      position: absolute;
+      left: -22px;
+      bottom: 24px;
+      background: #FFFDF8;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      padding: 0.95rem 1.15rem;
+      max-width: 248px;
+      box-shadow: 0 14px 28px rgba(30, 24, 21, 0.12);
+      transform: rotate(-2deg);
+      transition: transform 0.25s ease;
+    }
+
+    .hero-note-card:hover {
+      transform: rotate(0deg) translateY(-3px);
+    }
+
+    .hero-note-label {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--terracotta);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-note-dish {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.15;
+    }
+
+    .hero-note-desc {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Chalkboard Specials Strip */
+    .chalkboard {
+      background: var(--bg-chalk);
+      color: #F2ECE1;
+      border-top: 3px solid var(--ochre);
+      border-bottom: 3px solid var(--ochre);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chalkboard::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04), transparent 55%),
+                  radial-gradient(circle at 85% 75%, rgba(182, 136, 65, 0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .chalk-inner {
+      padding: 2.6rem 0;
+      position: relative;
+    }
+
+    .chalk-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.65rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px dashed rgba(242, 236, 225, 0.22);
+    }
+
+    .chalk-head h2 {
+      color: #F7F1E5;
+      font-size: clamp(1.65rem, 2.8vw, 2.2rem);
+      font-style: italic;
+    }
+
+    .chalk-date {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #D7C6A5;
+    }
+
+    .chalk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .chalk-item {
+      padding-right: 1rem;
+      border-right: 1px solid rgba(242, 236, 225, 0.12);
+    }
+
+    .chalk-item:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .chalk-course {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #DFBE82;
+      margin-bottom: 0.35rem;
+    }
+
+    .chalk-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .chalk-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: #FAF6EE;
+    }
+
+    .chalk-price {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: #DFBE82;
+      white-space: nowrap;
+    }
+
+    .chalk-desc {
+      margin: 0.35rem 0 0;
+      font-size: 0.87rem;
+      color: rgba(242, 236, 225, 0.76);
+    }
+
+    /* Story Section */
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: start;
+    }
+
+    .quote-card {
+      background: var(--bg-linen);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--terracotta);
+      padding: 2rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-top: 2rem;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .quote-card figcaption {
+      margin-top: 0.9rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+    }
+
+    .pillars {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .pillar {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 1.1rem;
+      align-items: start;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 1.45rem;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .pillar:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .pillar-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-linen);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--terracotta);
+    }
+
+    .pillar h3 {
+      font-size: 1.45rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .pillar p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--ink-muted);
+    }
+
+    /* Interactive Printed Menu */
+    .menu-section {
+      background: var(--bg-linen);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .menu-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .filter-pill {
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      color: var(--ink-muted);
+      border-radius: 999px;
+      padding: 0.42rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .filter-pill.active {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FAF7F0;
+    }
+
+    .menu-sheet {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .menu-sheet-inner {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(1.4rem, 3.5vw, 2.8rem);
+    }
+
+    .menu-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.5rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .menu-tab {
+      background: none;
+      border: none;
+      padding: 0.45rem 0;
+      font-family: var(--font-serif);
+      font-size: 1.38rem;
+      color: var(--ink-soft);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .menu-tab:hover {
+      color: var(--ink);
+    }
+
+    .menu-tab.active {
+      color: var(--terracotta);
+      font-weight: 600;
+    }
+
+    .menu-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.95rem;
+      height: 2px;
+      background: var(--terracotta);
+    }
+
+    .menu-category-block {
+      margin-bottom: 2.2rem;
+    }
+
+    .menu-category-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .menu-cat-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px dashed var(--line-strong);
+    }
+
+    .menu-cat-heading h3 {
+      font-size: 1.75rem;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .menu-cat-heading span {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .menu-items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.35rem 2.6rem;
+    }
+
+    .dish {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .dish-top {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+    }
+
+    .dish-name {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .dish-dots {
+      flex: 1;
+      border-bottom: 1px dotted rgba(35, 28, 24, 0.28);
+      transform: translateY(-4px);
+    }
+
+    .dish-price {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dish-desc {
+      margin: 0;
+      font-size: 0.89rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    .dish-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+
+    .tag {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.14rem 0.45rem;
+      border-radius: 3px;
+    }
+
+    .tag-v {
+      background: var(--olive-soft);
+      color: var(--olive);
+    }
+
+    .tag-gf {
+      background: rgba(182, 136, 65, 0.16);
+      color: #876022;
+    }
+
+    .tag-fav {
+      background: var(--terracotta-soft);
+      color: var(--terracotta);
+    }
+
+    .menu-footnote {
+      margin-top: 2rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .menu-empty {
+      text-align: center;
+      padding: 2.2rem 1rem;
+      color: var(--ink-muted);
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-style: italic;
+    }
+
+    /* Aperitivo & Sunday Supper Split */
+    .feature-split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.8rem;
+    }
+
+    .feature-card {
+      border-radius: var(--radius-md);
+      padding: clamp(1.8rem, 3.6vw, 2.8rem);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.6rem;
+    }
+
+    .feature-aperitivo {
+      background: linear-gradient(155deg, #9C3426 0%, #7C2419 100%);
+      color: #FBF4E9;
+      border-color: transparent;
+    }
+
+    .feature-aperitivo h3,
+    .feature-aperitivo .eyebrow {
+      color: #FBF4E9;
+    }
+
+    .feature-aperitivo .eyebrow {
+      opacity: 0.85;
+    }
+
+    .feature-aperitivo p {
+      color: rgba(251, 244, 233, 0.86);
+    }
+
+    .feature-sunday {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 1rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 0.6rem;
+      font-size: 0.93rem;
+    }
+
+    .feature-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed currentColor;
+      border-color: rgba(251, 244, 233, 0.25);
+    }
+
+    .feature-sunday .feature-list li {
+      border-color: var(--line);
+    }
+
+    .sunday-price-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      background: var(--bg-linen);
+      border: 1px solid var(--line);
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      color: var(--ink);
+      width: fit-content;
+    }
+
+    .sunday-price-tag strong {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      color: var(--terracotta);
+    }
+
+    /* Voices / Neighborhood Notes */
+    .voices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.2rem;
+    }
+
+    .voice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 1.7rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .voice-card p {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      line-height: 1.42;
+      color: var(--ink);
+    }
+
+    .voice-meta {
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+
+    .voice-meta strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.88rem;
+    }
+
+    /* Reservations Section */
+    .reserve-section {
+      background: var(--bg-linen);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reserve-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .reserve-notes {
+      margin-top: 1.7rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .reserve-note-row {
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      color: var(--ink-muted);
+    }
+
+    .reserve-note-row strong {
+      color: var(--ink);
+      display: block;
+    }
+
+    .reserve-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 0.72rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line-strong);
+      background: #FFFDF9;
+      color: var(--ink);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(169, 56, 41, 0.12);
+    }
+
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.15rem;
+    }
+
+    .slot-btn {
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line-strong);
+      background: #FFFDF9;
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .slot-btn:hover:not(:disabled) {
+      border-color: var(--terracotta);
+      color: var(--terracotta);
+    }
+
+    .slot-btn.selected {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #FFFDF9;
+    }
+
+    .slot-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--terracotta);
+      min-height: 1.2em;
+      margin-top: 0.2rem;
+    }
+
+    .confirmation-box {
+      display: none;
+      text-align: left;
+      padding: 0.5rem 0;
+    }
+
+    .confirmation-box.visible {
+      display: block;
+    }
+
+    .confirm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--olive-soft);
+      color: var(--olive);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    .confirm-summary {
+      margin: 1.2rem 0 1.5rem;
+      padding: 1.15rem;
+      background: var(--bg-linen);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-sm);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      font-size: 0.9rem;
+    }
+
+    .confirm-summary span {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+    }
+
+    .confirm-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    /* Visit & Map Section */
+    .visit-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+    }
+
+    .hours-list {
+      margin: 1.5rem 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .hours-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+
+    .hours-list .day {
+      font-weight: 500;
+    }
+
+    .hours-list .closed {
+      color: var(--terracotta);
+      font-style: italic;
+    }
+
+    .contact-strip {
+      display: grid;
+      gap: 0.45rem;
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+    }
+
+    .contact-strip a {
+      color: var(--terracotta);
+      font-weight: 500;
+    }
+
+    .map-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .map-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--bg-espresso);
+      color: #DDD2C3;
+      padding: 4rem 0 2.2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.8fr 0.8fr 1.2fr;
+      gap: 2.2rem;
+      padding-bottom: 2.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-brand {
+      font-family: var(--font-serif);
+      font-size: 1.9rem;
+      color: #FBF5EA;
+      margin-bottom: 0.6rem;
+    }
+
+    .site-footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #B9ADA0;
+      max-width: 34ch;
+    }
+
+    .footer-heading {
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #E3C489;
+      margin: 0 0 0.95rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.55rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a {
+      color: #D2C7B8;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #FFFFFF;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.68rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: #FAF4E8;
+      font-size: 0.88rem;
+    }
+
+    .newsletter-form input::placeholder {
+      color: #9C9083;
+    }
+
+    .newsletter-msg {
+      margin-top: 0.55rem;
+      font-size: 0.82rem;
+      color: #B4D39B;
+      min-height: 1.2em;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 1.6rem;
+      font-size: 0.82rem;
+      color: #988C7F;
+    }
+
+    .footer-signoff {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #DFC8A2;
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .js-animate .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .js-animate .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js-animate .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 980px) {
+      .nav-links,
+      .nav-actions .btn-reserve-desktop {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .hero-grid,
+      .story-grid,
+      .feature-split,
+      .reserve-layout,
+      .visit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-note-card {
+        left: 12px;
+        bottom: 12px;
+      }
+
+      .chalk-grid,
+      .voices-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chalk-item {
+        border-right: none;
+        border-bottom: 1px solid rgba(242, 236, 225, 0.14);
+        padding-right: 0;
+        padding-bottom: 1.2rem;
+      }
+
+      .chalk-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .menu-items-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(var(--max-w), calc(100% - 1.75rem));
+      }
+
+      .hero-meta {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .hero-stamp {
+        width: 78px;
+        height: 78px;
+        top: -10px;
+        right: -6px;
+      }
+
+      .hero-stamp strong {
+        font-size: 1.15rem;
+      }
+
+      .hero-note-card {
+        position: static;
+        margin-top: 1rem;
+        max-width: none;
+        transform: none;
+      }
+
+      .form-grid,
+      .confirm-summary,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Announcement Strip -->
+  <div class="top-strip">
+    <div class="container top-strip-inner">
+      <div class="top-strip-note">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span>Tonight from the kitchen: <em>Hand-cut Tajarin with Black Truffle &amp; Cultured Butter</em></span>
+      </div>
+      <div class="top-strip-hours" id="openStatus">Tue–Sun · 5:00 PM – 10:30 PM · Walk-ins at the Bar</div>
+    </div>
+  </div>
+
+  <!-- Sticky Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-bar">
+      <a href="#top" class="brand" aria-label="Trattoria Fiorini Home">
+        <svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="22" stroke="#A93829" stroke-width="1.5" />
+          <circle cx="24" cy="24" r="18.5" stroke="#A93829" stroke-width="0.75" stroke-dasharray="2 2.5" />
+          <path d="M24 11C21.5 16 17.5 19.5 14 21.5C18.5 22 21.5 24 24 28.5C26.5 24 29.5 22 34 21.5C30.5 19.5 26.5 16 24 11Z" fill="#495A42" opacity="0.22" />
+          <path d="M24 12V35M24 20C20.5 18.5 17 19.5 15 22M24 24C27.5 22.5 31 23.5 33 26M24 28.5C21 27.5 18.5 28.5 17 30.5" stroke="#495A42" stroke-width="1.4" stroke-linecap="round" />
+          <circle cx="20.5" cy="18.5" r="1.6" fill="#A93829" />
+          <circle cx="27.8" cy="22.5" r="1.6" fill="#A93829" />
+          <circle cx="20.2" cy="27.2" r="1.4" fill="#B68841" />
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">Trattoria Fiorini</span>
+          <span class="brand-sub">Cucina di Quartiere · Dal 1984</span>
+        </span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-links">
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#aperitivo">Aperitivo &amp; Sunday</a></li>
+          <li><a href="#visit">Visit</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#reservations" class="btn btn-primary btn-reserve-desktop">Reserve a Table</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="container">
+        <ul>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#menu">Tonight's Menu</a></li>
+          <li><a href="#aperitivo">Aperitivo &amp; Sunday Supper</a></li>
+          <li><a href="#visit">Hours &amp; Directions</a></li>
+          <li style="margin-top: 0.4rem;">
+            <a href="#reservations" class="btn btn-primary" style="width: 100%; font-family: var(--font-sans); font-size: 0.86rem;">Reserve a Table</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">Carroll Gardens · 418 Henry Street</div>
+          <h1 class="hero-title">Handmade pasta, <em>wood-fired</em> warmth, and your corner table waiting.</h1>
+          <p class="hero-copy">
+            Since 1984, the Fiorini family has rolled egg pasta by hand each morning, poured honest regional wines by the carafe, and kept the neighborhood fed with the unhurried generosity of an Emilia-Romagna kitchen.
+          </p>
+          <div class="hero-ctas">
+            <a href="#reservations" class="btn btn-primary">Reserve a Table</a>
+            <a href="#menu" class="btn btn-outline">Explore Tonight's Menu</a>
+          </div>
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <strong>Walk-ins Welcome</strong>
+              <span>12 seats held nightly at our marble bar</span>
+            </div>
+            <div class="hero-meta-item">
+              <strong>Garden Patio</strong>
+              <span>Heated string-lit courtyard dining</span>
+            </div>
+            <div class="hero-meta-item">
+              <strong>Sunday Supper</strong>
+              <span>Family-style braised ragù from 3 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="hero-stamp" aria-hidden="true">
+            <span>Henry St.</span>
+            <strong>1984</strong>
+            <span style="font-size: 0.62rem; letter-spacing: 0.1em; opacity: 0.85;">BROOKLYN</span>
+          </div>
+          <div class="hero-frame">
+            <div class="hero-frame-inner">
+              <!-- Art-directed Editorial Woodblock SVG Illustration -->
+              <svg viewBox="0 0 540 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Editorial illustration of a Trattoria Fiorini table with wine carafe, fresh tagliatelle, basil leaves, and warm Tuscan arch">
+                <rect width="540" height="520" fill="#F4ECD9" />
+                <!-- Sunlit Arch Window -->
+                <path d="M90 420V190C90 90.5887 170.589 10 270 10C369.411 10 450 90.5887 450 190V420H90Z" fill="#EFE2C6" />
+                <path d="M110 420V192C110 103.634 181.634 32 270 32C358.366 32 430 103.634 430 192V420" stroke="#CBB792" stroke-width="1.5" stroke-dasharray="4 4" />
+                <!-- Warm sun disc -->
+                <circle cx="348" cy="128" r="46" fill="#E3B26A" opacity="0.52" />
+                <!-- Decorative Italian lettering along arch -->
+                <text x="270" y="68" text-anchor="middle" fill="#8C6B42" font-family="Georgia, serif" font-size="13" letter-spacing="5">TRATTORIA FIORINI · CUCINA CASALINGA</text>
+
+                <!-- Checkered tablecloth corner -->
+                <rect x="0" y="345" width="540" height="175" fill="#EDE1C9" />
+                <g opacity="0.16" fill="#A93829">
+                  <rect x="0" y="345" width="45" height="35" />
+                  <rect x="90" y="345" width="45" height="35" />
+                  <rect x="180" y="345" width="45" height="35" />
+                  <rect x="270" y="345" width="45" height="35" />
+                  <rect x="360" y="345" width="45" height="35" />
+                  <rect x="450" y="345" width="45" height="35" />
+                  <rect x="45" y="380" width="45" height="35" />
+                  <rect x="135" y="380" width="45" height="35" />
+                  <rect x="225" y="380" width="45" height="35" />
+                  <rect x="315" y="380" width="45" height="35" />
+                  <rect x="405" y="380" width="45" height="35" />
+                  <rect x="495" y="380" width="45" height="35" />
+                  <rect x="0" y="415" width="45" height="35" />
+                  <rect x="90" y="415" width="45" height="35" />
+                  <rect x="180" y="415" width="45" height="35" />
+                  <rect x="270" y="415" width="45" height="35" />
+                  <rect x="360" y="415" width="45" height="35" />
+                  <rect x="450" y="415" width="45" height="35" />
+                  <rect x="45" y="450" width="45" height="35" />
+                  <rect x="135" y="450" width="45" height="35" />
+                  <rect x="225" y="450" width="45" height="35" />
+                  <rect x="315" y="450" width="45" height="35" />
+                  <rect x="405" y="450" width="45" height="35" />
+                  <rect x="495" y="450" width="45" height="35" />
+                </g>
+                <line x1="0" y1="345" x2="540" y2="345" stroke="#231C18" stroke-width="1.5" opacity="0.35" />
+
+                <!-- Olive branch top left -->
+                <g stroke="#495A42" stroke-width="2" stroke-linecap="round">
+                  <path d="M58 175C95 162 128 142 158 112" />
+                  <path d="M88 164C76 146 84 134 99 144C102 154 96 162 88 164Z" fill="#495A42" opacity="0.78" />
+                  <path d="M114 148C105 129 116 118 128 130C129 140 123 146 114 148Z" fill="#495A42" opacity="0.65" />
+                  <path d="M137 132C146 144 160 138 156 124C149 120 141 124 137 132Z" fill="#495A42" opacity="0.75" />
+                  <circle cx="106" cy="166" r="5" fill="#2B3427" stroke="none" />
+                  <circle cx="132" cy="147" r="4.5" fill="#495A42" stroke="none" />
+                </g>
+
+                <!-- Wine Carafe (Left-Back) -->
+                <g>
+                  <ellipse cx="164" cy="366" rx="44" ry="11" fill="#231C18" opacity="0.12" />
+                  <path d="M148 168H180L174 214C198 232 208 264 204 304C201 334 188 358 164 358C140 358 127 334 124 304C120 264 130 232 154 214L148 168Z" fill="#FAF5EB" stroke="#231C18" stroke-width="2" />
+                  <!-- Red wine inside -->
+                  <path d="M127 272C143 266 185 266 201 272C203 292 201 312 195 332C189 348 178 355 164 355C150 355 139 348 133 332C127 312 125 292 127 272Z" fill="#8D271E" />
+                  <ellipse cx="164" cy="272" rx="37" ry="6" fill="#A93829" />
+                  <!-- Carafe rim & highlight -->
+                  <ellipse cx="164" cy="168" rx="16" ry="4" fill="#EFE6D3" stroke="#231C18" stroke-width="1.8" />
+                  <path d="M144 242C138 265 137 294 143 326" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.45" />
+                </g>
+
+                <!-- Wine Glass (Right-Back) -->
+                <g>
+                  <ellipse cx="404" cy="364" rx="28" ry="8" fill="#231C18" opacity="0.12" />
+                  <path d="M378 212H430C430 250 420 274 404 274C388 274 378 250 378 212Z" fill="#FAF5EB" stroke="#231C18" stroke-width="1.8" />
+                  <path d="M381 236C392 233 416 233 427 236C424 258 415 271 404 271C393 271 384 258 381 236Z" fill="#A93829" />
+                  <line x1="404" y1="274" x2="404" y2="352" stroke="#231C18" stroke-width="2" />
+                  <ellipse cx="404" cy="354" rx="24" ry="6" fill="#FAF5EB" stroke="#231C18" stroke-width="1.8" />
+                </g>
+
+                <!-- Ceramic Bowl of Handmade Tagliatelle (Center Foreground) -->
+                <g>
+                  <ellipse cx="294" cy="402" rx="116" ry="24" fill="#231C18" opacity="0.14" />
+                  <!-- Bowl base -->
+                  <path d="M180 326C180 378 228 402 294 402C360 402 408 378 408 326H180Z" fill="#FBF7EE" stroke="#231C18" stroke-width="2" />
+                  <!-- Terracotta hand-painted rim stripe -->
+                  <path d="M186 344C215 358 373 358 402 344" stroke="#A93829" stroke-width="4" stroke-linecap="round" />
+                  <path d="M196 360C225 372 363 372 392 360" stroke="#495A42" stroke-width="1.8" stroke-dasharray="5 5" />
+                  <!-- Bowl inner rim -->
+                  <ellipse cx="294" cy="326" rx="114" ry="26" fill="#F1E7D2" stroke="#231C18" stroke-width="2" />
+
+                  <!-- Golden Pasta Nest -->
+                  <g stroke="#B88233" stroke-width="5.5" stroke-linecap="round" fill="none">
+                    <path d="M214 326C235 292 350 290 374 326" stroke="#E5B75C" stroke-width="14" />
+                    <path d="M222 324C246 286 342 284 366 322" stroke="#D5A042" stroke-width="4" />
+                    <path d="M235 330C258 298 332 296 355 328" stroke="#EBC470" stroke-width="4" />
+                    <path d="M248 318C272 288 320 288 344 316" stroke="#C58E34" stroke-width="3.5" />
+                    <path d="M228 334C266 312 324 312 360 334" stroke="#C8933B" stroke-width="3.5" />
+                  </g>
+
+                  <!-- Rich Pomodoro Sauce Swirl -->
+                  <path d="M254 312C268 296 320 296 334 312C342 321 324 334 294 334C264 334 246 321 254 312Z" fill="#A93829" opacity="0.92" />
+                  <!-- Shaved Parmigiano curls -->
+                  <path d="M272 311C280 305 290 307 288 314" stroke="#FBF6E8" stroke-width="3" stroke-linecap="round" />
+                  <path d="M300 307C310 303 318 308 314 314" stroke="#FBF6E8" stroke-width="3" stroke-linecap="round" />
+                  <path d="M286 321C295 318 304 320 301 325" stroke="#FBF6E8" stroke-width="2.5" stroke-linecap="round" />
+
+                  <!-- Fresh Basil Sprig on Top -->
+                  <path d="M294 306C282 292 266 294 268 304C272 312 286 312 294 306Z" fill="#495A42" stroke="#231C18" stroke-width="1.2" />
+                  <path d="M294 306C306 290 322 293 318 304C314 311 302 311 294 306Z" fill="#5D7253" stroke="#231C18" stroke-width="1.2" />
+                  <path d="M294 306C291 291 297 281 302 289C304 296 299 303 294 306Z" fill="#495A42" stroke="#231C18" stroke-width="1.2" />
+                </g>
+
+                <!-- Small Plate of Cherry Tomatoes & Garlic (Bottom Right) -->
+                <g>
+                  <circle cx="446" cy="422" r="14" fill="#B83B2A" stroke="#231C18" stroke-width="1.6" />
+                  <circle cx="472" cy="432" r="12" fill="#C94B38" stroke="#231C18" stroke-width="1.6" />
+                  <path d="M446 408L442 403M446 408L451 403M446 408L446 401" stroke="#495A42" stroke-width="1.5" stroke-linecap="round" />
+                  <path d="M472 420L469 415M472 420L477 416" stroke="#495A42" stroke-width="1.5" stroke-linecap="round" />
+                </g>
+
+                <!-- Warm steam wisps -->
+                <g stroke="#8C6B42" stroke-width="1.5" stroke-linecap="round" opacity="0.45">
+                  <path d="M270 272C264 256 276 244 270 228" />
+                  <path d="M296 266C290 248 302 234 296 216" />
+                  <path d="M322 272C316 258 328 246 322 232" />
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="hero-note-card">
+            <div class="hero-note-label">Rolled at 8:00 AM</div>
+            <div class="hero-note-dish">Tagliatelle al Ragù Bolognese</div>
+            <div class="hero-note-desc">Pasture-raised egg yolks, 6-hour simmered ragù, 36-month Parmigiano.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daily Chalkboard Specials -->
+    <section class="chalkboard" aria-label="Tonight's Market Specials">
+      <div class="container chalk-inner">
+        <div class="chalk-head">
+          <h2>La Lavagna di Oggi — Market Specials</h2>
+          <span class="chalk-date" id="chalkDate">Updated Daily · 3:00 PM</span>
+        </div>
+        <div class="chalk-grid">
+          <article class="chalk-item">
+            <div class="chalk-course">Antipasto del Giorno</div>
+            <div class="chalk-row">
+              <h3 class="chalk-name">Carciofi alla Romana</h3>
+              <span class="chalk-price">$17</span>
+            </div>
+            <p class="chalk-desc">Braised baby artichokes stuffed with mint, garlic, and toasted breadcrumbs over whipped pecorino.</p>
+          </article>
+          <article class="chalk-item">
+            <div class="chalk-course">Pasta della Sera</div>
+            <div class="chalk-row">
+              <h3 class="chalk-name">Tajarin al Tartufo Nero</h3>
+              <span class="chalk-price">$34</span>
+            </div>
+            <p class="chalk-desc">40-yolk Piedmontese ribbons tossed in cultured Alpine butter, aged Parmigiano, and shaved black truffle.</p>
+          </article>
+          <article class="chalk-item">
+            <div class="chalk-course">Dolce di Casa</div>
+            <div class="chalk-row">
+              <h3 class="chalk-name">Torta all'Olio d'Oliva</h3>
+              <span class="chalk-price">$13</span>
+            </div>
+            <p class="chalk-desc">Warm Sicilian olive oil cake with rosemary-roasted blood orange and mascarpone crema.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="section" id="story">
+      <div class="container story-grid">
+        <div class="reveal">
+          <div class="eyebrow">La Nostra Storia</div>
+          <h2 class="section-title">Forty years of flour-dusted aprons and familiar faces.</h2>
+          <p class="section-lead">
+            When Nonna Rosa and Gianni Fiorini opened our doors on Henry Street in 1984, they brought a wooden pasta board from Bologna, a notebook of Sunday recipes, and a simple conviction: a neighborhood restaurant should feel like an extension of your own dining room.
+          </p>
+          <p class="section-lead">
+            Today, grandchildren Marco and Lucia run the dining room and hearth—still kneading dough by hand, sourcing Hudson Valley produce alongside Dop cheeses and Ligurian olive oil, and saving seats every night for neighbors who drop in unannounced.
+          </p>
+
+          <figure class="quote-card">
+            <blockquote>“Good food shouldn't require a special occasion—only a good appetite and someone to pass the bread.”</blockquote>
+            <figcaption>— Marco &amp; Lucia Fiorini, Second-Generation Proprietors</figcaption>
+          </figure>
+        </div>
+
+        <div class="pillars reveal">
+          <article class="pillar">
+            <div class="pillar-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 17c2-5 6-10 16-10" />
+                <path d="M4 20c3-4 8-7 16-7" />
+                <path d="M8 7c1 2 1 4 0 6" />
+                <path d="M13 5c1 2 1 4 0 6" />
+              </svg>
+            </div>
+            <div>
+              <h3>01 · Sfoglia Fresca Every Morning</h3>
+              <p>We mill organic stone-ground semolina and Italian 00 flour with golden farm eggs every morning at 8 AM—never dried, never rushed.</p>
+            </div>
+          </article>
+
+          <article class="pillar">
+            <div class="pillar-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3c2 3.5 5 5.5 5 10a5 5 0 1 1-10 0c0-2.8 1.5-5 3-7 0 2 1.2 3 2 3 0-2-.5-4 0-6z" />
+              </svg>
+            </div>
+            <div>
+              <h3>02 · White-Oak Hearth</h3>
+              <p>Our brick oven burns seasoned Hudson Valley oak for blistered rosemary focaccia, whole-roasted Mediterranean branzino, and charred chicories.</p>
+            </div>
+          </article>
+
+          <article class="pillar">
+            <div class="pillar-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3h8l-1 7a3 3 0 0 1-6 0L8 3z" />
+                <path d="M12 13v8" />
+                <path d="M8 21h8" />
+              </svg>
+            </div>
+            <div>
+              <h3>03 · Small-Grower Italian Cellar</h3>
+              <p>Over 90 bottles from family estates across Piedmont, Emilia, Campania, and Etna—plus house-poured quartinos starting at $14.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Menu Section -->
+    <section class="section menu-section" id="menu">
+      <div class="container">
+        <div class="menu-header reveal">
+          <div>
+            <div class="eyebrow">Il Menu della Sera</div>
+            <h2 class="section-title">From the Pasta Board &amp; Hearth</h2>
+          </div>
+          <div class="menu-filters" role="group" aria-label="Dietary filters">
+            <button class="filter-pill active" data-filter="all" type="button">All Dishes</button>
+            <button class="filter-pill" data-filter="fav" type="button">House Classics</button>
+            <button class="filter-pill" data-filter="v" type="button">Vegetarian</button>
+            <button class="filter-pill" data-filter="gf" type="button">Gluten-Free Avail.</button>
+          </div>
+        </div>
+
+        <div class="menu-sheet reveal">
+          <div class="menu-sheet-inner">
+            <div class="menu-tabs" role="tablist" aria-label="Menu categories">
+              <button class="menu-tab active" role="tab" aria-selected="true" data-cat="all" type="button">Full Menu</button>
+              <button class="menu-tab" role="tab" aria-selected="false" data-cat="antipasti" type="button">Antipasti</button>
+              <button class="menu-tab" role="tab" aria-selected="false" data-cat="primi" type="button">Primi (Pasta)</button>
+              <button class="menu-tab" role="tab" aria-selected="false" data-cat="secondi" type="button">Secondi &amp; Contorni</button>
+              <button class="menu-tab" role="tab" aria-selected="false" data-cat="dolci" type="button">Dolci</button>
+              <button class="menu-tab" role="tab" aria-selected="false" data-cat="vini" type="button">Vini &amp; Aperitivi</button>
+            </div>
+
+            <div id="menuContainer" aria-live="polite"></div>
+
+            <div class="menu-footnote">
+              <span><strong>V</strong> Vegetarian &nbsp;·&nbsp; <strong>GF*</strong> Gluten-free pasta or preparation available on request &nbsp;·&nbsp; <strong>★</strong> Fiorini family classic since 1984</span>
+              <span>Corkage $25 per bottle (max 2)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Aperitivo & Sunday Supper -->
+    <section class="section" id="aperitivo">
+      <div class="container feature-split">
+        <article class="feature-card feature-aperitivo reveal">
+          <div>
+            <div class="eyebrow">Tue – Sat · 5:00 PM – 6:30 PM</div>
+            <h3 style="font-size: clamp(1.9rem, 3vw, 2.5rem);">L'Ora dell'Aperitivo at the Marble Bar</h3>
+            <p style="margin-top: 0.75rem;">
+              Pull up a stool before the dinner rush. Every cocktail or quartino comes with warm wood-fired rosemary focaccia, marinated Castelvetrano olives, and shaved fennel.
+            </p>
+            <ul class="feature-list">
+              <li><span>Negroni Sbagliato (Campari, Punt e Mes, Prosecco)</span><strong>$14</strong></li>
+              <li><span>Aperitivo Spritz (Select, Blood Orange, Soda)</span><strong>$13</strong></li>
+              <li><span>Chilled Lambrusco di Sorbara (Quartino)</span><strong>$14</strong></li>
+              <li><span>Crodino Bitter &amp; Rosemary Tonic (Zero-Proof)</span><strong>$9</strong></li>
+            </ul>
+          </div>
+          <div>
+            <a href="#visit" class="btn btn-light">First-Come at the Bar</a>
+          </div>
+        </article>
+
+        <article class="feature-card feature-sunday reveal">
+          <div>
+            <div class="eyebrow">Every Sunday · 3:00 PM – 9:00 PM</div>
+            <h3 style="font-size: clamp(1.9rem, 3vw, 2.5rem);">La Tavola di Famiglia — Sunday Supper</h3>
+            <p style="margin-top: 0.75rem; color: var(--ink-muted);">
+              Our favorite tradition of the week. Settle in with friends or family for a generous four-course feast served in big ceramic platters right in the center of the table.
+            </p>
+            <div class="sunday-price-tag" style="margin-top: 1rem;">
+              <strong>$58</strong> <span>per guest · children under 10 eat half price</span>
+            </div>
+            <ul class="feature-list">
+              <li><span>Warm Focaccia, Burrata &amp; Roasted Peppers</span><span style="color: var(--ink-soft);">Course I</span></li>
+              <li><span>Rigatoni with 6-Hour Braised Pork &amp; Beef Ragù</span><span style="color: var(--ink-soft);">Course II</span></li>
+              <li><span>Nonna's Veal &amp; Ricotta Meatballs, Bitter Greens</span><span style="color: var(--ink-soft);">Course III</span></li>
+              <li><span>Tableside Classic Tiramisù &amp; Espresso</span><span style="color: var(--ink-soft);">Course IV</span></li>
+            </ul>
+          </div>
+          <div>
+            <a href="#reservations" class="btn btn-primary" id="bookSundayBtn">Book Sunday Supper</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Neighborhood Voices -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="reveal">
+          <div class="eyebrow">Word on Henry Street</div>
+          <h2 class="section-title">Notes from the Neighborhood</h2>
+        </div>
+        <div class="voices-grid reveal">
+          <article class="voice-card">
+            <p>“The tagliatelle Bolognese tastes like someone spent the whole afternoon watching the pot just for you. We've celebrated three anniversaries and twenty rainy Tuesdays at table four.”</p>
+            <div class="voice-meta">
+              <strong>Elena &amp; Samira R.</strong>
+              Carroll Gardens neighbors since 2016
+            </div>
+          </article>
+          <article class="voice-card">
+            <p>“Zero pretense, candlelit warmth, and a Lambrusco list that puts half of Manhattan to shame. Sit at the marble bar at 5:15 PM and order the braised artichokes immediately.”</p>
+            <div class="voice-meta">
+              <strong>Brooklyn Table Dispatch</strong>
+              Neighborhood Classics Issue
+            </div>
+          </article>
+          <article class="voice-card">
+            <p>“Our family of ten booked the back garden table for Sunday Supper. Marco poured digestivi at the end of the night and nobody wanted to leave.”</p>
+            <div class="voice-meta">
+              <strong>David M.</strong>
+              Private Garden Dining Guest
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Reservations Section -->
+    <section class="section reserve-section" id="reservations">
+      <div class="container reserve-layout">
+        <div class="reveal">
+          <div class="eyebrow">Prenota un Tavolo</div>
+          <h2 class="section-title">Save your seat at the table.</h2>
+          <p class="section-lead">
+            Reservations open 30 days in advance. We keep our marble bar and several dining room two-tops available for walk-in neighbors every evening.
+          </p>
+
+          <div class="reserve-notes">
+            <div class="reserve-note-row">
+              <span aria-hidden="true" style="color: var(--terracotta); font-weight: 700;">—</span>
+              <div>
+                <strong>Groups of 9 to 18 Guests</strong>
+                Our candlelit Garden Room is available for family-style dinners. Call us at (718) 555-0194 or note it below.
+              </div>
+            </div>
+            <div class="reserve-note-row">
+              <span aria-hidden="true" style="color: var(--terracotta); font-weight: 700;">—</span>
+              <div>
+                <strong>Closed Mondays</strong>
+                We rest on Mondays so the kitchen can visit the farms and prepare fresh stocks for Tuesday evening.
+              </div>
+            </div>
+            <div class="reserve-note-row">
+              <span aria-hidden="true" style="color: var(--terracotta); font-weight: 700;">—</span>
+              <div>
+                <strong>Running a Few Minutes Late?</strong>
+                We hold tables for 15 minutes—just give Lucia a quick ring at the host stand.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reserve-card reveal">
+          <form id="reservationForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="resGuests">Party Size</label>
+                <select id="resGuests" name="guests" required>
+                  <option value="1 Guest">1 Guest</option>
+                  <option value="2 Guests" selected>2 Guests</option>
+                  <option value="3 Guests">3 Guests</option>
+                  <option value="4 Guests">4 Guests</option>
+                  <option value="5 Guests">5 Guests</option>
+                  <option value="6 Guests">6 Guests</option>
+                  <option value="7 Guests">7 Guests</option>
+                  <option value="8 Guests">8 Guests</option>
+                  <option value="Private Table (9–18)">Private Table (9–18)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="resDate">Date</label>
+                <input type="date" id="resDate" name="date" required />
+              </div>
+
+              <div class="field field-full">
+                <label>Select a Seating Time</label>
+                <div class="time-slots" id="timeSlots" role="radiogroup" aria-label="Available seating times"></div>
+                <div class="form-hint" id="dateHint"></div>
+              </div>
+
+              <div class="field">
+                <label for="resArea">Seating Preference</label>
+                <select id="resArea" name="area">
+                  <option value="Main Dining Room">Main Dining Room</option>
+                  <option value="Heated Garden Patio">Heated Garden Patio</option>
+                  <option value="Marble Aperitivo Bar">Marble Aperitivo Bar</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="resName">Your Name</label>
+                <input type="text" id="resName" name="name" placeholder="e.g., Chiara Rossi" required autocomplete="name" />
+              </div>
+
+              <div class="field">
+                <label for="resPhone">Phone Number</label>
+                <input type="tel" id="resPhone" name="phone" placeholder="(718) 555-0142" required autocomplete="tel" />
+              </div>
+
+              <div class="field">
+                <label for="resEmail">Email Address</label>
+                <input type="email" id="resEmail" name="email" placeholder="you@example.com" required autocomplete="email" />
+              </div>
+
+              <div class="field field-full">
+                <label for="resNotes">Allergies, Celebration, or Sunday Supper Request (Optional)</label>
+                <textarea id="resNotes" name="notes" rows="2" placeholder="Gluten-free pasta, birthday candle, high chair, Sunday Supper..."></textarea>
+              </div>
+
+              <div class="field field-full">
+                <div class="form-hint" id="formError" role="alert"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.92rem;">Confirm Table Request</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="confirmation-box" id="confirmationBox" aria-live="polite">
+            <div class="confirm-badge">✓ Table Held</div>
+            <h3 style="font-size: 2rem;">Ti aspettiamo — We'll see you soon!</h3>
+            <p style="margin: 0.5rem 0 0; color: var(--ink-muted); font-size: 0.95rem;">
+              Your table is reserved in our host book. Confirmation code <strong id="confirmCode"></strong> has been noted for <strong id="confirmGuestName"></strong>.
+            </p>
+            <div class="confirm-summary" id="confirmSummary"></div>
+            <div class="confirm-actions">
+              <button type="button" class="btn btn-primary" id="downloadIcsBtn">Add to Calendar (.ics)</button>
+              <button type="button" class="btn btn-outline" id="newReservationBtn">Modify or Book Another</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit & Illustrated Map Section -->
+    <section class="section" id="visit">
+      <div class="container visit-grid">
+        <div class="reveal">
+          <div class="eyebrow">Dove Siamo</div>
+          <h2 class="section-title">Right on the corner of Henry &amp; Carroll.</h2>
+          <p class="section-lead">
+            Look for the hunter-green awning, warm pendant lamps in the front windows, and the scent of garlic and rosemary drifting down the block.
+          </p>
+
+          <ul class="hours-list">
+            <li><span class="day">Tuesday – Thursday</span><span>5:00 PM – 10:00 PM</span></li>
+            <li><span class="day">Friday – Saturday</span><span>5:00 PM – 11:00 PM</span></li>
+            <li><span class="day">Sunday (Supper &amp; À la Carte)</span><span>3:00 PM – 9:30 PM</span></li>
+            <li><span class="day">Monday</span><span class="closed">Closed — Riposo</span></li>
+          </ul>
+
+          <div class="contact-strip">
+            <div><strong>Address:</strong> 418 Henry Street, Brooklyn, NY 11231</div>
+            <div><strong>Phone:</strong> <a href="tel:+17185550194">(718) 555-0194</a> &nbsp;·&nbsp; <strong>Email:</strong> <a href="mailto:ciao@trattoriafiorini.com">ciao@trattoriafiorini.com</a></div>
+            <div><strong>Subway:</strong> F or G train to Carroll Street (4-minute walk west)</div>
+          </div>
+        </div>
+
+        <div class="map-frame reveal">
+          <!-- Custom Illustrated Neighborhood Street Map -->
+          <svg viewBox="0 0 560 390" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated neighborhood map showing Trattoria Fiorini at 418 Henry Street near Carroll Park and the Carroll Street subway stop">
+            <rect width="560" height="390" rx="4" fill="#F2E9D6" />
+            <!-- City blocks -->
+            <rect x="28" y="26" width="115" height="84" rx="3" fill="#E6DAC2" />
+            <rect x="172" y="26" width="150" height="84" rx="3" fill="#E6DAC2" />
+            <rect x="352" y="26" width="176" height="84" rx="3" fill="#E6DAC2" />
+
+            <rect x="28" y="138" width="115" height="106" rx="3" fill="#E6DAC2" />
+            <rect x="172" y="138" width="150" height="106" rx="3" fill="#E6DAC2" />
+            <!-- Carroll Park -->
+            <rect x="352" y="138" width="176" height="106" rx="6" fill="#CBD5BE" stroke="#8CA07A" stroke-width="1.2" />
+            <circle cx="388" cy="176" r="14" fill="#9EB28D" opacity="0.7" />
+            <circle cx="486" cy="172" r="16" fill="#9EB28D" opacity="0.65" />
+            <circle cx="442" cy="212" r="13" fill="#9EB28D" opacity="0.6" />
+            <text x="440" y="196" text-anchor="middle" fill="#415239" font-family="Georgia, serif" font-style="italic" font-size="14">Carroll Park</text>
+
+            <rect x="28" y="274" width="115" height="90" rx="3" fill="#E6DAC2" />
+            <rect x="172" y="274" width="150" height="90" rx="3" fill="#E6DAC2" />
+            <rect x="352" y="274" width="176" height="90" rx="3" fill="#E6DAC2" />
+
+            <!-- Streets -->
+            <path d="M158 0V390M337 0V390M0 124H560M0 259H560" stroke="#FBF7EE" stroke-width="24" />
+            <path d="M158 0V390M337 0V390M0 124H560M0 259H560" stroke="#D8C9AE" stroke-width="1" stroke-dasharray="4 4" />
+
+            <!-- Street Labels -->
+            <text x="158" y="205" text-anchor="middle" fill="#6B5E52" font-family="sans-serif" font-size="10.5" font-weight="600" letter-spacing="2" transform="rotate(-90 158 205)">HENRY STREET</text>
+            <text x="337" y="205" text-anchor="middle" fill="#6B5E52" font-family="sans-serif" font-size="10.5" font-weight="600" letter-spacing="2" transform="rotate(-90 337 205)">CLINTON STREET</text>
+            <text x="248" y="128" text-anchor="middle" fill="#6B5E52" font-family="sans-serif" font-size="10.5" font-weight="600" letter-spacing="2">PRESIDENT STREET</text>
+            <text x="248" y="263" text-anchor="middle" fill="#6B5E52" font-family="sans-serif" font-size="10.5" font-weight="600" letter-spacing="2">CARROLL STREET</text>
+
+            <!-- Walking path from Subway to Trattoria -->
+            <path d="M498 259H176V236" stroke="#A93829" stroke-width="2.2" stroke-dasharray="5 5" stroke-linecap="round" />
+
+            <!-- Subway Stop Marker -->
+            <g transform="translate(498, 259)">
+              <circle r="15" fill="#231C18" />
+              <text x="0" y="4" text-anchor="middle" fill="#FBF8F1" font-family="sans-serif" font-size="10" font-weight="700">F·G</text>
+            </g>
+            <text x="498" y="290" text-anchor="middle" fill="#4D4239" font-family="sans-serif" font-size="10" font-weight="600">Carroll St Station</text>
+
+            <!-- Trattoria Fiorini Pin -->
+            <g transform="translate(176, 232)">
+              <circle r="24" fill="#A93829" opacity="0.16" />
+              <path d="M0 0C-12 -15 -16 -24 -16 -32C-16 -40.8366 -8.83656 -48 0 -48C8.83656 -48 16 -40.8366 16 -32C16 -24 12 -15 0 0Z" fill="#A93829" stroke="#FBF8F1" stroke-width="2" />
+              <circle cx="0" cy="-32" r="5.5" fill="#FBF8F1" />
+            </g>
+
+            <!-- Pin Callout Tag -->
+            <g transform="translate(196, 168)">
+              <rect width="136" height="44" rx="5" fill="#1E1815" />
+              <text x="12" y="19" fill="#FBF5EA" font-family="Georgia, serif" font-size="13.5" font-weight="600">Trattoria Fiorini</text>
+              <text x="12" y="34" fill="#DFC391" font-family="sans-serif" font-size="9.5" letter-spacing="0.5">418 HENRY ST · EST. 1984</text>
+            </g>
+
+            <!-- Compass Rose -->
+            <g transform="translate(56, 336)" opacity="0.65">
+              <circle r="16" stroke="#6B5E52" stroke-width="1" />
+              <path d="M0 -12L3 0L0 12L-3 0Z" fill="#6B5E52" />
+              <text x="0" y="-19" text-anchor="middle" fill="#6B5E52" font-family="Georgia, serif" font-size="10">N</text>
+            </g>
+          </svg>
+          <div class="map-caption">
+            <span>418 Henry Street · Corner of Carroll St, Brooklyn</span>
+            <span>4 min walk from F/G Carroll St</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">Trattoria Fiorini</div>
+          <p>
+            A neighborhood Italian kitchen dedicated to hand-rolled pasta, oak-fired cooking, and unhurried evenings around the table since 1984.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#story">Our Story</a></li>
+            <li><a href="#menu">Tonight's Menu</a></li>
+            <li><a href="#aperitivo">Aperitivo Hour</a></li>
+            <li><a href="#aperitivo">Sunday Supper</a></li>
+            <li><a href="#reservations">Reservations</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Visit Us</h4>
+          <ul class="footer-links">
+            <li>418 Henry Street</li>
+            <li>Brooklyn, NY 11231</li>
+            <li><a href="tel:+17185550194">(718) 555-0194</a></li>
+            <li>Tue–Sun from 5:00 PM</li>
+            <li>Sunday from 3:00 PM</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Kitchen Notes</h4>
+          <p>Monthly letters when white truffles arrive, winemaker dinners open, or seasonal menus turn.</p>
+          <form class="newsletter-form" id="newsletterForm" novalidate>
+            <label for="newsletterEmail" class="sr-only">Email address</label>
+            <input type="email" id="newsletterEmail" placeholder="your@email.com" required />
+            <button type="submit" class="btn btn-primary" style="padding: 0.68rem 1.05rem;">Join</button>
+          </form>
+          <div class="newsletter-msg" id="newsletterMsg" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="yearNow">2026</span> Trattoria Fiorini · Carroll Gardens, Brooklyn</span>
+        <span class="footer-signoff">A presto — See you at the table.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Enable progressive reveal animations
+      document.documentElement.classList.add('js-animate');
+
+      // Sticky header shadow
+      const header = document.getElementById('siteHeader');
+      const onScroll = () => {
+        header.classList.toggle('scrolled', window.scrollY > 12);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // Mobile navigation drawer
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      menuToggle.addEventListener('click', () => {
+        const open = mobileDrawer.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(open));
+      });
+      mobileDrawer.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Dynamic Chalkboard Date & Footer Year
+      const now = new Date();
+      document.getElementById('yearNow').textContent = now.getFullYear();
+      const chalkDateEl = document.getElementById('chalkDate');
+      const dateLabel = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+      chalkDateEl.textContent = `${dateLabel} · Updated at 3:00 PM`;
+
+      // Menu Data
+      const MENU_DATA = [
+        {
+          id: 'antipasti',
+          title: 'Antipasti',
+          subtitle: 'To begin & share',
+          items: [
+            {
+              name: 'Focaccia al Rosmarino',
+              price: '$9',
+              desc: 'Wood-fired sourdough focaccia brushed with Ligurian extra-virgin olive oil and flaky Trapani sea salt.',
+              tags: ['v']
+            },
+            {
+              name: 'Burrata Pugliese & Peperoni',
+              price: '$18',
+              desc: 'Creamy hand-spun burrata, hearth-charred sweet Jimmy Nardello peppers, basil oil, grilled country bread.',
+              tags: ['v', 'gf', 'fav']
+            },
+            {
+              name: 'Polpette della Nonna',
+              price: '$17',
+              desc: 'Tender veal, pork, and sheep-milk ricotta meatballs braised in San Marzano tomato sauce with toasted sourdough.',
+              tags: ['fav']
+            },
+            {
+              name: 'Insalata di Puntarelle & Finocchio',
+              price: '$15',
+              desc: 'Crisp chicory, shaved fennel, Castelfranco radicchio, aged Parmigiano, lemon-anchovy vinaigrette.',
+              tags: ['gf']
+            },
+            {
+              name: 'Crudo di Capesante',
+              price: '$21',
+              desc: 'Day-boat sea scallops, Sicilian blood orange, crushed pink peppercorn, cold-pressed olive oil.',
+              tags: ['gf']
+            },
+            {
+              name: 'Prosciutto di Parma & Gnocco Fritto',
+              price: '$19',
+              desc: '24-month aged prosciutto draped over warm, pillowy Emilian fried dough with rosemary honey.',
+              tags: []
+            }
+          ]
+        },
+        {
+          id: 'primi',
+          title: 'Primi — Handmade Pasta',
+          subtitle: 'Rolled fresh every morning',
+          items: [
+            {
+              name: 'Tagliatelle al Ragù Bolognese',
+              price: '$27',
+              desc: 'Silky egg ribbons with six-hour braised beef, pork shoulder, soffritto, white wine, and 36-month Parmigiano.',
+              tags: ['fav', 'gf']
+            },
+            {
+              name: 'Cacio e Pepe Tonnarelli',
+              price: '$24',
+              desc: 'Square-cut semolina pasta emulsified with Pecorino Romano DOP and freshly cracked Tellicherry black pepper.',
+              tags: ['v', 'gf', 'fav']
+            },
+            {
+              name: 'Tortelli di Zucca',
+              price: '$26',
+              desc: 'Roasted honeynut squash pasta parcels, brown butter, crispy sage, crushed amaretti, aged balsamic.',
+              tags: ['v']
+            },
+            {
+              name: 'Rigatoni alla Vodka di Casa',
+              price: '$25',
+              desc: 'Bronze-extruded rigatoni, sweet Calabrian chili, San Marzano tomato cream, stracciatella, fresh basil.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Spaghetti alle Vongole',
+              price: '$29',
+              desc: 'Little neck clams, garlic confit, Vermentino wine, lemon zest, parsley, toasted sourdough crumbs.',
+              tags: ['gf']
+            },
+            {
+              name: 'Pappardelle al Ragù di Funghi',
+              price: '$27',
+              desc: 'Wide hand-cut ribbons with wood-roasted porcini, hen-of-the-woods mushrooms, thyme, and aged pecorino.',
+              tags: ['v']
+            }
+          ]
+        },
+        {
+          id: 'secondi',
+          title: 'Secondi & Contorni',
+          subtitle: 'From the oak-fired hearth',
+          items: [
+            {
+              name: 'Branzino al Forno a Legna',
+              price: '$36',
+              desc: 'Whole Mediterranean sea bass roasted with lemon, thyme, capers, and Castelvetrano olives.',
+              tags: ['gf', 'fav']
+            },
+            {
+              name: 'Pollo al Mattone',
+              price: '$31',
+              desc: 'Brick-pressed organic half chicken, rosemary salsa verde, roasted garlic jus, charred lemon.',
+              tags: ['gf']
+            },
+            {
+              name: 'Cotoletta alla Milanese',
+              price: '$38',
+              desc: 'Bone-in heritage veal chop pounded thin, golden sourdough crust, wild arugula, shaved fennel salad.',
+              tags: ['fav']
+            },
+            {
+              name: 'Melanzane alla Parmigiana',
+              price: '$26',
+              desc: 'Wood-baked heirloom eggplant layered with bright tomato passata, fior di latte, and basil.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Broccolini Arrostiti (Contorno)',
+              price: '$12',
+              desc: 'Oak-charred broccolini, roasted garlic, Calabrian chili flake, lemon oil.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Patate al Rosmarino (Contorno)',
+              price: '$11',
+              desc: 'Crispy smashed fingerling potatoes tossed with rosemary needles and sea salt.',
+              tags: ['v', 'gf']
+            }
+          ]
+        },
+        {
+          id: 'dolci',
+          title: 'Dolci',
+          subtitle: 'Made in-house daily',
+          items: [
+            {
+              name: 'Tiramisù Classico',
+              price: '$13',
+              desc: 'Espresso-soaked savoiardi, whipped mascarpone zabaglione, Marsala, Valrhona cocoa.',
+              tags: ['v', 'fav']
+            },
+            {
+              name: 'Panna Cotta al Miele',
+              price: '$12',
+              desc: 'Vanilla bean custard topped with warm chestnut honey and roasted Piedmontese hazelnuts.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Cannoli Siciliani',
+              price: '$12',
+              desc: 'Crisp pastry shells piped to order with sweet sheep-milk ricotta, candied orange peel, Bronte pistachios.',
+              tags: ['v']
+            },
+            {
+              name: 'Affogato al Caffè',
+              price: '$11',
+              desc: 'House-churned fior di latte gelato drowned in hot espresso, served with almond biscotti.',
+              tags: ['v', 'gf']
+            }
+          ]
+        },
+        {
+          id: 'vini',
+          title: 'Vini & Aperitivi',
+          subtitle: 'Glass · Quartino · Bottle',
+          items: [
+            {
+              name: 'Negroni Fiorini',
+              price: '$16',
+              desc: 'Small-batch Italian gin, Carpano Antica, Campari, expressed blood orange peel over hand-cut ice.',
+              tags: ['fav']
+            },
+            {
+              name: 'Lambrusco di Sorbara, Paltrinieri',
+              price: '$15 / $56',
+              desc: 'Bone-dry, sparkling ruby red from Emilia-Romagna with wild strawberry notes—made for Bolognese.',
+              tags: ['v', 'gf', 'fav']
+            },
+            {
+              name: 'Barbera d’Alba, Vietti · Piedmont',
+              price: '$17 / $64',
+              desc: 'Vibrant dark cherry, bright acidity, supple finish; our table favorite alongside roasted meats.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Etna Bianco, Tornatore · Sicily',
+              price: '$16 / $60',
+              desc: 'Volcanic Carricante with sea-spray minerality, white peach, and crisp citrus.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Amaro Nonino · Averna · Fernet',
+              price: '$13',
+              desc: 'Served neat or over a single cube with lemon twist to close the evening.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Chinotto Spritz (Zero-Proof)',
+              price: '$10',
+              desc: 'Bitter Sicilian myrtle-leaf citrus soda, rosemary sprig, grapefruit peel.',
+              tags: ['v', 'gf']
+            }
+          ]
+        }
+      ];
+
+      let activeCategory = 'all';
+      let activeFilter = 'all';
+
+      const menuContainer = document.getElementById('menuContainer');
+      const tabButtons = document.querySelectorAll('.menu-tab');
+      const filterButtons = document.querySelectorAll('.filter-pill');
+
+      const tagMeta = {
+        fav: { cls: 'tag-fav', label: '★ House Classic' },
+        v: { cls: 'tag-v', label: 'V' },
+        gf: { cls: 'tag-gf', label: 'GF*' }
+      };
+
+      function renderMenu() {
+        const categories = activeCategory === 'all'
+          ? MENU_DATA
+          : MENU_DATA.filter((cat) => cat.id === activeCategory);
+
+        let html = '';
+        let totalRendered = 0;
+
+        categories.forEach((cat) => {
+          const filteredItems = activeFilter === 'all'
+            ? cat.items
+            : cat.items.filter((item) => item.tags.includes(activeFilter));
+
+          if (!filteredItems.length) return;
+          totalRendered += filteredItems.length;
+
+          html += `
+            <div class="menu-category-block">
+              <div class="menu-cat-heading">
+                <h3>${cat.title}</h3>
+                <span>${cat.subtitle}</span>
+              </div>
+              <div class="menu-items-grid">
+                ${filteredItems.map((item) => `
+                  <article class="dish">
+                    <div class="dish-top">
+                      <span class="dish-name">${item.name}</span>
+                      <span class="dish-dots" aria-hidden="true"></span>
+                      <span class="dish-price">${item.price}</span>
+                    </div>
+                    <p class="dish-desc">${item.desc}</p>
+                    ${item.tags.length ? `
+                      <div class="dish-tags">
+                        ${item.tags.map((t) => `<span class="tag ${tagMeta[t].cls}">${tagMeta[t].label}</span>`).join('')}
+                      </div>
+                    ` : ''}
+                  </article>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        });
+
+        if (totalRendered === 0) {
+          menuContainer.innerHTML = `<div class="menu-empty">No dishes in this section match that filter — try viewing the Full Menu or ask your server about kitchen adaptations.</div>`;
+        } else {
+          menuContainer.innerHTML = html;
+        }
+      }
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.cat;
+          tabButtons.forEach((b) => {
+            const isSelected = b === btn;
+            b.classList.toggle('active', isSelected);
+            b.setAttribute('aria-selected', String(isSelected));
+          });
+          renderMenu();
+        });
+      });
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeFilter = btn.dataset.filter;
+          filterButtons.forEach((b) => b.classList.toggle('active', b === btn));
+          renderMenu();
+        });
+      });
+
+      renderMenu();
+
+      // Reservation Widget Logic
+      const resDateInput = document.getElementById('resDate');
+      const timeSlotsContainer = document.getElementById('timeSlots');
+      const dateHint = document.getElementById('dateHint');
+      const formError = document.getElementById('formError');
+      const reservationForm = document.getElementById('reservationForm');
+      const confirmationBox = document.getElementById('confirmationBox');
+      const confirmCodeEl = document.getElementById('confirmCode');
+      const confirmGuestNameEl = document.getElementById('confirmGuestName');
+      const confirmSummaryEl = document.getElementById('confirmSummary');
+      const downloadIcsBtn = document.getElementById('downloadIcsBtn');
+      const newReservationBtn = document.getElementById('newReservationBtn');
+      const bookSundayBtn = document.getElementById('bookSundayBtn');
+
+      let selectedTime = '';
+      let lastBooking = null;
+
+      function formatDateISO(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function getNextOpenDate(startDate) {
+        const d = new Date(startDate.getTime());
+        // If Monday (1), advance to Tuesday
+        if (d.getDay() === 1) {
+          d.setDate(d.getDate() + 1);
+        }
+        return d;
+      }
+
+      const minDate = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 30);
+
+      resDateInput.min = formatDateISO(minDate);
+      resDateInput.max = formatDateISO(maxDate);
+      resDateInput.value = formatDateISO(getNextOpenDate(minDate));
+
+      function renderTimeSlots(dateStr) {
+        selectedTime = '';
+        dateHint.textContent = '';
+        timeSlotsContainer.innerHTML = '';
+
+        if (!dateStr) return;
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const dateObj = new Date(y, m - 1, d);
+        const dayOfWeek = dateObj.getDay();
+
+        if (dayOfWeek === 1) {
+          dateHint.textContent = 'We are closed on Mondays for Riposo. Please pick Tuesday through Sunday.';
+          return;
+        }
+
+        // Sunday starts at 3:00 PM; Tue-Sat start at 5:00 PM
+        const slots = dayOfWeek === 0
+          ? ['3:15 PM', '4:00 PM', '5:00 PM', '5:45 PM', '6:30 PM', '7:30 PM', '8:15 PM']
+          : ['5:00 PM', '5:30 PM', '6:15 PM', '7:00 PM', '7:45 PM', '8:30 PM', '9:15 PM'];
+
+        // Simulate realistic prime-time waitlist slot on Friday/Saturday
+        const fullSlot = (dayOfWeek === 5 || dayOfWeek === 6) ? '7:00 PM' : '';
+
+        slots.forEach((slot) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'slot-btn';
+          btn.textContent = slot;
+          if (slot === fullSlot) {
+            btn.disabled = true;
+            btn.title = 'Fully booked — walk-in bar seats available';
+          } else {
+            btn.addEventListener('click', () => {
+              selectedTime = slot;
+              timeSlotsContainer.querySelectorAll('.slot-btn').forEach((b) => {
+                b.classList.toggle('selected', b === btn);
+              });
+              formError.textContent = '';
+            });
+          }
+          timeSlotsContainer.appendChild(btn);
+        });
+
+        // Preselect a pleasant default slot
+        const firstAvailable = timeSlotsContainer.querySelector('.slot-btn:not(:disabled)');
+        if (firstAvailable) {
+          firstAvailable.click();
+        }
+      }
+
+      resDateInput.addEventListener('change', () => renderTimeSlots(resDateInput.value));
+      renderTimeSlots(resDateInput.value);
+
+      // Quick jump for Sunday Supper button
+      bookSundayBtn.addEventListener('click', () => {
+        const nextSun = new Date();
+        const daysUntilSun = (7 - nextSun.getDay()) % 7;
+        nextSun.setDate(nextSun.getDate() + daysUntilSun);
+        resDateInput.value = formatDateISO(nextSun);
+        renderTimeSlots(resDateInput.value);
+        const notesEl = document.getElementById('resNotes');
+        if (!notesEl.value.toLowerCase().includes('sunday supper')) {
+          notesEl.value = 'Sunday Supper family-style feast';
+        }
+      });
+
+      reservationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError.textContent = '';
+
+        const guests = document.getElementById('resGuests').value;
+        const dateVal = resDateInput.value;
+        const area = document.getElementById('resArea').value;
+        const name = document.getElementById('resName').value.trim();
+        const phone = document.getElementById('resPhone').value.trim();
+        const email = document.getElementById('resEmail').value.trim();
+        const notes = document.getElementById('resNotes').value.trim();
+
+        if (!dateVal || !selectedTime) {
+          formError.textContent = 'Please select an open day (Tue–Sun) and seating time.';
+          return;
+        }
+        if (!name || !phone || !email || !email.includes('@')) {
+          formError.textContent = 'Please complete your name, phone number, and a valid email address.';
+          return;
+        }
+
+        const [y, m, d] = dateVal.split('-').map(Number);
+        const prettyDate = new Date(y, m - 1, d).toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        const code = 'FIO-' + Math.floor(1000 + Math.random() * 9000);
+
+        lastBooking = { code, guests, dateVal, prettyDate, time: selectedTime, area, name, notes };
+
+        confirmCodeEl.textContent = code;
+        confirmGuestNameEl.textContent = name;
+        confirmSummaryEl.innerHTML = `
+          <div><span>Date &amp; Time</span><strong>${prettyDate} · ${selectedTime}</strong></div>
+          <div><span>Party &amp; Seating</span><strong>${guests} · ${area}</strong></div>
+          <div><span>Location</span><strong>418 Henry St, Brooklyn</strong></div>
+          <div><span>Notes</span><strong>${notes || 'None noted'}</strong></div>
+        `;
+
+        reservationForm.style.display = 'none';
+        confirmationBox.classList.add('visible');
+      });
+
+      // Generate downloadable .ics calendar file cleanly in vanilla JS
+      downloadIcsBtn.addEventListener('click', () => {
+        if (!lastBooking) return;
+        const [y, m, d] = lastBooking.dateVal.split('-').map(Number);
+        const match = lastBooking.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        let hour = parseInt(match[1], 10);
+        const minute = parseInt(match[2], 10);
+        if (match[3].toUpperCase() === 'PM' && hour !== 12) hour += 12;
+
+        const pad = (n) => String(n).padStart(2, '0');
+        const startStr = `${y}${pad(m)}${pad(d)}T${pad(hour)}${pad(minute)}00`;
+        const endHour = Math.min(23, hour + 2);
+        const endStr = `${y}${pad(m)}${pad(d)}T${pad(endHour)}${pad(minute)}00`;
+
+        const ics = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//Trattoria Fiorini//Reservation//EN',
+          'BEGIN:VEVENT',
+          `DTSTART:${startStr}`,
+          `DTEND:${endStr}`,
+          `SUMMARY:Dinner at Trattoria Fiorini (${lastBooking.guests})`,
+          'LOCATION:418 Henry Street, Brooklyn, NY 11231',
+          `DESCRIPTION:Confirmation ${lastBooking.code} - ${lastBooking.area}. Phone: (718) 555-0194`,
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Trattoria-Fiorini-${lastBooking.code}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      newReservationBtn.addEventListener('click', () => {
+        confirmationBox.classList.remove('visible');
+        reservationForm.style.display = 'block';
+      });
+
+      // Newsletter Signup
+      const newsletterForm = document.getElementById('newsletterForm');
+      const newsletterMsg = document.getElementById('newsletterMsg');
+      newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('newsletterEmail');
+        const val = emailInput.value.trim();
+        if (!val || !val.includes('@')) {
+          newsletterMsg.style.color = '#F1B0A5';
+          newsletterMsg.textContent = 'Please enter a valid email address.';
+          return;
+        }
+        newsletterMsg.style.color = '#B4D39B';
+        newsletterMsg.textContent = 'Grazie! You are on the list for our next kitchen note.';
+        emailInput.value = '';
+      });
+
+      // Scroll Reveal Observer
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        reveals.forEach((el) => io.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add('in-view'));
+      }
+    })();
+  </script>
+</body>
+</html>

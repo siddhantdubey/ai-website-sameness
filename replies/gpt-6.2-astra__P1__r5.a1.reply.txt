@@ -1,0 +1,254 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f5">
+  <title>Pinboard — A shared home for team projects</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #faf9f5;
+      --ink: #232822;
+      --muted: #60675e;
+      --line: #dcded4;
+      --lime: #dcf79d;
+    }
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.5 "DM Sans", "Helvetica Neue", Arial, sans-serif;
+    }
+    button, input { font: inherit }
+    button, a { -webkit-tap-highlight-color: transparent }
+    button { cursor: pointer }
+    a { color: inherit; text-decoration: none }
+    :focus-visible { outline: 3px solid #587730; outline-offset: 4px }
+    header, main { width: min(1200px, 90%); margin: auto }
+    header {
+      min-height: 86px; display: flex; align-items: center;
+      justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 25px; font-weight: 750; letter-spacing: -1.5px }
+    .mark { display: grid; grid-template-columns: repeat(2, 10px); gap: 3px; transform: rotate(-8deg) }
+    .mark i { height: 12px; border-radius: 2px; background: var(--ink) }
+    .mark i:last-child { background: #88a956; transform: translateY(-3px) }
+    nav { display: flex; align-items: center; gap: 26px; font-size: 14px }
+    nav a:hover, .text-link:hover { text-decoration: underline; text-underline-offset: 4px }
+    .button {
+      border: 1px solid var(--ink); border-radius: 8px; padding: 13px 20px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 18px;
+      background: var(--ink); color: white; font-weight: 650; font-size: 15px;
+    }
+    .button:hover { background: #414b3b }
+    header .button { padding: 9px 16px; font-size: 14px }
+    .hero {
+      display: grid; grid-template-columns: .9fr 1.1fr; align-items: center;
+      gap: clamp(28px, 5vw, 76px); padding: clamp(56px, 7vw, 98px) 0;
+    }
+    h1, h2, h3, p { margin: 0 }
+    h1 { font-size: clamp(58px, 6.8vw, 100px); line-height: .98; letter-spacing: -.075em; font-weight: 650 }
+    h1 em { font-family: Georgia, serif; font-weight: 400; letter-spacing: -.065em }
+    .intro { color: var(--muted); max-width: 390px; margin: 25px 0 30px; font-size: 18px }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 22px }
+    .text-link { font-size: 14px; font-weight: 650 }
+    .canvas {
+      position: relative; padding: 34px clamp(16px, 3vw, 42px) 40px; border-radius: 20px;
+      background-color: #e8eadd;
+      background-image: radial-gradient(#b6bdab 1px, transparent 1px);
+      background-size: 14px 14px; isolation: isolate;
+    }
+    .board {
+      background: #fffefa; border: 1px solid #bcc1b4; border-radius: 12px;
+      box-shadow: 5px 7px 0 #cbd0c0; padding: clamp(18px, 2.5vw, 32px);
+      transform: rotate(-2deg);
+    }
+    .board-top, .card-foot, .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px }
+    .board-top { border-bottom: 1px solid var(--line); padding-bottom: 15px; margin-bottom: 16px }
+    .board-top h2 { font-size: clamp(20px, 2.2vw, 32px); letter-spacing: -.055em }
+    .people { display: flex; padding-right: 3px }
+    .avatar {
+      width: 27px; height: 27px; border: 2px solid #fffefa; border-radius: 50%;
+      display: inline-grid; place-items: center; margin-right: -4px;
+      background: #dfcaef; font: bold 9px Arial, sans-serif;
+    }
+    .avatar:nth-child(2) { background: #ffc5a3 }
+    .avatar:nth-child(3) { background: #cbdeef }
+    .cards { display: grid; gap: 10px }
+    .card { border-radius: 8px; padding: 13px 16px; border: 1px solid #0001; color: #282d27 }
+    .card:nth-child(3n+1) { background: #e4d8f3 }
+    .card:nth-child(3n+2) { background: #ffdac0 }
+    .card:nth-child(3n) { background: var(--lime) }
+    .card h3 { margin: 5px 0 8px; font-size: 18px; letter-spacing: -.04em; overflow-wrap: anywhere }
+    .status, .card-foot { font: 10px/1.3 "Courier New", monospace }
+    .status { text-transform: uppercase; letter-spacing: .08em; font-weight: bold }
+    .card-foot { border-top: 1px solid #0002; padding-top: 7px }
+    #sample { border-top: 1px solid var(--line); padding: 40px 0 60px }
+    .section-head h2 { font-size: clamp(28px, 3.5vw, 45px); letter-spacing: -.06em; line-height: 1.1 }
+    .section-head p { color: var(--muted); margin-top: 8px }
+    .outline { color: var(--ink); background: transparent; white-space: nowrap }
+    .outline:hover { background: #eaecdf }
+    .tasks { margin-top: 24px; border-top: 1px solid var(--line) }
+    .task { display: flex; align-items: center; gap: 12px; padding: 15px 2px; border-bottom: 1px solid var(--line); cursor: pointer }
+    .task input { width: 19px; height: 19px; accent-color: #506c32; flex: none }
+    .task span { overflow-wrap: anywhere }
+    .task input:checked + span { color: var(--muted); text-decoration: line-through }
+    dialog { width: min(420px, 91vw); border: 1px solid var(--line); border-radius: 15px; padding: 28px; color: var(--ink); background: var(--paper) }
+    dialog::backdrop { background: #20251f70 }
+    dialog h2 { letter-spacing: -.05em; margin-bottom: 18px }
+    dialog label { display: block; margin-bottom: 5px; font-size: 14px }
+    dialog input { width: 100%; padding: 11px; border: 1px solid #969d90; border-radius: 6px; background: white }
+    dialog .actions { margin-top: 22px; justify-content: flex-end; gap: 8px }
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; gap: 38px }
+      .canvas { width: min(100%, 580px); justify-self: center }
+      .intro { max-width: 480px }
+    }
+    @media (max-width: 520px) {
+      header { min-height: 70px }
+      nav a { display: none }
+      .hero { padding: 44px 0 }
+      .section-head { align-items: flex-start; flex-direction: column }
+      .actions { gap: 15px }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="#" aria-label="Pinboard home">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Pinboard
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#sample">Explore the demo</a>
+      <button class="button create" type="button">Create a board <span aria-hidden="true">↗</span></button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="headline">
+      <div>
+        <h1 id="headline">Big plans.<br><em>Small steps.</em></h1>
+        <p class="intro">Give every project a shared board. See what’s moving, who’s on it, and what your team can tackle next.</p>
+        <div class="actions">
+          <button class="button create" type="button">Create a board <span aria-hidden="true">↗</span></button>
+          <a class="text-link" href="#sample">Try the demo ↓</a>
+        </div>
+      </div>
+      <div class="canvas" aria-label="Example project board">
+        <article class="board">
+          <div class="board-top">
+            <h2>Website launch</h2>
+            <div class="people" aria-label="Team members Mia, Leo and Sam">
+              <span class="avatar">MI</span><span class="avatar">LE</span><span class="avatar">SA</span>
+            </div>
+          </div>
+          <div class="cards">
+            <article class="card"><span class="status">○ &nbsp; Up next</span><h3>Write the launch email</h3><div class="card-foot"><span>Mia</span><span>Marketing</span></div></article>
+            <article class="card"><span class="status">◐ &nbsp; In progress</span><h3>Polish the homepage</h3><div class="card-foot"><span>Leo</span><span>Design</span></div></article>
+            <article class="card"><span class="status">✓ &nbsp; Done</span><h3>Approve the site map</h3><div class="card-foot"><span>Sam</span><span>Planning</span></div></article>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="sample" aria-labelledby="project-title">
+      <div class="section-head">
+        <div><h2 id="project-title">Try the launch checklist</h2><p id="progress" aria-live="polite"></p></div>
+        <button id="add" class="button outline" type="button">+ Add task</button>
+      </div>
+      <div class="tasks" id="tasks"></div>
+    </section>
+  </main>
+  <dialog id="editor" aria-labelledby="dialog-title">
+    <form id="form">
+      <h2 id="dialog-title"></h2>
+      <label id="field-label" for="entry"></label>
+      <input id="entry" required maxlength="100" autocomplete="off">
+      <div class="actions"><button id="cancel" class="button outline" type="button">Cancel</button><button id="submit" class="button" type="submit"></button></div>
+    </form>
+  </dialog>
+  <script>
+    const byId = id => document.getElementById(id);
+    const editor = byId("editor");
+    const entry = byId("entry");
+    const demo = {
+      name: "Try the launch checklist",
+      tasks: [
+        { name: "Write the launch email", done: false },
+        { name: "Polish the homepage", done: false },
+        { name: "Approve the site map", done: true }
+      ]
+    };
+    let board = demo;
+    let mode;
+    try {
+      const saved = JSON.parse(localStorage.getItem("pinboard.project.v1"));
+      if (saved && typeof saved.name === "string" && Array.isArray(saved.tasks) &&
+          saved.tasks.every(t => t && typeof t.name === "string" && typeof t.done === "boolean")) {
+        board = saved;
+      }
+    } catch {}
+    function save() {
+      try { localStorage.setItem("pinboard.project.v1", JSON.stringify(board)); } catch {}
+    }
+    function updateProgress() {
+      const count = board.tasks.filter(task => task.done).length;
+      byId("progress").textContent = board.tasks.length
+        ? `${count} of ${board.tasks.length} tasks complete`
+        : "Add your first task to get started.";
+    }
+    function render() {
+      byId("project-title").textContent = board.name;
+      byId("tasks").replaceChildren(...board.tasks.map(task => {
+        const label = document.createElement("label");
+        label.className = "task";
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.checked = task.done;
+        check.onchange = () => { task.done = check.checked; save(); updateProgress(); };
+        const name = document.createElement("span");
+        name.textContent = task.name;
+        label.append(check, name);
+        return label;
+      }));
+      updateProgress();
+    }
+    function openEditor(nextMode) {
+      mode = nextMode;
+      const creating = mode === "board";
+      byId("dialog-title").textContent = creating ? "Create a board" : "Add a task";
+      byId("field-label").textContent = creating ? "Project name" : "Task name";
+      byId("submit").textContent = creating ? "Create board" : "Add task";
+      entry.value = "";
+      entry.setCustomValidity("");
+      editor.showModal();
+      entry.focus();
+    }
+    document.querySelectorAll(".create").forEach(button => {
+      button.onclick = () => openEditor("board");
+    });
+    byId("add").onclick = () => openEditor("task");
+    byId("cancel").onclick = () => editor.close();
+    entry.oninput = () => entry.setCustomValidity("");
+    byId("form").onsubmit = event => {
+      event.preventDefault();
+      const name = entry.value.trim();
+      if (!name) {
+        entry.setCustomValidity("Please enter a name.");
+        entry.reportValidity();
+        return;
+      }
+      if (mode === "board") board = { name, tasks: [] };
+      else board.tasks.push({ name, done: false });
+      save();
+      render();
+      editor.close();
+      byId("sample").scrollIntoView({ block: "start" });
+      byId("add").focus({ preventScroll: true });
+    };
+    render();
+  </script>
+</body>
+</html>
+```

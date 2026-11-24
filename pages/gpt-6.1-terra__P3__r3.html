@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f4f1ea" />
+  <meta
+    name="description"
+    content="The portfolio of Avery Stone, a freelance photographer capturing people, places, and the moments in between."
+  />
+  <title>Avery Stone — Photographer</title>
+
+  <style>
+    :root {
+      --paper: #f4f1ea;
+      --ink: #252923;
+      --muted: #70736b;
+      --line: #d6d5cc;
+      --accent: #9b4d35;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    body.menu-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    svg { display: block; width: 100%; height: 100%; }
+    ::selection { background: #d9b5a4; color: var(--ink); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .wrap { width: min(100% - 10vw, 1440px); margin-inline: auto; }
+    .eyebrow {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+    .serif { font-family: var(--serif); font-weight: 400; }
+
+    .header {
+      height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: var(--serif);
+      font-size: 23px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+    .brand span {
+      font-family: var(--sans);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .nav { display: flex; align-items: center; gap: 36px; }
+    .nav a {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav a:hover { color: var(--accent); }
+    .nav .nav-contact { border-bottom: 1px solid var(--ink); padding-bottom: 5px; }
+    .menu-toggle {
+      display: none;
+      border: 0;
+      padding: 8px 0 8px 12px;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: .86fr 1.14fr;
+      min-height: 660px;
+      padding-block: 55px 70px;
+      gap: 6%;
+      align-items: center;
+    }
+    .hero-copy { padding-block: 35px; }
+    .hero-copy .eyebrow { color: var(--accent); }
+    h1 {
+      margin: 28px 0 25px;
+      font-family: var(--serif);
+      font-size: clamp(64px, 7.6vw, 112px);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .94;
+    }
+    h1 em { font-weight: 400; }
+    .hero-description {
+      max-width: 330px;
+      color: #64685f;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 30px;
+      margin-top: 29px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid currentColor;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transition: gap .2s, color .2s;
+    }
+    .text-link:hover { gap: 38px; color: var(--accent); }
+    .text-link span { font-size: 17px; line-height: 1; }
+    .hero-image {
+      position: relative;
+      height: min(62vw, 650px);
+      min-height: 520px;
+      overflow: hidden;
+      background: #b5a48f;
+    }
+    .hero-image svg, .art svg { transition: transform .7s ease; }
+    .hero-image:hover svg, .project:hover .art svg { transform: scale(1.035); }
+    .hero-image::after, .art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.018) 3px 4px);
+      mix-blend-mode: overlay;
+    }
+    .hero-caption {
+      position: absolute;
+      right: 20px;
+      bottom: 18px;
+      color: #fff;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 6px #333;
+    }
+
+    .intro-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #70736b;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .intro-line span:nth-child(2) { color: var(--accent); }
+
+    .work { padding-block: 120px 130px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 25px;
+      margin-bottom: 48px;
+    }
+    .section-heading h2, .about h2, .contact h2 {
+      margin: 12px 0 0;
+      font-family: var(--serif);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1;
+    }
+    .section-heading h2 { font-size: clamp(52px, 6vw, 82px); }
+    .section-heading > p {
+      max-width: 245px;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px 28px;
+      align-items: start;
+    }
+    .project:nth-child(even) { margin-top: 110px; }
+    .art {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      background: #d0c5b4;
+    }
+    .project:nth-child(2) .art { aspect-ratio: 4 / 4.5; }
+    .project:nth-child(3) .art { aspect-ratio: 4 / 4.5; }
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 18px;
+    }
+    .project h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(25px, 2.5vw, 35px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .project-meta p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .project-number { color: var(--muted); font-size: 11px; }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10%;
+      padding-block: 110px;
+      border-top: 1px solid var(--line);
+    }
+    .about h2 { max-width: 520px; font-size: clamp(48px, 5.4vw, 76px); }
+    .about-copy { padding-top: 28px; }
+    .about-copy p {
+      max-width: 470px;
+      margin: 0 0 22px;
+      color: #60645c;
+      font-size: 15px;
+      line-height: 1.9;
+    }
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 50px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+    .details strong { display: block; margin-bottom: 9px; }
+    .details span { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+    .contact {
+      padding: 115px 5vw 105px;
+      background: #30382f;
+      color: #f4f1ea;
+      text-align: center;
+    }
+    .contact .eyebrow { color: #c6b3a4; }
+    .contact h2 { margin-top: 24px; font-size: clamp(58px, 8vw, 110px); }
+    .contact p:not(.eyebrow) {
+      max-width: 380px;
+      margin: 24px auto 0;
+      color: #c2c8bc;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .contact .text-link { margin-top: 32px; }
+    .contact .text-link:hover { color: #e0b8a6; }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      min-height: 90px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a:hover { color: var(--accent); }
+
+    @media (max-width: 760px) {
+      .wrap { width: calc(100% - 40px); }
+      .header { height: 76px; }
+      .menu-toggle { display: block; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+      .nav {
+        display: none;
+        position: absolute;
+        z-index: 5;
+        top: 76px;
+        left: 0;
+        right: 0;
+        padding: 32px 20px 40px;
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .nav.open { display: flex; }
+      .hero { grid-template-columns: 1fr; gap: 20px; padding-block: 45px 45px; }
+      .hero-copy { padding: 0; }
+      h1 { font-size: clamp(62px, 14vw, 100px); margin: 22px 0; }
+      .hero-image { min-height: 0; height: 115vw; max-height: 650px; }
+      .intro-line { font-size: 8px; letter-spacing: .1em; }
+      .intro-line span:nth-child(2) { display: none; }
+      .work { padding-block: 85px; }
+      .section-heading { align-items: start; flex-direction: column; margin-bottom: 35px; }
+      .projects { gap: 45px 16px; }
+      .project:nth-child(even) { margin-top: 60px; }
+      .project h3 { font-size: 24px; }
+      .project-meta { gap: 5px; }
+      .project-meta p { font-size: 9px; line-height: 1.5; }
+      .about { grid-template-columns: 1fr; gap: 15px; padding-block: 80px; }
+      .about-copy { padding-top: 10px; }
+      .contact { padding-block: 90px; }
+      footer { flex-wrap: wrap; padding-block: 25px; }
+    }
+
+    @media (max-width: 430px) {
+      .projects { grid-template-columns: 1fr; }
+      .project:nth-child(even) { margin-top: 0; }
+      .art, .project:nth-child(2) .art, .project:nth-child(3) .art { aspect-ratio: 4 / 5; }
+      .footer-links { gap: 15px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <a class="brand" href="#top" aria-label="Avery Stone, home">
+        Avery Stone
+        <span>Photography</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation">Menu</button>
+      <nav class="nav" id="navigation" aria-label="Main navigation">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a class="nav-contact" href="#contact">Get in touch ↗</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Independent photographer · Available worldwide</p>
+          <h1 id="hero-title">The beauty<br />of <em>being</em><br />there.</h1>
+          <p class="hero-description">
+            Honest imagery for people, places, and the moments that deserve to be remembered.
+          </p>
+          <a class="text-link" href="#work">Explore the work <span aria-hidden="true">↘</span></a>
+        </div>
+
+        <div class="hero-image" role="img" aria-label="Illustration of a sunlit coastal landscape">
+          <svg viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b8b8aa"/><stop offset="1" stop-color="#e8c9a9"/></linearGradient>
+              <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#879a91"/><stop offset="1" stop-color="#516e66"/></linearGradient>
+              <linearGradient id="cliff" x2="1" y2="1"><stop stop-color="#bd9d7e"/><stop offset="1" stop-color="#655c49"/></linearGradient>
+            </defs>
+            <rect width="800" height="900" fill="url(#sky)"/>
+            <circle cx="594" cy="230" r="64" fill="#f3d8b9" opacity=".65"/>
+            <path d="M0 460 Q180 431 360 451 T800 428 V900 H0Z" fill="url(#sea)"/>
+            <path d="M0 522 Q180 510 310 528 T800 501" fill="none" stroke="#d8d6ba" stroke-width="3" opacity=".45"/>
+            <path d="M0 590 Q200 570 380 588 T800 572 M0 660 Q220 640 410 658 T800 645" fill="none" stroke="#cad2ba" stroke-width="2" opacity=".3"/>
+            <path d="M0 460 L115 395 183 411 243 371 294 405 356 432 410 478 376 521 334 539 299 605 243 629 198 702 147 717 98 787 0 817Z" fill="url(#cliff)"/>
+            <path d="M0 488 L91 441 144 445 191 414 236 424 279 403 326 435 361 459 320 470 270 465 234 490 182 486 143 515 92 504 43 532 0 526Z" fill="#6f7862"/>
+            <path d="M0 777 Q84 744 152 763 T292 745 Q360 741 413 781 L455 900 H0Z" fill="#d0b596"/>
+            <path d="M0 824 Q118 795 209 810 T402 803" fill="none" stroke="#eee1c9" stroke-width="7" opacity=".7"/>
+            <path d="M478 773 q12 -25 24 0 l8 48 h-40z" fill="#423f39"/>
+            <circle cx="490" cy="758" r="10" fill="#594b3e"/>
+            <path d="M483 820 l-6 35 M499 820 l7 35" stroke="#423f39" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <span class="hero-caption">California coast · 2024</span>
+        </div>
+      </section>
+
+      <div class="intro-line" aria-hidden="true">
+        <span>People, places &amp; everything between</span>
+        <span>✳</span>
+        <span>Based in California / Everywhere</span>
+      </div>
+
+      <section class="work" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">A selection of stories</p>
+            <h2 id="work-title">Selected work<span style="color: var(--accent)">.</span></h2>
+          </div>
+          <p>A collection of quiet moments, familiar faces, and places worth getting lost in.</p>
+        </div>
+
+        <div class="projects">
+          <article class="project">
+            <div class="art" role="img" aria-label="Illustration of a woman in warm afternoon light">
+              <svg viewBox="0 0 600 750" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <rect width="600" height="750" fill="#c9aa91"/>
+                <path d="M0 0h600v750H0z" fill="#dbc3ae" opacity=".35"/>
+                <path d="M360 0h240v750H220z" fill="#e7d2b9" opacity=".35"/>
+                <path d="M0 550Q100 510 210 550T600 510V750H0Z" fill="#aa876e"/>
+                <path d="M128 750 Q142 555 207 496 Q255 457 310 467 Q379 471 420 523 Q463 584 483 750Z" fill="#eee2d0"/>
+                <path d="M197 358 Q185 237 257 194 Q345 154 386 241 Q404 283 389 383 L355 436 222 433Z" fill="#51443b"/>
+                <path d="M230 303 Q235 223 302 226 Q365 225 373 303 L361 378 Q350 423 301 433 Q254 420 239 376Z" fill="#c48f70"/>
+                <path d="M229 303 Q224 240 267 216 Q319 185 363 230 Q344 264 304 270 Q265 280 229 303Z" fill="#51443b"/>
+                <path d="M271 427 L270 477 Q301 502 333 476 L331 425" fill="#bd8669"/>
+                <path d="M258 333q12-5 22 0 M320 333q12-5 22 0" fill="none" stroke="#5d453a" stroke-width="3" stroke-linecap="round"/>
+                <path d="M287 382 Q302 390 317 382" fill="none" stroke="#8a594e" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="project-meta">
+              <div><h3>In her own light</h3><p>Portraits · California</p></div>
+              <span class="project-number">01 / 04</span>
+            </div>
+          </article>
+
+          <article class="project">
+            <div class="art" role="img" aria-label="Illustration of a desert landscape at dusk">
+              <svg viewBox="0 0 600 675" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <defs><linearGradient id="desertSky" x2="0" y2="1"><stop stop-color="#b6b4aa"/><stop offset="1" stop-color="#e7c8ad"/></linearGradient></defs>
+                <rect width="600" height="675" fill="url(#desertSky)"/>
+                <circle cx="433" cy="170" r="45" fill="#ecd2b7" opacity=".8"/>
+                <path d="M0 390 L94 305 158 345 245 261 343 369 411 320 600 410V675H0Z" fill="#a69483"/>
+                <path d="M0 460 Q110 387 220 426 T430 405 Q520 383 600 425V675H0Z" fill="#b9977e"/>
+                <path d="M0 525 Q130 448 280 505 T600 473V675H0Z" fill="#c6a486"/>
+                <path d="M0 600 Q150 526 310 573 T600 550V675H0Z" fill="#d4b495"/>
+                <path d="M113 576v-87m0 35q-23 0-23-25v-17m23 65q25 0 25-25v-20" fill="none" stroke="#646c55" stroke-width="12" stroke-linecap="round"/>
+                <path d="M489 610v-66m0 26q-17 0-17-17v-10m17 44q18 0 18-18v-12" fill="none" stroke="#77785f" stroke-width="9" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="project-meta">
+              <div><h3>Somewhere out west</h3><p>Travel · Joshua Tree</p></div>
+              <span class="project-number">02 / 04</span>
+            </div>
+          </article>
+
+          <article class="project">
+            <div class="art" role="img" aria-label="Illustration of a still life with flowers and fruit">
+              <svg viewBox="0 0 600 675" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <rect width="600" height="675" fill="#aeb0a0"/>
+                <rect y="478" width="600" height="197" fill="#c3b39b"/>
+                <ellipse cx="298" cy="550" rx="200" ry="33" fill="#827a69" opacity=".25"/>
+                <path d="M236 372 Q232 438 253 510 Q300 532 348 510 Q368 439 362 372Z" fill="#e3d8c4"/>
+                <ellipse cx="299" cy="372" rx="63" ry="13" fill="#c6b9a3"/>
+                <path d="M286 375 Q260 270 213 180 M302 375 Q298 250 320 140 M315 375 Q361 264 410 205" fill="none" stroke="#66715a" stroke-width="5"/>
+                <path d="M263 293 Q219 290 218 256 Q251 257 263 293 M316 270 Q350 239 367 252 Q353 284 316 270 M280 219 Q245 200 251 175 Q280 181 280 219" fill="#77836a"/>
+                <g fill="#e6d8c4">
+                  <circle cx="211" cy="175" r="23"/><circle cx="192" cy="194" r="20"/><circle cx="230" cy="196" r="20"/>
+                  <circle cx="320" cy="135" r="25"/><circle cx="298" cy="150" r="19"/><circle cx="342" cy="151" r="19"/>
+                  <circle cx="410" cy="199" r="22"/><circle cx="392" cy="214" r="18"/><circle cx="428" cy="214" r="18"/>
+                </g>
+                <g fill="#ba9d6c"><circle cx="211" cy="190" r="8"/><circle cx="320" cy="151" r="8"/><circle cx="410" cy="213" r="8"/></g>
+                <circle cx="151" cy="521" r="37" fill="#b86f4d"/><circle cx="443" cy="530" r="31" fill="#d3a35e"/>
+                <path d="M149 484q1-15 15-20 M442 500q2-13 13-16" fill="none" stroke="#6c7256" stroke-width="4"/>
+              </svg>
+            </div>
+            <div class="project-meta">
+              <div><h3>The everyday ritual</h3><p>Still life · Personal</p></div>
+              <span class="project-number">03 / 04</span>
+            </div>
+          </article>
+
+          <article class="project">
+            <div class="art" role="img" aria-label="Illustration of a quiet Mediterranean village">
+              <svg viewBox="0 0 600 750" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <rect width="600" height="750" fill="#c6d0c9"/>
+                <rect y="360" width="600" height="390" fill="#91a69f"/>
+                <path d="M0 440 Q120 405 240 435 T600 420V750H0Z" fill="#738f87"/>
+                <path d="M0 485 L95 378 185 414 265 340 380 410 475 322 600 400V750H0Z" fill="#b0a38c"/>
+                <path d="M0 530 L102 453 173 467 260 420 352 455 455 386 600 430V750H0Z" fill="#777e68"/>
+                <g fill="#e6dbc6">
+                  <rect x="80" y="442" width="95" height="100"/><rect x="168" y="404" width="110" height="119"/>
+                  <rect x="283" y="444" width="92" height="97"/><rect x="371" y="392" width="105" height="125"/>
+                  <rect x="465" y="440" width="90" height="96"/>
+                </g>
+                <g fill="#aa795e">
+                  <path d="M70 442l58-35 57 35z"/><path d="M158 404l65-35 65 35z"/><path d="M274 444l55-32 55 32z"/>
+                  <path d="M361 392l62-35 63 35z"/><path d="M455 440l55-32 55 32z"/>
+                </g>
+                <g fill="#75847e">
+                  <rect x="99" y="468" width="17" height="25"/><rect x="137" y="468" width="17" height="25"/>
+                  <rect x="187" y="431" width="18" height="26"/><rect x="236" y="431" width="18" height="26"/>
+                  <rect x="305" y="467" width="17" height="24"/><rect x="340" y="467" width="17" height="24"/>
+                  <rect x="390" y="420" width="18" height="27"/><rect x="440" y="420" width="18" height="27"/>
+                </g>
+                <path d="M0 582Q160 560 300 582T600 570 M0 627Q160 607 300 628T600 617 M0 682Q160 662 300 683T600 672" fill="none" stroke="#c7d2bc" stroke-width="3" opacity=".5"/>
+              </svg>
+            </div>
+            <div class="project-meta">
+              <div><h3>Days by the sea</h3><p>Travel · Mediterranean</p></div>
+              <span class="project-number">04 / 04</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="about" id="about" aria-labelledby="about-title">
+        <div>
+          <p class="eyebrow">A little about me</p>
+          <h2 id="about-title">A curious eye and a love for <em>real life.</em></h2>
+        </div>
+        <div class="about-copy">
+          <p>
+            I’m Avery, a freelance photographer drawn to natural light, honest stories, and the little details that make a moment feel like yours.
+          </p>
+          <p>
+            From thoughtful portraits to faraway places, I make images that feel lived in and last beyond the moment.
+          </p>
+          <div class="details">
+            <div>
+              <strong class="eyebrow">Based in</strong>
+              <span>California, USA<br />Available worldwide</span>
+            </div>
+            <div>
+              <strong class="eyebrow">Available for</strong>
+              <span>Portraits, editorial,<br />travel &amp; collaborations</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <p class="eyebrow">Have a story in mind?</p>
+    <h2 id="contact-title">Let’s make<br /><em>something real.</em></h2>
+    <p>Whether you have a fully formed idea or just a feeling, I’d love to hear about it.</p>
+    <a class="text-link" href="mailto:hello@averystonephoto.com?subject=Photography%20inquiry">
+      Start a conversation <span aria-hidden="true">↗</span>
+    </a>
+  </section>
+
+  <footer class="wrap">
+    <span>© <span id="year">2026</span> Avery Stone Photography</span>
+    <div class="footer-links">
+      <a href="mailto:hello@averystonephoto.com">Email</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.querySelector(".menu-toggle");
+    const navigation = document.querySelector("#navigation");
+
+    function closeMenu() {
+      navigation.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.textContent = "Menu";
+      document.body.classList.remove("menu-open");
+    }
+
+    toggle.addEventListener("click", () => {
+      const open = navigation.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Close" : "Menu";
+      document.body.classList.toggle("menu-open", open);
+    });
+
+    navigation.addEventListener("click", (event) => {
+      if (event.target.closest("a")) closeMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+
+    document.querySelector("#year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

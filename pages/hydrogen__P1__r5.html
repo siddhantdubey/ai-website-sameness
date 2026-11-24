@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadence — Project Management Built for Momentum</title>
+  <meta name="description" content="Cadence unifies roadmaps, sprint cycles, and async updates in one fast workspace so teams ship on schedule without status-meeting bloat." />
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg-elevated: #ffffff;
+      --bg-subtle: #f4f4f5;
+      --bg-dark: #09090b;
+      --bg-dark-elevated: #141418;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --accent-soft: #eef2ff;
+      --accent-border: #c7d2fe;
+      --emerald: #059669;
+      --emerald-soft: #ecfdf5;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.04);
+      --shadow-md: 0 8px 24px -6px rgba(9, 9, 11, 0.08), 0 2px 6px -2px rgba(9, 9, 11, 0.04);
+      --shadow-lg: 0 24px 60px -16px rgba(9, 9, 11, 0.14), 0 4px 16px -4px rgba(9, 9, 11, 0.06);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --container: 1160px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Subtle grid background for hero */
+    .hero-backdrop {
+      position: relative;
+      background:
+        radial-gradient(900px 420px at 50% -60px, rgba(79, 70, 229, 0.10), transparent 70%),
+        linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(9, 9, 11, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(9, 9, 11, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Header / Nav */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250, 250, 250, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(228, 228, 231, 0.75);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg-dark);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 2px 6px rgba(9, 9, 11, 0.18);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .nav-links a {
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 9px 16px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      background: var(--bg-subtle);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border-color: var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-strong);
+      background: #ffffff;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(79, 70, 229, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px -4px rgba(79, 70, 229, 0.45);
+    }
+
+    .btn-dark {
+      background: var(--bg-dark);
+      color: #ffffff;
+    }
+
+    .btn-dark:hover {
+      background: #1c1c21;
+      transform: translateY(-1px);
+    }
+
+    .btn-lg {
+      padding: 12px 22px;
+      font-size: 0.95rem;
+      border-radius: 11px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .mobile-drawer {
+      display: none;
+      border-top: 1px solid var(--border);
+      background: var(--bg-elevated);
+      padding: 16px 24px 20px;
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 68px 0 80px;
+    }
+
+    .hero-copy {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 8px;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow-pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+    }
+
+    .hero h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      font-weight: 750;
+      color: var(--text);
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      margin: 0 auto 30px;
+      max-width: 580px;
+      font-size: 1.12rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .hero-form {
+      display: flex;
+      align-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 4px 4px 4px 14px;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+      max-width: 410px;
+    }
+
+    .hero-form:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+    }
+
+    .hero-form input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.92rem;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 42px;
+    }
+
+    .toast-inline {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto 24px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--emerald-soft);
+      color: var(--emerald);
+      border: 1px solid #a7f3d0;
+      font-size: 0.88rem;
+      font-weight: 500;
+      max-width: 460px;
+    }
+
+    .toast-inline.visible {
+      display: flex;
+    }
+
+    /* Interactive App Mockup */
+    .app-window {
+      position: relative;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: #fcfcfd;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .window-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e4e4e7;
+    }
+
+    .window-dot:nth-child(1) { background: #fca5a5; }
+    .window-dot:nth-child(2) { background: #fcd34d; }
+    .window-dot:nth-child(3) { background: #86efac; }
+
+    .app-tabs {
+      display: inline-flex;
+      background: var(--bg-subtle);
+      padding: 3px;
+      border-radius: 9px;
+      gap: 2px;
+    }
+
+    .app-tab {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .app-tab.active {
+      background: var(--bg-elevated);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cycle-progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .progress-track {
+      width: 92px;
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.28s ease;
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 410px;
+    }
+
+    .app-sidebar {
+      border-right: 1px solid var(--border);
+      background: #fafafa;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar-group-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0 8px 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .sidebar-item.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .sidebar-count {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      opacity: 0.8;
+    }
+
+    .sidebar-hint {
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text);
+    }
+
+    .app-main {
+      padding: 18px 22px;
+      background: #ffffff;
+    }
+
+    .app-main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .app-main-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-main-title h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+
+    .badge-status {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--emerald-soft);
+      color: var(--emerald);
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-pill {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      font-size: 0.76rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .filter-pill.active {
+      background: var(--bg-dark);
+      color: #fff;
+      border-color: var(--bg-dark);
+    }
+
+    /* Views inside mockup */
+    .view-panel {
+      display: none;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .kanban-col {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .kanban-col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      padding: 2px 4px;
+    }
+
+    .task-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .task-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .task-card:hover {
+      border-color: var(--accent-border);
+      transform: translateY(-1px);
+    }
+
+    .task-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .task-title {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .task-card.done .task-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .tag {
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+
+    .tag-high { background: var(--rose-soft); color: var(--rose); }
+    .tag-med { background: var(--amber-soft); color: var(--amber); }
+    .tag-low { background: var(--accent-soft); color: var(--accent); }
+
+    .avatar-mini {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Timeline View */
+    .timeline-grid {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .timeline-header {
+      display: grid;
+      grid-template-columns: 180px repeat(4, 1fr);
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .timeline-header > div,
+    .timeline-row > div:first-child {
+      padding: 10px 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 180px repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    .timeline-row:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-bars {
+      grid-column: 2 / -1;
+      position: relative;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background-image: linear-gradient(to right, var(--border) 1px, transparent 1px);
+      background-size: 25% 100%;
+    }
+
+    .gantt-bar {
+      position: relative;
+      height: 24px;
+      border-radius: 7px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Inbox View */
+    .inbox-list {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .inbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .inbox-row:last-child {
+      border-bottom: none;
+    }
+
+    .inbox-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .inbox-row-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .inbox-row-text {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .inbox-row-sub {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    /* Trust Logos */
+    .trust-strip {
+      padding: 46px 0 12px;
+      text-align: center;
+    }
+
+    .trust-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 22px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 44px;
+      flex-wrap: wrap;
+      color: #71717a;
+    }
+
+    .logo-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      opacity: 0.78;
+    }
+
+    /* Metrics Band */
+    .metrics-band {
+      padding: 48px 0;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-val {
+      font-size: 2.2rem;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    /* Section Commons */
+    .section {
+      padding: 84px 0;
+    }
+
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    .section-head.centered {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      font-weight: 750;
+    }
+
+    .section-desc {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .bento-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .bento-7 { grid-column: span 7; }
+    .bento-5 { grid-column: span 5; }
+    .bento-6 { grid-column: span 6; }
+
+    .bento-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+    }
+
+    .bento-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .bento-card p {
+      margin: 0 0 22px;
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+    }
+
+    .bento-visual {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .cmd-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+    }
+
+    .cmd-item.selected {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Dark Workflow Section */
+    .dark-section {
+      background: var(--bg-dark);
+      color: #ffffff;
+      padding: 88px 0;
+    }
+
+    .dark-section .section-desc {
+      color: #a1a1aa;
+    }
+
+    .workflow-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .wf-tab {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #d4d4d8;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .wf-tab.active {
+      background: #ffffff;
+      color: var(--bg-dark);
+      border-color: #ffffff;
+    }
+
+    .wf-panel {
+      display: none;
+      background: var(--bg-dark-elevated);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .wf-panel.active {
+      display: grid;
+    }
+
+    .wf-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wf-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #d4d4d8;
+      font-size: 0.94rem;
+    }
+
+    .wf-preview-card {
+      background: #09090b;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .wf-stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.88rem;
+    }
+
+    .wf-stat-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .quote-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quote-text {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #fff;
+    }
+
+    .author-name {
+      font-weight: 650;
+      font-size: 0.9rem;
+    }
+
+    .author-role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Pricing */
+    .billing-toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 5px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .billing-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .billing-btn.active {
+      background: var(--bg-elevated);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .save-pill {
+      background: var(--emerald-soft);
+      color: var(--emerald);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      margin-left: 4px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .price-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 20px 45px -15px rgba(79, 70, 229, 0.22);
+      position: relative;
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .price-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+
+    .price-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+    }
+
+    .price-amount {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 22px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-num {
+      font-size: 2.5rem;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+    }
+
+    .price-unit {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .price-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    /* FAQ */
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 18px 22px;
+      text-align: left;
+      font-size: 0.98rem;
+      font-weight: 650;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .faq-icon {
+      transition: transform 0.2s ease;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 22px 18px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    /* CTA Banner */
+    .cta-banner {
+      background: radial-gradient(650px 300px at 85% 15%, rgba(79, 70, 229, 0.32), transparent 70%), var(--bg-dark);
+      color: #ffffff;
+      border-radius: var(--radius-xl);
+      padding: 54px 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .cta-banner p {
+      margin: 0;
+      color: #a1a1aa;
+      max-width: 480px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 56px 0 36px;
+      margin-top: 84px;
+      background: #ffffff;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 42px;
+    }
+
+    .footer-col h4 {
+      margin: 0 0 14px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .footer-col a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .nav-links, .nav-actions .btn-ghost {
+        display: none;
+      }
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+      .app-sidebar {
+        display: none;
+      }
+      .kanban-grid,
+      .metrics-grid,
+      .testimonials-grid,
+      .pricing-grid,
+      .wf-panel.active {
+        grid-template-columns: 1fr;
+      }
+      .bento-7, .bento-5, .bento-6 {
+        grid-column: span 12;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-actions {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+      .hero {
+        padding: 46px 0 58px;
+      }
+      .cta-banner {
+        padding: 36px 24px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .timeline-header, .timeline-row {
+        grid-template-columns: 120px repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="Cadence home">
+        <span class="brand-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 17l6-6 4 4 6-8" />
+          </svg>
+        </span>
+        <span>Cadence</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#features">Features</a>
+        <a href="#workflows">Workflows</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#cta" class="btn btn-ghost">Log in</a>
+        <a href="#cta" class="btn btn-primary">Start free</a>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="mobile-drawer-links">
+        <a href="#features">Features</a>
+        <a href="#workflows">Workflows</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="#cta" class="btn btn-secondary" style="flex:1;">Log in</a>
+        <a href="#cta" class="btn btn-primary" style="flex:1;">Start free</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-backdrop">
+    <div class="hero-grid-pattern" aria-hidden="true"></div>
+    <div class="container hero">
+      <div class="hero-copy">
+        <div class="eyebrow">
+          <span class="eyebrow-pill">New 3.0</span>
+          <span>Async Cycles &amp; Automated Scope Alerts</span>
+        </div>
+
+        <h1>Ship projects on time, <span>without status meetings.</span></h1>
+
+        <p class="hero-subtitle">
+          Cadence brings sprint cycles, living roadmaps, and calm async updates into one fast workspace—so product, design, and engineering stay aligned automatically.
+        </p>
+
+        <div class="hero-cta-row">
+          <form class="hero-form" id="heroForm">
+            <input type="email" id="heroEmail" placeholder="Enter your work email" required aria-label="Work email" />
+            <button type="submit" class="btn btn-primary">Start free trial</button>
+          </form>
+          <a href="#interactive-demo" class="btn btn-secondary btn-lg">Explore live board</a>
+        </div>
+
+        <div class="toast-inline" id="heroToast" role="status">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="heroToastText">Workspace invite sent! Check your inbox.</span>
+        </div>
+
+        <p class="hero-note">Free for teams up to 8 · 14-day Pro trial · No credit card required</p>
+      </div>
+
+      <!-- Interactive Workspace Mockup -->
+      <div class="app-window" id="interactive-demo" aria-label="Interactive Cadence workspace preview">
+        <div class="app-topbar">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div class="window-dots" aria-hidden="true">
+              <span class="window-dot"></span>
+              <span class="window-dot"></span>
+              <span class="window-dot"></span>
+            </div>
+            <span style="font-size:0.82rem; font-weight:600; color:var(--text-secondary);">Acme Core / Cycle 18</span>
+          </div>
+
+          <div class="app-tabs" role="tablist" aria-label="Workspace views">
+            <button class="app-tab active" data-view="board" role="tab" aria-selected="true">Board</button>
+            <button class="app-tab" data-view="timeline" role="tab" aria-selected="false">Timeline</button>
+            <button class="app-tab" data-view="inbox" role="tab" aria-selected="false">Focus Inbox</button>
+          </div>
+
+          <div class="cycle-progress-pill">
+            <span id="cyclePctText">50% shipped</span>
+            <div class="progress-track">
+              <div class="progress-fill" id="cycleProgressFill" style="width: 50%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-body">
+          <aside class="app-sidebar">
+            <div>
+              <div class="sidebar-group-title">Workspace</div>
+              <div class="sidebar-item active">
+                <span>Active Cycle</span>
+                <span class="sidebar-count" id="sidebarActiveCount">6</span>
+              </div>
+              <div class="sidebar-item">
+                <span>Q4 Roadmap</span>
+                <span class="sidebar-count">4</span>
+              </div>
+              <div class="sidebar-item">
+                <span>Triage Inbox</span>
+                <span class="sidebar-count">3</span>
+              </div>
+              <div class="sidebar-item">
+                <span>Decisions</span>
+                <span class="sidebar-count">12</span>
+              </div>
+            </div>
+
+            <div class="sidebar-hint">
+              <strong>Try it:</strong> Click any card on the board to mark it done and watch cycle progress update.
+              <div style="margin-top:8px;">Quick search <span class="kbd">⌘ K</span></div>
+            </div>
+          </aside>
+
+          <main class="app-main">
+            <div class="app-main-header">
+              <div class="app-main-title">
+                <h3 id="viewTitle">Cycle 18 — Checkout v2</h3>
+                <span class="badge-status">On track</span>
+              </div>
+
+              <div class="filter-pills" id="priorityFilters">
+                <button class="filter-pill active" data-filter="all">All</button>
+                <button class="filter-pill" data-filter="high">High priority</button>
+                <button class="filter-pill" data-filter="med">Medium</button>
+              </div>
+            </div>
+
+            <!-- Board View -->
+            <div class="view-panel active" id="view-board">
+              <div class="kanban-grid">
+                <div class="kanban-col">
+                  <div class="kanban-col-head">
+                    <span>Queued</span>
+                    <span id="count-queued">2</span>
+                  </div>
+                  <div class="task-card" data-status="queued" data-priority="high" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-241</span>
+                      <span class="tag tag-high">High</span>
+                    </div>
+                    <div class="task-title">Add Apple Pay token validation</div>
+                    <div class="task-meta">
+                      <span>API · 2d</span>
+                      <span class="avatar-mini" style="background:#4f46e5;">MK</span>
+                    </div>
+                  </div>
+                  <div class="task-card" data-status="queued" data-priority="med" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-244</span>
+                      <span class="tag tag-med">Med</span>
+                    </div>
+                    <div class="task-title">Keyboard nav for tax breakdown</div>
+                    <div class="task-meta">
+                      <span>A11y · 1d</span>
+                      <span class="avatar-mini" style="background:#059669;">SR</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="kanban-col">
+                  <div class="kanban-col-head">
+                    <span>In Progress</span>
+                    <span id="count-progress">1</span>
+                  </div>
+                  <div class="task-card" data-status="progress" data-priority="high" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-238</span>
+                      <span class="tag tag-high">High</span>
+                    </div>
+                    <div class="task-title">Streamline multi-currency FX cache</div>
+                    <div class="task-meta">
+                      <span>Core · 3d</span>
+                      <span class="avatar-mini" style="background:#d97706;">JL</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="kanban-col">
+                  <div class="kanban-col-head">
+                    <span>Shipped</span>
+                    <span id="count-done">3</span>
+                  </div>
+                  <div class="task-card done" data-status="done" data-priority="high" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-230</span>
+                      <span class="tag tag-high">High</span>
+                    </div>
+                    <div class="task-title">Zero-downtime webhook retries</div>
+                    <div class="task-meta">
+                      <span>Infra · Done</span>
+                      <span class="avatar-mini" style="background:#09090b;">AL</span>
+                    </div>
+                  </div>
+                  <div class="task-card done" data-status="done" data-priority="med" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-233</span>
+                      <span class="tag tag-med">Med</span>
+                    </div>
+                    <div class="task-title">Mobile receipt drawer polish</div>
+                    <div class="task-meta">
+                      <span>UI · Done</span>
+                      <span class="avatar-mini" style="background:#4f46e5;">MK</span>
+                    </div>
+                  </div>
+                  <div class="task-card done" data-status="done" data-priority="low" tabindex="0">
+                    <div class="task-card-top">
+                      <span class="task-id">CAD-235</span>
+                      <span class="tag tag-low">Low</span>
+                    </div>
+                    <div class="task-title">Export CSV invoice ledger</div>
+                    <div class="task-meta">
+                      <span>Ops · Done</span>
+                      <span class="avatar-mini" style="background:#059669;">SR</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Timeline View -->
+            <div class="view-panel" id="view-timeline">
+              <div class="timeline-grid">
+                <div class="timeline-header">
+                  <div>Initiative</div>
+                  <div>Week 1</div>
+                  <div>Week 2</div>
+                  <div>Week 3</div>
+                  <div>Week 4</div>
+                </div>
+                <div class="timeline-row">
+                  <div><strong>Checkout v2</strong></div>
+                  <div class="timeline-bars">
+                    <div class="gantt-bar" style="width: 68%; background: #4f46e5;">API &amp; Apple Pay (On track)</div>
+                  </div>
+                </div>
+                <div class="timeline-row">
+                  <div><strong>FX Edge Cache</strong></div>
+                  <div class="timeline-bars">
+                    <div class="gantt-bar" style="margin-left: 22%; width: 52%; background: #059669;">Rollout 100%</div>
+                  </div>
+                </div>
+                <div class="timeline-row">
+                  <div><strong>SOC2 Audit Pack</strong></div>
+                  <div class="timeline-bars">
+                    <div class="gantt-bar" style="margin-left: 40%; width: 48%; background: #09090b;">Evidence &amp; Sign-off</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Focus Inbox View -->
+            <div class="view-panel" id="view-inbox">
+              <div class="inbox-list">
+                <div class="inbox-row">
+                  <div class="inbox-row-main">
+                    <span class="inbox-dot"></span>
+                    <div>
+                      <div class="inbox-row-text">Maya approved spec for <strong>CAD-241 Apple Pay</strong></div>
+                      <div class="inbox-row-sub">14m ago · Ready to pull into active sprint</div>
+                    </div>
+                  </div>
+                  <span class="tag tag-high">Action</span>
+                </div>
+                <div class="inbox-row">
+                  <div class="inbox-row-main">
+                    <span class="inbox-dot" style="background: var(--emerald);"></span>
+                    <div>
+                      <div class="inbox-row-text">PR #814 merged automatically closed <strong>CAD-230</strong></div>
+                      <div class="inbox-row-sub">1h ago · GitHub Sync</div>
+                    </div>
+                  </div>
+                  <span class="tag tag-low">Synced</span>
+                </div>
+                <div class="inbox-row">
+                  <div class="inbox-row-main">
+                    <span class="inbox-dot" style="background: var(--amber);"></span>
+                    <div>
+                      <div class="inbox-row-text">Weekly digest: Cycle 18 scope increased by 8%</div>
+                      <div class="inbox-row-sub">Today · Automated Scope Guard</div>
+                    </div>
+                  </div>
+                  <span class="tag tag-med">Digest</span>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- Trust Strip -->
+      <div class="trust-strip">
+        <div class="trust-label">Trusted by 2,400+ high-velocity product teams</div>
+        <div class="logo-row">
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,20 2,20"/></svg>
+            Northstar
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3"/></svg>
+            Vektor Labs
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12h16M12 4v16"/></svg>
+            Meridian
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5" opacity="0.5"/></svg>
+            Loomworks
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 18L12 6l8 12"/></svg>
+            Kestrel
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics Band -->
+  <section class="metrics-band">
+    <div class="container">
+      <div class="metrics-grid reveal">
+        <div class="metric-card">
+          <div class="metric-val">42%</div>
+          <div class="metric-label">Fewer recurring status meetings across engineering &amp; product teams</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">&lt;40ms</div>
+          <div class="metric-label">Local-first interaction speed for filtering, editing, and triage</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">99.98%</div>
+          <div class="metric-label">Verified uptime with SOC2 Type II &amp; SAML SSO built in</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-kicker">Core Capabilities</div>
+        <h2 class="section-title">Everything your team needs to plan, execute, and ship—nothing in the way.</h2>
+        <p class="section-desc">Legacy trackers drown teams in required fields. Cadence stays lightweight until you need structure.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card bento-7 reveal">
+          <div>
+            <div class="bento-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            </div>
+            <h3>Automated Cycles &amp; Scope Guard</h3>
+            <p>Set a two-week cadence and let Cadence roll over unfinished work, flag scope creep early, and forecast delivery dates using real velocity.</p>
+          </div>
+          <div class="bento-visual">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600; margin-bottom:8px;">
+              <span>Cycle 18 Velocity Forecast</span>
+              <span style="color:var(--emerald);">94% confidence</span>
+            </div>
+            <div style="height:10px; background:#e4e4e7; border-radius:999px; overflow:hidden; display:flex; gap:2px;">
+              <div style="width:52%; background:var(--accent);"></div>
+              <div style="width:28%; background:#818cf8;"></div>
+            </div>
+            <div style="display:flex; gap:16px; margin-top:10px; font-size:0.76rem; color:var(--text-muted);">
+              <span>● 18 Completed</span>
+              <span>● 9 In Review</span>
+              <span>○ 3 Unstarted</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card bento-5 reveal">
+          <div>
+            <div class="bento-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 10h10M7 14h6"/></svg>
+            </div>
+            <h3>Keyboard-First Speed</h3>
+            <p>Assign owners, change priority, or link a PR in two keystrokes—without touching a mouse.</p>
+          </div>
+          <div class="bento-visual">
+            <div class="cmd-bar">
+              <span>Jump to issue, cycle, or doc…</span>
+              <span class="kbd">⌘K</span>
+            </div>
+            <div class="cmd-item selected">
+              <span>Move to Cycle 18</span>
+              <span class="kbd">C</span>
+            </div>
+            <div class="cmd-item">
+              <span>Assign to Maya Lin</span>
+              <span class="kbd">A</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card bento-6 reveal">
+          <div>
+            <div class="bento-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+            </div>
+            <h3>Living Roadmaps</h3>
+            <p>Connect high-level quarterly milestones directly to underlying tasks so executive views never go stale.</p>
+          </div>
+          <div class="bento-visual">
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:0.82rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span><strong>Q4</strong> · Enterprise SSO Launch</span>
+                <span class="tag tag-low">76%</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span><strong>Q4</strong> · Billing Engine v2</span>
+                <span class="tag tag-med">45%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card bento-6 reveal">
+          <div>
+            <div class="bento-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Two-Way GitHub, GitLab &amp; Slack Sync</h3>
+            <p>Opening a pull request moves the ticket automatically. Slack threads turn into trackable tasks in one click.</p>
+          </div>
+          <div class="bento-visual">
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
+              <span><strong>PR #814</strong> merged to <code>main</code></span>
+              <span class="badge-status">Auto-closed CAD-230</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dark Workflows Section -->
+  <section class="dark-section" id="workflows">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-kicker" style="color:#a5b4fc;">Tailored Perspectives</div>
+        <h2 class="section-title">One source of truth, shaped for every role.</h2>
+        <p class="section-desc">Engineers get distraction-free queues. Leads get clear delivery signals without chasing updates.</p>
+      </div>
+
+      <div class="workflow-tabs" role="tablist">
+        <button class="wf-tab active" data-wf="eng">Engineering &amp; Product</button>
+        <button class="wf-tab" data-wf="design">Design &amp; Creative</button>
+        <button class="wf-tab" data-wf="leaders">Leadership &amp; Ops</button>
+      </div>
+
+      <div class="wf-panel active" id="wf-eng">
+        <div>
+          <h3 style="margin:0 0 10px; font-size:1.45rem;">Zero-friction sprint execution</h3>
+          <p style="margin:0; color:#a1a1aa;">Keep engineers in flow with automatic branch naming, PR state transitions, and crisp triage queues.</p>
+          <ul class="wf-list">
+            <li><span style="color:#818cf8;">✓</span> Auto-assign cycle points &amp; detect blocked dependencies</li>
+            <li><span style="color:#818cf8;">✓</span> Instant keyboard triage for incoming bug reports</li>
+            <li><span style="color:#818cf8;">✓</span> Native GraphQL API and webhooks for custom CI/CD</li>
+          </ul>
+        </div>
+        <div class="wf-preview-card">
+          <div style="font-size:0.78rem; color:#a1a1aa; margin-bottom:10px;">ENGINEERING HEALTH · CYCLE 18</div>
+          <div class="wf-stat-row"><span>PRs merged this week</span><strong>34</strong></div>
+          <div class="wf-stat-row"><span>Median cycle time</span><strong>1.8 days</strong></div>
+          <div class="wf-stat-row"><span>Blocked tasks</span><strong style="color:#34d399;">0 active</strong></div>
+        </div>
+      </div>
+
+      <div class="wf-panel" id="wf-design">
+        <div>
+          <h3 style="margin:0 0 10px; font-size:1.45rem;">Specs, prototypes, and feedback together</h3>
+          <p style="margin:0; color:#a1a1aa;">Embed live Figma frames directly inside issues so reviews happen beside engineering requirements.</p>
+          <ul class="wf-list">
+            <li><span style="color:#818cf8;">✓</span> Side-by-side visual sign-off checklists</li>
+            <li><span style="color:#818cf8;">✓</span> Clear handoff states from Exploration to Ready for Dev</li>
+            <li><span style="color:#818cf8;">✓</span> Versioned decision logs so rationale is never lost</li>
+          </ul>
+        </div>
+        <div class="wf-preview-card">
+          <div style="font-size:0.78rem; color:#a1a1aa; margin-bottom:10px;">DESIGN REVIEW QUEUE</div>
+          <div class="wf-stat-row"><span>Checkout Drawer v2</span><strong style="color:#34d399;">Approved</strong></div>
+          <div class="wf-stat-row"><span>Empty State Illustrations</span><strong style="color:#fbbf24;">In Review</strong></div>
+          <div class="wf-stat-row"><span>Mobile Nav Tokens</span><strong>Ready for Dev</strong></div>
+        </div>
+      </div>
+
+      <div class="wf-panel" id="wf-leaders">
+        <div>
+          <h3 style="margin:0 0 10px; font-size:1.45rem;">Predictable delivery across squads</h3>
+          <p style="margin:0; color:#a1a1aa;">Roll up progress across teams automatically and spot at-risk initiatives weeks before launch day.</p>
+          <ul class="wf-list">
+            <li><span style="color:#818cf8;">✓</span> Weekly async project updates delivered every Friday</li>
+            <li><span style="color:#818cf8;">✓</span> Cross-team dependency map with risk indicators</li>
+            <li><span style="color:#818cf8;">✓</span> Read-only stakeholder links with no extra seat cost</li>
+          </ul>
+        </div>
+        <div class="wf-preview-card">
+          <div style="font-size:0.78rem; color:#a1a1aa; margin-bottom:10px;">QUARTERLY PORTFOLIO</div>
+          <div class="wf-stat-row"><span>Platform Reliability</span><strong style="color:#34d399;">On Track (88%)</strong></div>
+          <div class="wf-stat-row"><span>Self-Serve Enterprise</span><strong style="color:#fbbf24;">At Risk (54%)</strong></div>
+          <div class="wf-stat-row"><span>EU Data Residency</span><strong style="color:#34d399;">Shipped</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head centered reveal">
+        <div class="section-kicker">Customer Stories</div>
+        <h2 class="section-title">Loved by teams that care about craft and speed.</h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <article class="quote-card reveal">
+          <p class="quote-text">“Moving from Jira to Cadence cut our weekly planning ritual from 90 minutes to 20. Our engineers actually enjoy opening the board now.”</p>
+          <div class="quote-author">
+            <div class="author-avatar" style="background:#4f46e5;">ER</div>
+            <div>
+              <div class="author-name">Elena Rostova</div>
+              <div class="author-role">VP of Engineering, Northstar</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="quote-card reveal">
+          <p class="quote-text">“The live roadmap rollups mean I never have to ping three PMs on Slack before a board meeting. Everything is accurate down to the commit.”</p>
+          <div class="quote-author">
+            <div class="author-avatar" style="background:#059669;">DK</div>
+            <div>
+              <div class="author-name">Devon Kim</div>
+              <div class="author-role">Head of Product, Vektor Labs</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="quote-card reveal">
+          <p class="quote-text">“Cadence feels instant. Between keyboard shortcuts and the Focus Inbox, our distributed design &amp; dev team ships twice as calmly.”</p>
+          <div class="quote-author">
+            <div class="author-avatar" style="background:#09090b;">NP</div>
+            <div>
+              <div class="author-name">Nadia Patel</div>
+              <div class="author-role">Product Lead, Meridian</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="section" id="pricing" style="padding-top: 24px;">
+    <div class="container">
+      <div class="section-head centered reveal">
+        <div class="section-kicker">Simple Pricing</div>
+        <h2 class="section-title">Start free. Scale as your team grows.</h2>
+        <p class="section-desc">Transparent per-seat pricing with unlimited guest observers on every plan.</p>
+
+        <div class="billing-toggle-wrap" role="group" aria-label="Billing interval">
+          <button class="billing-btn" data-billing="monthly">Monthly</button>
+          <button class="billing-btn active" data-billing="annual">Annual <span class="save-pill">Save 20%</span></button>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div>
+            <h3 class="price-name">Starter</h3>
+            <p class="price-desc">For small squads getting organized fast.</p>
+            <div class="price-amount">
+              <span class="price-num" data-monthly="$0" data-annual="$0">$0</span>
+              <span class="price-unit">free forever</span>
+            </div>
+            <ul class="price-features">
+              <li><span style="color:var(--emerald);">✓</span> Up to 8 team members</li>
+              <li><span style="color:var(--emerald);">✓</span> Unlimited issues &amp; cycles</li>
+              <li><span style="color:var(--emerald);">✓</span> GitHub &amp; Slack integration</li>
+              <li><span style="color:var(--emerald);">✓</span> 30-day activity history</li>
+            </ul>
+          </div>
+          <a href="#cta" class="btn btn-secondary" style="width:100%;">Get started free</a>
+        </div>
+
+        <div class="price-card featured reveal">
+          <span class="popular-tag">Most Popular</span>
+          <div>
+            <h3 class="price-name">Pro</h3>
+            <p class="price-desc">For growing product &amp; engineering orgs.</p>
+            <div class="price-amount">
+              <span class="price-num" data-monthly="$12" data-annual="$10">$10</span>
+              <span class="price-unit">/ seat / month</span>
+            </div>
+            <ul class="price-features">
+              <li><span style="color:var(--accent);">✓</span> Unlimited members &amp; teams</li>
+              <li><span style="color:var(--accent);">✓</span> Living roadmaps &amp; Scope Guard</li>
+              <li><span style="color:var(--accent);">✓</span> Unlimited guest viewers</li>
+              <li><span style="color:var(--accent);">✓</span> Automated async digests</li>
+            </ul>
+          </div>
+          <a href="#cta" class="btn btn-primary" style="width:100%;">Start 14-day free trial</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div>
+            <h3 class="price-name">Enterprise</h3>
+            <p class="price-desc">Security, compliance, and dedicated support.</p>
+            <div class="price-amount">
+              <span class="price-num" data-monthly="Custom" data-annual="Custom">Custom</span>
+            </div>
+            <ul class="price-features">
+              <li><span style="color:var(--emerald);">✓</span> SAML SSO &amp; SCIM provisioning</li>
+              <li><span style="color:var(--emerald);">✓</span> EU/US data residency controls</li>
+              <li><span style="color:var(--emerald);">✓</span> Audit logs &amp; SOC2 Type II pack</li>
+              <li><span style="color:var(--emerald);">✓</span> Dedicated migration concierge</li>
+            </ul>
+          </div>
+          <a href="#cta" class="btn btn-dark" style="width:100%;">Book a demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head centered reveal">
+        <div class="section-kicker">FAQ</div>
+        <h2 class="section-title">Questions, answered cleanly.</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-q" aria-expanded="true">
+            <span>How long does it take to migrate from Jira, Asana, or Linear?</span>
+            <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">
+            Most teams import their active projects in under 5 minutes using our one-click importers. Issue IDs, assignees, attachments, and comment history come over intact.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>Do we pay for stakeholders or clients who only view roadmaps?</span>
+            <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">
+            No. Guest viewers and external roadmap links are free and unlimited on Pro and Enterprise plans. You only pay for active contributors.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>How does Cadence keep data secure?</span>
+            <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">
+            Cadence is SOC2 Type II certified, encrypts all data in transit (TLS 1.3) and at rest (AES-256), and offers SAML 2.0 SSO with regional data residency on Enterprise.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>Can we cancel or downgrade at any time?</span>
+            <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-a">
+            Yes—there are no lock-in contracts. You can adjust seats, switch to Starter, or export your entire workspace as JSON/CSV anytime from billing settings.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="container" id="cta">
+    <div class="cta-banner reveal">
+      <div>
+        <h2>Ready to bring calm to every sprint?</h2>
+        <p>Spin up a workspace in 30 seconds and invite your team—free for up to 8 seats.</p>
+      </div>
+      <form class="hero-form" id="footerForm" style="background:#18181b; border-color:rgba(255,255,255,0.18);">
+        <input type="email" id="footerEmail" placeholder="you@company.com" required style="color:#ffffff;" aria-label="Work email" />
+        <button type="submit" class="btn btn-primary">Create workspace</button>
+      </form>
+    </div>
+    <div class="toast-inline" id="footerToast" style="margin-top:16px;" role="status">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="footerToastText">You're all set! Magic sign-in link sent.</span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" style="margin-bottom:12px;">
+            <span class="brand-mark">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 17l6-6 4 4 6-8" />
+              </svg>
+            </span>
+            <span>Cadence</span>
+          </a>
+          <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); max-width:260px;">
+            Project management built for momentum, clarity, and calmer shipping.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Cycles &amp; Scope Guard</a></li>
+            <li><a href="#features">Living Roadmaps</a></li>
+            <li><a href="#workflows">Integrations</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#interactive-demo">Live Workspace</a></li>
+            <li><a href="#faq">Migration Guide</a></li>
+            <li><a href="#faq">Security &amp; SOC2</a></li>
+            <li><a href="#cta">API Docs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#cta">About</a></li>
+            <li><a href="#cta">Changelog</a></li>
+            <li><a href="#cta">Privacy Policy</a></li>
+            <li><a href="#cta">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Cadence Software Inc. All rights reserved.</span>
+        <span class="status-pill"><span class="status-dot"></span> All systems operational</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      menuBtn.addEventListener('click', () => {
+        const isOpen = drawer.classList.toggle('open');
+        menuBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+      drawer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          drawer.classList.remove('open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Interactive workspace view tabs
+      const appTabs = document.querySelectorAll('.app-tab');
+      const viewPanels = document.querySelectorAll('.view-panel');
+      const viewTitle = document.getElementById('viewTitle');
+      const priorityFilters = document.getElementById('priorityFilters');
+      const titles = {
+        board: 'Cycle 18 — Checkout v2',
+        timeline: 'Q4 Strategic Initiatives',
+        inbox: 'Focus Inbox — Unread Updates'
+      };
+
+      appTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.view;
+          appTabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+
+          viewPanels.forEach(p => p.classList.remove('active'));
+          document.getElementById('view-' + target).classList.add('active');
+          viewTitle.textContent = titles[target];
+          priorityFilters.style.display = target === 'board' ? 'flex' : 'none';
+        });
+      });
+
+      // Interactive Kanban card completion & column counts
+      const cards = document.querySelectorAll('.task-card');
+      const pctText = document.getElementById('cyclePctText');
+      const progressFill = document.getElementById('cycleProgressFill');
+      const cols = document.querySelectorAll('.kanban-col');
+
+      function updateCycleMetrics() {
+        const allCards = Array.from(document.querySelectorAll('.task-card'));
+        const doneCount = allCards.filter(c => c.classList.contains('done')).length;
+        const pct = Math.round((doneCount / allCards.length) * 100);
+        pctText.textContent = pct + '% shipped';
+        progressFill.style.width = pct + '%';
+
+        document.getElementById('count-queued').textContent = cols[0].querySelectorAll('.task-card').length;
+        document.getElementById('count-progress').textContent = cols[1].querySelectorAll('.task-card').length;
+        document.getElementById('count-done').textContent = cols[2].querySelectorAll('.task-card').length;
+      }
+
+      cards.forEach(card => {
+        const toggleCard = () => {
+          const isDone = card.classList.toggle('done');
+          if (isDone) {
+            cols[2].appendChild(card);
+          } else {
+            cols[1].appendChild(card);
+          }
+          updateCycleMetrics();
+        };
+        card.addEventListener('click', toggleCard);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleCard();
+          }
+        });
+      });
+
+      // Priority filtering on board
+      const filterPills = document.querySelectorAll('.filter-pill');
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          filterPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const filter = pill.dataset.filter;
+          document.querySelectorAll('.task-card').forEach(card => {
+            if (filter === 'all' || card.dataset.priority === filter) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Role workflow tabs
+      const wfTabs = document.querySelectorAll('.wf-tab');
+      const wfPanels = document.querySelectorAll('.wf-panel');
+      wfTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          wfTabs.forEach(t => t.classList.remove('active'));
+          wfPanels.forEach(p => p.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('wf-' + tab.dataset.wf).classList.add('active');
+        });
+      });
+
+      // Billing toggle
+      const billingBtns = document.querySelectorAll('.billing-btn');
+      const priceNums = document.querySelectorAll('.price-num');
+      billingBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          billingBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const mode = btn.dataset.billing;
+          priceNums.forEach(el => {
+            el.textContent = el.dataset[mode];
+          });
+        });
+      });
+
+      // FAQ accordion
+      document.querySelectorAll('.faq-q').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.faq-item');
+          const isOpen = item.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
+
+      // Email form handlers
+      function wireForm(formId, inputId, toastId, toastTextId) {
+        const form = document.getElementById(formId);
+        const input = document.getElementById(inputId);
+        const toast = document.getElementById(toastId);
+        const toastText = document.getElementById(toastTextId);
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = input.value.trim();
+          if (!email) return;
+          toastText.textContent = 'Workspace invite sent to ' + email + '. Check your inbox!';
+          toast.classList.add('visible');
+          input.value = '';
+        });
+      }
+      wireForm('heroForm', 'heroEmail', 'heroToast', 'heroToastText');
+      wireForm('footerForm', 'footerEmail', 'footerToast', 'footerToastText');
+
+      // IntersectionObserver reveal
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        reveals.forEach(el => observer.observe(el));
+      } else {
+        reveals.forEach(el => el.classList.add('in-view'));
+      }
+    })();
+  </script>
+</body>
+</html>

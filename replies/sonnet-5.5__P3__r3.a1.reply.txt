@@ -1,0 +1,454 @@
+I'll write the site to a single file. Since there are no real photos yet, the gallery draws placeholder scenes in inline SVG, so it stays fully self-contained and you can swap in real images later.
+
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/sonnet-5.5__P3__r3.a1.hcntu5y9/index.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mara Lindqvist — Photographer</title>
+<meta name="description" content="Freelance photographer specializing in portrait, editorial, landscape and street photography. Available for commissions worldwide.">
+<style>
+  :root{
+    --paper:#f4efe7;
+    --paper-2:#ebe4d8;
+    --ink:#171512;
+    --muted:#6f685d;
+    --accent:#c4441f;
+    --line:rgba(23,21,18,.16);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --pad:clamp(20px,4vw,56px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  img,svg{display:block;max-width:100%}
+  a{color:inherit}
+  .label{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--paper);padding:8px 14px;z-index:100}
+  .skip:focus{left:8px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* NAV */
+  header.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);mix-blend-mode:normal;transition:background .3s,box-shadow .3s}
+  header.nav.solid{background:rgba(244,239,231,.92);backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--line)}
+  .logo{font-family:var(--serif);font-size:1.25rem;text-decoration:none;letter-spacing:.01em}
+  .logo b{color:var(--accent);font-weight:400}
+  nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+  nav a{text-decoration:none;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;position:relative;padding:4px 0}
+  nav a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--ink);transition:width .25s}
+  nav a:hover::after{width:100%}
+  .menu-btn{display:none;background:none;border:1px solid var(--ink);padding:6px 12px;font:inherit;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:inherit}
+
+  /* HERO */
+  .hero{min-height:100svh;display:grid;grid-template-columns:1.05fr 1fr;align-items:end;gap:var(--pad);padding:120px var(--pad) var(--pad)}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,8.5vw,8rem);line-height:.92;letter-spacing:-.025em}
+  .hero h1 em{color:var(--accent)}
+  .hero-copy p{max-width:44ch;margin-top:28px;color:var(--muted);font-size:1.05rem}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+  .btn{display:inline-block;padding:14px 26px;border:1px solid var(--ink);text-decoration:none;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;background:none;color:var(--ink);cursor:pointer;font-family:inherit;transition:background .25s,color .25s}
+  .btn.fill{background:var(--ink);color:var(--paper)}
+  .btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .hero-img{aspect-ratio:4/5;max-height:78vh;justify-self:end;width:100%;overflow:hidden;position:relative}
+  .hero-img figcaption{position:absolute;left:14px;bottom:12px;color:#fff;font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+
+  .stats{display:flex;flex-wrap:wrap;border-block:1px solid var(--line);margin:0 var(--pad)}
+  .stats div{flex:1 1 180px;padding:26px 0 26px 4px}
+  .stats strong{display:block;font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1}
+  
+  section{padding:clamp(70px,10vw,130px) var(--pad)}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:24px;margin-bottom:44px}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);line-height:1;letter-spacing:-.02em}
+
+  /* GALLERY */
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filters button{background:none;border:1px solid var(--line);padding:8px 16px;font:inherit;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--ink);transition:.2s}
+  .filters button:hover{border-color:var(--ink)}
+  .filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .grid{columns:3 280px;column-gap:18px}
+  .tile{break-inside:avoid;margin-bottom:18px;position:relative;cursor:zoom-in;overflow:hidden;background:var(--paper-2);border:0;padding:0;display:block;width:100%;text-align:left;font:inherit;color:inherit}
+  .tile svg{width:100%;height:auto;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .tile:hover svg{transform:scale(1.04)}
+  .tile .cap{position:absolute;inset:auto 0 0 0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;opacity:0;transform:translateY(8px);transition:.35s;display:flex;justify-content:space-between;font-size:.82rem}
+  .tile:hover .cap,.tile:focus-visible .cap{opacity:1;transform:none}
+  .tile .cap span:last-child{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+  .tile.hide{display:none}
+  .note{margin-top:22px;color:var(--muted);font-size:.85rem}
+
+  /* LIGHTBOX */
+  .lb{position:fixed;inset:0;background:rgba(14,12,10,.96);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;padding:60px 20px 30px}
+  .lb.open{display:flex}
+  .lb-stage{max-width:min(1100px,92vw);max-height:76vh;display:flex}
+  .lb-stage svg{max-height:76vh;width:auto;max-width:100%;height:auto}
+  .lb-cap{color:#e8e1d4;margin-top:18px;text-align:center}
+  .lb-cap .label{color:#9c9486}
+  .lb button{position:absolute;background:none;border:0;color:#f4efe7;font-size:2rem;cursor:pointer;padding:14px 18px;line-height:1}
+  .lb .x{top:10px;right:14px}
+  .lb .prev{left:8px;top:50%}
+  .lb .next{right:8px;top:50%}
+  .lb button:hover{color:var(--accent)}
+
+  /* ABOUT */
+  .about{background:var(--ink);color:var(--paper);display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(30px,6vw,90px);align-items:center}
+  .about .label{color:#a59d8f}
+  .about h2{margin:14px 0 26px}
+  .about p{color:#cfc7b8;max-width:58ch;margin-bottom:16px}
+  .about .portrait{aspect-ratio:3/4;overflow:hidden}
+  .gear{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
+  .gear span{border:1px solid rgba(244,239,231,.25);padding:5px 12px;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em}
+
+  /* SERVICES */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0;border-top:1px solid var(--ink)}
+  .card{padding:34px 28px 34px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+  @media(min-width:900px){.card{border-bottom:0;border-right:1px solid var(--line);padding-left:28px}.card:first-child{padding-left:0}.card:last-child{border-right:0}}
+  .card h3{font-family:var(--serif);font-weight:400;font-size:1.7rem}
+  .card .price{font-family:var(--mono);font-size:.85rem;color:var(--accent)}
+  .card ul{list-style:none;color:var(--muted);font-size:.93rem}
+  .card li{padding:5px 0;border-top:1px dashed var(--line)}
+
+  /* TESTIMONIALS */
+  .quotes{background:var(--paper-2)}
+  .quote-wrap{max-width:900px;margin:0 auto;text-align:center;min-height:240px}
+  blockquote{font-family:var(--serif);font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.3;font-style:italic}
+  .quote-wrap cite{display:block;margin-top:24px;font-style:normal}
+  .dots{display:flex;justify-content:center;gap:10px;margin-top:28px}
+  .dots button{width:10px;height:10px;border-radius:50%;border:1px solid var(--ink);background:none;cursor:pointer;padding:0}
+  .dots button[aria-current="true"]{background:var(--ink)}
+
+  /* CONTACT */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px)}
+  .contact h2 em{color:var(--accent)}
+  form{display:grid;gap:22px}
+  .field{display:grid;gap:6px}
+  label{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  input,select,textarea{font:inherit;background:transparent;border:0;border-bottom:1px solid var(--ink);padding:10px 0;color:var(--ink);border-radius:0;width:100%}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent)}
+  textarea{min-height:120px;resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .status{min-height:1.4em;font-size:.9rem;color:var(--accent)}
+  .direct{margin-top:30px;display:grid;gap:6px}
+  .direct a{font-family:var(--serif);font-size:1.3rem}
+
+  footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:26px var(--pad);border-top:1px solid var(--line)}
+  footer a{text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--accent)}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s,transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:860px){
+    .hero,.about,.contact{grid-template-columns:1fr}
+    .hero-img{max-height:60vh;justify-self:stretch}
+    .menu-btn{display:block}
+    nav ul{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--paper);padding:10px var(--pad) 24px;gap:14px;box-shadow:0 12px 20px rgba(0,0,0,.08)}
+    nav ul.open{display:flex}
+    .about .portrait{max-width:380px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important;animation:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#top">Mara Lindqvist<b>.</b></a>
+  <nav aria-label="Primary">
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <ul id="menu">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="hero-copy">
+      <p class="label">Freelance photographer · Based in Lisbon · Travels worldwide</p>
+      <h1>Quiet light,<br><em>honest</em> frames.</h1>
+      <p>I make portraits, editorial stories and landscapes that feel like the moment, not a performance of it. Available for commissions and collaborations.</p>
+      <div class="cta-row">
+        <a class="btn fill" href="#work">View selected work</a>
+        <a class="btn" href="#contact">Book a session</a>
+      </div>
+    </div>
+    <figure class="hero-img" id="heroImg" aria-label="Featured photograph"><figcaption>Featured — Golden Hour, Alentejo</figcaption></figure>
+  </div>
+
+  <div class="stats reveal">
+    <div><strong>12</strong><span class="label">Years behind the lens</span></div>
+    <div><strong>340+</strong><span class="label">Commissions delivered</span></div>
+    <div><strong>28</strong><span class="label">Countries shot in</span></div>
+    <div><strong>48h</strong><span class="label">Preview turnaround</span></div>
+  </div>
+
+  <section id="work" aria-labelledby="workH">
+    <div class="sec-head reveal">
+      <div><p class="label">01 — Selected work</p><h2 id="workH">Portfolio</h2></div>
+      <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="note">Placeholder artwork shown. To use real photos, replace the <code>PHOTOS</code> entries in the script with <code>src</code> image paths or data URIs.</p>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="aboutH">
+    <div class="portrait reveal" id="portrait" role="img" aria-label="Portrait of the photographer"></div>
+    <div class="reveal">
+      <p class="label">02 — About</p>
+      <h2 id="aboutH">I wait for the<br>in-between moments.</h2>
+      <p>I'm Mara, a self-taught photographer who traded a desk job for a camera bag in 2014. My work leans on natural light, patience and conversation. The best frames usually happen after the "official" shot is done.</p>
+      <p>Clients include independent magazines, hospitality brands, musicians and families. Whether it's a two-hour portrait session or a three-week editorial assignment, I bring the same calm, prepared approach.</p>
+      <div class="gear" aria-label="Kit"><span>Full-frame mirrorless</span><span>35 / 50 / 85mm primes</span><span>35mm &amp; medium-format film</span><span>Portable strobes</span></div>
+    </div>
+  </section>
+
+  <section id="services" aria-labelledby="servH">
+    <div class="sec-head reveal"><div><p class="label">03 — Services</p><h2 id="servH">Ways to work together</h2></div><p class="label">Rates in EUR · custom quotes on request</p></div>
+    <div class="cards reveal">
+      <article class="card"><h3>Portrait</h3><span class="price">from €280</span><ul><li>60–90 min session</li><li>1 location</li><li>15 edited images</li><li>Private online gallery</li></ul></article>
+      <article class="card"><h3>Editorial &amp; Brand</h3><span class="price">from €900 / half-day</span><ul><li>Pre-production call</li><li>Up to 4 hours on set</li><li>30 edited images</li><li>Commercial licensing</li></ul></article>
+      <article class="card"><h3>Events &amp; Weddings</h3><span class="price">from €1,600</span><ul><li>Full-day coverage</li><li>Second shooter available</li><li>400+ edited images</li><li>Printed album option</li></ul></article>
+      <article class="card"><h3>Prints</h3><span class="price">from €45</span><ul><li>Archival cotton paper</li><li>Limited editions of 25</li><li>Signed &amp; numbered</li><li>Worldwide shipping</li></ul></article>
+    </div>
+  </section>
+
+  <section class="quotes" aria-labelledby="quoteH">
+    <h2 class="label" id="quoteH" style="text-align:center;margin-bottom:34px;font-weight:400">04 — Kind words</h2>
+    <div class="quote-wrap" aria-live="polite">
+      <blockquote id="qText"></blockquote>
+      <cite class="label" id="qWho"></cite>
+    </div>
+    <div class="dots" id="dots" role="group" aria-label="Choose testimonial"></div>
+  </section>
+
+  <section id="contact" aria-labelledby="contactH">
+    <div class="contact">
+      <div class="reveal">
+        <p class="label">05 — Contact</p>
+        <h2 id="contactH" style="margin-top:14px">Let's make<br>something <em>real</em>.</h2>
+        <div class="direct">
+          <span class="label">Email</span><a href="mailto:hello@example.com">hello@example.com</a>
+          <span class="label" style="margin-top:14px">Studio</span><span>Rua das Flores 21, Lisbon</span>
+          <span class="label" style="margin-top:14px">Response time</span><span>Within 1–2 working days</span>
+        </div>
+      </div>
+      <form id="form" class="reveal" novalidate>
+        <div class="two">
+          <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="type">Project</label>
+            <select id="type" name="type"><option>Portrait</option><option>Editorial / Brand</option><option>Event / Wedding</option><option>Prints</option><option>Something else</option></select></div>
+          <div class="field"><label for="date">Preferred date</label><input id="date" name="date" type="date"></div>
+        </div>
+        <div class="field"><label for="msg">Tell me about it</label><textarea id="msg" name="msg" required></textarea></div>
+        <div><button class="btn fill" type="submit">Send enquiry</button></div>
+        <p class="status" id="status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="label">© <span id="yr"></span> Mara Lindqvist. All images copyright the photographer.</span>
+  <span><a class="label" href="#">Instagram</a><a class="label" href="#">Behance</a><a class="label" href="#">Vimeo</a></span>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="x" aria-label="Close">×</button>
+  <button class="prev" aria-label="Previous photo">‹</button>
+  <div class="lb-stage" id="lbStage"></div>
+  <button class="next" aria-label="Next photo">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+(function(){
+  /* ---------- Content: replace with real photos by adding `src` ---------- */
+  var PHOTOS = [
+    {t:"Golden Hour, Alentejo", c:"Landscape", y:2024, w:800,h:1000, p:["#f6c177","#d9663b","#3b2a3d"], s:"hills"},
+    {t:"Tomás",                  c:"Portrait",  y:2025, w:800,h:1000, p:["#cdb79e","#8a6f5a","#2a211c"], s:"portrait"},
+    {t:"Tram 28",                c:"Street",    y:2023, w:1000,h:700, p:["#e9d8a6","#ca6702","#1d2a2f"], s:"city"},
+    {t:"Salt Flats",             c:"Landscape", y:2024, w:1000,h:700, p:["#dfe7ea","#9db4bf","#4a5d6b"], s:"flat"},
+    {t:"Inês, studio",           c:"Editorial", y:2025, w:800,h:1100, p:["#e6a4a0","#a8445a","#2b1a2a"], s:"portrait"},
+    {t:"Night Market",           c:"Street",    y:2022, w:800,h:1000, p:["#ffb703","#7b2d5f","#10101e"], s:"city"},
+    {t:"Fog over Sintra",        c:"Landscape", y:2023, w:800,h:1000, p:["#c9d6cf","#7e9a8d","#2f4a42"], s:"hills"},
+    {t:"The Quartet",            c:"Editorial", y:2024, w:1000,h:700, p:["#bfc8e6","#5a6fb0","#161b3a"], s:"city"},
+    {t:"Elena & Rui",            c:"Portrait",  y:2025, w:800,h:1000, p:["#f1d5b2","#c98b5a","#3a2a22"], s:"portrait"}
+  ];
+  var QUOTES = [
+    ["Mara made a room full of nervous executives look relaxed and human. The images transformed our annual report.","Helena Vaz — Creative Director, Atlas Journal"],
+    ["She disappeared into our wedding day and somehow captured every moment we'd have missed. We cry every time we open the album.","Elena & Rui"],
+    ["Prepared, fast and endlessly calm. We had previews in our inbox before the shoot wrapped up the next morning.","Jonas Berg — Brand Manager, Kelp &amp; Co."]
+  ];
+
+  /* ---------- Procedural placeholder artwork ---------- */
+  function rng(seed){var a=seed;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  function art(ph,i){
+    if(ph.src){return '<img src="'+ph.src+'" alt="'+ph.t+'" style="width:100%;height:auto">';}
+    var w=ph.w,h=ph.h,r=rng(i*97+13),p=ph.p,g="g"+i+Math.floor(r()*1e5),o="";
+    o+='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+ph.t+' (placeholder)" preserveAspectRatio="xMidYMid slice">';
+    o+='<defs><linearGradient id="'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+p[0]+'"/><stop offset=".65" stop-color="'+p[1]+'"/><stop offset="1" stop-color="'+p[2]+'"/></linearGradient>';
+    o+='<filter id="n'+g+'"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="'+i+'"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .09 0"/></filter></defs>';
+    o+='<rect width="'+w+'" height="'+h+'" fill="url(#'+g+')"/>';
+    var sx=w*(.25+r()*.5),sy=h*(.22+r()*.15);
+    if(ph.s==="hills"||ph.s==="flat"){
+      o+='<circle cx="'+sx+'" cy="'+sy+'" r="'+w*.09+'" fill="#fff" opacity=".75"/>';
+      var layers=ph.s==="hills"?4:2;
+      for(var l=0;l<layers;l++){
+        var base=h*(.5+l*(ph.s==="hills"?.12:.2)),d="M0 "+h+" L0 "+base;
+        for(var x=0;x<=w;x+=w/8){d+=" Q "+(x+w/16)+" "+(base-r()*h*(ph.s==="hills"?.14:.03))+" "+(x+w/8)+" "+(base+(r()-.5)*h*.04)}
+        d+=" L"+w+" "+h+" Z";
+        o+='<path d="'+d+'" fill="'+p[2]+'" opacity="'+(.25+l*.22)+'"/>';
+      }
+    } else if(ph.s==="city"){
+      o+='<circle cx="'+sx+'" cy="'+sy+'" r="'+w*.06+'" fill="#fff" opacity=".6"/>';
+      for(var b=0;b<9;b++){
+        var bw=w/9,bh=h*(.25+r()*.4),bx=b*bw;
+        o+='<rect x="'+bx+'" y="'+(h-bh)+'" width="'+(bw+1)+'" height="'+bh+'" fill="'+p[2]+'" opacity="'+(.55+r()*.4)+'"/>';
+        for(var k=0;k<6;k++){if(r()>.55)o+='<rect x="'+(bx+8+(k%2)*bw*.4)+'" y="'+(h-bh+14+Math.floor(k/2)*h*.06)+'" width="'+bw*.18+'" height="'+h*.025+'" fill="#ffd98a" opacity=".85"/>'}
+      }
+    } else {
+      o+='<circle cx="'+w*.5+'" cy="'+h*.42+'" r="'+w*.15+'" fill="'+p[2]+'" opacity=".82"/>';
+      o+='<path d="M'+w*.12+' '+h+' Q'+w*.14+' '+h*.64+' '+w*.5+' '+h*.62+' Q'+w*.86+' '+h*.64+' '+w*.88+' '+h+' Z" fill="'+p[2]+'" opacity=".9"/>';
+      o+='<circle cx="'+w*.5+'" cy="'+h*.42+'" r="'+w*.2+'" fill="'+p[0]+'" opacity=".18"/>';
+    }
+    o+='<rect width="'+w+'" height="'+h+'" filter="url(#n'+g+')"/></svg>';
+    return o;
+  }
+
+  /* ---------- Gallery ---------- */
+  var grid=document.getElementById("grid"),filters=document.getElementById("filters");
+  var cats=["All"].concat(PHOTOS.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
+  var active="All",visible=[];
+  PHOTOS.forEach(function(ph,i){
+    var b=document.createElement("button");
+    b.className="tile";b.type="button";b.dataset.cat=ph.c;b.dataset.i=i;
+    b.setAttribute("aria-label","Open "+ph.t+", "+ph.c);
+    b.innerHTML=art(ph,i)+'<span class="cap"><span>'+ph.t+'</span><span>'+ph.c+' · '+ph.y+'</span></span>';
+    b.addEventListener("click",function(){openLb(visible.indexOf(i))});
+    grid.appendChild(b);
+  });
+  cats.forEach(function(c){
+    var b=document.createElement("button");b.type="button";b.textContent=c;
+    b.setAttribute("aria-pressed",c==="All");
+    b.addEventListener("click",function(){
+      active=c;
+      [].forEach.call(filters.children,function(x){x.setAttribute("aria-pressed",x===b)});
+      apply();
+    });
+    filters.appendChild(b);
+  });
+  function apply(){
+    visible=[];
+    [].forEach.call(grid.children,function(t){
+      var show=active==="All"||t.dataset.cat===active;
+      t.classList.toggle("hide",!show);
+      if(show)visible.push(+t.dataset.i);
+    });
+  }
+  apply();
+
+  /* Hero + portrait art */
+  document.getElementById("heroImg").insertAdjacentHTML("afterbegin",art({t:"Golden Hour, Alentejo",w:800,h:1000,p:["#f6c177","#d9663b","#3b2a3d"],s:"hills"},41).replace("<svg ",'<svg style="width:100%;height:100%" '));
+  document.getElementById("portrait").innerHTML=art({t:"Mara",w:600,h:800,p:["#cbbba5","#7c6a58","#241d18"],s:"portrait"},77).replace("<svg ",'<svg style="width:100%;height:100%" ');
+
+  /* ---------- Lightbox ---------- */
+  var lb=document.getElementById("lb"),stage=document.getElementById("lbStage"),cap=document.getElementById("lbCap"),idx=0,lastFocus=null;
+  function show(){
+    var i=visible[idx],ph=PHOTOS[i];
+    stage.innerHTML=art(ph,i);
+    cap.innerHTML='<div>'+ph.t+'</div><div class="label">'+ph.c+' · '+ph.y+' · '+(idx+1)+' / '+visible.length+'</div>';
+  }
+  function openLb(n){lastFocus=document.activeElement;idx=n;show();lb.classList.add("open");document.body.style.overflow="hidden";lb.querySelector(".x").focus()}
+  function closeLb(){lb.classList.remove("open");document.body.style.overflow="";if(lastFocus)lastFocus.focus()}
+  function step(d){idx=(idx+d+visible.length)%visible.length;show()}
+  lb.querySelector(".x").onclick=closeLb;
+  lb.querySelector(".prev").onclick=function(){step(-1)};
+  lb.querySelector(".next").onclick=function(){step(1)};
+  lb.addEventListener("click",function(e){if(e.target===lb)closeLb()});
+  document.addEventListener("keydown",function(e){
+    if(!lb.classList.contains("open"))return;
+    if(e.key==="Escape")closeLb();
+    if(e.key==="ArrowLeft")step(-1);
+    if(e.key==="ArrowRight")step(1);
+    if(e.key==="Tab"){ // simple focus trap
+      var f=lb.querySelectorAll("button"),first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+    }
+  });
+
+  /* ---------- Testimonials ---------- */
+  var qi=0,qt=document.getElementById("qText"),qw=document.getElementById("qWho"),dots=document.getElementById("dots"),timer;
+  QUOTES.forEach(function(_,i){
+    var d=document.createElement("button");d.type="button";d.setAttribute("aria-label","Testimonial "+(i+1));
+    d.onclick=function(){setQ(i);restart()};dots.appendChild(d);
+  });
+  function setQ(i){
+    qi=i;qt.innerHTML="“"+QUOTES[i][0]+"”";qw.innerHTML=QUOTES[i][1];
+    [].forEach.call(dots.children,function(d,k){d.setAttribute("aria-current",k===i)});
+  }
+  function restart(){clearInterval(timer);if(!matchMedia("(prefers-reduced-motion:reduce)").matches)timer=setInterval(function(){setQ((qi+1)%QUOTES.length)},7000)}
+  setQ(0);restart();
+
+  /* ---------- Nav ---------- */
+  var nav=document.getElementById("nav"),menu=document.getElementById("menu"),mb=document.getElementById("menuBtn");
+  function onScroll(){nav.classList.toggle("solid",scrollY>30)}
+  addEventListener("scroll",onScroll,{passive:true});onScroll();
+  mb.onclick=function(){var o=menu.classList.toggle("open");mb.setAttribute("aria-expanded",o)};
+  menu.addEventListener("click",function(e){if(e.target.tagName==="A"){menu.classList.remove("open");mb.setAttribute("aria-expanded",false)}});
+
+  /* ---------- Reveal on scroll ---------- */
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});
+  [].forEach.call(document.querySelectorAll(".reveal"),function(el){io.observe(el)});
+
+  /* ---------- Contact form (front-end only: opens the visitor's mail client) ---------- */
+  var form=document.getElementById("form"),st=document.getElementById("status");
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var d=new FormData(form),n=(d.get("name")||"").trim(),em=(d.get("email")||"").trim(),m=(d.get("msg")||"").trim();
+    if(!n||!/^\S+@\S+\.\S+$/.test(em)||!m){st.textContent="Please add your name, a valid email and a short message.";return}
+    var body="Name: "+n+"\nEmail: "+em+"\nProject: "+d.get("type")+"\nPreferred date: "+(d.get("date")||"flexible")+"\n\n"+m;
+    location.href="mailto:hello@example.com?subject="+encodeURIComponent("Enquiry: "+d.get("type"))+"&body="+encodeURIComponent(body);
+    st.textContent="Thanks, "+n.split(" ")[0]+"! Your email app should open with the message ready to send.";
+  });
+
+  document.getElementById("yr").textContent=new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+: I wrote the site to `/data/scratch/ai-sameness/main/work/sonnet-5.5__P3__r3.a1.hcntu5y9/index.html`. I haven't opened it in a browser, so it's untested.
+
+**What's in it**
+- **Hero** with a headline, call-to-action buttons and a featured image, followed by a stats strip.
+- **Portfolio gallery** with a masonry layout, category filters (All, Landscape, Portrait, Street, Editorial) and hover captions.
+- **Lightbox** that works with arrow keys, Esc, and a focus trap.
+- **About** section on a dark background with a kit list.
+- **Services** as four pricing cards: Portrait, Editorial & Brand, Events & Weddings, and Prints.
+- **Rotating testimonials** that advance every 7 seconds.
+- **Contact form** with validation. It opens the visitor's mail client with the enquiry filled in, because there's no backend.
+- **Responsive layout** with a mobile menu, a skip link, visible focus states, and `prefers-reduced-motion` support.
+- **Self-contained**: no external fonts, scripts or images.
+
+**Before you publish**
+- **Placeholder content:** the name "Mara Lindqvist", the Lisbon address, `hello@example.com`, the prices and the testimonials are all made up. Replace them with the photographer's real details.
+- **Placeholder photos:** the gallery art is generated SVG. Add a `src` (a relative path or data URI) to any entry in the `PHOTOS` array in the script and it will show that image instead. Keep `w` and `h` set to the image's aspect ratio.
+- **Contact form:** if you want submissions without relying on the visitor's mail app, point the form at a service like Formspree or Netlify Forms.
+- **Social links:** the footer links currently go to `#`.
+
+I can tailor the look to a specific genre, such as a darker cinematic style for weddings or a more minimal one for fine art.

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucciola — Trattoria on Alder Street</title>
+<meta name="description" content="Lucciola is a small neighborhood trattoria on Alder Street. Handmade pasta, wood-fired secondi, and a short list of good wine. Walk-ins welcome.">
+<style>
+  :root{
+    --paper:#f4ecdc;
+    --paper-2:#ebe0c9;
+    --ink:#2b2118;
+    --ink-soft:#5a4a3b;
+    --tomato:#b8361e;
+    --tomato-dark:#8f2714;
+    --olive:#5d6b3a;
+    --gold:#d9a441;
+    --line:rgba(43,33,24,.18);
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --display: "Didot","Bodoni 72","Bodoni MT","Playfair Display",Georgia,serif;
+    --sans: "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:18px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    /* subtle paper grain */
+    background-image:
+      radial-gradient(rgba(43,33,24,.035) 1px, transparent 1px),
+      radial-gradient(rgba(43,33,24,.025) 1px, transparent 1px);
+    background-size:3px 3px, 7px 7px;
+    background-position:0 0, 1px 2px;
+  }
+  a{color:inherit}
+  img,svg{display:block}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .eyebrow{
+    font-family:var(--sans);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--tomato);font-weight:600;
+  }
+  h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.05;letter-spacing:-.01em}
+  h2{font-size:clamp(2.2rem,4.5vw,3.4rem)}
+  .rule{display:flex;align-items:center;gap:14px;color:var(--tomato);margin:18px 0 28px}
+  .rule::before,.rule::after{content:"";flex:1;height:1px;background:var(--line)}
+  .btn{
+    display:inline-block;font-family:var(--sans);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:600;text-decoration:none;padding:15px 26px;border:1.5px solid var(--ink);border-radius:2px;
+    transition:background .2s,color .2s,transform .2s;cursor:pointer;background:transparent;color:var(--ink);
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-solid{background:var(--tomato);border-color:var(--tomato);color:var(--paper)}
+  .btn-solid:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+  :focus-visible{outline:2px dashed var(--tomato);outline-offset:3px}
+
+  /* ---------- Top strip ---------- */
+  .strip{
+    background:var(--ink);color:var(--paper);font-family:var(--sans);font-size:.78rem;letter-spacing:.06em;
+    text-align:center;padding:9px 16px;
+  }
+  .strip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#888;margin-right:8px;vertical-align:1px}
+  .strip .dot.open{background:#8fc46b;box-shadow:0 0 0 0 rgba(143,196,107,.7);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 7px rgba(143,196,107,0)}100%{box-shadow:0 0 0 0 rgba(143,196,107,0)}}
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:20;background:rgba(244,236,220,.92);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .logo span{font-family:var(--display);font-size:1.7rem;font-style:italic;letter-spacing:.01em}
+  .nav ul{display:flex;gap:30px;list-style:none;font-family:var(--sans);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase}
+  .nav ul a{text-decoration:none;padding:6px 0;border-bottom:1.5px solid transparent;transition:border-color .2s}
+  .nav ul a:hover{border-color:var(--tomato)}
+  .nav .btn{padding:10px 18px;font-size:.75rem}
+  @media (max-width:820px){ .nav ul{display:none} }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:72px 0 96px;position:relative;overflow:hidden}
+  .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(3rem,7.5vw,6.2rem);margin:18px 0 26px}
+  .hero h1 em{color:var(--tomato);font-style:italic}
+  .hero p.lede{font-size:1.2rem;color:var(--ink-soft);max-width:34ch;margin-bottom:34px}
+  .hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+  .hero .meta{display:flex;gap:28px;margin-top:44px;font-family:var(--sans);font-size:.82rem;color:var(--ink-soft)}
+  .hero .meta strong{display:block;font-family:var(--display);font-size:1.6rem;color:var(--ink);font-weight:400}
+
+  /* Chalkboard specials */
+  .board{
+    position:relative;background:#26302a;color:#efe9da;padding:38px 34px 34px;border-radius:4px;
+    border:12px solid #7a5434;
+    box-shadow: inset 0 0 60px rgba(0,0,0,.45), 0 22px 40px -18px rgba(43,33,24,.55);
+    transform:rotate(1.4deg);
+    background-image:radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.07), transparent 60%);
+  }
+  .board::before{ /* nail + string */
+    content:"";position:absolute;top:-62px;left:50%;width:2px;height:58px;background:#6b5a48;transform:translateX(-50%) rotate(-1.4deg);
+  }
+  .board h3{font-family:"Bradley Hand","Segoe Print","Comic Sans MS",cursive;font-size:1.9rem;text-align:center;margin-bottom:4px}
+  .board .date{text-align:center;font-family:var(--sans);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;opacity:.65;margin-bottom:22px}
+  .board ul{list-style:none}
+  .board li{
+    display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px dashed rgba(239,233,218,.25);
+    font-family:"Bradley Hand","Segoe Print","Comic Sans MS",cursive;font-size:1.08rem;line-height:1.35;
+  }
+  .board li:last-child{border-bottom:0}
+  .board li small{display:block;font-family:var(--serif);font-style:italic;font-size:.8rem;opacity:.7}
+  .board .price{color:var(--gold);white-space:nowrap}
+  .board .chalk-note{margin-top:16px;text-align:center;font-family:"Bradley Hand","Segoe Print",cursive;font-size:.95rem;opacity:.8}
+
+  .sprig{position:absolute;opacity:.18;pointer-events:none}
+  @media (max-width:900px){
+    .hero .wrap{grid-template-columns:1fr}
+    .board{max-width:440px;margin:40px auto 0}
+  }
+
+  /* ---------- Marquee ---------- */
+  .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--paper-2)}
+  .marquee .track{display:flex;gap:48px;white-space:nowrap;padding:16px 0;animation:scroll 40s linear infinite;width:max-content}
+  .marquee span{font-family:var(--display);font-style:italic;font-size:1.5rem;color:var(--ink-soft)}
+  .marquee span.star{color:var(--tomato);font-style:normal}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){ .marquee .track,.strip .dot.open{animation:none} }
+
+  /* ---------- Story ---------- */
+  section{padding:110px 0}
+  .story .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:center}
+  .frame{
+    position:relative;aspect-ratio:4/5;background:var(--tomato);border-radius:200px 200px 4px 4px;overflow:hidden;
+    box-shadow:0 30px 50px -30px rgba(43,33,24,.6);
+  }
+  .frame svg{width:100%;height:100%}
+  .story p{margin-bottom:18px;color:var(--ink-soft)}
+  .story p:first-of-type::first-letter{
+    font-family:var(--display);float:left;font-size:4.4rem;line-height:.8;padding:8px 10px 0 0;color:var(--tomato);
+  }
+  .signature{font-family:"Bradley Hand","Segoe Script","Brush Script MT",cursive;font-size:1.7rem;color:var(--ink);margin-top:10px}
+  @media (max-width:900px){ .story .wrap{grid-template-columns:1fr} .frame{max-width:380px;margin:0 auto} }
+
+  /* ---------- Menu ---------- */
+  .menu{background:var(--ink);color:var(--paper);position:relative}
+  .menu .eyebrow{color:var(--gold)}
+  .menu .rule{color:var(--gold)}
+  .menu .rule::before,.menu .rule::after{background:rgba(244,236,220,.2)}
+  .menu-head{text-align:center;max-width:620px;margin:0 auto 20px}
+  .menu-head p{color:rgba(244,236,220,.7);font-style:italic}
+  .tabs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:36px 0 54px}
+  .tab{
+    font-family:var(--sans);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+    background:transparent;color:rgba(244,236,220,.65);border:1px solid rgba(244,236,220,.22);padding:11px 20px;border-radius:40px;cursor:pointer;
+    transition:all .2s;
+  }
+  .tab:hover{color:var(--paper);border-color:rgba(244,236,220,.5)}
+  .tab[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .panel{display:grid;grid-template-columns:1fr 1fr;gap:8px 64px;max-width:960px;margin:0 auto}
+  .panel[hidden]{display:none}
+  .dish{padding:18px 0;border-bottom:1px solid rgba(244,236,220,.12)}
+  .dish .top{display:flex;align-items:baseline;gap:10px}
+  .dish h4{font-family:var(--display);font-weight:400;font-size:1.35rem;letter-spacing:.005em}
+  .dish .dots{flex:1;border-bottom:1.5px dotted rgba(244,236,220,.3);transform:translateY(-5px)}
+  .dish .p{font-family:var(--sans);font-weight:600;color:var(--gold);font-size:.95rem}
+  .dish p{font-size:.95rem;color:rgba(244,236,220,.65);font-style:italic;margin-top:3px}
+  .tag{
+    display:inline-block;font-family:var(--sans);font-style:normal;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:2px 7px;border-radius:2px;margin-left:6px;vertical-align:3px;border:1px solid currentColor;
+  }
+  .tag.v{color:#a9bb7a}.tag.n{color:var(--gold)}
+  .menu-foot{text-align:center;margin-top:52px;font-family:var(--sans);font-size:.8rem;color:rgba(244,236,220,.55);letter-spacing:.04em}
+  @media (max-width:760px){ .panel{grid-template-columns:1fr} }
+
+  /* ---------- Quotes ---------- */
+  .voices .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:20px}
+  .card{
+    background:#fffaf0;padding:32px 28px;border:1px solid var(--line);position:relative;
+    box-shadow:0 1px 0 var(--line), 0 18px 30px -24px rgba(43,33,24,.4);
+  }
+  .card:nth-child(1){transform:rotate(-.8deg)}
+  .card:nth-child(3){transform:rotate(.7deg)}
+  .card::before{content:"\201C";position:absolute;top:-6px;left:20px;font-family:var(--display);font-size:5rem;color:var(--tomato);line-height:1}
+  .card blockquote{font-size:1.06rem;margin-top:22px;margin-bottom:18px}
+  .card cite{font-family:var(--sans);font-style:normal;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .center{text-align:center}
+  @media (max-width:860px){ .voices .grid{grid-template-columns:1fr} .card{transform:none!important} }
+
+  /* ---------- Visit ---------- */
+  .visit{background:var(--paper-2);border-top:1px solid var(--line)}
+  .visit .wrap{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+  .hours{list-style:none;margin:22px 0 34px;font-family:var(--sans);font-size:.95rem}
+  .hours li{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}
+  .hours li.today{color:var(--tomato);font-weight:600}
+  .hours li.today::before{content:"→";margin-right:8px}
+  .hours li span:first-child{flex:1}
+  .addr{font-size:1.15rem;margin-bottom:6px}
+  .small{font-family:var(--sans);font-size:.85rem;color:var(--ink-soft)}
+  .map{
+    margin-top:26px;border:1px solid var(--line);background:#efe5cf;border-radius:3px;overflow:hidden;aspect-ratio:16/9
+  }
+  .map svg{width:100%;height:100%}
+
+  form.reserve{
+    background:var(--paper);border:1px solid var(--line);padding:38px 34px;border-radius:3px;
+    box-shadow:0 26px 40px -30px rgba(43,33,24,.5);
+  }
+  form h3{font-size:2rem;margin-bottom:6px}
+  form .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  label{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:18px 0 6px}
+  input,select,textarea{
+    width:100%;font:inherit;font-size:1rem;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--line);
+    padding:8px 2px;border-radius:0;transition:border-color .2s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tomato)}
+  textarea{resize:vertical;min-height:70px}
+  form .btn{width:100%;margin-top:28px}
+  .form-msg{margin-top:16px;font-style:italic;color:var(--olive);min-height:1.6em}
+  @media (max-width:900px){ .visit .wrap{grid-template-columns:1fr} }
+  @media (max-width:480px){ form .row{grid-template-columns:1fr} }
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--ink);color:rgba(244,236,220,.7);padding:64px 0 34px;font-family:var(--sans);font-size:.85rem}
+  footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+  footer .logo span{color:var(--paper);font-size:2.2rem}
+  footer h5{color:var(--paper);letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;margin-bottom:12px}
+  footer a{text-decoration:none}footer a:hover{color:var(--paper)}
+  footer .bottom{grid-column:1/-1;border-top:1px solid rgba(244,236,220,.12);padding-top:22px;margin-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.75rem}
+  @media (max-width:760px){ footer .wrap{grid-template-columns:1fr} }
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none} }
+</style>
+</head>
+<body>
+
+<div class="strip" role="status"><span class="dot" id="statusDot"></span><span id="statusText">Walk-ins always welcome · 418 Alder Street</span></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="Lucciola home">
+      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="22" r="9" fill="#d9a441" opacity=".35"/>
+        <circle cx="20" cy="22" r="4.5" fill="#d9a441"/>
+        <path d="M20 17 C14 8, 6 10, 9 16 C11 19, 16 18, 20 17 Z" fill="none" stroke="#2b2118" stroke-width="1.6"/>
+        <path d="M20 17 C26 8, 34 10, 31 16 C29 19, 24 18, 20 17 Z" fill="none" stroke="#2b2118" stroke-width="1.6"/>
+      </svg>
+      <span>Lucciola</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#visit">Hours &amp; Visit</a></li>
+      </ul>
+    </nav>
+    <a href="#reserve" class="btn btn-solid">Reserve</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-top:72px">
+    <svg class="sprig" style="right:-60px;top:20px" width="320" height="320" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M10 90 Q50 50 90 10" stroke="#5d6b3a" stroke-width="1.2" fill="none"/>
+      <g fill="#5d6b3a">
+        <ellipse cx="30" cy="68" rx="9" ry="4" transform="rotate(-60 30 68)"/>
+        <ellipse cx="42" cy="66" rx="9" ry="4" transform="rotate(20 42 66)"/>
+        <ellipse cx="48" cy="50" rx="9" ry="4" transform="rotate(-60 48 50)"/>
+        <ellipse cx="60" cy="48" rx="9" ry="4" transform="rotate(20 60 48)"/>
+        <ellipse cx="66" cy="32" rx="9" ry="4" transform="rotate(-60 66 32)"/>
+        <ellipse cx="78" cy="30" rx="9" ry="4" transform="rotate(20 78 30)"/>
+      </g>
+    </svg>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">Trattoria · Est. 2009 · Alder Street</div>
+        <h1>Pasta rolled <em>this morning.</em><br>A table waiting tonight.</h1>
+        <p class="lede">Twelve tables, one wood oven, and a kitchen that still makes every noodle by hand. Come as you are — we'll pour you something nice.</p>
+        <div class="ctas">
+          <a href="#reserve" class="btn btn-solid">Book a table</a>
+          <a href="#menu" class="btn btn-ghost">See the menu</a>
+        </div>
+        <div class="meta">
+          <div><strong>12</strong>tables</div>
+          <div><strong>9</strong>fresh pastas</div>
+          <div><strong>17</strong>years on Alder</div>
+        </div>
+      </div>
+
+      <aside class="board reveal" aria-label="Tonight's specials">
+        <h3>Stasera</h3>
+        <div class="date" id="boardDate">Tonight's specials</div>
+        <ul>
+          <li><span>Pumpkin cappellacci<small>brown butter, sage, amaretti crumb</small></span><span class="price">24</span></li>
+          <li><span>Braised short rib<small>soft polenta, gremolata</small></span><span class="price">34</span></li>
+          <li><span>Burrata &amp; roasted grapes<small>saba, grilled bread</small></span><span class="price">16</span></li>
+          <li><span>Olive oil cake<small>whipped mascarpone, blood orange</small></span><span class="price">11</span></li>
+        </ul>
+        <div class="chalk-note">ask about the wine Marco's hiding ✦</div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>Tagliatelle al ragù</span><span class="star">✦</span>
+      <span>Cacio e pepe</span><span class="star">✦</span>
+      <span>Wood-fired branzino</span><span class="star">✦</span>
+      <span>Tiramisù della nonna</span><span class="star">✦</span>
+      <span>Negroni on tap</span><span class="star">✦</span>
+      <span>Sunday supper</span><span class="star">✦</span>
+      <span>Tagliatelle al ragù</span><span class="star">✦</span>
+      <span>Cacio e pepe</span><span class="star">✦</span>
+      <span>Wood-fired branzino</span><span class="star">✦</span>
+      <span>Tiramisù della nonna</span><span class="star">✦</span>
+      <span>Negroni on tap</span><span class="star">✦</span>
+      <span>Sunday supper</span><span class="star">✦</span>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <section id="story" class="story">
+    <div class="wrap">
+      <div class="frame reveal" aria-hidden="true">
+        <!-- Illustrated window: string lights, table, wine, pasta -->
+        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="500" fill="#b8361e"/>
+          <rect y="300" width="400" height="200" fill="#8f2714"/>
+          <!-- string lights -->
+          <path d="M-10 70 Q100 130 200 80 T410 90" stroke="#2b2118" stroke-width="1.5" fill="none"/>
+          <g fill="#f6d27a">
+            <circle cx="30" cy="88" r="7"/><circle cx="85" cy="106" r="7"/><circle cx="140" cy="103" r="7"/>
+            <circle cx="200" cy="80" r="7"/><circle cx="260" cy="70" r="7"/><circle cx="320" cy="80" r="7"/><circle cx="375" cy="88" r="7"/>
+          </g>
+          <g fill="#f6d27a" opacity=".22">
+            <circle cx="30" cy="88" r="18"/><circle cx="85" cy="106" r="18"/><circle cx="140" cy="103" r="18"/>
+            <circle cx="200" cy="80" r="18"/><circle cx="260" cy="70" r="18"/><circle cx="320" cy="80" r="18"/><circle cx="375" cy="88" r="18"/>
+          </g>
+          <!-- table -->
+          <ellipse cx="200" cy="360" rx="170" ry="46" fill="#f4ecdc"/>
+          <!-- checkered cloth edge -->
+          <g fill="#b8361e" opacity=".85">
+            <rect x="60" y="340" width="20" height="14"/><rect x="100" y="340" width="20" height="14"/><rect x="140" y="340" width="20" height="14"/>
+            <rect x="180" y="340" width="20" height="14"/><rect x="220" y="340" width="20" height="14"/><rect x="260" y="340" width="20" height="14"/><rect x="300" y="340" width="20" height="14"/>
+            <rect x="80" y="362" width="20" height="14"/><rect x="120" y="362" width="20" height="14"/><rect x="160" y="362" width="20" height="14"/>
+            <rect x="200" y="362" width="20" height="14"/><rect x="240" y="362" width="20" height="14"/><rect x="280" y="362" width="20" height="14"/>
+          </g>
+          <!-- plate of pasta -->
+          <ellipse cx="185" cy="335" rx="62" ry="17" fill="#fffaf0" stroke="#2b2118" stroke-width="1.5"/>
+          <path d="M150 333 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0" stroke="#d9a441" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M158 328 q12 -14 24 0 q12 -14 24 0" stroke="#e6b85a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="180" cy="322" r="4" fill="#b8361e"/><circle cx="196" cy="326" r="3" fill="#5d6b3a"/>
+          <!-- wine bottle -->
+          <path d="M286 230 h16 v30 q16 10 16 30 v62 h-48 v-62 q0 -20 16 -30z" fill="#2b2118"/>
+          <rect x="274" y="296" width="40" height="30" fill="#f4ecdc"/>
+          <text x="294" y="316" font-family="Georgia" font-style="italic" font-size="11" text-anchor="middle" fill="#2b2118">Rosso</text>
+          <!-- glass -->
+          <path d="M108 268 q0 30 18 34 q18 -4 18 -34z" fill="none" stroke="#fffaf0" stroke-width="2"/>
+          <path d="M110 285 q4 14 16 17 q12 -3 16 -17z" fill="#6d1a10"/>
+          <line x1="126" y1="302" x2="126" y2="336" stroke="#fffaf0" stroke-width="2"/>
+          <line x1="114" y1="337" x2="138" y2="337" stroke="#fffaf0" stroke-width="2"/>
+          <!-- candle -->
+          <rect x="232" y="300" width="9" height="30" fill="#f4ecdc"/>
+          <path d="M236.5 286 q6 8 0 14 q-6 -6 0 -14z" fill="#f6d27a"/>
+          <circle cx="236.5" cy="294" r="20" fill="#f6d27a" opacity=".18"/>
+        </svg>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow">Our Story</div>
+        <h2>A small room that feels like Sunday at a friend's house.</h2>
+        <div class="rule">✦</div>
+        <p>Lucciola means "firefly." It's what Marco's grandmother called the string lights she hung over her garden table in Emilia-Romagna — the table where half the village ended up on summer nights, plates passed hand to hand.</p>
+        <p>We opened on Alder Street in 2009 with borrowed chairs and a pasta machine that came over in a suitcase. The chairs are ours now. The machine still works. Our neighbors have become regulars, and our regulars have become family.</p>
+        <p>We cook what's good this week from the farms up the valley, we roll every pasta in-house each morning, and we keep the prices fair so you can come back on a Tuesday.</p>
+        <div class="signature">— Marco &amp; Elena Bellini</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="menu">
+    <div class="wrap">
+      <div class="menu-head reveal">
+        <div class="eyebrow">Il Menù</div>
+        <h2>Short, seasonal, made by hand.</h2>
+        <div class="rule">✦</div>
+        <p>Our menu changes with the market. Here's a taste of what's on right now.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Menu sections">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="p-anti" id="t-anti">Antipasti</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-pasta" id="t-pasta" tabindex="-1">Pasta</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-sec" id="t-sec" tabindex="-1">Secondi</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-dolci" id="t-dolci" tabindex="-1">Dolci</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-bere" id="t-bere" tabindex="-1">Da Bere</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-anti" aria-labelledby="t-anti">
+        <div class="dish"><div class="top"><h4>Focaccia della casa</h4><span class="dots"></span><span class="p">7</span></div><p>rosemary, flaky salt, our olive oil <span class="tag v">V</span></p></div>
+        <div class="dish"><div class="top"><h4>Arancini</h4><span class="dots"></span><span class="p">12</span></div><p>saffron risotto, fontina, spicy tomato <span class="tag v">V</span></p></div>
+        <div class="dish"><div class="top"><h4>Vitello tonnato</h4><span class="dots"></span><span class="p">17</span></div><p>thin-sliced veal, tuna aioli, capers</p></div>
+        <div class="dish"><div class="top"><h4>Insalata di radicchio</h4><span class="dots"></span><span class="p">14</span></div><p>pear, walnut, gorgonzola dolce <span class="tag n">Nuts</span></p></div>
+        <div class="dish"><div class="top"><h4>Polpette</h4><span class="dots"></span><span class="p">15</span></div><p>pork &amp; beef meatballs, sugo, pecorino</p></div>
+        <div class="dish"><div class="top"><h4>Salumi board</h4><span class="dots"></span><span class="p">22</span></div><p>prosciutto, mortadella, finocchiona, gnocco fritto</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-pasta" aria-labelledby="t-pasta" hidden>
+        <div class="dish"><div class="top"><h4>Tagliatelle al ragù</h4><span class="dots"></span><span class="p">25</span></div><p>Nonna Pia's Bolognese, six hours slow</p></div>
+        <div class="dish"><div class="top"><h4>Cacio e pepe</h4><span class="dots"></span><span class="p">21</span></div><p>tonnarelli, pecorino romano, cracked pepper <span class="tag v">V</span></p></div>
+        <div class="dish"><div class="top"><h4>Tortellini in brodo</h4><span class="dots"></span><span class="p">23</span></div><p>pork &amp; parmigiano filling, capon broth</p></div>
+        <div class="dish"><div class="top"><h4>Spaghetti alle vongole</h4><span class="dots"></span><span class="p">27</span></div><p>littleneck clams, garlic, chili, white wine</p></div>
+        <div class="dish"><div class="top"><h4>Ricotta gnudi</h4><span class="dots"></span><span class="p">22</span></div><p>brown butter, crispy sage, lemon <span class="tag v">V</span></p></div>
+        <div class="dish"><div class="top"><h4>Pappardelle</h4><span class="dots"></span><span class="p">26</span></div><p>wild mushroom, thyme, mascarpone <span class="tag v">V</span></p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-sec" aria-labelledby="t-sec" hidden>
+        <div class="dish"><div class="top"><h4>Branzino al forno</h4><span class="dots"></span><span class="p">36</span></div><p>whole wood-roasted, salsa verde, charred lemon</p></div>
+        <div class="dish"><div class="top"><h4>Pollo al mattone</h4><span class="dots"></span><span class="p">31</span></div><p>brick-pressed half chicken, rosemary potatoes</p></div>
+        <div class="dish"><div class="top"><h4>Bistecca</h4><span class="dots"></span><span class="p">58</span></div><p>dry-aged ribeye for two, arugula, parmigiano</p></div>
+        <div class="dish"><div class="top"><h4>Melanzane parmigiana</h4><span class="dots"></span><span class="p">26</span></div><p>layered eggplant, basil, fior di latte <span class="tag v">V</span></p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-dolci" aria-labelledby="t-dolci" hidden>
+        <div class="dish"><div class="top"><h4>Tiramisù della nonna</h4><span class="dots"></span><span class="p">11</span></div><p>espresso-soaked savoiardi, mascarpone, cocoa</p></div>
+        <div class="dish"><div class="top"><h4>Panna cotta</h4><span class="dots"></span><span class="p">10</span></div><p>vanilla bean, seasonal fruit, honey</p></div>
+        <div class="dish"><div class="top"><h4>Cannoli</h4><span class="dots"></span><span class="p">9</span></div><p>sheep's milk ricotta, pistachio, candied orange <span class="tag n">Nuts</span></p></div>
+        <div class="dish"><div class="top"><h4>Affogato</h4><span class="dots"></span><span class="p">8</span></div><p>fior di latte gelato, a shot of espresso</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-bere" aria-labelledby="t-bere" hidden>
+        <div class="dish"><div class="top"><h4>Negroni on tap</h4><span class="dots"></span><span class="p">13</span></div><p>gin, Campari, sweet vermouth — batched daily</p></div>
+        <div class="dish"><div class="top"><h4>Aperol spritz</h4><span class="dots"></span><span class="p">12</span></div><p>Aperol, prosecco, soda, orange</p></div>
+        <div class="dish"><div class="top"><h4>Lambrusco di Sorbara</h4><span class="dots"></span><span class="p">12 / 44</span></div><p>glass / bottle — dry, bright, bubbly</p></div>
+        <div class="dish"><div class="top"><h4>House rosso</h4><span class="dots"></span><span class="p">10 / 36</span></div><p>Sangiovese from a friend in Romagna</p></div>
+        <div class="dish"><div class="top"><h4>Limoncello</h4><span class="dots"></span><span class="p">8</span></div><p>made in-house, served ice cold</p></div>
+        <div class="dish"><div class="top"><h4>Espresso</h4><span class="dots"></span><span class="p">4</span></div><p>or a cappuccino, if you must — we won't judge</p></div>
+      </div>
+
+      <p class="menu-foot"><span class="tag v" style="margin:0 4px 0 0">V</span> vegetarian · Gluten-free pasta available on request · Please tell us about any allergies</p>
+    </div>
+  </section>
+
+  <!-- VOICES -->
+  <section class="voices">
+    <div class="wrap">
+      <div class="center reveal">
+        <div class="eyebrow">From the Neighborhood</div>
+        <h2>What our regulars say</h2>
+        <div class="rule" style="max-width:360px;margin-left:auto;margin-right:auto">✦</div>
+      </div>
+      <div class="grid">
+        <figure class="card reveal">
+          <blockquote>We've had our anniversary dinner here eleven years running. Elena remembers our order before we sit down.</blockquote>
+          <cite>— Dana &amp; Luis, two blocks over</cite>
+        </figure>
+        <figure class="card reveal">
+          <blockquote>The tagliatelle ruined every other ragù for me. I walk past twice a week and it takes real willpower not to go in.</blockquote>
+          <cite>— Priya K., Alder &amp; 5th</cite>
+        </figure>
+        <figure class="card reveal">
+          <blockquote>Brought my kids on a Tuesday, the cook made them tiny buttered pasta and taught them to say "grazie." Instant regulars.</blockquote>
+          <cite>— Tom W., Hillcrest</cite>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT + RESERVE -->
+  <section id="visit" class="visit">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">Hours &amp; Visit</div>
+        <h2>Come find us.</h2>
+        <div class="rule">✦</div>
+        <p class="addr">418 Alder Street<br>Between 4th &amp; 5th, look for the string lights</p>
+        <p class="small"><a href="tel:+15550148820">(555) 014-8820</a> · <a href="mailto:ciao@lucciola.example">ciao@lucciola.example</a></p>
+
+        <ul class="hours" id="hours">
+          <li data-day="1"><span>Monday</span><span>Closed</span></li>
+          <li data-day="2"><span>Tuesday</span><span>5:00 – 10:00 pm</span></li>
+          <li data-day="3"><span>Wednesday</span><span>5:00 – 10:00 pm</span></li>
+          <li data-day="4"><span>Thursday</span><span>5:00 – 10:00 pm</span></li>
+          <li data-day="5"><span>Friday</span><span>5:00 – 11:00 pm</span></li>
+          <li data-day="6"><span>Saturday</span><span>4:00 – 11:00 pm</span></li>
+          <li data-day="0"><span>Sunday Supper</span><span>3:00 – 9:00 pm</span></li>
+        </ul>
+
+        <div class="map" aria-label="Map showing Lucciola on Alder Street between 4th and 5th">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <rect width="320" height="180" fill="#efe5cf"/>
+            <g fill="#e2d5b8">
+              <rect x="10" y="10" width="80" height="55" rx="3"/><rect x="110" y="10" width="95" height="55" rx="3"/><rect x="225" y="10" width="85" height="55" rx="3"/>
+              <rect x="10" y="115" width="80" height="55" rx="3"/><rect x="110" y="115" width="95" height="55" rx="3"/><rect x="225" y="115" width="85" height="55" rx="3"/>
+            </g>
+            <rect x="248" y="125" width="50" height="35" rx="3" fill="#cdd3a8"/>
+            <text x="273" y="146" font-family="sans-serif" font-size="7" fill="#5d6b3a" text-anchor="middle">Alder Park</text>
+            <g stroke="#fffaf0" stroke-width="18"><line x1="0" y1="90" x2="320" y2="90"/><line x1="100" y1="0" x2="100" y2="180"/><line x1="215" y1="0" x2="215" y2="180"/></g>
+            <g font-family="sans-serif" font-size="8" fill="#5a4a3b" letter-spacing="1">
+              <text x="20" y="93">ALDER ST</text>
+              <text x="103" y="176" transform="rotate(-90 103 176)">4TH AVE</text>
+              <text x="218" y="176" transform="rotate(-90 218 176)">5TH AVE</text>
+            </g>
+            <g transform="translate(158 66)">
+              <circle r="16" fill="#b8361e" opacity=".18"/>
+              <path d="M0 14 C-9 2 -10 -3 -10 -6 A10 10 0 0 1 10 -6 C10 -3 9 2 0 14Z" fill="#b8361e"/>
+              <circle cy="-6" r="3.5" fill="#f4ecdc"/>
+            </g>
+          </svg>
+        </div>
+        <p class="small" style="margin-top:12px">Street parking on Alder · Bike rack out front · Step-free entrance</p>
+      </div>
+
+      <form class="reserve reveal" id="reserve" novalidate>
+        <div class="eyebrow">Prenota</div>
+        <h3>Reserve a table</h3>
+        <p class="small">For parties of 7 or more, please give us a call.</p>
+        <div class="row">
+          <div><label for="name">Name</label><input id="name" name="name" autocomplete="name" required></div>
+          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+        </div>
+        <div class="row">
+          <div><label for="date">Date</label><input id="date" name="date" type="date" required></div>
+          <div><label for="time">Time</label>
+            <select id="time" name="time" required>
+              <option value="">Choose…</option>
+              <option>5:00 pm</option><option>5:30 pm</option><option>6:00 pm</option><option>6:30 pm</option>
+              <option>7:00 pm</option><option>7:30 pm</option><option>8:00 pm</option><option>8:30 pm</option><option>9:00 pm</option>
+            </select>
+          </div>
+        </div>
+        <label for="party">Party size</label>
+        <select id="party" name="party" required>
+          <option value="2">2 guests</option><option value="1">1 guest</option><option value="3">3 guests</option>
+          <option value="4">4 guests</option><option value="5">5 guests</option><option value="6">6 guests</option>
+        </select>
+        <label for="notes">Anything we should know?</label>
+        <textarea id="notes" name="notes" placeholder="Birthday, allergies, a favorite table…"></textarea>
+        <button type="submit" class="btn btn-solid">Request reservation</button>
+        <p class="form-msg" id="formMsg" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a href="#top" class="logo"><span>Lucciola</span></a>
+      <p style="margin-top:10px;max-width:32ch">A neighborhood trattoria on Alder Street. Handmade pasta, wood-fired cooking, and a warm seat since 2009.</p>
+    </div>
+    <div>
+      <h5>Visit</h5>
+      <p>418 Alder Street<br>(555) 014-8820<br>Tue – Sun from 5 pm</p>
+    </div>
+    <div>
+      <h5>Follow along</h5>
+      <p><a href="#">Instagram</a><br><a href="#">Newsletter</a><br><a href="#">Gift cards</a></p>
+    </div>
+    <div class="bottom">
+      <span>© <span id="yr">2026</span> Lucciola Trattoria</span>
+      <span>Grazie for supporting a local, family-run kitchen.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Hours: [open, close] in 24h decimal; null = closed. Index = getDay()
+  const hours = {0:[15,21],1:null,2:[17,22],3:[17,22],4:[17,22],5:[17,23],6:[16,23]};
+  const now = new Date(), day = now.getDay(), t = now.getHours() + now.getMinutes()/60;
+  const fmt = h => { const hr = Math.floor(h)%12||12, m = Math.round((h%1)*60); return hr + (m?':'+String(m).padStart(2,'0'):'') + (h>=12?' pm':' am'); };
+
+  document.querySelector(`#hours li[data-day="${day}"]`)?.classList.add('today');
+  document.getElementById('yr').textContent = now.getFullYear();
+  document.getElementById('boardDate').textContent =
+    now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  const dot = document.getElementById('statusDot'), txt = document.getElementById('statusText');
+  const today = hours[day];
+  if (today && t >= today[0] && t < today[1]) {
+    dot.classList.add('open');
+    txt.textContent = `Open now until ${fmt(today[1])} · Walk-ins welcome · 418 Alder Street`;
+  } else if (today && t < today[0]) {
+    txt.textContent = `Opening today at ${fmt(today[0])} · 418 Alder Street`;
+  } else {
+    let d = (day+1)%7; while(!hours[d]) d=(d+1)%7;
+    const name = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d];
+    txt.textContent = `Closed now · Back ${d===(day+1)%7?'tomorrow':name} at ${fmt(hours[d][0])} · 418 Alder Street`;
+  }
+
+  // Menu tabs (with arrow-key support)
+  const tabs = [...document.querySelectorAll('.tab')];
+  function select(tab){
+    tabs.forEach(t=>{
+      const on = t===tab;
+      t.setAttribute('aria-selected', on); t.tabIndex = on?0:-1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    tab.focus();
+  }
+  tabs.forEach((tab,i)=>{
+    tab.addEventListener('click',()=>select(tab));
+    tab.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight') select(tabs[(i+1)%tabs.length]);
+      if(e.key==='ArrowLeft') select(tabs[(i-1+tabs.length)%tabs.length]);
+    });
+  });
+
+  // Reservation form (front-end only)
+  const form = document.getElementById('reserve'), msg = document.getElementById('formMsg');
+  const dateIn = document.getElementById('date');
+  const iso = d => d.toISOString().slice(0,10);
+  dateIn.min = iso(new Date(now.getTime() - now.getTimezoneOffset()*60000));
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const missing = [...form.querySelectorAll('[required]')].find(el=>!el.value.trim());
+    if (missing){ msg.style.color='var(--tomato)'; msg.textContent='Please fill in your name, phone, date and time.'; missing.focus(); return; }
+    const d = new Date(dateIn.value+'T12:00');
+    if (!hours[d.getDay()]) { msg.style.color='var(--tomato)'; msg.textContent="We're closed Mondays — try another day?"; dateIn.focus(); return; }
+    const name = form.name.value.trim().split(' ')[0];
+    const when = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    msg.style.color='var(--olive)';
+    msg.textContent = `Grazie, ${name}! We've got you down for ${form.party.value} on ${when} at ${form.time.value}. We'll text to confirm.`;
+    form.reset();
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} }),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

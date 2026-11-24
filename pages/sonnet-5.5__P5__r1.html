@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiln — project management with a lid on it</title>
+<meta name="description" content="Kiln is project management for small teams that want to finish things. Fixed-length cycles, one owner per task, honest estimates.">
+<style>
+  :root {
+    --paper: #f2eee4;
+    --paper-2: #e9e3d4;
+    --ink: #1d1b18;
+    --muted: #675f52;
+    --line: #d3cbb8;
+    --kiln: #b83c14;
+    --kiln-dark: #8f2d0e;
+    --glaze: #2c5a4d;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--kiln); outline-offset: 3px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  .label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* nav */
+  header.top { border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .mark { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 24px; font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
+  .mark i { display: block; width: 18px; height: 22px; background: var(--kiln); border-radius: 9px 9px 1px 1px; position: relative; }
+  .mark i::after { content: ""; position: absolute; left: 5px; bottom: 0; width: 8px; height: 8px; background: var(--paper); border-radius: 4px 4px 0 0; }
+  nav ul { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; align-items: center; font-size: 15px; }
+  nav a { text-decoration: none; }
+  nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .btn {
+    display: inline-block; padding: 11px 20px; background: var(--ink); color: var(--paper);
+    text-decoration: none; font-size: 15px; font-weight: 600; border: 1px solid var(--ink);
+    border-radius: 3px; transition: background .15s, transform .15s;
+  }
+  .btn:hover { background: var(--kiln); border-color: var(--kiln); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  nav .btn:hover { text-decoration: none; }
+
+  /* hero */
+  .hero { padding: 84px 0 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: start; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(42px, 6.2vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -.025em;
+    margin: 18px 0 26px;
+  }
+  h1 em { font-style: italic; color: var(--kiln); }
+  .lede { font-size: 20px; max-width: 30em; color: #3a352d; margin: 0 0 32px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .fine { margin-top: 18px; font-size: 14px; color: var(--muted); }
+
+  /* product mock */
+  .mock {
+    background: #fbf9f3;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 var(--ink);
+    font-size: 14px;
+    position: relative;
+  }
+  .mock-bar { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .mock-bar strong { font-family: var(--serif); font-size: 18px; }
+  .days { font-family: var(--mono); font-size: 12px; color: var(--kiln-dark); }
+  .progress { height: 6px; background: var(--paper-2); }
+  .progress span { display: block; height: 100%; background: var(--glaze); width: 0; transition: width .3s ease; }
+  .tasks { list-style: none; margin: 0; padding: 6px 0; }
+  .tasks li { border-bottom: 1px dashed var(--line); }
+  .tasks li:last-child { border-bottom: 0; }
+  .tasks label { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; padding: 10px 18px; cursor: pointer; }
+  .tasks label:hover { background: #f4f0e4; }
+  .tasks input { appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--ink); border-radius: 2px; margin: 0; display: grid; place-items: center; cursor: pointer; background: #fff; }
+  .tasks input:checked { background: var(--glaze); border-color: var(--glaze); }
+  .tasks input:checked::after { content: ""; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px,-1px); }
+  .tasks input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: #9a917f; }
+  .who { font-family: var(--mono); font-size: 11px; width: 26px; height: 26px; border: 1px solid var(--ink); border-radius: 50%; display: grid; place-items: center; background: var(--paper); }
+  .decide { border-top: 1px solid var(--ink); background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(184,60,20,.06) 8px 16px); padding: 12px 18px 14px; }
+  .decide .label { color: var(--kiln-dark); }
+  .decide p { margin: 4px 0 0; font-size: 13px; color: #3a352d; }
+  .stamp {
+    position: absolute; right: -14px; top: -22px; transform: rotate(5deg);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    border: 2px solid var(--kiln); color: var(--kiln); padding: 5px 10px; background: var(--paper); border-radius: 2px;
+  }
+
+  /* sections */
+  section { padding: 88px 0; border-top: 1px solid var(--line); }
+  h2 { font-family: var(--serif); font-size: clamp(30px, 4vw, 46px); line-height: 1.08; letter-spacing: -.02em; margin: 14px 0 0; max-width: 16em; }
+  .split { display: grid; grid-template-columns: 5fr 7fr; gap: 56px; }
+  .split > div:first-child { position: sticky; top: 28px; align-self: start; }
+
+  /* opinions list */
+  .opinions { list-style: none; margin: 0; padding: 0; counter-reset: op; }
+  .opinions li { counter-increment: op; display: grid; grid-template-columns: 56px 1fr; padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--line); }
+  .opinions li:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+  .opinions li::before { content: counter(op, decimal-leading-zero); font-family: var(--mono); font-size: 13px; color: var(--kiln); padding-top: 9px; }
+  .opinions h3 { font-family: var(--serif); font-size: 26px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -.01em; }
+  .opinions p { margin: 0; color: #3a352d; max-width: 34em; }
+  .opinions code { font-family: var(--mono); font-size: .85em; background: var(--paper-2); padding: 1px 6px; border-radius: 2px; }
+
+  /* burn chart */
+  .chart-band { background: var(--ink); color: var(--paper); border-top: 0; }
+  .chart-band .label { color: #b9b09c; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .chart-band p { color: #d8d1c0; max-width: 30em; }
+  .chart-band h2 { color: var(--paper); }
+  svg.burn { width: 100%; height: auto; display: block; }
+  .burn text { font-family: var(--mono); font-size: 10px; fill: #b9b09c; }
+
+  /* pricing */
+  .price-table { border-top: 2px solid var(--ink); margin-top: 40px; }
+  .row { display: grid; grid-template-columns: 1.1fr 1fr 2fr auto; gap: 24px; align-items: baseline; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .row h3 { font-family: var(--serif); font-size: 26px; margin: 0; }
+  .row .amt { font-family: var(--serif); font-size: 26px; }
+  .row .amt small { font-family: var(--sans); font-size: 14px; color: var(--muted); }
+  .row p { margin: 0; color: #3a352d; font-size: 16px; }
+  .row a { font-size: 15px; font-weight: 600; text-underline-offset: 4px; white-space: nowrap; }
+  .row.pick { background: linear-gradient(90deg, rgba(184,60,20,.07), transparent 70%); }
+
+  /* faq */
+  details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+  details:first-of-type { border-top: 1px solid var(--line); }
+  summary { cursor: pointer; font-family: var(--serif); font-size: 21px; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--mono); color: var(--kiln); }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 12px 0 0; max-width: 38em; color: #3a352d; }
+
+  /* closing */
+  .closer { text-align: left; padding: 96px 0 104px; }
+  .closer h2 { max-width: 12em; font-size: clamp(36px, 5.4vw, 66px); }
+  .closer .cta { margin-top: 32px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { margin-left: 18px; }
+
+  @media (max-width: 900px) {
+    .hero-grid, .split, .chart-grid { grid-template-columns: 1fr; gap: 44px; }
+    .split > div:first-child { position: static; }
+    .row { grid-template-columns: 1fr auto; gap: 6px 16px; }
+    .row p { grid-column: 1 / -1; grid-row: 3; }
+    nav li.hide-sm { display: none; }
+    .hero { padding-top: 56px; }
+    .mock { box-shadow: 5px 5px 0 var(--ink); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="Kiln home"><i></i>Kiln</a>
+    <nav aria-label="Main">
+      <ul>
+        <li class="hide-sm"><a href="#how">How it works</a></li>
+        <li class="hide-sm"><a href="#pricing">Pricing</a></li>
+        <li class="hide-sm"><a href="#faq">FAQ</a></li>
+        <li><a class="btn" href="#start">Start a cycle</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="label">Project management for teams of 3–40</span>
+        <h1>Every project needs an end date. Kiln makes you <em>pick one.</em></h1>
+        <p class="lede">Most tools are very good at storing work and very bad at finishing it. Kiln runs on fixed-length cycles with a hard stop, so what doesn’t fit gets decided on, not quietly carried over for the ninth week in a row.</p>
+        <div class="cta">
+          <a class="btn" href="#start">Start free</a>
+          <a class="btn ghost" href="#how">See how a cycle works</a>
+        </div>
+        <p class="fine">Free for up to 5 people. No card. Import from CSV, Linear or Trello.</p>
+      </div>
+
+      <div>
+        <div class="mock" aria-label="Example Kiln cycle view">
+          <span class="stamp">Closes Fri</span>
+          <div class="mock-bar">
+            <strong>Cycle 14 · Billing rewrite</strong>
+            <span class="days">6 days left</span>
+          </div>
+          <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+          <ul class="tasks" id="tasks">
+            <li><label><input type="checkbox" checked><span>Move invoice PDFs to background job</span><b class="who">MO</b></label></li>
+            <li><label><input type="checkbox" checked><span>Proration for mid-cycle seat changes</span><b class="who">TA</b></label></li>
+            <li><label><input type="checkbox"><span>Backfill 2023 Stripe customers</span><b class="who">JL</b></label></li>
+            <li><label><input type="checkbox"><span>Dunning emails, 3-step sequence</span><b class="who">MO</b></label></li>
+            <li><label><input type="checkbox"><span>Finance sign-off on tax rounding</span><b class="who">RK</b></label></li>
+          </ul>
+          <div class="decide">
+            <span class="label">Decide before Friday · 2 items</span>
+            <p>“Multi-currency invoices” and “Custom net terms” didn’t start. Ship, cut, or defer — pick one each.</p>
+          </div>
+        </div>
+        <p class="fine" style="text-align:right;margin-top:26px"><span id="count"></span> — try the checkboxes.</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="how">
+    <div class="wrap split">
+      <div>
+        <span class="label">Five opinions</span>
+        <h2>We built it the way we wish our last team had worked.</h2>
+      </div>
+      <ol class="opinions">
+        <li>
+          <div>
+            <h3>A cycle has a lid.</h3>
+            <p>One to six weeks, your call, but it ends on the date it says. You can’t extend it. Work that didn’t finish lands in a <code>Decide</code> pile and someone has to say ship, cut, or defer. Nothing rolls over by default.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>One owner per task.</h3>
+            <p>Co-assignees are how things sit for two weeks while everyone assumes the other person has it. If a task is too big for one person, it’s two tasks.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Start with a page of writing.</h3>
+            <p>Every project opens with a brief: what, why, what “done” looks like, what we’re not doing. Tasks link back to it. When scope argues with the brief, the brief wins, or gets edited in public.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Estimates are ranges, and we show them.</h3>
+            <p>“3 to 8 days” is a more honest answer than “5.” Kiln carries the spread into the burndown, so you see a cone of likely finish dates instead of a single line that’s wrong with great confidence.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Quiet by default.</h3>
+            <p>One digest per person per morning. No red badges, no “someone mentioned you in a thread you’ve already left.” Urgent things can still page you; they have to be marked urgent by a human, with a reason.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="chart-band">
+    <div class="wrap chart-grid">
+      <div>
+        <span class="label">The burndown, but honest</span>
+        <h2>You’ll know on Tuesday, not on the last day.</h2>
+        <p>The shaded band is the range of finishes your own estimates allow. When the dashed line (your end date) slips outside it, Kiln tells you while there’s still time to cut something.</p>
+      </div>
+      <svg class="burn" viewBox="0 0 420 220" role="img" aria-label="Burndown chart showing remaining work, an estimate range band, and the cycle end date">
+        <g stroke="#3d3a34" stroke-width="1">
+          <line x1="30" y1="20" x2="30" y2="180"/>
+          <line x1="30" y1="180" x2="410" y2="180"/>
+          <line x1="30" y1="100" x2="410" y2="100" stroke-dasharray="2 5"/>
+        </g>
+        <polygon points="190,92 410,150 410,180 190,112" fill="#b83c14" opacity=".28"/>
+        <polygon points="190,92 410,180 190,112" fill="none"/>
+        <line x1="30" y1="30" x2="360" y2="180" stroke="#8d8573" stroke-width="1.5" stroke-dasharray="5 5"/>
+        <polyline points="30,30 70,44 110,60 150,66 190,100" fill="none" stroke="#f2eee4" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="190" cy="100" r="4.5" fill="#f2eee4"/>
+        <line x1="360" y1="20" x2="360" y2="180" stroke="#b83c14" stroke-width="2"/>
+        <text x="366" y="32">end date</text>
+        <text x="196" y="86">today</text>
+        <text x="288" y="162" style="fill:#e8a58c">likely finish</text>
+        <text x="30" y="198">Nov 17</text>
+        <text x="352" y="198">Nov 28</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <span class="label">Pricing</span>
+      <h2>Per person, per month. Nothing metered.</h2>
+      <div class="price-table">
+        <div class="row">
+          <h3>Small</h3>
+          <div class="amt">$0</div>
+          <p>Up to 5 people, unlimited projects, 12 months of history. Everything about cycles and briefs is included.</p>
+          <a href="#start">Start free</a>
+        </div>
+        <div class="row pick">
+          <h3>Team</h3>
+          <div class="amt">$9 <small>/ person</small></div>
+          <p>Unlimited history, estimate-range burndowns, GitHub and GitLab sync, a public roadmap page, and the Decide pile digest.</p>
+          <a href="#start">Start a trial</a>
+        </div>
+        <div class="row">
+          <h3>Studio</h3>
+          <div class="amt">$16 <small>/ person</small></div>
+          <p>SSO, audit log, data residency in the EU or US, and a human who answers email within a working day.</p>
+          <a href="#start">Talk to us</a>
+        </div>
+      </div>
+      <p class="fine">Billed annually, or add 20% monthly. Nonprofits and open-source maintainers: half off, no forms.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap split">
+      <div>
+        <span class="label">Questions</span>
+        <h2>Things people ask before they switch.</h2>
+      </div>
+      <div>
+        <details>
+          <summary>What if our work doesn’t fit in cycles?</summary>
+          <p>Support queues and ongoing ops work are better in a plain list, and Kiln has one. Cycles are for anything that’s meant to end: a launch, a migration, a redesign. Most teams run both side by side.</p>
+        </details>
+        <details>
+          <summary>Can we really not extend a cycle?</summary>
+          <p>Correct. You can end it early, or start the next one the following day with the same scope, but the act of closing and re-deciding is the whole point. If that sounds annoying, you may be the team that needs it most.</p>
+        </details>
+        <details>
+          <summary>How do we move over from our current tool?</summary>
+          <p>Import from CSV, Linear, Trello or Jira. Open work comes across as a backlog; closed work comes across as history. Most imports take under ten minutes, and nothing is deleted from the source.</p>
+        </details>
+        <details>
+          <summary>Where does our data live?</summary>
+          <p>Encrypted at rest in the EU or the US, your choice on Studio. Export everything as JSON or Markdown at any time, on any plan.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="closer" id="start">
+    <div class="wrap">
+      <span class="label">Next Monday is a fine day to start</span>
+      <h2>Pick a date. We’ll hold you to it.</h2>
+      <div class="cta">
+        <a class="btn" href="mailto:hello@kiln.example">Start free</a>
+        <a class="btn ghost" href="mailto:hello@kiln.example?subject=Demo">Book a 20-minute walkthrough</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Kiln Software, Inc.</span>
+    <span><a href="#">Changelog</a><a href="#">Security</a><a href="#">Privacy</a><a href="#">Status</a></span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var boxes = document.querySelectorAll('#tasks input');
+    var bar = document.getElementById('bar');
+    var count = document.getElementById('count');
+    function update() {
+      var done = 0;
+      boxes.forEach(function (b) { if (b.checked) done++; });
+      bar.style.width = (done / boxes.length * 100) + '%';
+      count.textContent = done + ' of ' + boxes.length + ' done';
+    }
+    boxes.forEach(function (b) { b.addEventListener('change', update); });
+    update();
+  })();
+</script>
+</body>
+</html>

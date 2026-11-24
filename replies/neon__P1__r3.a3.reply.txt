@@ -1,0 +1,3706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trellis — Calm Project Management for Teams That Ship</title>
+  <meta name="description" content="Trellis brings roadmaps, sprints, dependencies, and async updates into one crisp workspace built for speed and focus." />
+  <style>
+    /* ==========================================================================
+       Design Tokens & Base Reset
+       ========================================================================== */
+    :root {
+      --bg: #faf9f6;
+      --bg-subtle: #f3f1ec;
+      --surface: #ffffff;
+      --surface-hover: #fcfbf9;
+      --ink: #161614;
+      --ink-secondary: #57554f;
+      --ink-muted: #85827a;
+      --border: rgba(22, 22, 20, 0.09);
+      --border-strong: rgba(22, 22, 20, 0.16);
+
+      --accent: #d94e28;
+      --accent-hover: #be411e;
+      --accent-soft: rgba(217, 78, 40, 0.09);
+      --accent-border: rgba(217, 78, 40, 0.24);
+
+      --pine: #1b5e4a;
+      --pine-soft: rgba(27, 94, 74, 0.1);
+      --ochre: #b87a14;
+      --ochre-soft: rgba(184, 122, 20, 0.12);
+      --cobalt: #2b5b9e;
+      --cobalt-soft: rgba(43, 91, 158, 0.1);
+      --plum: #6c438b;
+      --plum-soft: rgba(108, 67, 139, 0.1);
+
+      --dark-bg: #141413;
+      --dark-surface: #1d1d1b;
+      --dark-border: rgba(255, 255, 255, 0.1);
+      --dark-ink: #f7f6f2;
+      --dark-muted: #a6a39b;
+
+      --radius-xs: 6px;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --radius-pill: 999px;
+
+      --shadow-xs: 0 1px 2px rgba(22, 22, 20, 0.04);
+      --shadow-sm: 0 2px 8px rgba(22, 22, 20, 0.05), 0 1px 2px rgba(22, 22, 20, 0.04);
+      --shadow-md: 0 12px 32px -8px rgba(22, 22, 20, 0.09), 0 2px 6px rgba(22, 22, 20, 0.04);
+      --shadow-lg: 0 28px 64px -16px rgba(22, 22, 20, 0.14), 0 4px 14px rgba(22, 22, 20, 0.05);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --container: 1180px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, input, select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================================
+       Typography & Shared Components
+       ========================================================================== */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--ink-secondary);
+      padding: 5px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .section-header {
+      max-width: 660px;
+      margin-bottom: 48px;
+    }
+
+    .section-header.centered {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 2.85rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-top: 16px;
+      color: var(--ink);
+    }
+
+    .section-title em {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .section-subtitle {
+      font-size: 1.075rem;
+      color: var(--ink-secondary);
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 14.5px;
+      padding: 11px 20px;
+      border-radius: var(--radius-sm);
+      transition: transform 0.16s var(--ease-out), background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary:hover {
+      background: #2b2a27;
+      box-shadow: 0 8px 20px -6px rgba(22, 22, 20, 0.35);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(217, 78, 40, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 10px 24px -6px rgba(217, 78, 40, 0.45);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: rgba(22, 22, 20, 0.24);
+    }
+
+    .btn-ghost {
+      color: var(--ink-secondary);
+      padding: 8px 12px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: rgba(22, 22, 20, 0.05);
+    }
+
+    .btn-sm {
+      font-size: 13.5px;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+    }
+
+    /* ==========================================================================
+       Header / Navigation
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(250, 249, 246, 0.84);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      padding: 7px 13px;
+      border-radius: 8px;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      background: rgba(22, 22, 20, 0.045);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cmd-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cmd-trigger:hover {
+      border-color: var(--border-strong);
+      color: var(--ink);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-drawer {
+      display: none;
+      padding: 16px 24px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .mobile-drawer a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .mobile-drawer a:hover {
+      background: var(--bg-subtle);
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       Hero Section
+       ========================================================================== */
+    .hero {
+      position: relative;
+      padding: 68px 0 84px;
+      overflow: clip;
+    }
+
+    .hero-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 50% -10%, rgba(217, 78, 40, 0.08), transparent 55%),
+        radial-gradient(rgba(22, 22, 20, 0.07) 1px, transparent 1px);
+      background-size: 100% 100%, 26px 26px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 70%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      max-width: 780px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.75rem, 6.2vw, 4.45rem);
+      font-weight: 700;
+      letter-spacing: -0.042em;
+      line-height: 1.04;
+      margin-top: 22px;
+      color: var(--ink);
+    }
+
+    .hero-title em {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+      color: var(--ink-secondary);
+      max-width: 600px;
+      margin: 22px auto 0;
+      line-height: 1.6;
+    }
+
+    .hero-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 490px;
+      margin: 32px auto 0;
+      padding: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-form input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      padding: 10px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .hero-form input::placeholder {
+      color: var(--ink-muted);
+    }
+
+    .hero-meta {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ==========================================================================
+       Interactive App Preview (Hero Workspace)
+       ========================================================================== */
+    .workspace-shell {
+      margin-top: 52px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .workspace-chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .chrome-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 6px;
+    }
+
+    .traffic-lights span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(22, 22, 20, 0.14);
+    }
+
+    .workspace-crumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .workspace-crumb .crumb-muted {
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .cycle-pill {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--pine);
+      background: var(--pine-soft);
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+    }
+
+    .chrome-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .view-switcher {
+      display: inline-flex;
+      background: rgba(22, 22, 20, 0.055);
+      padding: 3px;
+      border-radius: 9px;
+    }
+
+    .view-btn {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      padding: 5px 11px;
+      border-radius: 7px;
+      transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .view-btn.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .workspace-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+      background: var(--bg);
+      transition: all 0.15s ease;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--border-strong);
+      color: var(--ink);
+    }
+
+    .filter-chip.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .sprint-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-track {
+      width: 120px;
+      height: 7px;
+      background: var(--bg-subtle);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--pine);
+      border-radius: var(--radius-pill);
+      transition: width 0.35s var(--ease-out);
+    }
+
+    /* Quick add inline row */
+    .quick-add-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #fcfbf8;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .quick-add-bar input {
+      flex: 1;
+      min-width: 160px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13.5px;
+    }
+
+    .quick-add-bar select {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--ink-secondary);
+    }
+
+    /* Board view */
+    .workspace-body {
+      padding: 18px;
+      background: var(--bg);
+      min-height: 360px;
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .board-col {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 320px;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .board-col.drag-over {
+      background: rgba(217, 78, 40, 0.06);
+      border-color: var(--accent-border);
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .col-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .col-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      background: rgba(22, 22, 20, 0.06);
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: var(--shadow-xs);
+      cursor: grab;
+      transition: transform 0.16s var(--ease-out), box-shadow 0.16s ease, border-color 0.16s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      text-align: left;
+    }
+
+    .task-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .task-card.dragging {
+      opacity: 0.45;
+      cursor: grabbing;
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .tag-eng { background: var(--cobalt-soft); color: var(--cobalt); }
+    .tag-design { background: var(--plum-soft); color: var(--plum); }
+    .tag-product { background: var(--accent-soft); color: var(--accent); }
+    .tag-ops { background: var(--ochre-soft); color: var(--ochre); }
+
+    .task-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.38;
+      color: var(--ink);
+    }
+
+    .task-card.is-done .task-title {
+      text-decoration: line-through;
+      color: var(--ink-muted);
+    }
+
+    .task-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(22, 22, 20, 0.05);
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .priority-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+
+    .priority-high { color: var(--accent); }
+
+    .move-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--bg-subtle);
+      transition: background-color 0.14s ease, color 0.14s ease;
+    }
+
+    .move-btn:hover {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    /* Timeline View */
+    .timeline-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+    }
+
+    .timeline-grid {
+      min-width: 720px;
+    }
+
+    .timeline-header, .timeline-row {
+      display: grid;
+      grid-template-columns: 240px repeat(5, 1fr);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .timeline-header {
+      background: var(--bg-subtle);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .timeline-header > div, .timeline-row > div {
+      padding: 11px 14px;
+    }
+
+    .timeline-header > div:not(:first-child) {
+      border-left: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .timeline-row:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-task-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timeline-bars-cell {
+      grid-column: 2 / -1;
+      position: relative;
+      height: 44px;
+      background-image: repeating-linear-gradient(
+        to right,
+        transparent,
+        transparent calc(20% - 1px),
+        var(--border) calc(20% - 1px),
+        var(--border) 20%
+      );
+      padding: 0 !important;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      top: 9px;
+      height: 26px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: var(--shadow-xs);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* List View */
+    .list-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+    }
+
+    .list-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      font-size: 13.5px;
+    }
+
+    .list-table th {
+      text-align: left;
+      padding: 11px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .list-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .list-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .list-table tbody tr:hover {
+      background: var(--surface-hover);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-subtle);
+      color: var(--ink-secondary);
+    }
+
+    /* ==========================================================================
+       Logo Strip & Metrics
+       ========================================================================== */
+    .logos-section {
+      padding: 20px 0 64px;
+    }
+
+    .logos-label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+    }
+
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(24px, 5vw, 56px);
+      flex-wrap: wrap;
+      opacity: 0.72;
+    }
+
+    .logo-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.03em;
+      color: var(--ink-secondary);
+    }
+
+    .metrics-strip {
+      padding: 0 0 88px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-cell {
+      padding: 28px 26px;
+      border-right: 1px solid var(--border);
+    }
+
+    .metric-cell:last-child {
+      border-right: none;
+    }
+
+    .metric-value {
+      font-size: clamp(1.85rem, 3vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .metric-label {
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+      margin-top: 6px;
+    }
+
+    /* ==========================================================================
+       Features Bento Grid
+       ========================================================================== */
+    .section {
+      padding: 88px 0;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+
+    .bento-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-subtle);
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .bento-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+
+    .bento-card p {
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    /* Interactive dependency widget inside Bento */
+    .dep-demo {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .dep-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      flex-wrap: wrap;
+    }
+
+    .dep-tracks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dep-row {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .dep-lane {
+      position: relative;
+      height: 28px;
+      background: rgba(22, 22, 20, 0.04);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .dep-pill {
+      position: absolute;
+      top: 3px;
+      height: 22px;
+      border-radius: 5px;
+      padding: 0 9px;
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      color: #fff;
+      transition: left 0.4s var(--ease-out);
+      white-space: nowrap;
+    }
+
+    /* Velocity bars widget */
+    .velocity-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .velocity-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .velocity-bars {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 110px;
+    }
+
+    .v-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .v-bar-wrap {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      background: rgba(22, 22, 20, 0.04);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .v-bar {
+      width: 100%;
+      border-radius: 6px 6px 0 0;
+      background: var(--ink);
+      transition: height 0.35s var(--ease-out);
+    }
+
+    .v-bar.accent {
+      background: var(--accent);
+    }
+
+    .v-label {
+      font-size: 11px;
+      color: var(--ink-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Async digest widget */
+    .digest-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .digest-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .digest-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Command bar teaser */
+    .cmd-teaser {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cmd-teaser-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .cmd-teaser-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    .cmd-teaser-row.highlighted {
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 600;
+      box-shadow: var(--shadow-xs);
+    }
+
+    /* ==========================================================================
+       Team Workflows (Tabbed Showcase)
+       ========================================================================== */
+    .workflows-section {
+      padding: 88px 0;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .wf-tab {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 0.16s ease;
+    }
+
+    .wf-tab:hover {
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+
+    .wf-tab.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow-stage {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 36px;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .wf-copy h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+
+    .wf-copy p {
+      color: var(--ink-secondary);
+      margin-bottom: 22px;
+      font-size: 15.5px;
+    }
+
+    .wf-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wf-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14.5px;
+      color: var(--ink);
+    }
+
+    .check-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--pine-soft);
+      color: var(--pine);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .wf-visual {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wf-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13.5px;
+    }
+
+    /* ==========================================================================
+       Dark Scale & Engineering Band
+       ========================================================================== */
+    .dark-band {
+      background: var(--dark-bg);
+      color: var(--dark-ink);
+      padding: 96px 0;
+    }
+
+    .dark-band .eyebrow {
+      background: var(--dark-surface);
+      border-color: var(--dark-border);
+      color: var(--dark-muted);
+    }
+
+    .dark-band .section-title {
+      color: var(--dark-ink);
+    }
+
+    .dark-band .section-subtitle {
+      color: var(--dark-muted);
+    }
+
+    .dark-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+
+    .dark-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .dark-tile {
+      background: var(--dark-surface);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+
+    .dark-tile h4 {
+      font-size: 15.5px;
+      font-weight: 600;
+      margin: 12px 0 6px;
+      color: var(--dark-ink);
+    }
+
+    .dark-tile p {
+      font-size: 13.5px;
+      color: var(--dark-muted);
+      line-height: 1.55;
+    }
+
+    .code-panel {
+      background: #10100f;
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .code-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--dark-surface);
+      border-bottom: 1px solid var(--dark-border);
+      gap: 10px;
+    }
+
+    .code-tab-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-tab {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: var(--dark-muted);
+    }
+
+    .code-tab.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .code-body {
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #d9d6ce;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .tok-key { color: #f08a66; }
+    .tok-str { color: #8ad1a8; }
+    .tok-num { color: #e9c46a; }
+    .tok-com { color: #6e6c66; }
+
+    /* ==========================================================================
+       Testimonials
+       ========================================================================== */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .quote-metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--pine);
+      background: var(--pine-soft);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      align-self: flex-start;
+    }
+
+    .quote-text {
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .quote-author .avatar {
+      width: 38px;
+      height: 38px;
+      font-size: 13px;
+    }
+
+    .author-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .author-role {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+
+    /* ==========================================================================
+       Pricing
+       ========================================================================== */
+    .pricing-section {
+      padding: 88px 0;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .billing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 40px;
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      border-radius: var(--radius-pill);
+      background: var(--ink);
+      padding: 3px;
+      transition: background-color 0.2s ease;
+    }
+
+    .toggle-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.22s var(--ease-out);
+      transform: translateX(22px);
+    }
+
+    .toggle-switch[aria-checked="false"] {
+      background: rgba(22, 22, 20, 0.25);
+    }
+
+    .toggle-switch[aria-checked="false"] .toggle-thumb {
+      transform: translateX(0);
+    }
+
+    .save-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-xs);
+      position: relative;
+    }
+
+    .plan-card.featured {
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow-md);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.02em;
+    }
+
+    .plan-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .plan-desc {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-top: 6px;
+      min-height: 42px;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 22px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-amount {
+      font-size: 2.65rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .price-unit {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      font-size: 14px;
+      color: var(--ink-secondary);
+      flex: 1;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    /* ==========================================================================
+       FAQ Accordion
+       ========================================================================== */
+    .faq-wrap {
+      max-width: 760px;
+      margin-inline: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      text-align: left;
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .faq-icon {
+      transition: transform 0.22s var(--ease-out);
+      flex-shrink: 0;
+      color: var(--ink-muted);
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 22px 18px;
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      line-height: 1.65;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    /* ==========================================================================
+       Final CTA & Footer
+       ========================================================================== */
+    .cta-section {
+      padding: 20px 0 96px;
+    }
+
+    .cta-box {
+      position: relative;
+      background: var(--dark-bg);
+      color: var(--dark-ink);
+      border-radius: var(--radius-xl);
+      padding: clamp(40px, 6vw, 68px) clamp(24px, 5vw, 56px);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(217, 78, 40, 0.26), transparent 45%),
+        radial-gradient(circle at 80% 100%, rgba(27, 94, 74, 0.28), transparent 45%);
+      pointer-events: none;
+    }
+
+    .cta-box > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box h2 {
+      font-size: clamp(2rem, 4.2vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+
+    .cta-box p {
+      color: var(--dark-muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 16px auto 28px;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-dark-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-dark-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 64px 0 40px;
+      background: var(--bg);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr repeat(4, 1fr);
+      gap: 36px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-top: 12px;
+      max-width: 260px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--pine);
+      background: var(--pine-soft);
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+    }
+
+    .status-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--pine);
+    }
+
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      transition: color 0.14s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* ==========================================================================
+       Modals, Command Palette & Toast
+       ========================================================================== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(20, 20, 19, 0.52);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modal-head h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .modal-head p {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-top: 4px;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--ink-muted);
+    }
+
+    .close-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--ink);
+    }
+
+    .form-field {
+      margin-bottom: 14px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .form-field input, .form-field select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      background: var(--bg);
+      font-size: 14.5px;
+    }
+
+    .form-field input:focus, .form-field select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    /* Command Palette */
+    .cmd-modal {
+      width: 100%;
+      max-width: 540px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      align-self: flex-start;
+      margin-top: 10vh;
+    }
+
+    .cmd-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-input-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    .cmd-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .cmd-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      text-align: left;
+      color: var(--ink);
+    }
+
+    .cmd-item:hover, .cmd-item.selected {
+      background: var(--bg-subtle);
+    }
+
+    .cmd-item small {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 120;
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s var(--ease-out);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* ==========================================================================
+       Responsive Breakpoints
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .board-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .metric-cell:nth-child(2) {
+        border-right: none;
+      }
+      .metric-cell:nth-child(1), .metric-cell:nth-child(2) {
+        border-bottom: 1px solid var(--border);
+      }
+      .span-7, .span-5, .span-6 {
+        grid-column: span 12;
+      }
+      .workflow-stage, .dark-grid {
+        grid-template-columns: 1fr;
+      }
+      .testimonials-grid, .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+      .hero {
+        padding: 44px 0 64px;
+      }
+      .hero-form {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 8px;
+      }
+      .board-grid {
+        grid-template-columns: 1fr;
+      }
+      .board-col {
+        min-height: auto;
+      }
+      .quick-add-bar {
+        flex-wrap: wrap;
+      }
+      .dark-features {
+        grid-template-columns: 1fr;
+      }
+      .workflow-stage {
+        padding: 22px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric-cell {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .metric-cell:last-child {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       Navigation
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="Trellis Home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M9 6v14M15 6v10" />
+          </svg>
+        </span>
+        Trellis
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#workflows">Workflows</a></li>
+          <li><a href="#platform">Platform</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="cmd-trigger" id="openCmdBtn" aria-label="Open command palette">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>Quick jump</span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary btn-sm" data-open-modal="signup">Start free</button>
+      </div>
+
+      <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#workflows">Workflows</a></li>
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-secondary" style="flex:1;" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary" style="flex:1;" data-open-modal="signup">Start free</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======================================================================
+         Hero Section + Interactive Live Workspace
+         ====================================================================== -->
+    <section class="hero">
+      <div class="hero-bg-grid" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-copy">
+          <a href="#features" class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>Trellis 2.4 · Automated sprint capacity &amp; cascading timelines</span>
+          </a>
+
+          <h1 class="hero-title">
+            Plan the work.<br />Protect the <em>focus.</em>
+          </h1>
+
+          <p class="hero-subtitle">
+            The project management workspace designed for high-craft teams. Connect roadmaps, sprints, and async updates in one calm system that moves at the speed of thought.
+          </p>
+
+          <form class="hero-form" id="heroSignupForm">
+            <label for="heroEmail" class="sr-only">Work email</label>
+            <input id="heroEmail" type="email" required placeholder="name@company.com" autocomplete="email" />
+            <button type="submit" class="btn btn-accent">Create workspace</button>
+          </form>
+
+          <div class="hero-meta">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Free for teams up to 10
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              No credit card required
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              2-minute import from Jira &amp; Linear
+            </span>
+          </div>
+        </div>
+
+        <!-- Interactive Live Workspace Demo -->
+        <div class="workspace-shell" id="liveWorkspace" aria-label="Interactive Trellis workspace demo">
+          <div class="workspace-chrome">
+            <div class="chrome-left">
+              <div class="traffic-lights" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="workspace-crumb">
+                <span class="crumb-muted">Northwind</span>
+                <span class="crumb-muted">/</span>
+                <span>Q4 Checkout Overhaul</span>
+                <span class="cycle-pill">Cycle 18 · 4d left</span>
+              </div>
+            </div>
+
+            <div class="chrome-right">
+              <div class="view-switcher" role="tablist" aria-label="Workspace view">
+                <button type="button" class="view-btn active" role="tab" aria-selected="true" data-view="board">Board</button>
+                <button type="button" class="view-btn" role="tab" aria-selected="false" data-view="timeline">Timeline</button>
+                <button type="button" class="view-btn" role="tab" aria-selected="false" data-view="list">List</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="workspace-toolbar">
+            <div class="filter-group" role="group" aria-label="Filter by team">
+              <button type="button" class="filter-chip active" data-filter="all">All teams</button>
+              <button type="button" class="filter-chip" data-filter="eng">Engineering</button>
+              <button type="button" class="filter-chip" data-filter="design">Design</button>
+              <button type="button" class="filter-chip" data-filter="product">Product</button>
+              <button type="button" class="filter-chip" data-filter="ops">Ops</button>
+            </div>
+
+            <div class="sprint-progress">
+              <span id="progressText">2 of 7 completed</span>
+              <div class="progress-track" aria-hidden="true">
+                <div class="progress-fill" id="progressBar" style="width: 29%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <form class="quick-add-bar" id="quickAddForm">
+            <label for="newTaskTitle" class="sr-only">Add a task to the demo board</label>
+            <input id="newTaskTitle" type="text" placeholder="Try it live: add a task to Cycle 18 and drag or advance cards..." maxlength="64" />
+            <select id="newTaskTeam" aria-label="Task team">
+              <option value="product">Product</option>
+              <option value="eng">Engineering</option>
+              <option value="design">Design</option>
+              <option value="ops">Ops</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">+ Add task</button>
+          </form>
+
+          <div class="workspace-body" id="workspaceBody">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Social Proof Logos & Metrics Strip
+         ====================================================================== -->
+    <section class="logos-section">
+      <div class="container">
+        <p class="logos-label">Trusted by 14,000+ product, engineering, and operations teams worldwide</p>
+        <div class="logos-row" aria-label="Customer companies">
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 19h6l4-7 4 7h6L12 2z"/></svg>
+            Northwind
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+            Vesper Studio
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="4" opacity=".45"/></svg>
+            Halcyon Bio
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 18V6l8 6 8-6v12"/></svg>
+            Monograph
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+            Copperline
+          </div>
+          <div class="logo-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            Relay Ops
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="metrics-strip reveal">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="metric-cell">
+            <div class="metric-value">42%</div>
+            <div class="metric-label">Faster median cycle time within 60 days</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-value">5.4 hrs</div>
+            <div class="metric-label">Saved per person weekly on status meetings</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-value">&lt; 38ms</div>
+            <div class="metric-label">Local-first interaction latency across views</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-value">99.98%</div>
+            <div class="metric-label">Measured uptime backed by enterprise SLA</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Core Features Bento Grid
+         ====================================================================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">Core Capabilities</span>
+          <h2 class="section-title">Everything a team needs.<br />Nothing to <em>maintain.</em></h2>
+          <p class="section-subtitle">
+            Most project tools demand a full-time administrator. Trellis adapts automatically as dates move, PRs merge, and priorities shift.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Bento 1: Cascading Dependencies -->
+          <article class="bento-card span-7 reveal">
+            <div>
+              <div class="bento-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8v4H4zM12 14h8v4h-8z"/><path d="M12 8h4v6"/></svg>
+              </div>
+              <h3>Auto-cascading dependencies</h3>
+              <p>When an upstream milestone slips, Trellis shifts dependent tasks automatically and flags only the dates that threaten launch readiness.</p>
+            </div>
+
+            <div class="dep-demo">
+              <div class="dep-controls">
+                <span id="depStatusText">Launch date: <strong>Nov 28</strong> (On track)</span>
+                <button type="button" class="btn btn-secondary btn-sm" id="toggleSlipBtn">Simulate +3d delay</button>
+              </div>
+              <div class="dep-tracks">
+                <div class="dep-row">
+                  <span>API Schema</span>
+                  <div class="dep-lane">
+                    <div class="dep-pill" id="depBar1" style="left: 4%; width: 30%; background: var(--cobalt);">Nov 12–16</div>
+                  </div>
+                </div>
+                <div class="dep-row">
+                  <span>Checkout UI</span>
+                  <div class="dep-lane">
+                    <div class="dep-pill" id="depBar2" style="left: 34%; width: 28%; background: var(--plum);">Nov 17–21</div>
+                  </div>
+                </div>
+                <div class="dep-row">
+                  <span>QA &amp; Rollout</span>
+                  <div class="dep-lane">
+                    <div class="dep-pill" id="depBar3" style="left: 62%; width: 22%; background: var(--pine);">Nov 22–28</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 2: Cycles & Velocity -->
+          <article class="bento-card span-5 reveal">
+            <div>
+              <div class="bento-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+              </div>
+              <h3>Healthy cycle momentum</h3>
+              <p>Predict delivery without micromanagement. Capacity guardrails warn before a sprint is overloaded.</p>
+            </div>
+
+            <div class="velocity-box">
+              <div class="velocity-head">
+                <span style="font-size:12.5px; font-weight:600;">Completed points / cycle</span>
+                <span style="font-size:12px; color:var(--pine); font-weight:700;">+18% pace</span>
+              </div>
+              <div class="velocity-bars" aria-label="Cycle velocity chart">
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar" style="height:52%"></div></div><span class="v-label">C13</span></div>
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar" style="height:64%"></div></div><span class="v-label">C14</span></div>
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar" style="height:58%"></div></div><span class="v-label">C15</span></div>
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar" style="height:76%"></div></div><span class="v-label">C16</span></div>
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar" style="height:84%"></div></div><span class="v-label">C17</span></div>
+                <div class="v-col"><div class="v-bar-wrap"><div class="v-bar accent" style="height:92%"></div></div><span class="v-label">C18</span></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 3: Async Daily Briefs -->
+          <article class="bento-card span-6 reveal">
+            <div>
+              <div class="bento-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v12H7l-3 3V5z"/></svg>
+              </div>
+              <h3>Async briefs that replace standups</h3>
+              <p>Every morning at 9:00 AM, Trellis compiles shipped tasks, emerging blockers, and owner handoffs straight to Slack or email—zero manual write-ups.</p>
+            </div>
+
+            <div class="digest-card">
+              <div class="digest-item">
+                <span class="digest-badge" style="background:var(--pine-soft); color:var(--pine);">Shipped</span>
+                <div><strong>Stripe webhooks v2</strong> merged by Maya · unblocked 3 billing tasks</div>
+              </div>
+              <div class="digest-item">
+                <span class="digest-badge" style="background:var(--accent-soft); color:var(--accent);">Blocker</span>
+                <div><strong>Mobile Safari keyboard trap</strong> waiting on design token review (18h)</div>
+              </div>
+              <div class="digest-item">
+                <span class="digest-badge" style="background:var(--ochre-soft); color:var(--ochre);">Milestone</span>
+                <div><strong>Beta Cohort 2</strong> reached 86% completion · 2 days ahead of schedule</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bento 4: Keyboard-first Command Palette -->
+          <article class="bento-card span-6 reveal">
+            <div>
+              <div class="bento-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M8 15h8"/></svg>
+              </div>
+              <h3>Keyboard-first speed everywhere</h3>
+              <p>Create issues, reassign owners, switch views, and link pull requests without lifting your hands. Try pressing <span class="kbd">⌘</span> <span class="kbd">K</span> right now.</p>
+            </div>
+
+            <div class="cmd-teaser">
+              <div class="cmd-teaser-input">
+                <span>Type a command or search tasks...</span>
+                <button type="button" class="btn btn-secondary btn-sm" id="bentoOpenCmd">Open ⌘K</button>
+              </div>
+              <div class="cmd-teaser-row highlighted">
+                <span>→ Create new task in Cycle 18</span>
+                <span class="kbd">C</span>
+              </div>
+              <div class="cmd-teaser-row">
+                <span>→ Switch to Timeline view</span>
+                <span class="kbd">2</span>
+              </div>
+              <div class="cmd-teaser-row">
+                <span>→ Filter high-priority blockers</span>
+                <span class="kbd">F</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Tailored Team Workflows (Interactive Tabs)
+         ====================================================================== -->
+    <section class="workflows-section" id="workflows">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <span class="eyebrow">Built for Every Discipline</span>
+          <h2 class="section-title">One workspace, tailored to how<br />each team <em>actually</em> works.</h2>
+        </div>
+
+        <div class="workflow-tabs" role="tablist" aria-label="Team workflows">
+          <button type="button" class="wf-tab active" role="tab" aria-selected="true" data-wf="product">Product</button>
+          <button type="button" class="wf-tab" role="tab" aria-selected="false" data-wf="engineering">Engineering</button>
+          <button type="button" class="wf-tab" role="tab" aria-selected="false" data-wf="design">Design</button>
+          <button type="button" class="wf-tab" role="tab" aria-selected="false" data-wf="operations">Operations</button>
+        </div>
+
+        <div class="workflow-stage reveal" id="workflowStage">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Dark Contrast Band: Platform, Speed & Integrations
+         ====================================================================== -->
+    <section class="dark-band" id="platform">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="eyebrow">Platform &amp; Security</span>
+          <h2 class="section-title">Engineered for speed.<br />Hardened for <em>enterprise.</em></h2>
+          <p class="section-subtitle">
+            Local-first sync gives every click instant feedback while keeping permissions, audit trails, and webhooks rock-solid at scale.
+          </p>
+        </div>
+
+        <div class="dark-grid reveal">
+          <div class="dark-features">
+            <div class="dark-tile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <h4>Real-time sync engine</h4>
+              <p>Offline-resilient local cache syncs changes across 10,000+ concurrent seats with zero page reloads.</p>
+            </div>
+            <div class="dark-tile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8ad1a8" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <h4>SOC 2 Type II &amp; GDPR</h4>
+              <p>End-to-end TLS 1.3, AES-256 encryption at rest, EU/US data residency, and immutable audit logs.</p>
+            </div>
+            <div class="dark-tile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e9c46a" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <h4>SAML SSO &amp; SCIM</h4>
+              <p>Provision teams automatically from Okta, Google Workspace, or Azure AD with granular role controls.</p>
+            </div>
+            <div class="dark-tile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7fb3f0" stroke-width="2" stroke-linecap="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              <h4>GraphQL API &amp; Webhooks</h4>
+              <p>Connect GitHub, GitLab, Slack, Figma, and custom internal pipelines with typed webhooks.</p>
+            </div>
+          </div>
+
+          <div class="code-panel">
+            <div class="code-tabs">
+              <div class="code-tab-group" role="tablist" aria-label="Code examples">
+                <button type="button" class="code-tab active" data-code="webhook">webhook.json</button>
+                <button type="button" class="code-tab" data-code="graphql">sync.graphql</button>
+                <button type="button" class="code-tab" data-code="cli">trellis-cli</button>
+              </div>
+              <button type="button" class="code-tab" id="copyCodeBtn" aria-label="Copy snippet">Copy</button>
+            </div>
+            <pre class="code-body" id="codeSnippet"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Customer Testimonials
+         ====================================================================== -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <span class="eyebrow">Customer Stories</span>
+          <h2 class="section-title">Teams switch to Trellis for speed.<br />They stay for the <em>clarity.</em></h2>
+        </div>
+
+        <div class="testimonials-grid">
+          <article class="quote-card reveal">
+            <span class="quote-metric">−61% weekly status meetings</span>
+            <p class="quote-text">
+              "We migrated 140 engineers off a sprawling legacy tracker in one weekend. Within two cycles, our standups vanished and everyone actually trusts the roadmap dates again."
+            </p>
+            <div class="quote-author">
+              <div class="avatar" style="background: var(--pine);">EL</div>
+              <div>
+                <div class="author-name">Elena Lindqvist</div>
+                <div class="author-role">VP of Engineering, Northwind</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="quote-card reveal">
+            <span class="quote-metric">2.3× faster release cadence</span>
+            <p class="quote-text">
+              "Trellis hits the rare balance where leadership gets crisp quarterly forecasts while designers and engineers get a calm, keyboard-fast board that stays out of their way."
+            </p>
+            <div class="quote-author">
+              <div class="avatar" style="background: var(--accent);">MO</div>
+              <div>
+                <div class="author-name">Marcus Okafor</div>
+                <div class="author-role">Head of Product, Monograph</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="quote-card reveal">
+            <span class="quote-metric">Zero missed launch milestones</span>
+            <p class="quote-text">
+              "Auto-cascading dependencies alone paid for our annual plan in month one. When clinical compliance shifts by a day, every downstream team sees the impact immediately."
+            </p>
+            <div class="quote-author">
+              <div class="avatar" style="background: var(--cobalt);">SC</div>
+              <div>
+                <div class="author-name">Dr. Priya Subramanian</div>
+                <div class="author-role">COO, Halcyon Bio</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Pricing Section
+         ====================================================================== -->
+    <section class="pricing-section" id="pricing">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <span class="eyebrow">Simple, Transparent Pricing</span>
+          <h2 class="section-title">Start free. Scale without<br /><em>per-feature</em> surprises.</h2>
+          <p class="section-subtitle">
+            Every plan includes unlimited guests, instant imports, and real-time sync across Board, Timeline, and List views.
+          </p>
+        </div>
+
+        <div class="billing-toggle-wrap">
+          <span id="monthlyLabel" style="color: var(--ink-muted);">Monthly</span>
+          <button type="button" class="toggle-switch" id="billingToggle" role="switch" aria-checked="true" aria-label="Toggle annual billing">
+            <div class="toggle-thumb"></div>
+          </button>
+          <span id="annualLabel">Annual</span>
+          <span class="save-badge">Save 20%</span>
+        </div>
+
+        <div class="pricing-grid reveal">
+          <!-- Starter -->
+          <article class="plan-card">
+            <h3 class="plan-name">Starter</h3>
+            <p class="plan-desc">For early teams and side projects getting organized fast.</p>
+            <div class="plan-price">
+              <span class="price-amount">$0</span>
+              <span class="price-unit">free forever</span>
+            </div>
+            <button type="button" class="btn btn-secondary" style="width:100%;" data-open-modal="signup" data-plan="Starter">Get started free</button>
+            <ul class="plan-features">
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Up to 10 workspace members</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Unlimited tasks &amp; projects</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Board, List &amp; Timeline views</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> GitHub &amp; Slack integration</li>
+            </ul>
+          </article>
+
+          <!-- Pro -->
+          <article class="plan-card featured">
+            <span class="plan-badge">Most Popular</span>
+            <h3 class="plan-name">Pro</h3>
+            <p class="plan-desc">For growing product &amp; engineering teams shipping every week.</p>
+            <div class="plan-price">
+              <span class="price-amount" id="proPrice">$12</span>
+              <span class="price-unit" id="proUnit">/ member / mo, billed annually</span>
+            </div>
+            <button type="button" class="btn btn-accent" style="width:100%;" data-open-modal="signup" data-plan="Pro">Start 14-day free trial</button>
+            <ul class="plan-features">
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Unlimited members &amp; teams</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Auto-cascading dependencies</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Async daily briefs &amp; cycle velocity</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Custom workflows &amp; GraphQL API</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Priority support (4h SLA)</li>
+            </ul>
+          </article>
+
+          <!-- Enterprise -->
+          <article class="plan-card">
+            <h3 class="plan-name">Enterprise</h3>
+            <p class="plan-desc">Advanced governance, security, and dedicated onboarding at scale.</p>
+            <div class="plan-price">
+              <span class="price-amount" id="entPrice">$26</span>
+              <span class="price-unit" id="entUnit">/ member / mo, billed annually</span>
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%;" data-open-modal="demo" data-plan="Enterprise">Talk to sales</button>
+            <ul class="plan-features">
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Everything in Pro</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> SAML SSO, SCIM &amp; audit logs</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> EU or US data residency</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Dedicated migration engineer</li>
+              <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 99.98% uptime SLA</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         FAQ Section
+         ====================================================================== -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <span class="eyebrow">Questions &amp; Answers</span>
+          <h2 class="section-title">Frequently asked <em>questions</em></h2>
+        </div>
+
+        <div class="faq-wrap reveal">
+          <div class="faq-item open">
+            <button type="button" class="faq-q" aria-expanded="true">
+              <span>How fast can we migrate from Jira, Asana, or Linear?</span>
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">
+              Our guided importer connects via OAuth and preserves projects, assignees, comments, attachments, and historical cycle data in under two minutes. You can run a dry-run preview before inviting your team.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false">
+              <span>Does Trellis work well for non-engineering teams too?</span>
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">
+              Yes. Each team chooses its own default terminology and view—engineering can work in keyboard-first Cycles while marketing, design, and operations work in visual Timelines and launch checklists on the exact same underlying data.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false">
+              <span>Can we invite external clients or contractors for free?</span>
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">
+              Every plan includes unlimited single-project guests at no additional charge. Guests can view timelines, comment on deliverables, and upload files without seeing internal company roadmaps.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false">
+              <span>What happens if we downgrade or leave?</span>
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">
+              Your data is always yours. You can export your entire workspace to clean JSON or CSV at any time with one click, with zero lock-in fees or retention hoops.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Final CTA Banner
+         ====================================================================== -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2>Give your team a calmer way to ship ambitious work.</h2>
+          <p>Set up your first roadmap in two minutes. Free forever for teams up to 10, with full access to Pro during your 14-day trial.</p>
+          <div class="cta-actions">
+            <button type="button" class="btn btn-accent" data-open-modal="signup">Create free workspace</button>
+            <button type="button" class="btn btn-dark-secondary" data-open-modal="demo">Book a 15-min walkthrough</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16M4 12h16M9 6v14M15 6v10" />
+              </svg>
+            </span>
+            Trellis
+          </a>
+          <p>Structured project management for product, engineering, and operations teams that value craft and speed.</p>
+          <div class="status-pill">
+            <span class="status-pulse" aria-hidden="true"></span>
+            All systems operational
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#liveWorkspace">Live Board</a></li>
+            <li><a href="#features">Dependencies</a></li>
+            <li><a href="#workflows">Team Workflows</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#platform">GraphQL API</a></li>
+            <li><a href="#platform">Webhooks</a></li>
+            <li><a href="#platform">Security &amp; SOC 2</a></li>
+            <li><a href="#faq">Migrations</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#workflows">Playbooks</a></li>
+            <li><a href="#features">Changelog 2.4</a></li>
+            <li><a href="#faq">Help Center</a></li>
+            <li><a href="#pricing">Compare Plans</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#" data-open-modal="demo">Contact Sales</a></li>
+            <li><a href="#" data-open-modal="signup">Careers</a></li>
+            <li><a href="#faq">Privacy</a></li>
+            <li><a href="#faq">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Trellis Software, Inc. All rights reserved.</span>
+        <span>Crafted for calm, focused execution · Press <span class="kbd">⌘K</span> anywhere</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       Auth / Demo Modal
+       ======================================================================== -->
+  <div class="overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle">Create your Trellis workspace</h3>
+          <p id="modalSubtitle">Start free with up to 10 teammates. No credit card required.</p>
+        </div>
+        <button type="button" class="close-btn" id="closeModalBtn" aria-label="Close modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="modalForm">
+        <div class="form-field">
+          <label for="modalEmail">Work email</label>
+          <input id="modalEmail" type="email" required placeholder="alex@northwind.io" />
+        </div>
+        <div class="form-field" id="workspaceField">
+          <label for="modalWorkspace">Workspace name</label>
+          <input id="modalWorkspace" type="text" placeholder="Northwind Product" />
+        </div>
+        <div class="form-field" id="teamSizeField">
+          <label for="modalSize">Team size</label>
+          <select id="modalSize">
+            <option>1–10 people</option>
+            <option>11–50 people</option>
+            <option>51–200 people</option>
+            <option>200+ people</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-accent" style="width:100%; margin-top:6px;" id="modalSubmitBtn">Launch workspace</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Command Palette Modal (⌘K)
+       ======================================================================== -->
+  <div class="overlay" id="cmdOverlay" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="cmd-modal">
+      <div class="cmd-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" id="cmdSearch" placeholder="Jump to section, switch view, or run action..." autocomplete="off" />
+        <span class="kbd">ESC</span>
+      </div>
+      <div class="cmd-list" id="cmdList"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       Application Script
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ----------------------------------------------------------------------
+         Toast Utility
+         ---------------------------------------------------------------------- */
+      const toastEl = document.getElementById('toast');
+      let toastTimer = null;
+
+      function showToast(message) {
+        toastEl.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8ad1a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>${message}</span>`;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
+      }
+
+      /* ----------------------------------------------------------------------
+         Interactive Hero Workspace State & Rendering
+         ---------------------------------------------------------------------- */
+      const COLUMNS = [
+        { id: 'backlog', label: 'Backlog', color: '#85827a' },
+        { id: 'progress', label: 'In Progress', color: '#2b5b9e' },
+        { id: 'review', label: 'In Review', color: '#b87a14' },
+        { id: 'done', label: 'Done', color: '#1b5e4a' }
+      ];
+
+      const TEAM_META = {
+        eng: { label: 'Engineering', cls: 'tag-eng', bar: '#2b5b9e' },
+        design: { label: 'Design', cls: 'tag-design', bar: '#6c438b' },
+        product: { label: 'Product', cls: 'tag-product', bar: '#d94e28' },
+        ops: { label: 'Ops', cls: 'tag-ops', bar: '#b87a14' }
+      };
+
+      let nextTaskNum = 149;
+      let tasks = [
+        { id: 'TRL-142', title: 'One-click Apple Pay express sheet', team: 'eng', status: 'progress', priority: 'High', assignee: 'MK', color: '#2b5b9e', start: 8, span: 36, due: 'Nov 19' },
+        { id: 'TRL-143', title: 'Audit mobile address autocomplete states', team: 'design', status: 'review', priority: 'Med', assignee: 'SR', color: '#6c438b', start: 22, span: 28, due: 'Nov 18' },
+        { id: 'TRL-144', title: 'Draft Q4 pricing experiment metrics', team: 'product', status: 'backlog', priority: 'Med', assignee: 'JL', color: '#d94e28', start: 44, span: 30, due: 'Nov 24' },
+        { id: 'TRL-145', title: 'Idempotency keys for webhook retries', team: 'eng', status: 'done', priority: 'High', assignee: 'AT', color: '#1b5e4a', start: 2, span: 24, due: 'Nov 14' },
+        { id: 'TRL-146', title: 'Tax ID validation for EU enterprise accounts', team: 'ops', status: 'progress', priority: 'High', assignee: 'DP', color: '#b87a14', start: 30, span: 34, due: 'Nov 21' },
+        { id: 'TRL-147', title: 'Refresh empty-state illustrations', team: 'design', status: 'backlog', priority: 'Low', assignee: 'SR', color: '#6c438b', start: 58, span: 26, due: 'Nov 27' },
+        { id: 'TRL-148', title: 'Finalize PCI compliance checklist', team: 'ops', status: 'done', priority: 'Med', assignee: 'DP', color: '#1b5e4a', start: 10, span: 26, due: 'Nov 15' }
+      ];
+
+      let currentView = 'board';
+      let currentFilter = 'all';
+      let draggedId = null;
+
+      const workspaceBody = document.getElementById('workspaceBody');
+      const progressText = document.getElementById('progressText');
+      const progressBar = document.getElementById('progressBar');
+
+      function getFilteredTasks() {
+        return currentFilter === 'all' ? tasks : tasks.filter(t => t.team === currentFilter);
+      }
+
+      function updateProgress() {
+        const visible = getFilteredTasks();
+        const doneCount = visible.filter(t => t.status === 'done').length;
+        const pct = visible.length ? Math.round((doneCount / visible.length) * 100) : 0;
+        progressText.textContent = `${doneCount} of ${visible.length} completed (${pct}%)`;
+        progressBar.style.width = `${pct}%`;
+      }
+
+      function advanceStatus(taskId) {
+        const order = ['backlog', 'progress', 'review', 'done'];
+        const t = tasks.find(item => item.id === taskId);
+        if (!t) return;
+        const nextIdx = (order.indexOf(t.status) + 1) % order.length;
+        t.status = order[nextIdx];
+        renderWorkspace();
+        if (t.status === 'done') {
+          showToast(`${t.id} marked Done`);
+        }
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+      }
+
+      function renderWorkspace() {
+        updateProgress();
+        const visible = getFilteredTasks();
+
+        if (currentView === 'board') {
+          workspaceBody.innerHTML = `<div class="board-grid">${COLUMNS.map(col => {
+            const colTasks = visible.filter(t => t.status === col.id);
+            const cardsHtml = colTasks.map(t => {
+              const tm = TEAM_META[t.team];
+              const nextLabel = t.status === 'done' ? 'Reopen' : 'Advance →';
+              return `
+                <div class="task-card ${t.status === 'done' ? 'is-done' : ''}" draggable="true" data-task-id="${t.id}">
+                  <div class="task-top">
+                    <span class="task-id">${t.id}</span>
+                    <span class="tag ${tm.cls}">${tm.label}</span>
+                  </div>
+                  <div class="task-title">${escapeHtml(t.title)}</div>
+                  <div class="task-footer">
+                    <div class="task-meta">
+                      <span class="avatar" style="background:${t.color}" title="Assignee ${t.assignee}">${t.assignee}</span>
+                      <span class="priority-pill ${t.priority === 'High' ? 'priority-high' : ''}">${t.priority}</span>
+                    </div>
+                    <button type="button" class="move-btn" data-advance="${t.id}">${nextLabel}</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            return `
+              <div class="board-col" data-col-id="${col.id}">
+                <div class="col-header">
+                  <span class="col-title-wrap">
+                    <span class="status-dot" style="background:${col.color}"></span>
+                    ${col.label}
+                  </span>
+                  <span class="col-count">${colTasks.length}</span>
+                </div>
+                ${cardsHtml || '<div style="font-size:12.5px; color:var(--ink-muted); padding:16px 6px; text-align:center;">Drop a task here</div>'}
+              </div>
+            `;
+          }).join('')}</div>`;
+
+          bindBoardInteractions();
+        } else if (currentView === 'timeline') {
+          const rowsHtml = visible.map(t => {
+            const tm = TEAM_META[t.team];
+            return `
+              <div class="timeline-row">
+                <div class="timeline-task-cell" title="${escapeHtml(t.title)}">
+                  <span class="status-dot" style="background:${COLUMNS.find(c => c.id === t.status).color}; flex-shrink:0;"></span>
+                  <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(t.title)}</span>
+                </div>
+                <div class="timeline-bars-cell">
+                  <div class="gantt-bar" style="left:${t.start}%; width:${t.span}%; background:${tm.bar}; opacity:${t.status === 'done' ? 0.58 : 1};">
+                    <span>${t.id} · ${t.assignee}</span>
+                    <span>${t.due}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          workspaceBody.innerHTML = `
+            <div class="timeline-view">
+              <div class="timeline-grid">
+                <div class="timeline-header">
+                  <div>Deliverable</div>
+                  <div>Week 1 · Nov 11</div>
+                  <div>Week 2 · Nov 18</div>
+                  <div>Week 3 · Nov 25</div>
+                  <div>Week 4 · Dec 2</div>
+                  <div>Week 5 · Dec 9</div>
+                </div>
+                ${rowsHtml}
+              </div>
+            </div>
+          `;
+        } else {
+          const rowsHtml = visible.map(t => {
+            const tm = TEAM_META[t.team];
+            const col = COLUMNS.find(c => c.id === t.status);
+            return `
+              <tr>
+                <td><span class="task-id">${t.id}</span></td>
+                <td style="font-weight:600; ${t.status === 'done' ? 'text-decoration:line-through; color:var(--ink-muted);' : ''}">${escapeHtml(t.title)}</td>
+                <td><span class="tag ${tm.cls}">${tm.label}</span></td>
+                <td>
+                  <button type="button" class="status-badge" data-advance="${t.id}" title="Click to cycle status">
+                    <span class="status-dot" style="background:${col.color}"></span>
+                    ${col.label}
+                  </button>
+                </td>
+                <td><span class="priority-pill ${t.priority === 'High' ? 'priority-high' : ''}">${t.priority}</span></td>
+                <td style="color:var(--ink-secondary); font-variant-numeric:tabular-nums;">${t.due}</td>
+              </tr>
+            `;
+          }).join('');
+
+          workspaceBody.innerHTML = `
+            <div class="list-view">
+              <table class="list-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Task</th>
+                    <th>Team</th>
+                    <th>Status (click to cycle)</th>
+                    <th>Priority</th>
+                    <th>Due</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+          `;
+
+          workspaceBody.querySelectorAll('[data-advance]').forEach(btn => {
+            btn.addEventListener('click', () => advanceStatus(btn.dataset.advance));
+          });
+        }
+      }
+
+      function bindBoardInteractions() {
+        workspaceBody.querySelectorAll('[data-advance]').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            advanceStatus(btn.dataset.advance);
+          });
+        });
+
+        workspaceBody.querySelectorAll('.task-card').forEach(card => {
+          card.addEventListener('dragstart', e => {
+            draggedId = card.dataset.taskId;
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', draggedId);
+          });
+          card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+            workspaceBody.querySelectorAll('.board-col').forEach(c => c.classList.remove('drag-over'));
+          });
+        });
+
+        workspaceBody.querySelectorAll('.board-col').forEach(col => {
+          col.addEventListener('dragover', e => {
+            e.preventDefault();
+            col.classList.add('drag-over');
+          });
+          col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+          col.addEventListener('drop', e => {
+            e.preventDefault();
+            col.classList.remove('drag-over');
+            const id = draggedId || e.dataTransfer.getData('text/plain');
+            const task = tasks.find(t => t.id === id);
+            if (task && task.status !== col.dataset.colId) {
+              task.status = col.dataset.colId;
+              renderWorkspace();
+              showToast(`Moved ${task.id} to ${COLUMNS.find(c => c.id === task.status).label}`);
+            }
+          });
+        });
+      }
+
+      // View switcher
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.view-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          currentView = btn.dataset.view;
+          renderWorkspace();
+        });
+      });
+
+      // Team filter chips
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentFilter = chip.dataset.filter;
+          renderWorkspace();
+        });
+      });
+
+      // Quick add task
+      document.getElementById('quickAddForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('newTaskTitle');
+        const team = document.getElementById('newTaskTeam').value;
+        const title = input.value.trim();
+        if (!title) {
+          input.focus();
+          return;
+        }
+        const id = `TRL-${nextTaskNum++}`;
+        tasks.unshift({
+          id,
+          title,
+          team,
+          status: 'backlog',
+          priority: 'Med',
+          assignee: 'YO',
+          color: TEAM_META[team].bar,
+          start: 18,
+          span: 28,
+          due: 'Nov 26'
+        });
+        input.value = '';
+        if (currentFilter !== 'all' && currentFilter !== team) {
+          currentFilter = 'all';
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'all'));
+        }
+        renderWorkspace();
+        showToast(`Added ${id} to Backlog`);
+      });
+
+      renderWorkspace();
+
+      /* ----------------------------------------------------------------------
+         Bento: Interactive Auto-cascading Dependencies Demo
+         ---------------------------------------------------------------------- */
+      let slipped = false;
+      const toggleSlipBtn = document.getElementById('toggleSlipBtn');
+      const depStatusText = document.getElementById('depStatusText');
+      const depBar1 = document.getElementById('depBar1');
+      const depBar2 = document.getElementById('depBar2');
+      const depBar3 = document.getElementById('depBar3');
+
+      toggleSlipBtn.addEventListener('click', () => {
+        slipped = !slipped;
+        if (slipped) {
+          depBar1.style.left = '14%';
+          depBar1.textContent = 'Nov 15–19 (+3d)';
+          depBar2.style.left = '44%';
+          depBar2.textContent = 'Nov 20–24 (auto)';
+          depBar3.style.left = '72%';
+          depBar3.textContent = 'Nov 25–Dec 1';
+          depBar3.style.background = 'var(--accent)';
+          depStatusText.innerHTML = 'Launch date: <strong style="color:var(--accent);">Dec 1</strong> (2 downstream tasks shifted)';
+          toggleSlipBtn.textContent = 'Reset schedule';
+        } else {
+          depBar1.style.left = '4%';
+          depBar1.textContent = 'Nov 12–16';
+          depBar2.style.left = '34%';
+          depBar2.textContent = 'Nov 17–21';
+          depBar3.style.left = '62%';
+          depBar3.textContent = 'Nov 22–28';
+          depBar3.style.background = 'var(--pine)';
+          depStatusText.innerHTML = 'Launch date: <strong>Nov 28</strong> (On track)';
+          toggleSlipBtn.textContent = 'Simulate +3d delay';
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         Team Workflows Tabbed Showcase
+         ---------------------------------------------------------------------- */
+      const WORKFLOWS = {
+        product: {
+          title: 'Connect quarterly bets to weekly execution.',
+          desc: 'Score initiatives by impact and confidence, link customer research directly to specs, and see real delivery progress without chasing updates.',
+          bullets: [
+            'Live initiative health rollups from linked engineering cycles',
+            'Shareable stakeholder roadmaps with view-only links',
+            'Structured PRDs right alongside scoped deliverables'
+          ],
+          cards: [
+            { title: 'Self-serve Annual Upgrades', meta: 'Impact 94 · Q4 Priority #1', badge: '78% shipped', cls: 'tag-product' },
+            { title: 'Multi-currency Invoicing', meta: 'Impact 86 · Linked to 14 issues', badge: 'In Progress', cls: 'tag-eng' },
+            { title: 'AI Brief Summarizer', meta: 'Impact 79 · Customer Discovery', badge: 'Scoping', cls: 'tag-design' }
+          ]
+        },
+        engineering: {
+          title: 'Stay in your editor. Let Git keep boards current.',
+          desc: 'Branch names auto-link to Trellis issues. Opening a PR moves cards to Review; merging closes the issue and updates the sprint burndown automatically.',
+          bullets: [
+            'Bi-directional GitHub & GitLab sync with zero webhook boilerplate',
+            'Automated cycle carry-over so nothing silently disappears',
+            'Sub-50ms keyboard triage and bulk editing across issues'
+          ],
+          cards: [
+            { title: 'feat/apple-pay-express #482', meta: '2 approvals · CI green', badge: 'PR Merged', cls: 'tag-eng' },
+            { title: 'fix/safari-sheet-focus #491', meta: 'Review requested from @maya', badge: 'In Review', cls: 'tag-ops' },
+            { title: 'perf/local-sync-indexeddb #495', meta: '−42% cold start latency', badge: 'Cycle 18', cls: 'tag-product' }
+          ]
+        },
+        design: {
+          title: 'Keep critique, specs, and final assets in one place.',
+          desc: 'Embed live Figma frames right inside task cards, capture timestamped review approvals, and hand off clean tokens straight to engineering.',
+          bullets: [
+            'Live Figma embeds stay synced with your latest frame revisions',
+            'Visual review states separate exploration from ready-to-build',
+            'Asset checklists prevent broken states before launch day'
+          ],
+          cards: [
+            { title: 'Checkout Flow v3 — Mobile States', meta: 'Figma synced 4m ago · 3 comments', badge: 'Approved', cls: 'tag-design' },
+            { title: 'Dark Mode Elevation Tokens', meta: 'Contrast AAA verified', badge: 'Handoff', cls: 'tag-eng' },
+            { title: 'Onboarding Empty Illustrations', meta: 'Needs copy review', badge: 'Critique', cls: 'tag-product' }
+          ]
+        },
+        operations: {
+          title: 'Run repeatable launches without spreadsheet chaos.',
+          desc: 'Turn complex product launches, vendor onboarding, and quarterly audits into reusable templates with owner SLAs and automated reminders.',
+          bullets: [
+            'One-click launch templates with pre-wired relative due dates',
+            'Cross-functional readiness checklists with sign-off gates',
+            'Automated escalation alerts when critical milestones stall'
+          ],
+          cards: [
+            { title: 'SOC 2 Annual Evidence Collection', meta: '24 of 24 controls verified', badge: 'Complete', cls: 'tag-ops' },
+            { title: 'Q4 GTM Launch Readiness', meta: 'Legal, Docs & Support aligned', badge: 'On Track', cls: 'tag-product' },
+            { title: 'EU Data Residency Rollout', meta: 'Frankfurt cluster live', badge: 'Active', cls: 'tag-eng' }
+          ]
+        }
+      };
+
+      const workflowStage = document.getElementById('workflowStage');
+
+      function renderWorkflow(key) {
+        const wf = WORKFLOWS[key];
+        workflowStage.innerHTML = `
+          <div class="wf-copy">
+            <h3>${wf.title}</h3>
+            <p>${wf.desc}</p>
+            <ul class="wf-bullets">
+              ${wf.bullets.map(b => `
+                <li>
+                  <span class="check-circle" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span>${b}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          <div class="wf-visual">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; color:var(--ink-muted); padding:0 4px;">
+              <span>LIVE WORKSPACE SNAPSHOT</span>
+              <span>Synced just now</span>
+            </div>
+            ${wf.cards.map(c => `
+              <div class="wf-card-row">
+                <div>
+                  <div style="font-weight:600; color:var(--ink);">${c.title}</div>
+                  <div style="font-size:12px; color:var(--ink-muted); margin-top:2px;">${c.meta}</div>
+                </div>
+                <span class="tag ${c.cls}" style="flex-shrink:0;">${c.badge}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      document.querySelectorAll('.wf-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.wf-tab').forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          renderWorkflow(tab.dataset.wf);
+        });
+      });
+
+      renderWorkflow('product');
+
+      /* ----------------------------------------------------------------------
+         Dark Band: Code Snippet Switcher
+         ---------------------------------------------------------------------- */
+      const CODE_SNIPPETS = {
+        webhook: {
+          raw: `{\n  "event": "task.status_changed",\n  "workspace": "northwind",\n  "payload": {\n    "id": "TRL-142",\n    "title": "One-click Apple Pay express sheet",\n    "from": "in_review",\n    "to": "done",\n    "cycle": 18,\n    "auto_shifted_dependents": 0\n  }\n}`,
+          html: `<span class="tok-com">// Real-time signed webhook delivered in &lt;120ms</span>\n{\n  <span class="tok-key">"event"</span>: <span class="tok-str">"task.status_changed"</span>,\n  <span class="tok-key">"workspace"</span>: <span class="tok-str">"northwind"</span>,\n  <span class="tok-key">"payload"</span>: {\n    <span class="tok-key">"id"</span>: <span class="tok-str">"TRL-142"</span>,\n    <span class="tok-key">"title"</span>: <span class="tok-str">"One-click Apple Pay express sheet"</span>,\n    <span class="tok-key">"from"</span>: <span class="tok-str">"in_review"</span>,\n    <span class="tok-key">"to"</span>: <span class="tok-str">"done"</span>,\n    <span class="tok-key">"cycle"</span>: <span class="tok-num">18</span>,\n    <span class="tok-key">"auto_shifted_dependents"</span>: <span class="tok-num">0</span>\n  }\n}`
+        },
+        graphql: {
+          raw: `query ActiveCycle($team: String!) {\n  cycle(team: $team, active: true) {\n    number\n    completionRate\n    tasks(priority: HIGH) {\n      id\n      title\n      assignee { handle }\n    }\n  }\n}`,
+          html: `<span class="tok-com"># Typed GraphQL API with sub-30ms edge caching</span>\n<span class="tok-key">query</span> ActiveCycle(<span class="tok-num">$team</span>: String!) {\n  cycle(team: <span class="tok-num">$team</span>, active: <span class="tok-num">true</span>) {\n    number\n    completionRate\n    tasks(priority: <span class="tok-str">HIGH</span>) {\n      id\n      title\n      assignee { handle }\n    }\n  }\n}`
+        },
+        cli: {
+          raw: `$ trellis branch TRL-142\n✓ Switched to feat/trl-142-apple-pay-express\n✓ Moved TRL-142 → In Progress\n\n$ trellis ship\n✓ Opened PR #482 linked to Cycle 18`,
+          html: `<span class="tok-com"># Keep git branches and project status effortlessly synced</span>\n<span class="tok-key">$</span> trellis branch <span class="tok-str">TRL-142</span>\n<span class="tok-str">✓</span> Switched to feat/trl-142-apple-pay-express\n<span class="tok-str">✓</span> Moved TRL-142 → In Progress\n\n<span class="tok-key">$</span> trellis ship\n<span class="tok-str">✓</span> Opened PR <span class="tok-num">#482</span> linked to Cycle <span class="tok-num">18</span>`
+        }
+      };
+
+      let activeCodeKey = 'webhook';
+      const codeSnippetEl = document.getElementById('codeSnippet');
+
+      function renderCode(key) {
+        activeCodeKey = key;
+        codeSnippetEl.innerHTML = CODE_SNIPPETS[key].html;
+      }
+
+      document.querySelectorAll('.code-tab[data-code]').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.code-tab[data-code]').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderCode(tab.dataset.code);
+        });
+      });
+
+      document.getElementById('copyCodeBtn').addEventListener('click', () => {
+        const text = CODE_SNIPPETS[activeCodeKey].raw;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast('Snippet copied to clipboard'));
+        } else {
+          showToast('Snippet ready');
+        }
+      });
+
+      renderCode('webhook');
+
+      /* ----------------------------------------------------------------------
+         Pricing Toggle (Annual / Monthly)
+         ---------------------------------------------------------------------- */
+      let annualBilling = true;
+      const billingToggle = document.getElementById('billingToggle');
+      const proPrice = document.getElementById('proPrice');
+      const proUnit = document.getElementById('proUnit');
+      const entPrice = document.getElementById('entPrice');
+      const entUnit = document.getElementById('entUnit');
+      const monthlyLabel = document.getElementById('monthlyLabel');
+      const annualLabel = document.getElementById('annualLabel');
+
+      billingToggle.addEventListener('click', () => {
+        annualBilling = !annualBilling;
+        billingToggle.setAttribute('aria-checked', String(annualBilling));
+        proPrice.textContent = annualBilling ? '$12' : '$15';
+        entPrice.textContent = annualBilling ? '$26' : '$32';
+        const suffix = annualBilling ? '/ member / mo, billed annually' : '/ member / mo, billed monthly';
+        proUnit.textContent = suffix;
+        entUnit.textContent = suffix;
+        monthlyLabel.style.color = annualBilling ? 'var(--ink-muted)' : 'var(--ink)';
+        annualLabel.style.color = annualBilling ? 'var(--ink)' : 'var(--ink-muted)';
+      });
+
+      /* ----------------------------------------------------------------------
+         FAQ Accordion
+         ---------------------------------------------------------------------- */
+      document.querySelectorAll('.faq-q').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.faq-item');
+          const isOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         Mobile Drawer
+         ---------------------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+
+      mobileMenuBtn.addEventListener('click', () => {
+        const open = mobileDrawer.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+      });
+
+      mobileDrawer.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('click', () => {
+          mobileDrawer.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         Signup / Signin / Demo Modal
+         ---------------------------------------------------------------------- */
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalSubtitle = document.getElementById('modalSubtitle');
+      const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+      const modalEmail = document.getElementById('modalEmail');
+      const workspaceField = document.getElementById('workspaceField');
+      const teamSizeField = document.getElementById('teamSizeField');
+
+      function openModal(mode, prefillEmail, planName) {
+        if (mode === 'signin') {
+          modalTitle.textContent = 'Welcome back to Trellis';
+          modalSubtitle.textContent = 'Enter your work email for a one-click sign-in link.';
+          modalSubmitBtn.textContent = 'Send magic link';
+          workspaceField.style.display = 'none';
+          teamSizeField.style.display = 'none';
+        } else if (mode === 'demo') {
+          modalTitle.textContent = 'Book a 15-min walkthrough';
+          modalSubtitle.textContent = 'See how Trellis adapts to your engineering and product cadence.';
+          modalSubmitBtn.textContent = 'Request walkthrough';
+          workspaceField.style.display = 'block';
+          teamSizeField.style.display = 'block';
+        } else {
+          modalTitle.textContent = planName ? `Start with Trellis ${planName}` : 'Create your Trellis workspace';
+          modalSubtitle.textContent = 'Set up in two minutes. Free forever for teams up to 10.';
+          modalSubmitBtn.textContent = 'Launch workspace';
+          workspaceField.style.display = 'block';
+          teamSizeField.style.display = 'block';
+        }
+        if (prefillEmail) modalEmail.value = prefillEmail;
+        modalOverlay.classList.add('open');
+        setTimeout(() => modalEmail.focus(), 40);
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('open');
+      }
+
+      document.querySelectorAll('[data-open-modal]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          openModal(btn.dataset.openModal, '', btn.dataset.plan || '');
+        });
+      });
+
+      document.getElementById('heroSignupForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const email = document.getElementById('heroEmail').value.trim();
+        openModal('signup', email);
+      });
+
+      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', e => {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      document.getElementById('modalForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const email = modalEmail.value.trim();
+        closeModal();
+        e.target.reset();
+        showToast(`Check ${email} — your workspace invite is on the way.`);
+      });
+
+      /* ----------------------------------------------------------------------
+         Command Palette (⌘K / Ctrl+K)
+         ---------------------------------------------------------------------- */
+      const cmdOverlay = document.getElementById('cmdOverlay');
+      const cmdSearch = document.getElementById('cmdSearch');
+      const cmdList = document.getElementById('cmdList');
+
+      const COMMANDS = [
+        { label: 'Switch workspace to Board view', hint: 'Live Demo', run: () => switchView('board') },
+        { label: 'Switch workspace to Timeline (Gantt) view', hint: 'Live Demo', run: () => switchView('timeline') },
+        { label: 'Switch workspace to List view', hint: 'Live Demo', run: () => switchView('list') },
+        { label: 'Add a new task to Cycle 18', hint: 'Action', run: () => { scrollToId('liveWorkspace'); document.getElementById('newTaskTitle').focus(); } },
+        { label: 'Jump to Core Features', hint: 'Section', run: () => scrollToId('features') },
+        { label: 'Jump to Team Workflows', hint: 'Section', run: () => scrollToId('workflows') },
+        { label: 'Jump to Pricing', hint: 'Section', run: () => scrollToId('pricing') },
+        { label: 'Create a free workspace', hint: 'Get Started', run: () => openModal('signup') },
+        { label: 'Book a 15-min walkthrough', hint: 'Sales', run: () => openModal('demo') }
+      ];
+
+      function scrollToId(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function switchView(v) {
+        scrollToId('liveWorkspace');
+        const target = document.querySelector(`.view-btn[data-view="${v}"]`);
+        if (target) target.click();
+      }
+
+      function renderCommands(query = '') {
+        const q = query.trim().toLowerCase();
+        const filtered = COMMANDS.filter(c => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q));
+        cmdList.innerHTML = filtered.length
+          ? filtered.map((c, idx) => `
+              <button type="button" class="cmd-item ${idx === 0 ? 'selected' : ''}" data-cmd-idx="${COMMANDS.indexOf(c)}">
+                <span>${c.label}</span>
+                <small>${c.hint}</small>
+              </button>
+            `).join('')
+          : `<div style="padding:20px; text-align:center; font-size:13.5px; color:var(--ink-muted);">No matching commands</div>`;
+
+        cmdList.querySelectorAll('.cmd-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            closeCmd();
+            COMMANDS[Number(btn.dataset.cmdIdx)].run();
+          });
+        });
+      }
+
+      function openCmd() {
+        cmdSearch.value = '';
+        renderCommands('');
+        cmdOverlay.classList.add('open');
+        setTimeout(() => cmdSearch.focus(), 30);
+      }
+
+      function closeCmd() {
+        cmdOverlay.classList.remove('open');
+      }
+
+      document.getElementById('openCmdBtn').addEventListener('click', openCmd);
+      document.getElementById('bentoOpenCmd').addEventListener('click', openCmd);
+      cmdSearch.addEventListener('input', () => renderCommands(cmdSearch.value));
+      cmdOverlay.addEventListener('click', e => {
+        if (e.target === cmdOverlay) closeCmd();
+      });
+
+      document.addEventListener('keydown', e => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          cmdOverlay.classList.contains('open') ? closeCmd() : openCmd();
+        } else if (e.key === 'Escape') {
+          closeCmd();
+          closeModal();
+        } else if (e.key === 'Enter' && cmdOverlay.classList.contains('open')) {
+          const first = cmdList.querySelector('.cmd-item');
+          if (first) {
+            e.preventDefault();
+            first.click();
+          }
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         Scroll Reveal Observer
+         ---------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => io.observe(el));
+      } else {
+        revealEls.forEach(el => el.classList.add('visible'));
+      }
+    })();
+  </script>
+</body>
+</html>

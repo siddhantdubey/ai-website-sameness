@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bramhall &amp; Reyes — Attorneys at Law, Providence RI</title>
+<meta name="description" content="A three-lawyer firm in downtown Providence handling contracts, leases, employment matters and estates for small businesses and families. Flat fees on most work.">
+<style>
+  :root {
+    --paper: #F6F7F4;
+    --paper-2: #ECEEE9;
+    --ink: #16201B;
+    --ink-soft: #46524B;
+    --rule: #CDD3CC;
+    --green: #1F4A3A;
+    --green-deep: #163629;
+    --red: #B3261E;
+    --red-tint: #FBEEEB;
+    --marker: #F3E46E;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", P052, Georgia, serif;
+    --sans: "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --wrap: 1120px;
+    --pad: clamp(20px, 5vw, 48px);
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, p, dl, dd, ol, ul, blockquote, figure { margin: 0; padding: 0; }
+  ol, ul { list-style: none; }
+  a { color: inherit; }
+  [id] { scroll-margin-top: 24px; }
+
+  .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--pad); }
+  .sans { font-family: var(--sans); }
+
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 2px; }
+  .band :focus-visible { outline-color: var(--marker); }
+
+  .skip {
+    position: absolute; left: -9999px; top: 8px;
+    background: var(--ink); color: var(--paper);
+    padding: 10px 14px; font-family: var(--sans); font-size: .9rem; z-index: 10;
+  }
+  .skip:focus { left: 8px; }
+
+  /* ---------- Header ---------- */
+  .site-header { border-bottom: 1px solid var(--rule); }
+  .site-header .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; padding-block: 18px;
+  }
+  .wordmark { text-decoration: none; line-height: 1.15; white-space: nowrap; }
+  .wordmark b { display: block; font-weight: 400; font-size: 1.375rem; letter-spacing: .005em; }
+  .wordmark span {
+    display: block; font-family: var(--sans); font-size: .6875rem;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .nav { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); font-family: var(--sans); font-size: .9375rem; }
+  .nav a { text-decoration: none; padding-block: 6px; }
+  .nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  .nav .tel { font-weight: 600; color: var(--green); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  @media (max-width: 800px) { .nav a:not(.tel) { display: none; } }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-block; font-family: var(--sans); font-size: .9688rem; font-weight: 600;
+    text-decoration: none; padding: 15px 24px; border-radius: 2px; border: 0; cursor: pointer;
+    background: var(--green); color: var(--paper);
+    transition: background-color .15s ease;
+  }
+  .btn:hover { background: var(--green-deep); }
+  .btn:active { transform: translateY(1px); }
+  .text-link { font-family: var(--sans); font-size: .9688rem; font-weight: 600; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  .text-link:hover { color: var(--green); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 88px); }
+  .hero-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) 250px;
+    column-gap: clamp(32px, 5vw, 72px); align-items: start;
+  }
+  h1 {
+    font-weight: 400;
+    font-size: clamp(2.25rem, 5.7vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: -.012em;
+    max-width: 17ch;
+  }
+  h1 del {
+    text-decoration: none; color: #7B827D;
+    background: linear-gradient(var(--red), var(--red)) no-repeat 0 56% / 100% .05em;
+    animation: strike .7s .45s cubic-bezier(.6, 0, .3, 1) backwards;
+  }
+  h1 ins {
+    text-decoration: none;
+    padding-inline: .08em; margin-inline: -.08em;
+    background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 60% / 100% 78%;
+    animation: mark .9s 1.15s cubic-bezier(.6, 0, .3, 1) backwards;
+  }
+  @keyframes strike { from { background-size: 0% .05em; } }
+  @keyframes mark { from { background-size: 0% 78%; } }
+
+  .comments { padding-top: clamp(8px, 9vw, 150px); display: grid; gap: 14px; }
+  .comment {
+    position: relative; font-family: var(--sans); font-size: .8438rem; line-height: 1.45;
+    background: var(--red-tint); border: 1px solid #E5B9B3; border-radius: 3px;
+    padding: 11px 13px 12px; color: #4A1C18;
+    animation: note .5s 1.2s ease-out backwards;
+  }
+  .comment + .comment { animation-delay: 1.9s; }
+  .comment::before {
+    content: ""; position: absolute; right: 100%; top: 20px;
+    width: clamp(20px, 4vw, 56px); border-top: 1px dashed #D9938B;
+  }
+  .comment b { display: block; font-size: .75rem; letter-spacing: .04em; color: var(--red); margin-bottom: 2px; }
+  @keyframes note { from { opacity: 0; transform: translateX(8px); } }
+
+  .hero-body { margin-top: clamp(28px, 4vw, 44px); max-width: 38em; }
+  .hero-body p { font-size: clamp(1.125rem, 1.5vw, 1.25rem); color: var(--ink-soft); }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-top: 30px; }
+
+  .facts {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(48px, 7vw, 88px); border-top: 1px solid var(--ink);
+  }
+  .facts div { padding: 16px 20px 0 0; }
+  .facts dt { font-family: var(--sans); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .facts dd { font-size: 1.1875rem; margin-top: 2px; }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .comments { padding-top: 26px; max-width: 420px; }
+    .comment::before { display: none; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
+  }
+
+  /* ---------- Sections ---------- */
+  section { padding-block: clamp(56px, 8vw, 104px); }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: clamp(28px, 4vw, 48px); }
+  .sec-no { font-family: var(--sans); font-size: .875rem; font-weight: 600; color: var(--green); white-space: nowrap; letter-spacing: .04em; }
+  h2 { font-weight: 400; font-size: clamp(1.75rem, 3.4vw, 2.625rem); line-height: 1.15; letter-spacing: -.008em; text-wrap: balance; }
+  h3 { font-weight: 400; font-size: 1.5rem; line-height: 1.2; }
+
+  /* Practice */
+  .clauses { border-top: 1px solid var(--ink); }
+  .clause {
+    display: grid; grid-template-columns: 64px minmax(0, 5fr) minmax(0, 7fr);
+    gap: 8px 32px; padding-block: 28px; border-bottom: 1px solid var(--rule);
+  }
+  .clause .no { font-family: var(--sans); font-size: .875rem; color: var(--ink-soft); padding-top: 7px; font-variant-numeric: tabular-nums; }
+  .clause p { color: var(--ink-soft); max-width: 34em; }
+  .clause .typical { font-family: var(--sans); font-size: .875rem; margin-top: 10px; color: var(--ink); }
+  @media (max-width: 760px) {
+    .clause { grid-template-columns: 44px minmax(0, 1fr); }
+    .clause .desc { grid-column: 2; }
+  }
+
+  /* Process */
+  .process { background: var(--paper-2); }
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
+  .step { border-top: 1px solid var(--ink); padding-top: 18px; }
+  .step .when { font-family: var(--sans); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--green); font-weight: 600; }
+  .step h3 { margin: 8px 0 10px; }
+  .step p { color: var(--ink-soft); font-size: 1.0625rem; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+
+  /* Fees band */
+  .band { background: var(--green); color: var(--paper); }
+  .band .sec-no { color: var(--marker); }
+  .fees-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .fees-grid > div > p { color: #CFDCD4; max-width: 26em; }
+  .fees-grid > div > p + p { margin-top: 16px; }
+  .fees-grid .sec-head { margin-bottom: 22px; }
+  .schedule { border-top: 1px solid rgba(246, 247, 244, .7); }
+  .schedule div {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding-block: 15px; border-bottom: 1px solid rgba(246, 247, 244, .2);
+  }
+  .schedule dt { font-size: 1.125rem; }
+  .schedule dd { font-family: var(--sans); font-weight: 600; font-size: 1rem; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+  .schedule dd small { display: block; font-weight: 400; font-size: .75rem; color: #CFDCD4; }
+  .band mark { background: var(--marker); color: var(--ink); padding: 0 .2em; }
+  @media (max-width: 860px) { .fees-grid { grid-template-columns: 1fr; } }
+
+  /* People */
+  .people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
+  .person { border-top: 1px solid var(--ink); padding-top: 18px; }
+  .person .role { font-family: var(--sans); font-size: .875rem; color: var(--green); font-weight: 600; margin: 4px 0 12px; }
+  .person p { color: var(--ink-soft); font-size: 1.0625rem; }
+  .person .bar { font-family: var(--sans); font-size: .8125rem; color: var(--ink-soft); margin-top: 14px; }
+  @media (max-width: 760px) { .people { grid-template-columns: 1fr; } }
+
+  /* Quote */
+  .quote { padding-block: 0 clamp(56px, 8vw, 104px); }
+  .quote blockquote {
+    font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3; max-width: 26em;
+    padding-left: clamp(18px, 3vw, 32px); border-left: 2px solid var(--red);
+  }
+  .quote mark { background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 60% / 100% 78%; color: inherit; }
+  .quote figcaption { font-family: var(--sans); font-size: .875rem; color: var(--ink-soft); margin-top: 18px; padding-left: clamp(20px, 3vw, 34px); }
+
+  /* Contact */
+  .contact { border-top: 1px solid var(--rule); }
+  .contact-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); }
+  .contact-grid .sec-head { margin-bottom: 20px; }
+  .lede { color: var(--ink-soft); max-width: 24em; }
+  .details { margin-top: 30px; display: grid; gap: 20px; }
+  .details dt { font-family: var(--sans); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .details dd { font-size: 1.125rem; }
+  .details a { text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .details a:hover { color: var(--green); }
+
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .field { display: grid; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-family: var(--sans); font-size: .875rem; font-weight: 600; }
+  input, select, textarea {
+    font: inherit; font-family: var(--sans); font-size: 1rem; color: var(--ink);
+    background: #fff; border: 1px solid #9BA59E; border-radius: 2px;
+    padding: 12px 13px; width: 100%; min-height: 48px;
+  }
+  textarea { min-height: 140px; resize: vertical; line-height: 1.5; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 0; border-color: var(--green); }
+  .form-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+  .fine { font-family: var(--sans); font-size: .8125rem; line-height: 1.5; color: var(--ink-soft); flex: 1 1 260px; }
+  #form-status { grid-column: 1 / -1; font-family: var(--sans); font-size: .9375rem; }
+  #form-status:empty { display: none; }
+  @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { form { grid-template-columns: 1fr; } }
+
+  /* Footer */
+  footer { background: var(--ink); color: #C5CCC7; font-family: var(--sans); font-size: .8125rem; line-height: 1.6; padding-block: 36px; }
+  footer .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px 48px; }
+  footer b { color: var(--paper); font-family: var(--serif); font-weight: 400; font-size: 1.125rem; display: block; margin-bottom: 4px; }
+  @media (max-width: 700px) { footer .wrap { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="#top" aria-label="Bramhall and Reyes, Attorneys at Law">
+      <b>Bramhall &amp; Reyes</b>
+      <span>Attorneys at Law</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#practice">Practice</a>
+      <a href="#process">How it works</a>
+      <a href="#fees">Fees</a>
+      <a href="#people">People</a>
+      <a href="#contact">Contact</a>
+      <a class="tel" href="tel:+14015550142">(401) 555-0142</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-grid">
+        <h1 aria-label="Law for small businesses and families, explained in plain English.">
+          <span aria-hidden="true">Law for small businesses and families, <del>hereinafter set forth</del> <ins>explained in plain English.</ins></span>
+        </h1>
+
+        <aside class="comments" aria-label="Margin comments from the partners">
+          <p class="comment"><b>A. REYES</b>Cut “hereinafter set forth.” If a client has to look it up, we wrote it wrong.</p>
+          <p class="comment"><b>D. BRAMHALL</b>Agreed. And tell them what it costs before they have to ask.</p>
+        </aside>
+      </div>
+
+      <div class="hero-body">
+        <p>We’re a three-lawyer firm in downtown Providence. We handle contracts, leases, employment matters and estates, quote most work as a flat fee, and return every call within one business day.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#contact">Book a free 20-minute call</a>
+          <a class="text-link" href="#fees">See what things cost</a>
+        </div>
+      </div>
+
+      <dl class="facts">
+        <div><dt>Founded</dt><dd>2009</dd></div>
+        <div><dt>Attorneys</dt><dd>Three</dd></div>
+        <div><dt>Admitted in</dt><dd>Rhode Island &amp; Massachusetts</dd></div>
+        <div><dt>Reply time</dt><dd>One business day</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <section id="practice" aria-labelledby="practice-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-no" aria-hidden="true">§ 1</span>
+        <h2 id="practice-h">What we handle</h2>
+      </div>
+
+      <ol class="clauses">
+        <li class="clause">
+          <span class="no" aria-hidden="true">1.1</span>
+          <h3>Small business &amp; contracts</h3>
+          <div class="desc">
+            <p>Setting a company up properly, then keeping its paperwork honest: the agreements you sign with partners, suppliers and customers.</p>
+            <p class="typical">LLC and corporation formation · Operating agreements · Vendor and service contracts · Buying or selling a business</p>
+          </div>
+        </li>
+        <li class="clause">
+          <span class="no" aria-hidden="true">1.2</span>
+          <h3>Employment</h3>
+          <div class="desc">
+            <p>For employers who want to do it right and employees who’ve been handed something to sign. We’ll tell you what it says and what to push back on.</p>
+            <p class="typical">Offer letters and handbooks · Severance agreements · Non-competes · Wage and hour questions</p>
+          </div>
+        </li>
+        <li class="clause">
+          <span class="no" aria-hidden="true">1.3</span>
+          <h3>Real estate &amp; leasing</h3>
+          <div class="desc">
+            <p>Commercial leases are written by the landlord’s lawyer. We read them for the tenant, flag what will cost you later, and negotiate the terms that matter.</p>
+            <p class="typical">Commercial lease review · Residential closings · Purchase and sale agreements · Landlord–tenant disputes</p>
+          </div>
+        </li>
+        <li class="clause">
+          <span class="no" aria-hidden="true">1.4</span>
+          <h3>Wills, trusts &amp; probate</h3>
+          <div class="desc">
+            <p>Documents that say who decides and who inherits, written so your family can follow them. And steady help with the court process when someone has died.</p>
+            <p class="typical">Wills and living trusts · Powers of attorney · Health care directives · Estate administration</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="process" id="process" aria-labelledby="process-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-no" aria-hidden="true">§ 2</span>
+        <h2 id="process-h">How an engagement works</h2>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="when">First, a call</span>
+          <h3>Twenty minutes, no charge</h3>
+          <p>You talk to a lawyer, not an intake form. We’ll tell you whether you need us, and if you don’t, who you should call instead.</p>
+        </li>
+        <li class="step">
+          <span class="when">Within two days</span>
+          <h3>A fee in writing</h3>
+          <p>You get a one-page letter stating the work, the price and the timeline. Nothing starts and nothing is billed until you sign it.</p>
+        </li>
+        <li class="step">
+          <span class="when">Then the work</span>
+          <h3>One lawyer, start to finish</h3>
+          <p>The person you spoke to does the work and answers your calls. Every document comes with a short summary of what it does and why.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="fees" aria-labelledby="fees-h">
+    <div class="wrap fees-grid">
+      <div>
+        <div class="sec-head">
+          <span class="sec-no" aria-hidden="true">§ 3</span>
+          <h2 id="fees-h">What it costs</h2>
+        </div>
+        <p>Most of what we do has a predictable shape, so we price it as a flat fee and <mark>publish the common ones</mark>.</p>
+        <p>Work that can’t be scoped in advance is billed at $290 an hour, with a written estimate first and a call before we exceed it.</p>
+      </div>
+
+      <dl class="schedule">
+        <div><dt>Simple will</dt><dd>$450</dd></div>
+        <div><dt>Will, power of attorney &amp; health care directive</dt><dd>$850</dd></div>
+        <div><dt>LLC formation with operating agreement</dt><dd>$1,100 <small>plus state filing fee</small></dd></div>
+        <div><dt>Commercial lease review with written memo</dt><dd>$750</dd></div>
+        <div><dt>Employment or severance agreement review</dt><dd>$500</dd></div>
+        <div><dt>Contract drafting, up to ten pages</dt><dd>from $900</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="people" aria-labelledby="people-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-no" aria-hidden="true">§ 4</span>
+        <h2 id="people-h">The three of us</h2>
+      </div>
+
+      <ul class="people">
+        <li class="person">
+          <h3>Dana Bramhall</h3>
+          <p class="role">Founding partner · Business &amp; contracts</p>
+          <p>Nine years as in-house counsel for a regional grocery chain before opening the firm in 2009. Has read more supplier agreements than is healthy.</p>
+          <p class="bar">Admitted: Rhode Island, Massachusetts</p>
+        </li>
+        <li class="person">
+          <h3>Alma Reyes</h3>
+          <p class="role">Partner · Employment &amp; real estate</p>
+          <p>Joined in 2013 after a clerkship with the Rhode Island Superior Court. Represents both employers and employees, which keeps the advice honest.</p>
+          <p class="bar">Admitted: Rhode Island, Massachusetts</p>
+        </li>
+        <li class="person">
+          <h3>Theo Marchetti</h3>
+          <p class="role">Associate · Wills, trusts &amp; probate</p>
+          <p>Came to law from hospice social work. Handles the firm’s estate planning and walks families through probate one filing at a time.</p>
+          <p class="bar">Admitted: Rhode Island</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="quote">
+    <div class="wrap">
+      <figure>
+        <blockquote>
+          <p>“Alma sent my lease back with eleven notes in the margin and <mark>a one-paragraph summary I could actually act on.</mark> We renegotiated three of them.”</p>
+        </blockquote>
+        <figcaption>Owner of a bakery in Fox Point, client since 2019</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="sec-head">
+          <span class="sec-no" aria-hidden="true">§ 5</span>
+          <h2 id="contact-h">Tell us what’s going on</h2>
+        </div>
+        <p class="lede">A few sentences is plenty. A lawyer will call or write back within one business day to set up your free 20-minute call.</p>
+
+        <dl class="details">
+          <div>
+            <dt>Phone</dt>
+            <dd><a href="tel:+14015550142">(401) 555-0142</a></dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href="mailto:office@bramhallreyes.example">office@bramhallreyes.example</a></dd>
+          </div>
+          <div>
+            <dt>Office</dt>
+            <dd>41 Weybosset Street, Suite 300<br>Providence, RI 02903</dd>
+          </div>
+          <div>
+            <dt>Hours</dt>
+            <dd>Monday to Friday, 8:30 to 5:30<br>Thursday evenings by appointment</dd>
+          </div>
+        </dl>
+      </div>
+
+      <form id="contact-form" novalidate>
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="f-reach">Phone or email</label>
+          <input id="f-reach" name="reach" type="text" autocomplete="email" required>
+        </div>
+        <div class="field full">
+          <label for="f-topic">What is it about?</label>
+          <select id="f-topic" name="topic">
+            <option>Small business or a contract</option>
+            <option>Employment</option>
+            <option>Real estate or a lease</option>
+            <option>A will, trust or estate</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="f-msg">Briefly, what’s the situation?</label>
+          <textarea id="f-msg" name="message" required></textarea>
+        </div>
+        <div class="form-foot">
+          <button class="btn" type="submit">Write to us</button>
+          <p class="fine">Please leave out anything confidential for now. Sending a message does not make us your lawyers; that takes a signed engagement letter.</p>
+        </div>
+        <p id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Bramhall &amp; Reyes LLP</b>41 Weybosset Street, Suite 300, Providence, RI 02903<br>© 2026 Bramhall &amp; Reyes LLP</p>
+    <p>Attorney advertising. The material on this page is general information, not legal advice, and reading it does not create an attorney–client relationship. Prior results do not guarantee a similar outcome. Fees shown are for typical matters and are confirmed in writing before any work begins.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var form = document.getElementById('contact-form');
+    var status = document.getElementById('form-status');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = form.elements.name.value.trim();
+      var reach = form.elements.reach.value.trim();
+      var topic = form.elements.topic.value;
+      var message = form.elements.message.value.trim();
+
+      var missing = !name ? form.elements.name : !reach ? form.elements.reach : !message ? form.elements.message : null;
+      if (missing) {
+        status.textContent = 'Please add your name, a way to reach you, and a line or two about the situation.';
+        missing.focus();
+        return;
+      }
+
+      var subject = 'New enquiry: ' + topic;
+      var body = 'Name: ' + name + '\nReach me at: ' + reach + '\nAbout: ' + topic + '\n\n' + message;
+      window.location.href = 'mailto:office@bramhallreyes.example?subject=' +
+        encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+      status.textContent = 'Your email app should open with the message ready to send. If it doesn’t, call us on (401) 555-0142.';
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+Save this as `index.html`. The layout, styles, and interactions are contained in one file; the sample photographs load from Unsplash and can be replaced with your own image URLs or embedded images.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2ec">
+  <meta name="description" content="Freelance photographer capturing honest moments, considered portraits, and stories worth keeping.">
+  <title>Alex Morgan — Photographer</title>
+
+  <style>
+    :root {
+      --paper: #f4f2ec;
+      --ink: #20211d;
+      --muted: #777970;
+      --line: #d4d5cc;
+      --accent: #697454;
+      --white: #fff;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+      --gutter: clamp(22px, 5vw, 80px);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.menu-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img { display: block; width: 100%; }
+    ::selection { background: #cbd1bc; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+
+    .wrap {
+      width: min(100% - (var(--gutter) * 2), 1600px);
+      margin-inline: auto;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .site-header {
+      position: relative;
+      z-index: 10;
+      background: var(--paper);
+    }
+
+    .header-inner {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: -.06em;
+      line-height: 1;
+    }
+
+    .brand-subtitle {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(26px, 3.2vw, 52px);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav a,
+    .footer-links a {
+      transition: color .2s ease;
+    }
+
+    .desktop-nav a:hover,
+    .footer-links a:hover { color: var(--accent); }
+
+    .nav-contact {
+      padding: 12px 17px;
+      border: 1px solid var(--ink);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      padding: 11px 7px;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      display: block;
+      height: 1px;
+      margin: 6px 0;
+      background: currentColor;
+      transition: transform .2s ease;
+    }
+
+    .mobile-nav { display: none; }
+
+    .hero {
+      padding-top: clamp(38px, 5.5vw, 84px);
+    }
+
+    .hero-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+    }
+
+    .hero-title {
+      max-width: 1300px;
+      margin: clamp(28px, 4vw, 60px) 0 clamp(30px, 4vw, 60px);
+      font-family: var(--serif);
+      font-size: clamp(58px, 9.3vw, 148px);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .88;
+    }
+
+    .hero-title em {
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    .hero-image {
+      position: relative;
+      height: clamp(430px, 58vw, 760px);
+      overflow: hidden;
+      background: #a3a69a;
+    }
+
+    .hero-image img {
+      height: 100%;
+      object-fit: cover;
+      object-position: center 52%;
+    }
+
+    .hero-image::after {
+      position: absolute;
+      inset: 45% 0 0;
+      content: "";
+      background: linear-gradient(transparent, rgba(0, 0, 0, .38));
+      pointer-events: none;
+    }
+
+    .hero-caption {
+      position: absolute;
+      z-index: 1;
+      right: clamp(20px, 3vw, 45px);
+      bottom: clamp(20px, 3vw, 45px);
+      left: clamp(20px, 3vw, 45px);
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      color: white;
+    }
+
+    .hero-caption p { margin: 0; }
+    .hero-caption .caption-title {
+      margin-top: 8px;
+      font-family: var(--serif);
+      font-size: clamp(24px, 3vw, 42px);
+      font-style: italic;
+    }
+
+    .hero-caption .caption-number {
+      font-size: 11px;
+      letter-spacing: .12em;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+      padding-block: clamp(80px, 11vw, 160px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .section-label::before {
+      width: 26px;
+      height: 1px;
+      margin-top: 7px;
+      background: var(--accent);
+      content: "";
+      flex: 0 0 auto;
+    }
+
+    .intro-copy {
+      max-width: 920px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(32px, 4.1vw, 62px);
+      font-weight: 400;
+      letter-spacing: -.04em;
+      line-height: 1.13;
+    }
+
+    .intro-copy em {
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    .work {
+      padding-block: clamp(80px, 10vw, 145px);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: clamp(35px, 5vw, 75px);
+    }
+
+    .section-heading h2,
+    .about h2,
+    .contact h2 {
+      margin: 18px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(52px, 7.2vw, 108px);
+      font-weight: 400;
+      letter-spacing: -.06em;
+      line-height: .95;
+    }
+
+    .section-note {
+      max-width: 210px;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(55px, 8vw, 120px) clamp(20px, 3vw, 46px);
+      align-items: start;
+    }
+
+    .project:nth-child(even) { margin-top: clamp(80px, 13vw, 200px); }
+    .project-image { overflow: hidden; background: #d4d5cc; }
+    .project-image img {
+      height: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      transition: transform .7s cubic-bezier(.2, .65, .2, 1);
+    }
+    .project:nth-child(2) .project-image img { aspect-ratio: 4 / 5.4; }
+    .project:nth-child(3) .project-image img { aspect-ratio: 4 / 3.3; }
+    .project:nth-child(4) .project-image img { aspect-ratio: 4 / 4.6; }
+    .project:hover img { transform: scale(1.035); }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 15px;
+      padding-top: 20px;
+    }
+
+    .project-meta h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(26px, 3vw, 42px);
+      font-weight: 400;
+      letter-spacing: -.04em;
+    }
+
+    .project-meta p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 640px;
+      background: #e5e6dd;
+    }
+
+    .about-image { min-height: 500px; }
+    .about-image img {
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(45px, 7vw, 110px);
+    }
+
+    .about h2 { font-size: clamp(54px, 6.2vw, 95px); }
+    .about h2 em { color: var(--accent); font-weight: 400; }
+
+    .about-copy {
+      max-width: 460px;
+      margin-top: 38px;
+      color: #555950;
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .about-copy p { margin: 0 0 18px; }
+
+    .text-link {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 30px;
+      margin-top: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid currentColor;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .text-link span { transition: transform .2s ease; }
+    .text-link:hover span { transform: translateX(5px); }
+
+    .contact {
+      padding-block: clamp(100px, 13vw, 190px);
+      text-align: center;
+    }
+
+    .contact .section-label { justify-content: center; }
+    .contact h2 { margin-top: 28px; }
+    .contact h2 em { color: var(--accent); font-weight: 400; }
+
+    .contact-copy {
+      max-width: 420px;
+      margin: 30px auto;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .contact-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 35px;
+      min-height: 58px;
+      padding: 0 24px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      transition: background .2s ease;
+    }
+
+    .contact-button:hover { background: var(--accent); }
+
+    .footer {
+      padding-block: 30px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .footer-copy,
+    .footer-links {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .footer-links { display: flex; gap: 26px; }
+
+    @media (max-width: 700px) {
+      .header-inner { min-height: 72px; }
+      .desktop-nav { display: none; }
+      .menu-toggle { display: block; }
+      .menu-open .menu-toggle span:first-child { transform: translateY(3.5px) rotate(45deg); }
+      .menu-open .menu-toggle span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+      .mobile-nav {
+        position: fixed;
+        inset: 72px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 50px var(--gutter);
+        background: var(--paper);
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity .2s ease, visibility .2s ease;
+      }
+
+      .menu-open .mobile-nav { visibility: visible; opacity: 1; }
+      .mobile-nav a {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-family: var(--serif);
+        font-size: 42px;
+        letter-spacing: -.04em;
+      }
+
+      .hero-topline .hero-location { display: none; }
+      .hero-title { font-size: clamp(55px, 11vw, 80px); }
+      .hero-image { height: 62vh; min-height: 420px; }
+      .intro { grid-template-columns: 1fr; gap: 35px; }
+      .section-heading { align-items: start; }
+      .section-note { display: none; }
+      .work-grid { grid-template-columns: 1fr; gap: 50px; }
+      .project:nth-child(even) { margin-top: 0; }
+      .project:nth-child(n) .project-image img { aspect-ratio: 4 / 4.5; }
+      .about { grid-template-columns: 1fr; }
+      .about-image { min-height: 440px; max-height: 650px; }
+      .about-content { padding: 70px var(--gutter); }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="Alex Morgan Photography, home">
+        <span class="brand-name">alex morgan</span>
+        <span class="brand-subtitle">Photography</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#work">Selected work</a>
+        <a href="#about">About</a>
+        <a class="nav-contact" href="#contact">Let's talk ↗</a>
+      </nav>
+
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" inert>
+      <a href="#work">Selected work ↗</a>
+      <a href="#about">About ↗</a>
+      <a href="#contact">Let's talk ↗</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-topline eyebrow">
+        <span>Independent photographer</span>
+        <span class="hero-location">Based in California · Available worldwide</span>
+      </div>
+
+      <h1 class="hero-title" id="hero-title">
+        A little more<br><em>feeling.</em>
+      </h1>
+
+      <div class="hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=2200&amp;q=85"
+          alt="A quiet mountain landscape reflected in a lake"
+          fetchpriority="high">
+        <div class="hero-caption">
+          <div>
+            <p class="eyebrow">Finding beauty in the in-between</p>
+            <p class="caption-title">Stories, honestly told.</p>
+          </div>
+          <p class="caption-number">01 / 04</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro wrap" aria-label="Introduction">
+      <p class="section-label eyebrow">A note from Alex</p>
+      <p class="intro-copy">
+        For the moments that feel like <em>you.</em> The wild, the quiet, and everything beautifully in between.
+      </p>
+    </section>
+
+    <section class="work wrap" id="work" aria-labelledby="work-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label eyebrow">The portfolio · 01—04</p>
+          <h2 id="work-title">Selected work<span style="color: var(--accent)">.</span></h2>
+        </div>
+        <p class="section-note">A collection of people, places, and the moments that connect them.</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="Expressive portrait of a woman in warm light" loading="lazy">
+          </div>
+          <div class="project-meta">
+            <h3>In good light</h3>
+            <p>Portraits / 01</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="Golden sunlight falling across a misty field" loading="lazy">
+          </div>
+          <div class="project-meta">
+            <h3>Somewhere quiet</h3>
+            <p>Places / 02</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A couple celebrating together outdoors" loading="lazy">
+          </div>
+          <div class="project-meta">
+            <h3>The way we are</h3>
+            <p>People / 03</p>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A winding road through a vast natural landscape" loading="lazy">
+          </div>
+          <div class="project-meta">
+            <h3>Room to wander</h3>
+            <p>Travel / 04</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Photographer holding a camera outdoors" loading="lazy">
+      </div>
+      <div class="about-content">
+        <p class="section-label eyebrow">Behind the lens</p>
+        <h2 id="about-title">Hello, I'm<br><em>Alex.</em></h2>
+        <div class="about-copy">
+          <p>I'm a freelance photographer drawn to honest stories, beautiful light, and all the little things that make a moment feel like yours.</p>
+          <p>Whether we're making portraits, documenting a celebration, or creating something for your brand, my approach is relaxed, thoughtful, and always human.</p>
+        </div>
+        <a class="text-link" href="#contact">A little more conversation <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="contact wrap" id="contact" aria-labelledby="contact-title">
+      <p class="section-label eyebrow">Have a story in mind?</p>
+      <h2 id="contact-title">Let's make<br><em>something real.</em></h2>
+      <p class="contact-copy">Big idea or just the beginning of one, I'd love to hear about it. Tell me what you're dreaming up.</p>
+      <a class="contact-button" href="mailto:hello@alexmorganphoto.com?subject=Let's%20create%20something">
+        Get in touch <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <a class="brand" href="#top" aria-label="Back to top">
+        <span class="brand-name">alex morgan</span>
+        <span class="brand-subtitle">Photography</span>
+      </a>
+      <p class="footer-copy">© <span id="year"></span> Alex Morgan Photography</p>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+        <a href="mailto:hello@alexmorganphoto.com">Email ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.querySelector(".menu-toggle");
+    const mobileNav = document.querySelector(".mobile-nav");
+
+    function setMenu(open) {
+      document.body.classList.toggle("menu-open", open);
+      menuButton.setAttribute("aria-expanded", String(open));
+      menuButton.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      mobileNav.inert = !open;
+    }
+
+    menuButton.addEventListener("click", () => {
+      setMenu(menuButton.getAttribute("aria-expanded") !== "true");
+    });
+
+    mobileNav.addEventListener("click", (event) => {
+      if (event.target.closest("a")) setMenu(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menuButton.getAttribute("aria-expanded") === "true") {
+        setMenu(false);
+        menuButton.focus();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 700) setMenu(false);
+    });
+
+    document.querySelector("#year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+```

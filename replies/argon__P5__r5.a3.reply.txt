@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CADENCE // Operations & Project Ledger for Hardware & Software Teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F4F1EA;
+      --paper-dark: #EAE5DB;
+      --paper-card: #FAF8F3;
+      --ink: #161615;
+      --ink-muted: #575652;
+      --ink-faint: #8C8A83;
+      --rule: #161615;
+      --rule-soft: #D3CEC3;
+      --accent: #D64527; /* International Signal Orange */
+      --accent-soft: #F7E1DC;
+      --amber: #C98209;
+      --green: #1C6B43;
+      --blue: #1E4D8C;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --serif: 'Fraunces', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-image: radial-gradient(rgba(22, 22, 21, 0.06) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* UTILITIES & GRID */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      border-left: 1px solid var(--rule);
+      border-right: 1px solid var(--rule);
+      background-color: var(--paper);
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: -0.01em;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 8px;
+      border: 1px solid var(--rule);
+      background: var(--paper-card);
+      font-weight: 500;
+    }
+
+    .tag.orange {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+
+    /* TOP TELEMETRY BAR */
+    .telemetry-bar {
+      border-bottom: 1px solid var(--rule);
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 7px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .telemetry-bar .left, .telemetry-bar .right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #27C96D;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* NAVIGATION */
+    header {
+      border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--paper);
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr auto;
+      align-items: stretch;
+    }
+
+    .brand {
+      padding: 18px 24px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      grid-template-columns: repeat(2, 7px);
+      gap: 2px;
+      margin-right: 10px;
+    }
+    .brand-mark span {
+      width: 7px;
+      height: 7px;
+      background: var(--ink);
+    }
+    .brand-mark span:nth-child(2) {
+      background: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      position: relative;
+      padding: 4px 0;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-Links-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      margin-right: 4px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: stretch;
+      border-left: 1px solid var(--rule);
+    }
+
+    .btn-nav {
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--ink);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-nav.login {
+      border-right: 1px solid var(--rule);
+    }
+    .btn-nav.login:hover {
+      background: var(--paper-dark);
+    }
+
+    .btn-nav.primary {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+    .btn-nav.primary:hover {
+      background: var(--ink);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-main {
+      padding: 64px 48px 56px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-index {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 4.6vw, 4.1rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin-bottom: 28px;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 400;
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
+
+    .hero-sub {
+      font-size: 1.12rem;
+      line-height: 1.6;
+      color: var(--ink-muted);
+      max-width: 58ch;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px dashed var(--rule-soft);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      font-weight: 500;
+      padding: 15px 24px;
+      text-decoration: none;
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--accent);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 6px 6px 0 var(--accent);
+    }
+
+    .btn-primary:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--accent);
+    }
+
+    .cli-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 14px 18px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: all;
+    }
+
+    .cli-install .prompt {
+      color: var(--accent);
+      user-select: none;
+    }
+
+    .cli-install .copy-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      background: var(--paper-dark);
+      border: 1px solid var(--rule-soft);
+      color: var(--ink-muted);
+      user-select: none;
+    }
+
+    /* HERO RIGHT: MANIFESTO & METRICS LOG */
+    .hero-aside {
+      display: flex;
+      flex-direction: column;
+      background: var(--paper-card);
+    }
+
+    .aside-block {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .aside-block:last-child {
+      border-bottom: none;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .aside-title {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .complaint-list {
+      list-style: none;
+      font-size: 0.9rem;
+      display: grid;
+      gap: 10px;
+    }
+
+    .complaint-list li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: baseline;
+      color: var(--ink);
+    }
+
+    .complaint-list .cross {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    .spec-table td {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--rule-soft);
+    }
+
+    .spec-table td:first-child {
+      color: var(--ink-muted);
+    }
+
+    .spec-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    /* INTERACTIVE WORKBENCH PREVIEW */
+    .workbench-section {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .workbench-header {
+      padding: 16px 24px;
+      background: var(--paper-dark);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .wb-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .wb-tab {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      padding: 6px 12px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wb-tab.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .wb-tab .key-hint {
+      font-size: 0.68rem;
+      opacity: 0.65;
+      padding: 0 4px;
+      border: 1px solid currentColor;
+    }
+
+    .wb-layout {
+      display: grid;
+      grid-template-columns: 1fr 370px;
+      background: var(--paper-card);
+      min-height: 520px;
+    }
+
+    /* TASK LEDGER TABLE */
+    .ledger-pane {
+      border-right: 1px solid var(--rule);
+      overflow-x: auto;
+    }
+
+    .ledger-Subbar {
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--rule-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: var(--paper);
+    }
+
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+
+    .ledger-table th {
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper-dark);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .ledger-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--rule-soft);
+      vertical-align: middle;
+    }
+
+    .ledger-row {
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+
+    .ledger-row:hover {
+      background: #EFECE4;
+    }
+
+    .ledger-row.selected {
+      background: var(--accent-soft);
+    }
+
+    .ledger-row.selected td:first-child {
+      box-shadow: inset 4px 0 0 var(--accent);
+    }
+
+    .id-cell {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      color: var(--ink-muted);
+    }
+
+    .title-cell {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .blocker-pill {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      margin-left: 8px;
+      background: #FDE5E0;
+      color: #B42B10;
+      border: 1px solid #E29788;
+      vertical-align: middle;
+    }
+
+    .status-badge {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border: 1px solid var(--rule);
+      white-space: nowrap;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .status-badge.in-review { background: #E4EEF8; color: var(--blue); border-color: var(--blue); }
+    .status-badge.blocked { background: #FCE6E2; color: var(--accent); border-color: var(--accent); }
+    .status-badge.active { background: #FDF3DF; color: var(--amber); border-color: var(--amber); }
+    .status-badge.merged { background: #E2F2EA; color: var(--green); border-color: var(--green); }
+
+    .drift-cell {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .drift-pos { color: var(--accent); font-weight: 600; }
+    .drift-neg { color: var(--green); }
+    .drift-zero { color: var(--ink-faint); }
+
+    /* INSPECTOR PANE */
+    .inspector-pane {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--paper);
+    }
+
+    .inspector-header {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+    }
+
+    .inspector-id {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--accent);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .inspector-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .inspector-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--rule-soft);
+      margin-bottom: 16px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .meta-label {
+      color: var(--ink-faint);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .meta-val {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .inspector-body {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .git-trace {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .git-trace .hash { color: #F5B14C; }
+    .git-trace .branch { color: #67D49B; }
+
+    .inspector-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .btn-small {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      padding: 8px 10px;
+      border: 1px solid var(--rule);
+      background: var(--paper-card);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: center;
+      font-weight: 500;
+    }
+    .btn-small:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    /* SECTION HEADERS */
+    .section-bar {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ARCHITECTURE / BENTO SCHEMATIC */
+    .schematic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .schematic-cell {
+      padding: 40px 32px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--paper);
+    }
+
+    .schematic-cell:last-child {
+      border-right: none;
+    }
+
+    .cell-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .schematic-cell h3 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .schematic-cell p {
+      font-size: 0.94rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .diagram-box {
+      border: 1px solid var(--rule);
+      background: var(--paper-card);
+      padding: 18px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .gantt-row:last-child { margin-bottom: 0; }
+
+    .gantt-bar-wrap {
+      height: 18px;
+      background: var(--paper-dark);
+      border: 1px solid var(--rule-soft);
+      position: relative;
+    }
+
+    .gantt-bar {
+      height: 100%;
+      background: var(--ink);
+    }
+    .gantt-bar.slip {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--accent),
+        var(--accent) 5px,
+        #fff 5px,
+        #fff 10px
+      );
+      border-right: 2px solid var(--accent);
+    }
+
+    /* COMPARISON / ANTI-BLOAT */
+    .comparison-section {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .comp-intro {
+      padding: 56px 40px;
+      border-right: 1px solid var(--rule);
+      background: var(--paper-card);
+    }
+
+    .comp-intro h2 {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      font-weight: 400;
+      line-height: 1.12;
+      margin-bottom: 20px;
+    }
+
+    .comp-intro p {
+      color: var(--ink-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .comp-table-wrap {
+      padding: 0;
+      overflow-x: auto;
+    }
+
+    .comp-table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .comp-table th, .comp-table td {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--rule);
+      text-align: left;
+    }
+
+    .comp-table th {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      background: var(--paper-dark);
+      color: var(--ink-muted);
+    }
+
+    .comp-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comp-table td:nth-child(2) {
+      color: var(--ink-faint);
+      text-decoration: line-through;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+
+    .comp-table td:nth-child(3) {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: #FAF6EC;
+      border-left: 1px solid var(--rule);
+    }
+
+    /* FIELD REPORTS (TESTIMONIALS) */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .report-card {
+      padding: 36px 32px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--paper-card);
+    }
+    .report-card:last-child { border-right: none; }
+
+    .report-quote {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .report-author {
+      border-top: 1px solid var(--rule-soft);
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+    }
+
+    .author-name {
+      font-weight: 600;
+      color: var(--ink);
+      display: block;
+    }
+
+    .author-org {
+      color: var(--ink-muted);
+    }
+
+    /* PRICING & CALCULATOR */
+    .pricing-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .pricing-calc {
+      padding: 48px 40px;
+      border-right: 1px solid var(--rule);
+      background: var(--paper);
+    }
+
+    .pricing-calc h2 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .slider-box {
+      margin: 32px 0;
+      padding: 24px;
+      border: 1px solid var(--rule);
+      background: var(--paper-card);
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      font-family: var(--mono);
+    }
+
+    .seat-readout {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--ink);
+      height: 6px;
+      background: var(--paper-dark);
+      cursor: pointer;
+    }
+
+    .cost-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--rule-soft);
+      font-family: var(--mono);
+    }
+
+    .cost-figure {
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .pricing-tiers {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .tier-box {
+      padding: 36px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--paper-card);
+    }
+    .tier-box:last-child {
+      border-bottom: none;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .tier-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .tier-name {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+    }
+
+    .tier-price {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .tier-specs {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      margin-top: 16px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 48px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+      background: var(--paper-dark);
+      font-size: 0.86rem;
+    }
+
+    .footer-col h4 {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--ink-muted);
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .footer-col a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .footer-col a:hover {
+      text-decoration: underline;
+    }
+
+    .colophon {
+      border-top: 1px solid var(--rule);
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      background: var(--paper);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero, .wb-layout, .schematic-grid, .comparison-section, .reports-grid, .pricing-section {
+        grid-template-columns: 1fr;
+      }
+      .hero-main, .ledger-pane, .schematic-cell, .comp-intro, .report-card, .pricing-calc {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .nav-grid {
+        grid-template-columns: 1fr auto;
+      }
+      .nav-links {
+        display: none;
+      }
+      footer {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- TOP TELEMETRY BAR -->
+    <div class="telemetry-bar">
+      <div class="left">
+        <span><span class="status-dot"></span>BUILD v2.14.8-STABLE</span>
+        <span>SYNC ENGINE: CRDT / SQLITE-WASM</span>
+      </div>
+      <div class="right">
+        <span>MEDIAN KEYSTROKE LATENCY: 11.4ms</span>
+        <span>DOCS: /MAN/CADENCE(1)</span>
+      </div>
+    </div>
+
+    <!-- HEADER NAVIGATION -->
+    <header>
+      <nav class="nav-grid">
+        <a href="#" class="brand">
+          <span>
+            <span class="brand-mark">
+              <span></span><span></span><span></span><span></span>
+            </span>
+            CADENCE
+          </span>
+          <span class="mono" style="color: var(--ink-faint); font-weight: 400;">[SYS-09]</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#workbench"><span class="nav-Links-num">01.</span>Workbench</a>
+          <a href="#architecture"><span class="nav-Links-num">02.</span>Critical Path</a>
+          <a href="#audit"><span class="nav-Links-num">03.</span>Audit Ledger</a>
+          <a href="#pricing"><span class="nav-Links-num">04.</span>Licensing</a>
+        </div>
+
+        <div class="nav-actions">
+          <a href="#pricing" class="btn-nav login">Sign In</a>
+          <a href="#workbench" class="btn-nav primary">Download Binary →</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-main">
+        <div>
+          <div class="hero-index">
+            <span class="tag orange">RELEASE 2.14</span>
+            <span>LOCAL-FIRST PROJECT LEDGER FOR HARDWARE &amp; SOFTWARE ENGINEERING</span>
+          </div>
+          <h1>
+            Stop managing work inside <em>ceremonial</em> spreadsheets.
+          </h1>
+          <p class="hero-sub">
+            Cadence replaces bloated ticket queues and sluggish web boards with an offline-capable, plain-text-backed schedule ledger. Built for engineering teams shipping firmware, silicon, and production infrastructure on strict deadlines.
+          </p>
+        </div>
+
+        <div class="hero-cta-group">
+          <a href="#workbench" class="btn-primary">
+            <span>Launch Interactive Ledger</span>
+            <span>↵</span>
+          </a>
+          <div class="cli-install" id="cliCopy" title="Click to copy install command">
+            <span class="prompt">$</span>
+            <code>brew install cadence-org/tap/cadence</code>
+            <span class="copy-badge" id="copyStatus">COPY</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <div class="aside-block">
+          <div class="aside-title">
+            <span>WHY TEAMS MIGRATE</span>
+            <span>[DIAGNOSTIC]</span>
+          </div>
+          <ul class="complaint-list">
+            <li><span class="cross">×</span> No "Story Points" or AI summary bots hallucinating status updates.</li>
+            <li><span class="cross">×</span> No 4-second spinner when filtering 12,000 open issues.</li>
+            <li><span class="cross">×</span> No broken dependencies hidden three sub-tasks deep.</li>
+            <li><span class="cross">×</span> Two-way Git commit trailers update task state without leaving your terminal.</li>
+          </ul>
+        </div>
+
+        <div class="aside-block">
+          <div class="aside-title">
+            <span>RUNTIME BENCHMARK (10K ISSUES)</span>
+            <span>M2 AIR / 8GB</span>
+          </div>
+          <table class="spec-table">
+            <tr>
+              <td>Cold Boot to Interactive</td>
+              <td>38 ms</td>
+            </tr>
+            <tr>
+              <td>Full-Text Regex Search</td>
+              <td>4.2 ms</td>
+            </tr>
+            <tr>
+              <td>Critical Path Recalculation</td>
+              <td>9.1 ms</td>
+            </tr>
+            <tr>
+              <td>Storage Footprint (On-Disk)</td>
+              <td>14.6 MB (.sqlite)</td>
+            </tr>
+            <tr>
+              <td>Offline Airplane Mode</td>
+              <td>100% Read/Write</td>
+            </tr>
+          </table>
+        </div>
+      </aside>
+    </section>
+
+    <!-- INTERACTIVE WORKBENCH -->
+    <section id="workbench" class="workbench-section">
+      <div class="workbench-header">
+        <div>
+          <span class="tag">LIVE SANDBOX</span>
+          <span class="mono" style="margin-left: 10px; font-weight: 600;">WORKSPACE: ORBITAL-TELEMETRY-REV-C</span>
+        </div>
+        <div class="wb-controls">
+          <button class="wb-tab active" data-filter="all">All Units (6) <span class="key-hint">A</span></button>
+          <button class="wb-tab" data-filter="blocked">Blocked / Slipping (2) <span class="key-hint">B</span></button>
+          <button class="wb-tab" data-filter="hardware">Hardware / PCB <span class="key-hint">H</span></button>
+          <button class="wb-tab" data-filter="firmware">Core Firmware <span class="key-hint">F</span></button>
+        </div>
+      </div>
+
+      <div class="wb-layout">
+        <!-- LEFT TABLE -->
+        <div class="ledger-pane">
+          <div class="ledger-Subbar">
+            <span>CLICK ANY ROW OR PRESS <kbd style="border:1px solid var(--rule); padding:0 4px;">J</kbd> / <kbd style="border:1px solid var(--rule); padding:0 4px;">K</kbd> TO INSPECT DEPENDENCY TRACE</span>
+            <span id="rowCountDisplay">SHOWING 6 OF 6 WORK UNITS</span>
+          </div>
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Work Unit / Deliverable</th>
+                <th>Subsystem</th>
+                <th>Owner</th>
+                <th>State</th>
+                <th>Schedule Drift</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- RIGHT INSPECTOR -->
+        <div class="inspector-pane" id="inspectorPane">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE SCHEMATIC -->
+    <div class="section-bar" id="architecture">
+      <span>SECTION 02 // ARCHITECTURAL PRIMITIVES</span>
+      <span>DETERMINISTIC SCHEDULING</span>
+    </div>
+
+    <section class="schematic-grid">
+      <div class="schematic-cell">
+        <div>
+          <span class="cell-num">01 / CRITICAL PATH ENGINE</span>
+          <h3>True dependency propagation, not decorative arrows.</h3>
+          <p>
+            When a PCB layout slips by four days in Shenzhen, Cadence automatically recalculates downstream firmware bring-up and enclosure tooling dates across every linked milestone.
+          </p>
+        </div>
+        <div class="diagram-box">
+          <div style="margin-bottom: 10px; color: var(--ink-muted); display:flex; justify-content:space-between;">
+            <span>PROPAGATION DELTA</span>
+            <span style="color: var(--accent); font-weight: 600;">+4d SLIP DETECTED</span>
+          </div>
+          <div class="gantt-row">
+            <span>HW-104</span>
+            <div class="gantt-bar-wrap"><div class="gantt-bar" style="width: 65%;"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span>FW-209</span>
+            <div class="gantt-bar-wrap"><div class="gantt-bar slip" style="width: 82%; margin-left: 18%;"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span>QA-044</span>
+            <div class="gantt-bar-wrap"><div class="gantt-bar" style="width: 45%; margin-left: 55%; opacity: 0.4;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="schematic-cell">
+        <div>
+          <span class="cell-num">02 / BI-DIRECTIONAL GIT LEDGER</span>
+          <h3>State changes live inside your commit history.</h3>
+          <p>
+            Close blockers, log bench hours, or reassign owners via standard Git commit trailers or PR merge hooks. Your project tracker never drifts out of sync with the actual repository.
+          </p>
+        </div>
+        <div class="diagram-box" style="background: var(--ink); color: var(--paper);">
+          <div style="color: #8C8A83; margin-bottom: 6px;">$ git commit -m "Fix DMA ring buffer overflow"</div>
+          <div style="color: #67D49B;">Cadence-ID: FW-209</div>
+          <div style="color: #F5B14C;">Cadence-State: in-review -> merged</div>
+          <div style="color: #D3CEC3;">Cadence-Unblocks: HW-118, QA-012</div>
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #444; color: #A3A19A;">
+            [hook] Ledger synced in 6ms (sha: 9f4c1a2)
+          </div>
+        </div>
+      </div>
+
+      <div class="schematic-cell">
+        <div>
+          <span class="cell-num">03 / PLAIN-TEXT ESCAPE HATCH</span>
+          <h3>Own your data in SQLite &amp; Markdown forever.</h3>
+          <p>
+            Every workspace is backed by an open schema SQLite file and human-readable Markdown specs. Query your project velocity with standard SQL or pipe tasks directly into `jq`.
+          </p>
+        </div>
+        <div class="diagram-box">
+          <div style="color: var(--ink-muted); margin-bottom: 6px;">$ cadence query "SELECT id, drift_days FROM units WHERE state='blocked'"</div>
+          <pre style="font-family: var(--mono); font-size: 0.73rem; line-height: 1.45; color: var(--ink);">┌────────┬────────────┐
+│ id     │ drift_days │
+├────────┼────────────┤
+│ HW-104 │ +4.5d      │
+│ RF-302 │ +2.0d      │
+└────────┴────────────┘</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANTI-BLOAT AUDIT COMPARISON -->
+    <div class="section-bar" id="audit">
+      <span>SECTION 03 // OPERATIONAL CONTRAST</span>
+      <span>ZERO CEREMONY GUARANTEE</span>
+    </div>
+
+    <section class="comparison-section">
+      <div class="comp-intro">
+        <span class="tag" style="margin-bottom: 16px;">DESIGN PHILOSOPHY</span>
+        <h2>Built for engineers who despise "project management."</h2>
+        <p>
+          Most trackers are designed to sell seats to middle management—optimizing for colorful burndown charts while making daily task entry painfully slow for the people doing the actual work.
+        </p>
+        <p style="margin-bottom: 0;">
+          Cadence strips away theatrical agile rituals in favor of raw throughput, keyboard-only navigation, and verifiable dates.
+        </p>
+      </div>
+
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Workflow Dimension</th>
+              <th>Legacy Cloud Trackers</th>
+              <th>Cadence Ledger v2.14</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Estimation Model</strong></td>
+              <td>Abstract Story Points &amp; T-Shirt Sizes</td>
+              <td>Concrete Engineering Days + Confidence Bounds (±d)</td>
+            </tr>
+            <tr>
+              <td><strong>Bulk Editing 50 Tasks</strong></td>
+              <td>40+ mouse clicks across modal popups</td>
+              <td>Multi-cursor vim bindings or 1-line SQL/CLI command</td>
+            </tr>
+            <tr>
+              <td><strong>Offline / Lab Floor Access</strong></td>
+              <td>Read-only cached tab (fails on save)</td>
+              <td>Full local CRDT database; merges cleanly on reconnect</td>
+            </tr>
+            <tr>
+              <td><strong>Custom Fields</strong></td>
+              <td>Admin-locked schemas &amp; slow dropdowns</td>
+              <td>Typed TOML frontmatter validated on commit</td>
+            </tr>
+            <tr>
+              <td><strong>Self-Hosting Footprint</strong></td>
+              <td>Kubernetes cluster + 16GB RAM Java JVM</td>
+              <td>Single 22MB static Rust binary on any Linux box</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FIELD REPORTS -->
+    <div class="section-bar">
+      <span>SECTION 04 // FIELD REPORTS</span>
+      <span>PRODUCTION DEPLOYMENTS</span>
+    </div>
+
+    <section class="reports-grid">
+      <div class="report-card">
+        <p class="report-quote">
+          "We coordinate 45 electrical and firmware engineers across Munich and Taipei. Moving off Jira to Cadence cut our weekly schedule reconciliation meeting from 90 minutes to 15. The dependency drift alerts alone saved our Rev-B tapeout."
+        </p>
+        <div class="report-author">
+          <div>
+            <span class="author-name">Dr. Lukas Vance</span>
+            <span class="author-org">VP Silicon Engineering, Kestrel Avionics</span>
+          </div>
+          <span class="tag">140 SEATS</span>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <p class="report-quote">
+          "Our RF test chambers are Faraday-shielded with zero Wi-Fi. Cadence is the only issue ledger that lets technicians log hardware anomalies offline on rugged ThinkPads and sync automatically when they step back into the hallway."
+        </p>
+        <div class="report-author">
+          <div>
+            <span class="author-name">Maren Lindqvist</span>
+            <span class="author-org">Principal Test Architect, NordVolt Robotics</span>
+          </div>
+          <span class="tag">85 SEATS</span>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <p class="report-quote">
+          "No AI chatbots popping up to ask if I want to 'summarize my sprint vibes.' Just an absurdly fast table, instant keyboard filtering, and commit hooks that actually respect how systems programmers work."
+        </p>
+        <div class="report-author">
+          <div>
+            <span class="author-name">Devon K. Okafor</span>
+            <span class="author-org">Staff Storage Kernel Lead, Oxide-Core</span>
+          </div>
+          <span class="tag">60 SEATS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING & SEAT CALCULATOR -->
+    <div class="section-bar" id="pricing">
+      <span>SECTION 05 // COMMERCIAL LICENSING</span>
+      <span>FLAT-RATE / NO FEATURE GATING</span>
+    </div>
+
+    <section class="pricing-section">
+      <div class="pricing-calc">
+        <span class="tag" style="margin-bottom: 12px;">TRANSPARENT COST MODEL</span>
+        <h2>Every feature included. Pay only for active committers.</h2>
+        <p style="color: var(--ink-muted); font-size: 0.94rem;">
+          Read-only stakeholders, external PCB vendors, and Guest QA testers are always free. Drag the slider to calculate your exact annual or monthly commitment.
+        </p>
+
+        <div class="slider-box">
+          <div class="slider-header">
+            <span>ACTIVE ENGINEERING SEATS</span>
+            <span class="seat-readout"><span id="seatCount">25</span> Engineers</span>
+          </div>
+          <input type="range" id="seatSlider" min="5" max="250" step="5" value="25">
+          <div class="cost-breakdown">
+            <div>
+              <span class="meta-label">MONTHLY LEDGER CLOUD</span>
+              <div class="cost-figure" id="monthlyPrice">$350<span style="font-size:0.9rem; font-weight:400; color:var(--ink-muted);">/mo</span></div>
+              <span class="mono" style="color: var(--ink-faint);">$14 per active seat</span>
+            </div>
+            <div>
+              <span class="meta-label">AIR-GAPPED SELF-HOSTED</span>
+              <div class="cost-figure" id="annualPrice">$3,600<span style="font-size:0.9rem; font-weight:400; color:var(--ink-muted);">/yr</span></div>
+              <span class="mono" style="color: var(--green);">Includes source escrow &amp; SAML</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mono" style="color: var(--ink-muted); font-size: 0.75rem;">
+          * Teams under 5 engineers and verified open-source hardware/software projects run free forever.
+        </div>
+      </div>
+
+      <div class="pricing-tiers">
+        <div class="tier-box">
+          <div>
+            <div class="tier-head">
+              <span class="tier-name">Managed Relay Cloud</span>
+              <span class="tier-price">$14 / user / mo</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-muted);">
+              End-to-end encrypted CRDT sync across macOS, Linux, Windows, and Web with zero server maintenance.
+            </p>
+            <ul class="tier-specs">
+              <li>✓ Unlimited workspaces &amp; units</li>
+              <li>✓ GitHub / GitLab / Gitea hooks</li>
+              <li>✓ 99.99% uptime SLA relay</li>
+              <li>✓ Automated hourly SQLite snapshots</li>
+            </ul>
+          </div>
+          <div style="margin-top: 20px;">
+            <a href="#workbench" class="btn-primary" style="padding: 10px 18px; font-size: 0.78rem;">Provision Cloud Workspace →</a>
+          </div>
+        </div>
+
+        <div class="tier-box">
+          <div>
+            <div class="tier-head">
+              <span class="tier-name" style="color: var(--paper);">On-Premise / ITAR Binary</span>
+              <span class="tier-price" style="color: #F5B14C;">$12 / user / mo (billed annually)</span>
+            </div>
+            <p style="font-size: 0.88rem; color: #B8B5AD;">
+              Deploy the single-file Rust sync daemon inside your private VPC or air-gapped lab network.
+            </p>
+            <ul class="tier-specs" style="color: #D3CEC3;">
+              <li>✓ Zero external telemetry calls</li>
+              <li>✓ OIDC / Okta / LDAP auth</li>
+              <li>✓ Full C &amp; Rust plugin FFI</li>
+              <li>✓ Dedicated build engineer support</li>
+            </ul>
+          </div>
+          <div style="margin-top: 20px;">
+            <a href="#workbench" class="btn-small" style="display:inline-block; background: var(--accent); color: #fff; border-color: var(--accent); padding: 10px 18px; text-decoration: none;">Download Linux x86_64 Tarball (.tar.zst)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-col">
+        <div class="brand" style="padding: 0; border: none; margin-bottom: 12px;">
+          <span>
+            <span class="brand-mark">
+              <span></span><span></span><span></span><span></span>
+            </span>
+            CADENCE SYSTEMS INC.
+          </span>
+        </div>
+        <p style="color: var(--ink-muted); max-width: 36ch; font-size: 0.84rem; margin-bottom: 16px;">
+          Industrial-grade project scheduling and dependency accounting for high-consequence engineering teams.
+        </p>
+        <div class="mono" style="color: var(--ink-faint);">
+          PGP: 4F92 881C 09A1 E3B0
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Distribution</h4>
+        <ul>
+          <li><a href="#workbench">macOS Universal (.dmg)</a></li>
+          <li><a href="#workbench">Linux AppImage / DEB / RPM</a></li>
+          <li><a href="#workbench">Windows x64 (.msi)</a></li>
+          <li><a href="#workbench">Homebrew &amp; Nix Flake</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Documentation</h4>
+        <ul>
+          <li><a href="#architecture">Critical Path Math</a></li>
+          <li><a href="#architecture">SQLite Schema Reference</a></li>
+          <li><a href="#audit">Jira / Linear Importer CLI</a></li>
+          <li><a href="#architecture">Git Trailer Specification</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#audit">Changelog (v2.14.8)</a></li>
+          <li><a href="#pricing">Security &amp; SOC2 Report</a></li>
+          <li><a href="#pricing">Source Escrow Terms</a></li>
+          <li><a href="mailto:ops@cadence-ledger.dev">ops@cadence-ledger.dev</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <div class="colophon">
+      <span>© 2026 CADENCE SYSTEMS INC. ALL RIGHTS RESERVED.</span>
+      <span>NO COOKIES // NO TRACKING PIXELS // RENDERED IN PURE HTML/CSS</span>
+    </div>
+  </div>
+
+  <script>
+    // WORKBENCH DATASET
+    const WORK_UNITS = [
+      {
+        id: "HW-104",
+        title: "4-Layer Power Distribution PCB Layout & Impedance Check",
+        category: "hardware",
+        subsystem: "Power / Avionics",
+        owner: "k.chen",
+        state: "blocked",
+        stateLabel: "BLOCKED",
+        blocker: "Awaiting TI Buck Regulator BOM",
+        drift: "+4.5d",
+        driftClass: "drift-pos",
+        estimate: "6.0d ± 1.0d",
+        downstream: "FW-209, QA-044 (2 milestones shifted)",
+        notes: "Fab house flagged 90-ohm differential pair spacing on Layer 2. Waiting on updated footprint for TPS54302 before Gerbers can be locked.",
+        gitCommit: "c81a4f0",
+        gitBranch: "hw/rev-c-pdn-layout",
+        gitMsg: "Update copper pour clearance around Buck SW node"
+      },
+      {
+        id: "FW-209",
+        title: "SPI DMA Ring-Buffer Driver for IMU Telemetry @ 4kHz",
+        category: "firmware",
+        subsystem: "RTOS Kernel",
+        owner: "m.kovacs",
+        state: "in-review",
+        stateLabel: "IN REVIEW",
+        blocker: null,
+        drift: "0.0d",
+        driftClass: "drift-zero",
+        estimate: "4.0d ± 0.5d",
+        downstream: "QA-044, SYS-310",
+        notes: "Zero-copy DMA transfer verified on logic analyzer with <1.8µs jitter. Needs second sign-off on interrupt priority masking.",
+        gitCommit: "9f4c1a2",
+        gitBranch: "fw/spi-dma-ringbuffer",
+        gitMsg: "Fix race condition on half-transfer IRQ callback"
+      },
+      {
+        id: "RF-302",
+        title: "S-Band Patch Antenna Return Loss Tuning inside Enclosure",
+        category: "hardware",
+        subsystem: "RF / Comms",
+        owner: "s.alvarez",
+        state: "blocked",
+        stateLabel: "BLOCKED",
+        blocker: "VNA Calibration Kit in Lab 3",
+        drift: "+2.0d",
+        driftClass: "drift-pos",
+        estimate: "3.5d ± 1.5d",
+        downstream: "SYS-310",
+        notes: "Carbon-fiber shroud detunes center frequency by 38MHz. Trimming feed patch geometry on CNC mill today.",
+        gitCommit: "3e119b8",
+        gitBranch: "rf/sband-matching-net",
+        gitMsg: "Log S11 touchstone sweeps for 2.24GHz shunt cap"
+      },
+      {
+        id: "FW-214",
+        title: "Watchdog Fault Recovery & Flash Wear-Leveling Journal",
+        category: "firmware",
+        subsystem: "Storage / Safety",
+        owner: "d.okafor",
+        state: "active",
+        stateLabel: "IN PROGRESS",
+        blocker: null,
+        drift: "-1.0d",
+        driftClass: "drift-neg",
+        estimate: "5.0d ± 0.5d",
+        downstream: "QA-044",
+        notes: "Simulated 10,000 brown-out power cycles without superblock corruption. Ahead of schedule by 1 full day.",
+        gitCommit: "7b22d09",
+        gitBranch: "fw/littlefs-brownout-guard",
+        gitMsg: "Add CRC32C check to journal header sector"
+      },
+      {
+        id: "ME-119",
+        title: "CNC Aluminum Heat-Spreader FEA Thermal Soak (+85°C)",
+        category: "hardware",
+        subsystem: "Mechanical",
+        owner: "j.lindholm",
+        state: "merged",
+        stateLabel: "VERIFIED",
+        blocker: null,
+        drift: "-0.5d",
+        driftClass: "drift-neg",
+        estimate: "3.0d ± 0.0d",
+        downstream: "HW-104",
+        notes: "Junction temp on primary FPGA stayed below 71.4°C during 6-hour vacuum thermal chamber stress run. STEP files frozen.",
+        gitCommit: "1d90e44",
+        gitBranch: "me/heatsink-rib-profile",
+        gitMsg: "Freeze Rev-C CNC toolpath STEP export"
+      },
+      {
+        id: "QA-044",
+        title: "Automated Hardware-in-the-Loop (HIL) Regression Harness",
+        category: "firmware",
+        subsystem: "Test Infra",
+        owner: "r.takahashi",
+        state: "active",
+        stateLabel: "IN PROGRESS",
+        blocker: null,
+        drift: "0.0d",
+        driftClass: "drift-zero",
+        estimate: "4.5d ± 0.5d",
+        downstream: "REL-1.0",
+        notes: "Pytest harness now flashes target over SWD and asserts CAN-FD telemetry frames within 15 seconds of commit.",
+        gitCommit: "6a05c11",
+        gitBranch: "qa/hil-canfd-runner",
+        gitMsg: "Add saleae logic capture trigger on assertion fail"
+      }
+    ];
+
+    let currentFilter = "all";
+    let selectedId = "HW-104";
+
+    const ledgerBody = document.getElementById("ledgerBody");
+    const inspectorPane = document.getElementById("inspectorPane");
+    const rowCountDisplay = document.getElementById("rowCountDisplay");
+
+    function getFilteredUnits() {
+      return WORK_UNITS.filter(u => {
+        if (currentFilter === "all") return true;
+        if (currentFilter === "blocked") return u.state === "blocked";
+        return u.category === currentFilter;
+      });
+    }
+
+    function renderLedger() {
+      const filtered = getFilteredUnits();
+      rowCountDisplay.textContent = `SHOWING ${filtered.length} OF ${WORK_UNITS.length} WORK UNITS`;
+
+      if (!filtered.some(u => u.id === selectedId) && filtered.length > 0) {
+        selectedId = filtered[0].id;
+      }
+
+      ledgerBody.innerHTML = filtered.map(u => {
+        const isSelected = u.id === selectedId ? "selected" : "";
+        const blockerTag = u.blocker ? `<span class="blocker-pill">! ${u.blocker}</span>` : "";
+        return `
+          <tr class="ledger-row ${isSelected}" data-id="${u.id}">
+            <td class="id-cell">${u.id}</td>
+            <td class="title-cell">${u.title}${blockerTag}</td>
+            <td class="mono" style="color: var(--ink-muted);">${u.subsystem}</td>
+            <td class="mono">@${u.owner}</td>
+            <td><span class="status-badge ${u.state}">${u.stateLabel}</span></td>
+            <td class="drift-cell ${u.driftClass}">${u.drift}</td>
+          </tr>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".ledger-row").forEach(row => {
+        row.addEventListener("click", () => {
+          selectedId = row.getAttribute("data-id");
+          renderLedger();
+          renderInspector();
+        });
+      });
+    }
+
+    function renderInspector() {
+      const unit = WORK_UNITS.find(u => u.id === selectedId) || WORK_UNITS[0];
+      const nextStateLabel = unit.state === "blocked" ? "Clear Blocker → Active" : "Advance State → Verified";
+
+      inspectorPane.innerHTML = `
+        <div>
+          <div class="inspector-header">
+            <div class="inspector-id">
+              <span>UNIT // ${unit.id}</span>
+              <span>EST: ${unit.estimate}</span>
+            </div>
+            <div class="inspector-title">${unit.title}</div>
+          </div>
+
+          <div class="inspector-meta">
+            <div>
+              <span class="meta-label">ASSIGNED LEAD</span>
+              <span class="meta-val">@${unit.owner}</span>
+            </div>
+            <div>
+              <span class="meta-label">CRITICAL PATH DRIFT</span>
+              <span class="meta-val ${unit.driftClass}">${unit.drift}</span>
+            </div>
+            <div style="grid-column: span 2;">
+              <span class="meta-label">DOWNSTREAM IMPACT</span>
+              <span class="meta-val">${unit.downstream}</span>
+            </div>
+          </div>
+
+          <div class="inspector-body">
+            <strong class="mono" style="display:block; color:var(--ink); margin-bottom:4px;">ENGINEERING LOG:</strong>
+            ${unit.notes}
+          </div>
+
+          <div class="git-trace">
+            <div style="color: #8C8A83; margin-bottom: 4px;">LATEST LINKED COMMIT</div>
+            <div><span class="hash">${unit.gitCommit}</span> on <span class="branch">${unit.gitBranch}</span></div>
+            <div style="color: #EAE5DB; margin-top: 4px;">"${unit.gitMsg}"</div>
+          </div>
+        </div>
+
+        <div class="inspector-actions">
+          <button class="btn-small" id="btnToggleState">${nextStateLabel}</button>
+          <button class="btn-small" id="btnPingOwner">Copy CLI Ref (${unit.id})</button>
+        </div>
+      `;
+
+      document.getElementById("btnToggleState").addEventListener("click", () => {
+        if (unit.state === "blocked") {
+          unit.state = "active";
+          unit.stateLabel = "IN PROGRESS";
+          unit.blocker = null;
+          unit.drift = "0.0d";
+          unit.driftClass = "drift-zero";
+        } else {
+          unit.state = "merged";
+          unit.stateLabel = "VERIFIED";
+          unit.drift = "-0.5d";
+          unit.driftClass = "drift-neg";
+        }
+        renderLedger();
+        renderInspector();
+      });
+
+      document.getElementById("btnPingOwner").addEventListener("click", (e) => {
+        navigator.clipboard?.writeText(`cadence inspect ${unit.id}`);
+        e.target.textContent = `Copied: cadence inspect ${unit.id}`;
+        setTimeout(() => { e.target.textContent = `Copy CLI Ref (${unit.id})`; }, 1600);
+      });
+    }
+
+    // FILTER BUTTONS
+    document.querySelectorAll(".wb-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".wb-tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.getAttribute("data-filter");
+        renderLedger();
+        renderInspector();
+      });
+    });
+
+    // KEYBOARD SHORTCUTS (J/K Navigation & Filter Hotkeys)
+    window.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+      const filtered = getFilteredUnits();
+      const idx = filtered.findIndex(u => u.id === selectedId);
+
+      if (e.key.toLowerCase() === "j" && idx < filtered.length - 1) {
+        selectedId = filtered[idx + 1].id;
+        renderLedger();
+        renderInspector();
+      } else if (e.key.toLowerCase() === "k" && idx > 0) {
+        selectedId = filtered[idx - 1].id;
+        renderLedger();
+        renderInspector();
+      }
+    });
+
+    // CLI COPY WIDGET
+    document.getElementById("cliCopy").addEventListener("click", () => {
+      navigator.clipboard?.writeText("brew install cadence-org/tap/cadence");
+      const badge = document.getElementById("copyStatus");
+      badge.textContent = "COPIED ✓";
+      badge.style.background = "#1C6B43";
+      badge.style.color = "#FFF";
+      setTimeout(() => {
+        badge.textContent = "COPY";
+        badge.style.background = "";
+        badge.style.color = "";
+      }, 1800);
+    });
+
+    // PRICING CALCULATOR
+    const seatSlider = document.getElementById("seatSlider");
+    const seatCount = document.getElementById("seatCount");
+    const monthlyPrice = document.getElementById("monthlyPrice");
+    const annualPrice = document.getElementById("annualPrice");
+
+    seatSlider.addEventListener("input", () => {
+      const seats = parseInt(seatSlider.value, 10);
+      seatCount.textContent = seats;
+      const mo = seats * 14;
+      const yr = seats * 12 * 12;
+      monthlyPrice.innerHTML = `$${mo.toLocaleString()}<span style="font-size:0.9rem; font-weight:400; color:var(--ink-muted);">/mo</span>`;
+      annualPrice.innerHTML = `$${yr.toLocaleString()}<span style="font-size:0.9rem; font-weight:400; color:var(--ink-muted);">/yr</span>`;
+    });
+
+    // INITIAL RENDER
+    renderLedger();
+    renderInspector();
+  </script>
+</body>
+</html>

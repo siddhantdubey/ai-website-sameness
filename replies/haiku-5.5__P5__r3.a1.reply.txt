@@ -1,0 +1,366 @@
+Here's a single-file landing page for a project management app. I called the product "Furrow" as a placeholder name. The design avoids the usual gradient-and-cards look: warm paper tones, a serif headline, hairline rules, and a board preview built from plain HTML and CSS. It has no external dependencies.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Furrow: project management for teams that ship</title>
+<meta name="description" content="Furrow is a project board for small product teams. Owners, dates, and dependencies stay in sync without status meetings.">
+<style>
+:root{
+  --paper:#f5f2ea;
+  --paper-2:#ebe6d9;
+  --card:#fbfaf6;
+  --ink:#1c1a16;
+  --ink-2:#4a463d;
+  --mute:#8a8476;
+  --rule:#d6cfbd;
+  --rust:#b8462a;
+  --moss:#4f6b3a;
+  --ochre:#b8862a;
+  --sky:#3e6a7d;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--rule)}
+.mark{font-family:var(--serif);font-size:24px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.mark i{width:14px;height:14px;border-radius:50%;background:var(--rust);display:inline-block}
+.links{display:flex;gap:28px;font-size:15px;color:var(--ink-2)}
+.links a{text-decoration:none}
+.links a:hover{color:var(--ink)}
+.nav-r{display:flex;gap:22px;align-items:center;font-size:15px}
+.nav-r a.signin{text-decoration:none;color:var(--ink-2)}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:3px;text-decoration:none;font-size:15px;font-weight:600;border:0;cursor:pointer;font-family:inherit}
+.btn:hover{background:#000}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.btn.ghost:hover{background:var(--paper-2)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center;padding:88px 0 96px}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--mute);margin-bottom:22px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6vw,72px);line-height:1.02;letter-spacing:-.02em}
+h1 em{font-style:italic;color:var(--rust)}
+.lede{margin-top:24px;font-size:19px;color:var(--ink-2);max-width:31em}
+form.signup{margin-top:36px;display:flex;max-width:500px;border:1px solid var(--ink);border-radius:3px;background:var(--card)}
+form.signup input{flex:1;min-width:0;border:0;background:transparent;padding:14px 16px;font:inherit;font-size:16px;color:var(--ink);outline:none}
+form.signup input::placeholder{color:var(--mute)}
+form.signup .btn{border-radius:0 2px 2px 0;padding:0 22px}
+.fine{margin-top:14px;font-size:14px;color:var(--mute)}
+
+/* board preview */
+.board{background:var(--card);border:1px solid var(--rule);border-radius:6px;box-shadow:0 1px 0 var(--rule),0 28px 52px -30px rgba(28,26,22,.4);overflow:hidden;font-size:13px}
+.board-h{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12px;color:var(--mute)}
+.board-h b{color:var(--ink);font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(3,1fr)}
+.col{padding:14px;border-right:1px solid var(--rule);min-height:372px}
+.col:last-child{border-right:0}
+.col h3{font-family:var(--mono);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);display:flex;justify-content:space-between;margin-bottom:12px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:11px 12px;margin-bottom:10px}
+.card .id{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.card p{margin-top:4px;font-size:13.5px;line-height:1.35}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.av{width:20px;height:20px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;font-weight:700;color:#fff}
+.due{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.due.late{color:var(--rust)}
+.bar{height:3px;background:var(--paper-2);border-radius:2px;margin-top:10px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--moss)}
+
+/* sections */
+.block{padding:104px 0;border-top:1px solid var(--rule)}
+.sec{display:grid;grid-template-columns:200px 1fr;gap:48px}
+.label{font-family:var(--mono);font-size:13px;color:var(--mute);padding-top:10px}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3.6vw,44px);line-height:1.1;letter-spacing:-.015em;max-width:20em}
+
+.rules{list-style:none;margin-top:52px}
+.rules li{display:grid;grid-template-columns:64px 1fr;gap:24px;padding:28px 0;border-top:1px solid var(--rule)}
+.rules li:last-child{border-bottom:1px solid var(--rule)}
+.rules .n{font-family:var(--serif);font-size:28px;color:var(--rust);line-height:1}
+.rules h4{font-size:19px;font-weight:600;margin-bottom:6px}
+.rules p{color:var(--ink-2);max-width:40em}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:52px;border:1px solid var(--rule);border-radius:4px;background:var(--card)}
+.split > div{padding:36px 36px 40px}
+.split > div + div{border-left:1px solid var(--rule)}
+.split h4{font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:18px}
+.split ul{list-style:none}
+.split li{padding:12px 0;border-top:1px solid var(--paper-2);color:var(--ink-2)}
+.split li:first-child{border-top:0;padding-top:0}
+.split .no li{color:var(--ink-2)}
+.split .no li::before{content:"\2014\00a0";color:var(--rust)}
+.split .yes li::before{content:"\2192\00a0";color:var(--moss);font-family:var(--mono)}
+
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:52px}
+blockquote{font-family:var(--serif);font-size:21px;line-height:1.4;color:var(--ink)}
+blockquote::before{content:"\201C";display:block;font-size:56px;line-height:.6;color:var(--rust);margin-bottom:10px}
+cite{display:block;margin-top:18px;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--mute)}
+cite b{color:var(--ink-2);font-weight:600}
+
+.close{padding:112px 0 120px;border-top:1px solid var(--rule)}
+.close h2{max-width:14em}
+.close .row{margin-top:40px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.close .btn{padding:14px 24px;font-size:16px}
+
+footer{border-top:1px solid var(--rule);padding:40px 0 48px;font-size:14px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}
+footer nav-links{display:flex;gap:24px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+.flinks{display:flex;gap:24px;flex-wrap:wrap}
+
+/* responsive */
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;gap:56px;padding:56px 0 72px}
+  .links{display:none}
+  .sec{grid-template-columns:1fr;gap:16px}
+  .label{padding-top:0}
+  .quotes{grid-template-columns:1fr;gap:36px}
+  .split{grid-template-columns:1fr}
+  .split > div + div{border-left:0;border-top:1px solid var(--rule)}
+  .col:nth-child(3){display:none}
+  .cols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .wrap{padding:0 20px}
+  .cols{grid-template-columns:1fr}
+  .col{border-right:0;border-bottom:1px solid var(--rule);min-height:0}
+  .col:nth-child(3){display:block}
+  .nav-r a.signin{display:none}
+  form.signup{flex-direction:column;border:0;gap:10px}
+  form.signup input{border:1px solid var(--ink);border-radius:3px;background:var(--card)}
+  form.signup .btn{border-radius:3px;padding:14px}
+  .rules li{grid-template-columns:40px 1fr;gap:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="mark" href="#"><i></i>Furrow</a>
+    <div class="links">
+      <a href="#how">How it runs</a>
+      <a href="#honest">Limits</a>
+      <a href="#voices">Customers</a>
+    </div>
+    <div class="nav-r">
+      <a class="signin" href="#">Sign in</a>
+      <a class="btn" href="#start">Start free</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Project board for product teams, 6 to 60 people</p>
+      <h1>Know what's <em>actually</em> late before standup.</h1>
+      <p class="lede">Furrow keeps owners, dates, and dependencies on one board. When a blocker moves, every date downstream moves with it, and you see the diff before you accept it. Nobody has to ask for a status update.</p>
+
+      <form class="signup" id="start" onsubmit="event.preventDefault();this.querySelector('button').textContent='Check your inbox';">
+        <input type="email" placeholder="you@company.com" aria-label="Work email" required>
+        <button class="btn" type="submit">Start 30-day trial</button>
+      </form>
+      <p class="fine">No card required. Import from Linear, Trello, or a CSV in a few minutes.</p>
+    </div>
+
+    <div class="board" aria-label="Example Furrow board">
+      <div class="board-h">
+        <span><b>Atlas release</b> &nbsp;/&nbsp; sprint 14</span>
+        <span>3 blocked &middot; 11 open</span>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <h3><span>To do</span><span>3</span></h3>
+          <div class="card">
+            <span class="id">ATL-212</span>
+            <p>Migrate billing webhooks to the new queue</p>
+            <div class="meta">
+              <span class="av" style="background:var(--sky)">JR</span>
+              <span class="due late">due Thu</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="id">ATL-218</span>
+            <p>Export audit log as CSV for compliance</p>
+            <div class="meta">
+              <span class="av" style="background:var(--ochre)">MK</span>
+              <span class="due">Nov 28</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <h3><span>In progress</span><span>2</span></h3>
+          <div class="card">
+            <span class="id">ATL-207</span>
+            <p>Rewrite permissions check for shared folders</p>
+            <div class="meta">
+              <span class="av" style="background:var(--rust)">DA</span>
+              <span class="due">Nov 26</span>
+            </div>
+            <div class="bar"><span style="width:62%"></span></div>
+          </div>
+          <div class="card">
+            <span class="id">ATL-223</span>
+            <p>Empty states for first-run onboarding</p>
+            <div class="meta">
+              <span class="av" style="background:var(--moss)">SD</span>
+              <span class="due">Dec 2</span>
+            </div>
+            <div class="bar"><span style="width:25%"></span></div>
+          </div>
+        </div>
+        <div class="col">
+          <h3><span>Done</span><span>6</span></h3>
+          <div class="card">
+            <span class="id">ATL-199</span>
+            <p>Dark mode contrast pass on tables</p>
+            <div class="meta">
+              <span class="av" style="background:var(--sky)">JR</span>
+              <span class="due">Nov 19</span>
+            </div>
+          </div>
+          <div class="card">
+            <span class="id">ATL-201</span>
+            <p>Bulk archive for closed projects</p>
+            <div class="meta">
+              <span class="av" style="background:var(--ochre)">MK</span>
+              <span class="due">Nov 21</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section class="block" id="how">
+  <div class="wrap sec">
+    <p class="label">How it runs</p>
+    <div>
+      <h2>Four rules that keep the schedule honest.</h2>
+      <ol class="rules">
+        <li>
+          <span class="n">01</span>
+          <div>
+            <h4>One owner per card</h4>
+            <p>Every task has exactly one name on it. Shared responsibility is where work goes to stall, so Furrow won't let you assign two people to the same card.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <div>
+            <h4>Dates follow dependencies</h4>
+            <p>Push a blocker and every downstream date shifts with it. The change appears as a readable diff, and nothing moves until you accept it.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n">03</span>
+          <div>
+            <h4>A timeline in weeks, not Gantt bars</h4>
+            <p>Drag to reschedule. Each Monday you get one short list of the things that slipped, why they slipped, and who owns the fix.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n">04</span>
+          <div>
+            <h4>Notifications that wait</h4>
+            <p>A digest arrives at 9 a.m. in your timezone. Direct mentions interrupt you, and everything else waits for the digest.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="honest">
+  <div class="wrap sec">
+    <p class="label">Limits</p>
+    <div>
+      <h2>What Furrow is not for.</h2>
+      <div class="split">
+        <div>
+          <h4>What it does well</h4>
+          <ul class="yes">
+            <li>Keeps tasks, owners, and dates in sync</li>
+            <li>Recalculates schedules when dependencies move</li>
+            <li>Exports to CSV and iCal, and imports from Linear, Trello, and Jira</li>
+            <li>Works offline in the desktop app and syncs on reconnect</li>
+          </ul>
+        </div>
+        <div>
+          <h4>What it doesn't do</h4>
+          <ul class="no">
+            <li>Track billable time or generate invoices</li>
+            <li>Roll up reporting across dozens of portfolios</li>
+            <li>Replace your documentation tool</li>
+            <li>Edit boards on a phone (read-only on mobile)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="voices">
+  <div class="wrap sec">
+    <p class="label">Customers</p>
+    <div>
+      <h2>Teams that stopped running status meetings.</h2>
+      <div class="quotes">
+        <figure>
+          <blockquote>We cut our weekly sync from an hour to ten minutes. The board already says what everyone needs to hear.</blockquote>
+          <cite><b>Priya Raman</b><br>Engineering lead, a 22-person fintech</cite>
+        </figure>
+        <figure>
+          <blockquote>The dependency diff is the feature I didn't know I needed. Nobody moves a date without the rest of the team seeing it.</blockquote>
+          <cite><b>Tom Adeyemi</b><br>Product manager, hardware startup</cite>
+        </figure>
+        <figure>
+          <blockquote>It is plain on purpose. Our designers opened it the first day and didn't need a training call.</blockquote>
+          <cite><b>Lena Brandt</b><br>Design director, studio of nine</cite>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap">
+    <h2>Start with the board you already have.</h2>
+    <div class="row">
+      <a class="btn" href="#start">Start 30-day trial</a>
+      <a class="btn ghost" href="#">Talk to us first</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Furrow Software. Built in Leeds and Lisbon.</span>
+    <div class="flinks">
+      <a href="#">Changelog</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+```
+
+Choices I made that you may want to change:
+
+- **Name and copy:** "Furrow," the city credits, and the customer quotes are placeholders. Replace the quotes with real approved testimonials before publishing, since the ones here are invented.
+- **Design direction:** warm off-white paper, a serif headline with one italic accent, a monospaced font for IDs and dates, and rust, moss, and ochre as the only colors. The hero board is built from HTML and CSS, so it works without images.
+- **Honesty section:** I included a "what it doesn't do" list. It's a deliberate choice that tends to read as more credible than a feature grid, but you can cut it.
+- **Sign-up form:** it only changes the button label on submit. Wire it to your backend before launch.

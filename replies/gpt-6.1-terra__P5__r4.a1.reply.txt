@@ -1,0 +1,348 @@
+Save this as `index.html` and open it in a browser.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5ef">
+  <title>Fieldwork — Make space for the work</title>
+  <style>
+    :root {
+      --ink: #22271f;
+      --muted: #6f746a;
+      --paper: #f6f5ef;
+      --white: #fffefa;
+      --line: #dcded4;
+      --green: #294d3c;
+      --lime: #d8e8b4;
+      --yellow: #f1cc75;
+      --peach: #e9b6a0;
+      --lavender: #c6c1df;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 3px solid #b68135; outline-offset: 4px; }
+
+    .wrap { width: min(1280px, calc(100% - 80px)); margin: auto; }
+    .serif { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
+
+    .site-header {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(34, 39, 31, .13);
+    }
+    .nav { display: flex; align-items: center; gap: 48px; width: 100%; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 21px; font-weight: 700; letter-spacing: -.8px; }
+    .brand-mark { width: 25px; height: 25px; position: relative; display: inline-block; }
+    .brand-mark::before, .brand-mark::after {
+      content: ""; position: absolute; background: currentColor; border-radius: 2px;
+    }
+    .brand-mark::before { width: 9px; height: 24px; left: 2px; top: 0; transform: rotate(32deg); }
+    .brand-mark::after { width: 9px; height: 18px; right: 2px; bottom: 0; transform: rotate(32deg); }
+    .nav-links { display: flex; align-items: center; gap: 32px; font-size: 13px; font-weight: 600; }
+    .nav-links a:hover, .login:hover { color: #688268; }
+    .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 24px; font-size: 13px; font-weight: 600; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 20px;
+      min-height: 48px; padding: 0 19px; border: 1px solid var(--ink); border-radius: 5px;
+      background: var(--ink); color: white; font-size: 13px; font-weight: 700;
+      transition: background .2s, transform .2s;
+    }
+    .button:hover { background: var(--green); transform: translateY(-2px); }
+    .button.light { background: transparent; color: var(--ink); }
+    .button.light:hover { background: #e9ebe1; }
+    .arrow { font-size: 18px; font-weight: 400; line-height: 1; }
+
+    .hero { padding: 74px 0 72px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 65px; }
+    .eyebrow {
+      display: flex; align-items: center; gap: 10px; margin: 0 0 24px;
+      font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+    h1 { max-width: 560px; margin: 0; font-size: clamp(58px, 6.1vw, 88px); line-height: .98; letter-spacing: -.065em; }
+    h1 em { color: #63815e; font-weight: 400; }
+    .hero-copy { max-width: 410px; margin: 28px 0 30px; color: #62685f; font-size: 16px; line-height: 1.7; }
+    .hero-actions { display: flex; align-items: center; gap: 20px; }
+    .hero-note { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    .workspace {
+      position: relative; min-height: 485px; padding: 18px;
+      background: #dce4cf; border: 1px solid #cbd5bf; border-radius: 9px;
+    }
+    .workspace::before {
+      content: ""; position: absolute; width: 155px; height: 155px; border: 1px solid rgba(78, 111, 74, .22);
+      border-radius: 50%; right: -65px; top: -58px;
+    }
+    .app {
+      position: relative; display: grid; grid-template-columns: 145px 1fr; min-height: 447px;
+      background: #fbfbf8; border: 1px solid #d8ddd1; border-radius: 6px;
+      box-shadow: 0 16px 35px rgba(52, 68, 45, .12); overflow: hidden;
+    }
+    .sidebar { padding: 20px 14px; border-right: 1px solid #e7e9e2; color: #7b8178; font-size: 10px; }
+    .app-brand { display: flex; align-items: center; gap: 7px; margin-bottom: 33px; color: var(--ink); font-size: 13px; font-weight: 700; }
+    .app-brand .brand-mark { width: 15px; height: 15px; transform: scale(.6); transform-origin: left center; margin-right: -5px; }
+    .side-label { margin: 24px 6px 9px; font-size: 9px; color: #a4a99f; text-transform: uppercase; letter-spacing: .08em; }
+    .side-item { padding: 8px 7px; border-radius: 4px; white-space: nowrap; }
+    .side-item.active { background: #e9eee4; color: #35543c; font-weight: 700; }
+    .side-icon { display: inline-block; width: 18px; color: #8b9686; }
+    .side-dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #d4a56d; }
+    .app-main { min-width: 0; padding: 22px 23px; }
+    .app-top { display: flex; justify-content: space-between; align-items: center; color: #9ca298; font-size: 10px; }
+    .app-top strong { color: #566052; font-weight: 600; }
+    .avatar-stack { display: flex; padding-left: 6px; }
+    .avatar { display: grid; place-items: center; width: 24px; height: 24px; margin-left: -6px; border: 2px solid #fbfbf8; border-radius: 50%; background: #e7c4a5; color: #5b493b; font-size: 8px; font-weight: 700; }
+    .avatar:nth-child(2) { background: #b8c9b2; }
+    .avatar:nth-child(3) { background: #c9bfdb; }
+    .app-title-row { display: flex; justify-content: space-between; align-items: end; margin-top: 35px; }
+    .app-title-row h2 { margin: 0; font-size: 22px; letter-spacing: -.04em; }
+    .app-title-row p { margin: 7px 0 0; color: #9ca298; font-size: 10px; }
+    .app-add { padding: 8px 10px; border-radius: 4px; background: var(--green); color: white; font-size: 9px; }
+    .app-tabs { display: flex; gap: 24px; margin-top: 27px; border-bottom: 1px solid #e8ebe3; color: #a0a69c; font-size: 10px; }
+    .app-tabs span { padding-bottom: 10px; }
+    .app-tabs .selected { color: #34523b; border-bottom: 2px solid #34523b; font-weight: 700; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+    .column-heading { display: flex; justify-content: space-between; margin-bottom: 10px; color: #676f64; font-size: 9px; font-weight: 700; }
+    .count { color: #a7ada3; }
+    .task { min-height: 100px; margin-bottom: 9px; padding: 11px; border: 1px solid #e6e9e1; border-radius: 5px; background: white; }
+    .tag { display: inline-block; padding: 4px 5px; border-radius: 3px; background: #f8edcf; color: #9a773e; font-size: 8px; }
+    .tag.green { background: #e3eddf; color: #66835d; }
+    .tag.purple { background: #eeebf7; color: #8275a0; }
+    .task-title { min-height: 32px; margin: 9px 0 8px; font-size: 10px; font-weight: 700; line-height: 1.35; }
+    .task-foot { display: flex; justify-content: space-between; align-items: center; color: #a6ada2; font-size: 8px; }
+    .mini-avatar { display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%; background: #e5c3ad; color: #6d5143; font-size: 7px; }
+
+    .trust { padding: 25px 0 28px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .trust-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .trust p { max-width: 175px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .logos { display: flex; flex: 1; justify-content: space-around; align-items: center; gap: 25px; color: #777d72; }
+    .logos span { white-space: nowrap; font-size: 18px; font-weight: 700; letter-spacing: -.06em; }
+    .logos .logo-serif { font-family: Georgia, serif; font-size: 21px; font-weight: 400; }
+    .logos .logo-wide { font-size: 14px; letter-spacing: .13em; }
+
+    .features { padding: 110px 0 120px; }
+    .section-top { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: end; margin-bottom: 56px; }
+    .section-top h2, .closing h2 { max-width: 650px; margin: 0; font-size: clamp(42px, 4.5vw, 64px); line-height: 1.05; letter-spacing: -.055em; }
+    .section-top > p { max-width: 380px; margin: 0 0 4px auto; color: var(--muted); font-size: 15px; line-height: 1.75; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+    .feature { padding: 27px 35px 0 0; }
+    .feature + .feature { padding-left: 35px; border-left: 1px solid var(--line); }
+    .feature-number { color: #9a9f94; font-size: 11px; }
+    .feature-icon { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; margin: 32px 0 24px; border-radius: 50%; background: #dfe9d5; font-size: 22px; }
+    .feature:nth-child(2) .feature-icon { background: #f2e0bd; }
+    .feature:nth-child(3) .feature-icon { background: #e7d9e1; }
+    .feature h3 { margin: 0 0 12px; font-size: 19px; letter-spacing: -.03em; }
+    .feature p { max-width: 310px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .closing { background: var(--green); color: #f5f5e9; }
+    .closing-inner { display: flex; align-items: center; justify-content: space-between; gap: 35px; padding: 76px 0; }
+    .closing .eyebrow { color: #c1d2b7; }
+    .closing h2 { max-width: 650px; }
+    .closing .button { flex-shrink: 0; background: var(--lime); border-color: var(--lime); color: #253c2d; }
+    .closing .button:hover { background: #eff6df; }
+    footer { padding: 34px 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+    .footer-note { color: var(--muted); font-size: 12px; }
+    .footer-links { display: flex; gap: 24px; color: #62685f; font-size: 12px; }
+
+    @media (max-width: 900px) {
+      .wrap { width: min(100% - 48px, 720px); }
+      .nav-links { display: none; }
+      .hero { padding-top: 64px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 50px; }
+      .hero-copy { max-width: 480px; }
+      .workspace { max-width: 680px; }
+      .trust-inner { align-items: flex-start; flex-direction: column; }
+      .logos { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .section-top { gap: 30px; }
+    }
+    @media (max-width: 600px) {
+      .wrap { width: calc(100% - 36px); }
+      .site-header { height: 72px; }
+      .nav-actions { gap: 14px; }
+      .login { display: none; }
+      .nav-actions .button { min-height: 42px; padding: 0 13px; }
+      .hero { padding: 58px 0 50px; }
+      h1 { font-size: clamp(52px, 14vw, 70px); }
+      .hero-copy { font-size: 15px; }
+      .workspace { min-height: 0; padding: 10px; }
+      .app { grid-template-columns: 1fr; min-height: 350px; }
+      .sidebar { display: none; }
+      .app-main { padding: 18px 14px; }
+      .app-title-row { margin-top: 25px; }
+      .board { gap: 6px; }
+      .task { padding: 8px; }
+      .task-title { font-size: 9px; }
+      .logos { justify-content: flex-start; gap: 20px 28px; }
+      .logos span { font-size: 16px; }
+      .features { padding: 75px 0 85px; }
+      .section-top { grid-template-columns: 1fr; gap: 20px; margin-bottom: 38px; }
+      .section-top > p { margin: 0; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature, .feature + .feature { padding: 24px 0 30px; border-left: 0; border-bottom: 1px solid var(--line); }
+      .feature-icon { margin: 20px 0; }
+      .closing-inner { align-items: flex-start; flex-direction: column; padding: 60px 0; }
+      .footer-inner { align-items: flex-start; flex-wrap: wrap; }
+      .footer-note { width: 100%; order: 3; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="#" aria-label="Fieldwork home"><span class="brand-mark" aria-hidden="true"></span>fieldwork</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#about">Our approach</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="login" href="mailto:hello@fieldwork.example">Get in touch</a>
+        <a class="button" href="#get-started">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">A little more room to do great work</p>
+          <h1 class="serif">Make space for <em>the work.</em></h1>
+          <p class="hero-copy">Bring your projects, people, and plans together in one calm place. Less chasing updates, more making things happen.</p>
+          <div class="hero-actions">
+            <a class="button" href="#get-started">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+            <span class="hero-note">A clearer way to<br>work together.</span>
+          </div>
+        </div>
+
+        <div class="workspace" aria-label="Preview of a project board in Fieldwork">
+          <div class="app" aria-hidden="true">
+            <aside class="sidebar">
+              <div class="app-brand"><span class="brand-mark"></span>fieldwork</div>
+              <div class="side-item"><span class="side-icon">⌂</span> Home</div>
+              <div class="side-item"><span class="side-icon">▦</span> My tasks</div>
+              <div class="side-item"><span class="side-icon">◷</span> Calendar</div>
+              <div class="side-label">Your projects</div>
+              <div class="side-item active"><span class="side-dot"></span> Spring launch</div>
+              <div class="side-item"><span class="side-dot" style="background:#aab9a5"></span> Brand studio</div>
+              <div class="side-item"><span class="side-dot" style="background:#bdb2d1"></span> Website</div>
+            </aside>
+            <div class="app-main">
+              <div class="app-top">
+                <span>Projects &nbsp; / &nbsp; <strong>Spring launch</strong></span>
+                <div class="avatar-stack"><span class="avatar">M</span><span class="avatar">J</span><span class="avatar">A</span></div>
+              </div>
+              <div class="app-title-row">
+                <div><h2>Spring launch</h2><p>A fresh season, a fresh start 🌱</p></div>
+                <span class="app-add">+ &nbsp; Add task</span>
+              </div>
+              <div class="app-tabs"><span>Overview</span><span class="selected">Board</span><span>Timeline</span><span>Files</span></div>
+              <div class="board">
+                <div>
+                  <div class="column-heading"><span>To do</span><span class="count">02 &nbsp; +</span></div>
+                  <div class="task"><span class="tag">Planning</span><div class="task-title">Map out launch milestones</div><div class="task-foot"><span>◷ Apr 12</span><span class="mini-avatar">M</span></div></div>
+                  <div class="task"><span class="tag purple">Creative</span><div class="task-title">Gather visual references</div><div class="task-foot"><span>◷ Apr 15</span><span class="mini-avatar" style="background:#c9bfdb">A</span></div></div>
+                </div>
+                <div>
+                  <div class="column-heading"><span>In progress</span><span class="count">02 &nbsp; +</span></div>
+                  <div class="task"><span class="tag green">Content</span><div class="task-title">Write the launch story</div><div class="task-foot"><span>◷ Apr 10</span><span class="mini-avatar" style="background:#b8c9b2">J</span></div></div>
+                  <div class="task"><span class="tag purple">Creative</span><div class="task-title">Explore campaign concepts</div><div class="task-foot"><span>◷ Apr 14</span><span class="mini-avatar">M</span></div></div>
+                </div>
+                <div>
+                  <div class="column-heading"><span>Done</span><span class="count">01 &nbsp; +</span></div>
+                  <div class="task"><span class="tag">Planning</span><div class="task-title">Kickoff with the team</div><div class="task-foot"><span>✓ Apr 04</span><span class="mini-avatar" style="background:#b8c9b2">J</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust" aria-label="Built for thoughtful teams">
+      <div class="wrap trust-inner">
+        <p>Made for thoughtful teams doing meaningful work.</p>
+        <div class="logos" aria-hidden="true">
+          <span class="logo-serif">northstar</span>
+          <span>◒ &nbsp;goodform</span>
+          <span class="logo-wide">COMMON CO.</span>
+          <span class="logo-serif"><i>morrow</i></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="wrap">
+        <div class="section-top">
+          <div>
+            <p class="eyebrow">A better rhythm for your team</p>
+            <h2 class="serif">Good work needs<br>room to breathe.</h2>
+          </div>
+          <p>Fieldwork gives everyone a clear view of what matters, without adding another layer of work to your day.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <span class="feature-number">01 / CLARITY</span>
+            <div class="feature-icon" aria-hidden="true">▤</div>
+            <h3>See the whole picture</h3>
+            <p>Keep the details and the big picture side by side. Know what’s moving, what’s next, and who’s on it.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-number">02 / MOMENTUM</span>
+            <div class="feature-icon" aria-hidden="true">↗</div>
+            <h3>Keep things moving</h3>
+            <p>Turn plans into practical next steps, set a direction, and give your team the space to get there.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-number">03 / TOGETHER</span>
+            <div class="feature-icon" aria-hidden="true">✳</div>
+            <h3>Work better together</h3>
+            <p>Bring conversations and decisions closer to the work, so everyone can contribute with context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" id="get-started">
+      <div class="wrap closing-inner">
+        <div>
+          <p class="eyebrow">Make good things happen</p>
+          <h2 class="serif">Ready for a little more clarity?</h2>
+        </div>
+        <a class="button" href="mailto:hello@fieldwork.example?subject=Getting%20started%20with%20Fieldwork">Get in touch <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="about">
+    <div class="wrap footer-inner">
+      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"></span>fieldwork</a>
+      <span class="footer-note">A calmer place for work to come together.</span>
+      <div class="footer-links"><a href="#features">Features</a><a href="mailto:hello@fieldwork.example">Contact</a></div>
+    </div>
+  </footer>
+</body>
+</html>
+```
+
+The contact links use the placeholder address `hello@fieldwork.example`; replace it with your real address before publishing.

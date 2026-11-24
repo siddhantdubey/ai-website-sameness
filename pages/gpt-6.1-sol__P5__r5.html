@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f3ec">
+<title>Relay — Good work, moving forward.</title>
+<style>
+  :root{--paper:#f5f3ec;--ink:#262a23;--muted:#73766b;--line:#dcded2;--orange:#e65b35;--green:#e2e9d7}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+  button,input,a{-webkit-tap-highlight-color:transparent}
+  a{color:inherit;text-decoration:none}
+  button,input{font:inherit}
+  button,a{touch-action:manipulation}
+  button{cursor:pointer}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:5px}
+  .wrap{width:min(1240px,calc(100% - 96px));margin:auto}
+  .nav{height:104px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+  .logo{font-size:30px;font-weight:800;letter-spacing:-1.8px;display:inline-flex;align-items:center;gap:11px}
+  .mark{display:flex;gap:4px;transform:rotate(-18deg)}
+  .mark i{display:block;width:9px;height:28px;background:var(--orange)}
+  .mark i:nth-child(2){height:20px;margin-top:8px}
+  .links,.nav-end{display:flex;align-items:center;gap:32px;font-size:14px}
+  .nav-end{gap:24px}
+  .button{display:inline-flex;align-items:center;justify-content:center;gap:25px;min-height:49px;padding:0 23px;border:1px solid var(--ink);border-radius:5px;background:var(--ink);color:white;font-weight:600;font-size:14px}
+  .button:hover{background:#414638}
+  .button.orange{background:var(--orange);border-color:var(--orange)}
+  .button.orange:hover{background:#cf4925}
+  .button.light{background:transparent;color:var(--ink);border-color:var(--line)}
+  .button.light:hover{background:#eae9e0}
+  .hero{padding:81px 0 72px;display:grid;grid-template-columns:.95fr 1.05fr;gap:54px;align-items:center}
+  .eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .dot{width:7px;height:7px;background:var(--orange);border-radius:50%;display:inline-block}
+  h1{font-size:clamp(56px,5.65vw,80px);font-weight:500;letter-spacing:-4.5px;line-height:1.035;margin:27px 0}
+  h1 em{font-family:Georgia,'Times New Roman',serif;font-weight:400;color:var(--orange)}
+  .intro{font-size:17px;line-height:1.65;color:#696d60;max-width:380px}
+  .hero-actions{display:flex;gap:12px;margin:30px 0 18px}
+  .small{font-size:11px;color:var(--muted)}
+  .hero-art{position:relative;padding:45px 0 38px 12px}
+  .art-back{position:absolute;inset:0 -24px 0 32px;background:var(--green);border-radius:50% 50% 5px 5px}
+  .app{position:relative;background:#fffefb;border:1px solid #d4d7c9;border-radius:9px;box-shadow:0 21px 44px #38472a14;transform:rotate(-2deg);overflow:hidden}
+  .app-bar{height:43px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #e9e9e1;font-size:10px;color:#7b7d72}
+  .dots{display:flex;gap:5px}.dots i{width:6px;height:6px;border-radius:50%;background:#d5d8cd}
+  .app-body{display:grid;grid-template-columns:116px 1fr;min-height:338px}
+  .sidebar{background:#f5f5ef;border-right:1px solid #e8e9df;padding:19px 11px;font-size:10px}
+  .workspace{font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:6px}
+  .workspace b{background:#e1e5d5;padding:5px;border-radius:3px}
+  .side-item{padding:8px;color:#74796b;margin:3px 0;border-radius:4px}
+  .side-item.active{background:#e4e8d9;color:#353d2d;font-weight:600}
+  .side-label{font-size:8px;letter-spacing:1px;color:#929789;margin:27px 8px 8px}
+  .board{padding:23px 19px}
+  .board-top{display:flex;justify-content:space-between;align-items:center}
+  .board h3{font-size:18px;letter-spacing:-.5px;margin:0 0 7px}
+  .board-sub{font-size:9px;color:#8b8f81}
+  .avatars{display:flex;padding-left:5px}
+  .avatar{width:23px;height:23px;border-radius:50%;border:2px solid #fffefb;margin-left:-5px;background:#c7d2be;display:flex;align-items:center;justify-content:center;font-size:7px;color:#4c5745}
+  .avatar:nth-child(2){background:#ecd4bc}.avatar:nth-child(3){background:#d6d6e4}
+  .tabs{display:flex;gap:17px;border-bottom:1px solid #e5e7dc;margin:20px 0 15px;font-size:9px;color:#8b8f81}
+  .tabs span{padding-bottom:10px}.tabs .selected{border-bottom:2px solid var(--orange);color:var(--ink)}
+  .columns{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .column-title{font-size:9px;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between}
+  .column-title span{color:#919687;font-weight:400}
+  .task{border:1px solid #e2e5da;border-radius:5px;padding:12px 10px;margin-bottom:9px;background:white}
+  .tag{display:inline-block;font-size:7px;padding:4px 6px;border-radius:3px;background:#e8eddf;color:#60704e}
+  .tag.peach{background:#f7e5d7;color:#a37655}
+  .task h4{font-size:10px;line-height:1.5;margin:8px 0 15px;font-weight:600}
+  .task-footer{display:flex;justify-content:space-between;align-items:center;font-size:8px;color:#9a9f91}
+  .task-footer .avatar{width:18px;height:18px;font-size:6px}
+  .task.done h4{text-decoration:line-through;color:#8a907f}
+  .floating{position:absolute;bottom:12px;right:-26px;background:#fffefb;border:1px solid #d6daca;border-radius:7px;padding:16px 20px;display:flex;gap:13px;align-items:center;box-shadow:0 10px 25px #39482d12;transform:rotate(3deg)}
+  .check{background:#e2e9d7;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#5e734a}
+  .floating strong{font-size:12px;display:block;margin-bottom:5px}
+  .floating small{font-size:10px;color:#858a79}
+  .scribble{position:absolute;top:3px;right:20px;font-family:Georgia,serif;font-size:13px;font-style:italic;transform:rotate(8deg);color:#637154}
+  .scribble span{display:block;font-size:29px;text-align:center;line-height:1.2}
+  .trusted{text-align:center;padding:20px 0 49px;border-bottom:1px solid var(--line)}
+  .trusted p{font-size:11px;color:#818575;margin:0 0 28px}
+  .logos{display:flex;justify-content:space-around;align-items:center;gap:25px;color:#747a69;font-size:24px;font-weight:700;letter-spacing:-1px}
+  .logos .serif{font-family:Georgia,serif;font-style:italic;font-weight:400;font-size:28px}
+  .logos .mono{font-family:monospace;font-size:22px;letter-spacing:-1.5px}
+  .features{padding:68px 0 77px}
+  .section-top{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:37px}
+  h2{font-size:39px;font-weight:500;letter-spacing:-1.8px;line-height:1.15;margin:16px 0 0}
+  .section-top p{max-width:280px;font-size:14px;color:var(--muted);line-height:1.65;margin:0}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:38px}
+  .feature{border-top:1px solid #cdd2c1;padding-top:23px}
+  .feature-num{font-family:monospace;font-size:11px;color:#979c8c}
+  .feature h3{font-weight:500;font-size:20px;letter-spacing:-.5px;margin:22px 0 12px}
+  .feature p{font-size:13px;line-height:1.8;color:var(--muted);margin:0;max-width:310px}
+  .bottom{background:#e7ebde;border-radius:8px;padding:35px 40px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+  .bottom h2{font-size:29px;margin:0 0 10px;letter-spacing:-1px}
+  .bottom p{font-size:13px;color:#737c66;margin:0}
+  footer{padding:32px 0;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#828778}
+  .footer-links{display:flex;gap:23px}
+  dialog{border:1px solid var(--line);border-radius:12px;padding:36px;background:var(--paper);color:var(--ink);width:min(440px,calc(100% - 32px))}
+  dialog::backdrop{background:#262a2366;backdrop-filter:blur(4px)}
+  dialog h2{margin:0 0 12px;font-size:31px}
+  dialog p{font-size:14px;line-height:1.6;color:var(--muted)}
+  dialog label{display:block;font-size:12px;margin:24px 0 8px}
+  dialog input{width:100%;padding:13px;border:1px solid #c7ccbd;border-radius:4px;background:white}
+  dialog .button{width:100%;margin-top:14px}
+  .close{position:absolute;right:14px;top:10px;background:none;border:0;font-size:24px;color:var(--muted)}
+  @media(min-width:1450px){.hero{gap:90px}}
+  @media(max-width:1000px){.wrap{width:calc(100% - 48px)}.hero{gap:24px}h1{font-size:62px}.links{gap:20px}.hero-art{padding-left:0}.app-body{grid-template-columns:90px 1fr}.sidebar{padding:19px 6px}.board{padding:20px 12px}.floating{right:-12px}.hero-actions{flex-wrap:wrap}.art-back{right:-10px}}
+  @media(max-width:760px){.wrap{width:calc(100% - 40px)}.nav{height:80px}.links,.nav-end>a:first-child{display:none}.nav-end .button{min-height:40px;padding:0 15px;font-size:12px}.logo{font-size:27px}.hero{grid-template-columns:1fr;padding:52px 0 35px;gap:30px}h1{font-size:66px;letter-spacing:-3.8px;max-width:500px}.intro{max-width:400px}.hero-art{width:100%;max-width:530px;margin:auto;padding:40px 8px}.app-body{grid-template-columns:105px 1fr}.board{padding:23px 17px}.art-back{inset:0 0 0 24px}.floating{right:0;bottom:15px}.trusted{padding-top:28px}.logos{flex-wrap:wrap;column-gap:32px;row-gap:22px;font-size:21px}.logos .serif{font-size:25px}.section-top{display:block}.section-top p{margin-top:20px;max-width:380px}.features{padding:49px 0}.feature-grid{grid-template-columns:1fr;gap:28px}.feature h3{margin-top:13px}.feature p{max-width:100%}.bottom{align-items:start;flex-direction:column;padding:29px}.bottom h2{font-size:28px}footer{gap:25px;align-items:start;line-height:1.6}.footer-links{gap:14px}h2{font-size:35px}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <nav class="nav" aria-label="Main navigation">
+    <a class="logo" href="#" aria-label="Relay home"><span class="mark" aria-hidden="true"><i></i><i></i></span>relay</a>
+    <div class="links"><a href="#product">Product</a><a href="#why-relay">Why Relay</a><a href="#get-started">Get started</a></div>
+    <div class="nav-end"><a href="#product">Take a look ↗</a><button class="button" data-start>Try Relay free <span>↗</span></button></div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap" id="product">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> A little structure. A lot of progress.</div>
+      <h1>Good work,<br>moving <em>forward.</em></h1>
+      <p class="intro">A calmer place to plan projects, find your focus, and get things over the finish line. Together.</p>
+      <div class="hero-actions">
+        <button class="button orange" data-start>Make room for good work <span>↗</span></button>
+        <a class="button light" href="#why-relay">Meet Relay <span>↓</span></a>
+      </div>
+      <p class="small">Free to start. No credit card. No unnecessary noise.</p>
+    </div>
+
+    <div class="hero-art" role="img" aria-label="Relay project board showing a website refresh with tasks organized into up next and in progress">
+      <div class="art-back"></div>
+      <div class="scribble">less juggling, more doing<span>↙</span></div>
+      <div class="app">
+        <div class="app-bar"><div class="dots"><i></i><i></i><i></i></div><span>Our little corner of the internet</span><span>↗</span></div>
+        <div class="app-body">
+          <aside class="sidebar">
+            <div class="workspace"><b>S</b> Studio North <span>⌄</span></div>
+            <div class="side-item">⌂ &nbsp; Overview</div>
+            <div class="side-item">☑ &nbsp; My tasks</div>
+            <div class="side-item">◷ &nbsp; Inbox</div>
+            <div class="side-label">OUR PROJECTS</div>
+            <div class="side-item active">◈ &nbsp; Website refresh</div>
+            <div class="side-item">◈ &nbsp; Spring launch</div>
+            <div class="side-item">＋ &nbsp; New project</div>
+          </aside>
+          <div class="board">
+            <div class="board-top"><div><h3>Website refresh</h3><div class="board-sub">A fresh start for our little studio.</div></div><div class="avatars"><span class="avatar">JL</span><span class="avatar">AK</span><span class="avatar">MR</span></div></div>
+            <div class="tabs"><span class="selected">▤ &nbsp; Board</span><span>☷ &nbsp; List</span><span>▦ &nbsp; Timeline</span></div>
+            <div class="columns">
+              <div>
+                <div class="column-title">○ &nbsp; Up next <span>2 &nbsp; ···</span></div>
+                <div class="task"><span class="tag peach">Content</span><h4>Give our story a little love</h4><div class="task-footer"><span>☷ &nbsp; 0/3</span><span class="avatar">AK</span></div></div>
+                <div class="task"><span class="tag">Design</span><h4>Explore the new homepage</h4><div class="task-footer"><span>↳ &nbsp; 2</span><span class="avatar">JL</span></div></div>
+              </div>
+              <div>
+                <div class="column-title">◐ &nbsp; In progress <span>2 &nbsp; ···</span></div>
+                <div class="task"><span class="tag">Design</span><h4>Make a moodboard</h4><div class="task-footer"><span>☑ &nbsp; 3/4</span><span class="avatar">MR</span></div></div>
+                <div class="task done"><span class="tag peach">Research</span><h4>Talk to our customers</h4><div class="task-footer"><span>✓ &nbsp; All done</span><span class="avatar">AK</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floating"><span class="check">✓</span><div><strong>One step closer.</strong><small>Nice work, team. Keep it going.</small></div></div>
+    </div>
+  </section>
+
+  <section class="trusted wrap" aria-label="Made for teams of all kinds">
+    <p>For small teams with big things on their plate.</p>
+    <div class="logos"><span>↟ small hours</span><span class="serif">Good Company</span><span class="mono">northstar®</span><span>◒ layers</span><span class="serif">Offscript.</span></div>
+  </section>
+
+  <section class="features wrap" id="why-relay">
+    <div class="section-top">
+      <div><div class="eyebrow"><span class="dot"></span> Clear heads. Shared direction.</div><h2>Less managing.<br>More making things happen.</h2></div>
+      <p>Just enough structure to keep everyone moving. Enough breathing room to do your best work.</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feature"><span class="feature-num">01 / THE BIG PICTURE</span><h3>Everything has a place.</h3><p>Turn the “where did we put that?” into “here it is.” Plans, tasks, and conversations, all under one roof.</p></article>
+      <article class="feature"><span class="feature-num">02 / THE NEXT STEP</span><h3>Know what matters today.</h3><p>A clear owner. A sensible deadline. A next step you can actually take. Bring a little focus to the everyday.</p></article>
+      <article class="feature"><span class="feature-num">03 / THE SHARED MOMENTUM</span><h3>Stay in sync, naturally.</h3><p>See what’s moving and where a hand is needed. Fewer check-ins about the work. More time to get into it.</p></article>
+    </div>
+  </section>
+
+  <section class="bottom wrap" id="get-started">
+    <div><h2>Your next good thing starts here.</h2><p>Bring your people. We’ll bring a little order.</p></div>
+    <button class="button" data-start>Find your flow <span>↗</span></button>
+  </section>
+</main>
+
+<footer class="wrap"><span>© <span id="year">2026</span> Relay. A little more together.</span><div class="footer-links"><a href="#product">Product</a><a href="#why-relay">Our approach</a><a href="#get-started">Start here ↗</a></div></footer>
+
+<dialog id="signup" aria-labelledby="signup-title">
+  <button class="close" aria-label="Close dialog">×</button>
+  <div id="signup-content">
+    <h2 id="signup-title">Make a little room.</h2>
+    <p>Leave your email to join the Relay launch list. We’ll let you know when your workspace is ready.</p>
+    <form id="signup-form">
+      <label for="email">Your work email</label>
+      <input id="email" type="email" name="email" placeholder="you@yourstudio.com" autocomplete="email" required>
+      <button class="button orange" type="submit">Join the launch list <span>↗</span></button>
+      <p class="small">Preview only: this demo doesn’t send or store your email.</p>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('signup');
+  document.querySelectorAll('[data-start]').forEach(button => {
+    button.addEventListener('click', () => dialog.showModal());
+  });
+  dialog.querySelector('.close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) {
+      const bounds = dialog.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+    }
+  });
+  document.getElementById('signup-form').addEventListener('submit', event => {
+    event.preventDefault();
+    document.getElementById('signup-content').innerHTML =
+      '<h2 id="signup-title">You’ve found your people.</h2>' +
+      '<p>This is a preview of Relay’s signup experience. Your email hasn’t been submitted. In the live app, this is where your next chapter would begin.</p>' +
+      '<button class="button orange" id="done">Back to the good stuff ↗</button>';
+    document.getElementById('done').addEventListener('click', () => dialog.close());
+    document.getElementById('done').focus();
+  });
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

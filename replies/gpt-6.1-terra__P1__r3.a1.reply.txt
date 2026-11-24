@@ -1,0 +1,415 @@
+Save this as `index.html` and open it in a browser.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f7f2" />
+  <meta
+    name="description"
+    content="Morrow brings projects, people, and progress together in one calm workspace."
+  />
+  <title>Morrow — Make room for your best work</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+    :root {
+      --ink: #17251e;
+      --muted: #6f7a72;
+      --green: #244d3c;
+      --green-dark: #183a2c;
+      --lime: #d3e8a5;
+      --paper: #f8f7f2;
+      --line: #e3e7dc;
+      --white: #fff;
+      --shadow: 0 24px 70px rgba(32, 53, 39, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "DM Sans", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid #91b774;
+      outline-offset: 4px;
+    }
+
+    .container { width: min(1200px, calc(100% - 48px)); margin: 0 auto; }
+    .site-header { height: 86px; display: flex; align-items: center; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font: 800 24px/1 "Manrope", sans-serif; letter-spacing: -1.4px; }
+    .brand-mark { width: 30px; height: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; transform: rotate(-8deg); }
+    .brand-mark span { background: var(--green); border-radius: 3px 7px 3px 7px; }
+    .brand-mark span:nth-child(2), .brand-mark span:nth-child(3) { background: #98b97d; }
+    .nav-links, .nav-actions { display: flex; align-items: center; gap: 34px; }
+    .nav-links a, .login { font-size: 14px; font-weight: 600; color: #536057; }
+    .nav-links a:hover, .login:hover { color: var(--green); }
+    .nav-actions { gap: 25px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+      min-height: 49px; padding: 0 21px; border: 1px solid transparent; border-radius: 9px;
+      background: var(--green); color: white; font-size: 14px; font-weight: 700;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { background: var(--green-dark); transform: translateY(-2px); }
+    .button-light { background: white; border-color: #e0e6dc; color: var(--ink); }
+    .button-light:hover { background: #f1f4ec; }
+    .arrow { font-size: 18px; line-height: 1; }
+    .menu-toggle { display: none; background: transparent; border: 0; font-size: 25px; color: var(--ink); }
+
+    .hero { padding: 64px 0 74px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: .92fr 1.08fr; gap: 62px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; color: #4e7454;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #9ac47a; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 560px; margin: 22px 0 22px;
+      font: 700 clamp(46px, 5.4vw, 72px)/1.08 "Manrope", sans-serif;
+      letter-spacing: -4.5px;
+    }
+    h1 em { color: #719667; font-style: normal; }
+    .hero-copy > p { max-width: 460px; color: var(--muted); font-size: 17px; line-height: 1.75; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-buttons .button { min-height: 54px; padding: 0 23px; }
+    .play { width: 20px; height: 20px; border: 1px solid #9cac9c; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9px; padding-left: 2px; }
+    .hero-note { margin-top: 25px; display: flex; flex-wrap: wrap; gap: 18px; color: #849087; font-size: 12px; }
+    .hero-note span::before { content: "✓"; color: #779b6d; margin-right: 7px; font-weight: 700; }
+
+    .visual-wrap { position: relative; padding: 28px 0 24px 25px; }
+    .visual-wrap::before {
+      content: ""; position: absolute; inset: 0 -90px 0 0; background: #e5ecd8;
+      border-radius: 45% 0 0 45%; transform: rotate(-4deg);
+    }
+    .app-window {
+      position: relative; display: grid; grid-template-columns: 150px 1fr;
+      min-height: 420px; background: #fff; border: 1px solid #e8eee6; border-radius: 14px;
+      box-shadow: var(--shadow); overflow: hidden; transform: rotate(1deg);
+    }
+    .sidebar { padding: 22px 14px; border-right: 1px solid #eef1eb; background: #fbfcf9; }
+    .sidebar-brand { font: 800 16px "Manrope", sans-serif; letter-spacing: -.7px; margin: 0 0 29px 5px; }
+    .sidebar-brand i { display: inline-block; width: 13px; height: 13px; margin-right: 5px; background: #71966d; border-radius: 4px 1px 4px 1px; }
+    .workspace-label, .side-heading { color: #a7b0a7; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .workspace-label { margin: 0 0 9px 8px; }
+    .side-item { padding: 9px 8px; margin-bottom: 3px; color: #8a968c; font-size: 11px; border-radius: 5px; }
+    .side-item.active { background: #eaf1e4; color: #41654a; font-weight: 700; }
+    .side-icon { display: inline-block; width: 19px; font-size: 12px; }
+    .side-heading { margin: 25px 0 10px 8px; }
+    .side-dot { display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin-right: 10px; background: #d4a679; }
+    .side-dot.purple { background: #b9a6d2; }
+    .side-dot.green { background: #9dbb8b; }
+    .app-main { min-width: 0; padding: 22px 24px; }
+    .app-top { display: flex; justify-content: space-between; align-items: center; color: #9ba79d; font-size: 10px; }
+    .app-top strong { color: #68786a; font-weight: 600; }
+    .app-user { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; background: #e6c8a8; color: #775842; font-size: 9px; font-weight: 700; }
+    .app-title-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 28px; }
+    .app-title-row h3 { margin: 0 0 5px; font: 700 20px "Manrope", sans-serif; letter-spacing: -.7px; }
+    .app-title-row p { margin: 0; color: #a3ada4; font-size: 10px; }
+    .app-add { background: var(--green); border: 0; border-radius: 5px; color: #fff; padding: 8px 10px; font-size: 9px; }
+    .app-tabs { display: flex; gap: 22px; margin-top: 24px; border-bottom: 1px solid #edf0eb; color: #a4afa5; font-size: 10px; }
+    .app-tabs span { padding-bottom: 10px; }
+    .app-tabs .selected { color: #3a6747; border-bottom: 2px solid #6f9a72; font-weight: 700; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+    .column { min-width: 0; }
+    .column-head { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 9px; font-weight: 700; color: #6d7a6e; }
+    .count { color: #a6b1a5; }
+    .task { min-height: 98px; margin-bottom: 9px; padding: 10px; border: 1px solid #edf0ea; border-radius: 7px; box-shadow: 0 3px 8px rgba(34, 59, 39, .025); }
+    .tag { display: inline-block; padding: 3px 5px; border-radius: 3px; background: #f8eadc; color: #b88659; font-size: 8px; font-weight: 700; }
+    .tag.lilac { background: #f0eaf6; color: #a184b9; }
+    .tag.mint { background: #e8f2e4; color: #759b6c; }
+    .task-title { min-height: 26px; margin: 8px 0; font-size: 10px; font-weight: 700; line-height: 1.4; }
+    .task-bottom { display: flex; justify-content: space-between; align-items: center; color: #b1bab0; font-size: 8px; }
+    .avatar { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #e7c6a9; color: #7a5946; font-size: 7px; font-weight: 700; }
+    .avatar.a2 { background: #cbdcc9; color: #52745a; }
+    .avatar.a3 { background: #e4d1df; color: #8a6480; }
+    .floating-card {
+      position: absolute; z-index: 2; right: -35px; bottom: 2px; display: flex; align-items: center; gap: 11px;
+      padding: 13px 16px; background: white; border: 1px solid #edf1e9; border-radius: 10px; box-shadow: 0 12px 35px rgba(41, 67, 44, .13);
+    }
+    .check-circle { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #e8f2e2; color: #6d9d6c; font-weight: 700; }
+    .floating-card strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    .floating-card small { color: #9ba69b; font-size: 9px; }
+
+    .trusted { padding: 26px 0 39px; border-top: 1px solid #eaede5; border-bottom: 1px solid #eaede5; }
+    .trusted-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .trusted p { margin: 0; max-width: 170px; color: #909a91; font-size: 12px; line-height: 1.5; }
+    .logos { flex: 1; display: flex; justify-content: space-around; align-items: center; gap: 25px; color: #8d9a8e; font: 700 18px "Manrope", sans-serif; letter-spacing: -.8px; }
+    .logos span:nth-child(2) { font-family: Georgia, serif; font-style: italic; }
+    .logos span:nth-child(3) { letter-spacing: 2px; font-size: 15px; }
+    .logos span:nth-child(4) { font-weight: 800; }
+
+    .features { padding: 112px 0 115px; }
+    .section-intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 48px; }
+    .section-intro h2, .cta h2 { margin: 16px 0 0; font: 700 clamp(34px, 4vw, 48px)/1.15 "Manrope", sans-serif; letter-spacing: -2.5px; }
+    .section-intro > p { max-width: 345px; margin: 0 0 4px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature-card { min-height: 250px; padding: 30px; background: #fff; border: 1px solid #edf0e8; border-radius: 13px; }
+    .feature-icon { width: 47px; height: 47px; display: grid; place-items: center; margin-bottom: 33px; border-radius: 11px; background: #edf4e7; color: #5c8762; font-size: 23px; }
+    .feature-card:nth-child(2) .feature-icon { background: #f8eee2; color: #ba906d; }
+    .feature-card:nth-child(3) .feature-icon { background: #f0edf7; color: #9380aa; }
+    .feature-card h3 { margin-bottom: 11px; font: 700 18px "Manrope", sans-serif; letter-spacing: -.5px; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .cta { padding-bottom: 90px; }
+    .cta-inner { position: relative; overflow: hidden; padding: 66px 35px; border-radius: 18px; background: var(--green); text-align: center; color: white; }
+    .cta-inner::before, .cta-inner::after { content: ""; position: absolute; width: 240px; height: 240px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; }
+    .cta-inner::before { left: -100px; top: -110px; box-shadow: 0 0 0 35px rgba(255,255,255,.025), 0 0 0 70px rgba(255,255,255,.025); }
+    .cta-inner::after { right: -100px; bottom: -120px; box-shadow: 0 0 0 35px rgba(255,255,255,.025), 0 0 0 70px rgba(255,255,255,.025); }
+    .cta h2 { position: relative; margin: 0 0 14px; }
+    .cta p { position: relative; color: #c2d2c4; font-size: 15px; }
+    .cta .button { position: relative; margin-top: 13px; background: var(--lime); color: #294632; }
+    .cta .button:hover { background: #e1f0bf; }
+
+    footer { padding: 0 0 30px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 26px; border-top: 1px solid #e5e9df; }
+    .footer-inner .brand { font-size: 19px; }
+    .footer-inner .brand-mark { width: 23px; height: 23px; }
+    .footer-inner p, .footer-links { margin: 0; color: #909b91; font-size: 12px; }
+    .footer-links { display: flex; gap: 24px; }
+
+    @media (max-width: 900px) {
+      .nav-links { gap: 18px; }
+      .hero-grid { gap: 25px; }
+      h1 { letter-spacing: -3px; }
+      .visual-wrap { padding-left: 0; }
+      .app-window { grid-template-columns: 115px 1fr; }
+      .sidebar { padding: 20px 8px; }
+      .app-main { padding: 20px 14px; }
+      .floating-card { right: -10px; }
+    }
+
+    @media (max-width: 700px) {
+      .container { width: min(100% - 36px, 540px); }
+      .site-header { height: 72px; }
+      .menu-toggle { display: block; }
+      .nav { position: relative; }
+      .nav-links {
+        display: none; position: absolute; z-index: 10; top: 45px; left: 0; right: 0;
+        padding: 18px; background: white; border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+      }
+      .nav-links.open { display: flex; flex-direction: column; align-items: flex-start; }
+      .nav-actions { margin-left: auto; gap: 14px; }
+      .login { display: none; }
+      .nav-actions .button { min-height: 42px; padding: 0 14px; font-size: 12px; }
+      .hero { padding: 45px 0 55px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 38px; }
+      h1 { margin-top: 18px; font-size: clamp(44px, 10vw, 60px); }
+      .hero-copy > p { font-size: 16px; }
+      .visual-wrap { padding: 20px 0; }
+      .visual-wrap::before { inset: 0 -40px 0 -20px; }
+      .app-window { transform: none; }
+      .trusted-inner { flex-direction: column; align-items: flex-start; }
+      .trusted p { max-width: none; }
+      .logos { width: 100%; flex-wrap: wrap; justify-content: space-between; font-size: 15px; }
+      .features { padding: 75px 0; }
+      .section-intro { align-items: flex-start; flex-direction: column; gap: 18px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: auto; }
+      .feature-icon { margin-bottom: 22px; }
+      .cta { padding-bottom: 60px; }
+      .cta-inner { padding: 55px 25px; }
+      .footer-inner { flex-wrap: wrap; }
+      .footer-inner p { order: 3; width: 100%; }
+    }
+
+    @media (max-width: 390px) {
+      .app-window { grid-template-columns: 90px 1fr; }
+      .sidebar { padding: 18px 5px; }
+      .side-item { font-size: 9px; }
+      .app-main { padding: 18px 10px; }
+      .board { gap: 5px; }
+      .task { padding: 7px; }
+      .task-title { font-size: 9px; }
+      .floating-card { right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Morrow home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        morrow
+      </a>
+
+      <div class="nav-links" id="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#get-started">Get started</a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="login" href="#get-started">Log in</a>
+        <a class="button" href="#get-started">Get started <span class="arrow">↗</span></a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">A little more clarity, every day</div>
+          <h1>Make room for your <em>best work.</em></h1>
+          <p>Bring your projects, people, and plans together in one wonderfully simple workspace.</p>
+
+          <div class="hero-buttons">
+            <a class="button" href="#get-started">Start for free <span class="arrow">↗</span></a>
+            <a class="button button-light" href="#how-it-works"><span class="play">▶</span> See how it works</a>
+          </div>
+
+          <div class="hero-note">
+            <span>Free to get started</span>
+            <span>No credit card required</span>
+          </div>
+        </div>
+
+        <div class="visual-wrap" id="how-it-works" aria-label="Example of a Morrow project board">
+          <div class="app-window">
+            <aside class="sidebar">
+              <div class="sidebar-brand"><i></i>morrow</div>
+              <div class="workspace-label">Workspace</div>
+              <div class="side-item"><span class="side-icon">▦</span> Overview</div>
+              <div class="side-item active"><span class="side-icon">▤</span> My projects</div>
+              <div class="side-item"><span class="side-icon">▣</span> My tasks</div>
+              <div class="side-item"><span class="side-icon">◷</span> Calendar</div>
+              <div class="side-heading">Projects</div>
+              <div class="side-item"><span class="side-dot"></span> Brand refresh</div>
+              <div class="side-item"><span class="side-dot purple"></span> Website launch</div>
+              <div class="side-item"><span class="side-dot green"></span> Content plan</div>
+            </aside>
+
+            <div class="app-main">
+              <div class="app-top">
+                <span>Workspace &nbsp; / &nbsp; <strong>Brand refresh</strong></span>
+                <span class="app-user">JD</span>
+              </div>
+              <div class="app-title-row">
+                <div><h3>Brand refresh ✳</h3><p>Good things are coming together.</p></div>
+                <button class="app-add" type="button" tabindex="-1">+ Add task</button>
+              </div>
+              <div class="app-tabs"><span class="selected">Board</span><span>List</span><span>Timeline</span><span>Files</span></div>
+              <div class="board">
+                <div class="column">
+                  <div class="column-head"><span>To do</span><span class="count">2 &nbsp; +</span></div>
+                  <div class="task"><span class="tag">Research</span><div class="task-title">Gather inspiration</div><div class="task-bottom"><span>▧ &nbsp; 3</span><span class="avatar">AL</span></div></div>
+                  <div class="task"><span class="tag lilac">Design</span><div class="task-title">Explore color palettes</div><div class="task-bottom"><span>▧ &nbsp; 2</span><span class="avatar a3">SK</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-head"><span>In progress</span><span class="count">2 &nbsp; +</span></div>
+                  <div class="task"><span class="tag lilac">Design</span><div class="task-title">Create moodboard</div><div class="task-bottom"><span>▧ &nbsp; 4</span><span class="avatar a2">MC</span></div></div>
+                  <div class="task"><span class="tag">Strategy</span><div class="task-title">Define brand voice</div><div class="task-bottom"><span>▧ &nbsp; 1</span><span class="avatar">AL</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-head"><span>Done</span><span class="count">1 &nbsp; +</span></div>
+                  <div class="task"><span class="tag mint">Planning</span><div class="task-title">Project kickoff</div><div class="task-bottom"><span>▧ &nbsp; 5</span><span class="avatar a3">SK</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="floating-card"><span class="check-circle">✓</span><span><strong>Looking good!</strong><small>Your team is making progress.</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trusted" aria-label="Teams that use Morrow">
+      <div class="container trusted-inner">
+        <p>Made for thoughtful teams doing great things</p>
+        <div class="logos" aria-label="Example teams">
+          <span>✳ northstar</span>
+          <span>goodform.</span>
+          <span>STUDIO N°</span>
+          <span>◒ layers</span>
+          <span>fieldwork</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="features container" id="features">
+      <div class="section-intro">
+        <div>
+          <div class="eyebrow">A calmer way to work</div>
+          <h2>Everything in its place.<br />Everyone in the loop.</h2>
+        </div>
+        <p>Less chasing updates, more making things happen. Morrow gives your team a little space to do a lot.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">▤</div>
+          <h3>See the whole picture</h3>
+          <p>Organize projects your way and know exactly what’s moving, what’s next, and what’s done.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">✳</div>
+          <h3>Make teamwork feel easy</h3>
+          <p>Keep conversations, files, and feedback right alongside the work they belong to.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">◷</div>
+          <h3>Find your focus</h3>
+          <p>Turn big ideas into clear next steps, so everyone can spend more time doing their best work.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta container" id="get-started">
+      <div class="cta-inner">
+        <h2>Good work starts here.</h2>
+        <p>Make space for your team’s next great idea.</p>
+        <a class="button" href="mailto:hello@example.com?subject=Getting%20started%20with%20Morrow">Get started for free <span class="arrow">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand" href="#" aria-label="Morrow home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        morrow
+      </a>
+      <p>© <span id="year"></span> Morrow. Made for better days at work.</p>
+      <div class="footer-links"><a href="#features">Features</a><a href="#get-started">Contact</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.querySelector(".menu-toggle");
+    const menu = document.querySelector("#nav-links");
+
+    menuButton.addEventListener("click", () => {
+      const isOpen = menu.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+      menuButton.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+      menuButton.textContent = isOpen ? "×" : "☰";
+    });
+
+    menu.addEventListener("click", (event) => {
+      if (event.target.closest("a")) {
+        menu.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Open menu");
+        menuButton.textContent = "☰";
+      }
+    });
+
+    document.querySelector("#year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+```

@@ -1,0 +1,17 @@
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/sonnet-5.5__P5__r5.a1.q84tacob && ls -la index.html && python3 -I -c "
+import sys
+from html.parser import HTMLParser
+class P(HTMLParser):
+    def __init__(s):
+        super().__init__(); s.stack=[]; s.err=[]
+    def handle_starttag(s,t,a):
+        if t not in ('meta','link','br','img','input','hr'): s.stack.append(t)
+    def handle_endtag(s,t):
+        if s.stack and s.stack[-1]==t: s.stack.pop()
+        else: s.err.append((t,s.stack[-3:]))
+p=P(); p.feed(open(sys.argv[1]).read()); print('errors',p.err,'unclosed',p.stack)
+" index.html; grep -c "http" index.html</parameter>
+</invoke>
+= tool result pending

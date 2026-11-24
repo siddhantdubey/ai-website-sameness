@@ -1,0 +1,26 @@
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/opus-5.5__P3__r2.a1.n5z9rf4b && sed -i "s/\${form.name.value.split(' ')\[0\]}/\${document.getElementById('name').value.trim().split(' ')[0]}/; s#<span>Kinfolk</span><span>Aesop</span><span>Monocle</span><span>Condé Nast Traveller</span><span>Patagonia</span><span>The Gentlewoman</span><span>Hermès</span><span>Cereal</span>#<span>Lume Studio</span><span>Norra Goods</span><span>Abreu \&amp; Faria</span><span>Salt Quarterly</span><span>Casa Ondina</span><span>Field Notes Review</span><span>Maré Hotels</span><span>Atelier Vey</span>#" index.html && grep -c "Lume Studio</span>" index.html && grep -n "getElementById('name')" index.html && sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d' > /tmp/check.js && node --check /tmp/check.js && echo OK</parameter>
+</invoke>
+[Tool result: 1
+606:    status.textContent = `Thank you, ${document.getElementById('name').value.trim().split(' ')[0]} — I'll be in touch soon.`;
+OK]
+I've built the portfolio site as one self-contained HTML file. The JavaScript passes a syntax check, but I haven't opened the page in a browser.
+
+**File:** `/data/scratch/ai-sameness/main/work/opus-5.5__P3__r2.a1.n5z9rf4b/index.html`
+
+**What's on the page** (for a made-up photographer, "Ines Calloway", based in Lisbon):
+- **Hero:** a large headline, two buttons ("View portfolio" and "Book a shoot") and two overlapping images.
+- **Client strip:** a scrolling row of client names. All the names are invented, so the page doesn't suggest that real brands endorse it.
+- **Portfolio:** 14 images in a masonry grid, with filter buttons for Portrait, Landscape, Architecture and Still life. Clicking an image opens it full-screen; you can move between images with the arrow keys, by swiping on a phone, or with the on-screen arrows, and Esc closes it.
+- **About:** a short bio and three numbers that count up as you scroll to them.
+- **Services:** three pricing cards and a four-step outline of how a booking works.
+- **Testimonials:** quotes that rotate on their own, with dots to pick one.
+- **Contact:** a booking form that checks for missing fields and a valid email, plus contact details.
+- **Layout and accessibility:** it adapts to phones with a collapsible menu, works with the keyboard, and turns off animations for people who have reduced motion enabled.
+
+**About the images:** to keep everything in one file, the "photos" are drawn by the page's own code. They are simple pictures of landscapes, portrait silhouettes, buildings and still-life objects, each with its own colours. To use real photos:
+- In the code, find the list called `WORKS` and change each entry so it shows your own image instead of the drawn one.
+- In the page's text, replace the elements marked `data-scene` (the hero and About pictures) with your own images.
+
+**The contact form doesn't send anything yet.** It checks what's typed and shows a thank-you message, but the enquiry goes nowhere. To receive messages, point it at a form service such as Formspree or Netlify Forms, or at your own server.

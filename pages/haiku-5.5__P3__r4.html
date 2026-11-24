@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alex Rivera — Photographer</title>
+<meta name="description" content="Portrait, landscape and event photography.">
+<style>
+:root{
+  --bg:#0e0e0f; --fg:#f3efe8; --muted:#9b978f; --accent:#d4a373;
+  --card:#161618; --line:#2a2a2d;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:110px 0}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.15}
+h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:16px}
+.eyebrow{display:block;text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:var(--accent);margin-bottom:14px}
+.muted{color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- Header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(14,14,15,.85);backdrop-filter:blur(10px);border-color:var(--line)}
+.nav{display:flex;justify-content:space-between;align-items:center;height:72px}
+.logo{font-family:var(--serif);font-size:1.3rem;text-decoration:none;letter-spacing:.02em}
+.nav ul{display:flex;gap:32px;list-style:none}
+.nav ul a{text-decoration:none;font-size:.88rem;color:var(--muted);transition:color .2s}
+.nav ul a:hover{color:var(--fg)}
+.menu-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;position:relative}
+.menu-btn span{position:absolute;left:9px;right:9px;height:1.5px;background:var(--fg);transition:.3s}
+.menu-btn span:nth-child(1){top:14px}
+.menu-btn span:nth-child(2){top:20px}
+.menu-btn span:nth-child(3){top:26px}
+.menu-open .menu-btn span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.menu-open .menu-btn span:nth-child(2){opacity:0}
+.menu-open .menu-btn span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;display:flex;align-items:flex-end;position:relative;padding:0;
+  background:
+    radial-gradient(circle at 75% 30%,rgba(212,163,115,.25),transparent 45%),
+    linear-gradient(160deg,#1d1d20 0%,#0e0e0f 70%);}
+.hero-inner{padding-bottom:120px;padding-top:120px;width:100%}
+.hero h1{font-size:clamp(3rem,9vw,7.5rem);letter-spacing:-.02em;max-width:900px}
+.hero h1 em{color:var(--accent)}
+.hero p{margin-top:24px;font-size:1.1rem;color:var(--muted);max-width:480px}
+.btn{display:inline-block;margin-top:36px;padding:14px 30px;border:1px solid var(--fg);text-decoration:none;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;transition:.25s;background:none;cursor:pointer}
+.btn:hover{background:var(--fg);color:var(--bg)}
+.btn.solid{background:var(--accent);border-color:var(--accent);color:#111}
+.btn.solid:hover{background:var(--fg);border-color:var(--fg)}
+
+/* ---------- Work ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0 40px}
+.filter{background:none;border:1px solid var(--line);padding:8px 18px;border-radius:999px;cursor:pointer;font-size:.85rem;color:var(--muted);transition:.2s}
+.filter:hover{color:var(--fg);border-color:var(--muted)}
+.filter[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.tile{position:relative;aspect-ratio:4/5;overflow:hidden;cursor:zoom-in;background:var(--card);border:0;padding:0;display:block;width:100%}
+.tile img,.tile .ph{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.tile .ph{background:linear-gradient(135deg,var(--h1),var(--h2))}
+.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent 50%);opacity:0;transition:opacity .4s}
+.tile .cap{position:absolute;left:18px;bottom:16px;right:18px;z-index:2;opacity:0;transform:translateY(8px);transition:.4s;text-align:left}
+.tile .cap small{display:block;color:var(--accent);text-transform:uppercase;letter-spacing:.15em;font-size:.68rem}
+.tile .cap span{font-family:var(--serif);font-size:1.15rem}
+.tile:hover img,.tile:hover .ph{transform:scale(1.05)}
+.tile:hover::after{opacity:1}
+.tile:hover .cap{opacity:1;transform:none}
+.tile[hidden]{display:none}
+
+/* ---------- About ---------- */
+.about{background:var(--card)}
+.about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:70px;align-items:center}
+.portrait{aspect-ratio:3/4;background:linear-gradient(200deg,#3a3430,#1c1a19);position:relative;overflow:hidden}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.about p+p{margin-top:18px}
+.stats{display:flex;gap:44px;margin-top:40px;flex-wrap:wrap}
+.stats strong{display:block;font-family:var(--serif);font-size:2.4rem;font-weight:400;color:var(--accent)}
+.stats span{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+/* ---------- Services ---------- */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:50px}
+.card{border:1px solid var(--line);padding:38px 32px;transition:border-color .3s,transform .3s;display:flex;flex-direction:column}
+.card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.card h3{font-size:1.5rem;margin-bottom:10px}
+.card .price{font-family:var(--serif);font-size:2rem;color:var(--accent);margin:18px 0 22px}
+.card .price small{font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+.card ul{list-style:none;color:var(--muted);font-size:.93rem;margin-bottom:28px;flex:1}
+.card li{padding:7px 0;border-top:1px solid var(--line)}
+.card li:first-child{border-top:0}
+.card .btn{margin-top:0;align-self:flex-start}
+
+/* ---------- Contact ---------- */
+.contact{background:var(--card)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:70px}
+.contact-info p{margin-bottom:14px}
+.contact-info a{color:var(--accent)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field.full{grid-column:1/-1}
+.field label{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.field input,.field select,.field textarea{background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 0;outline:none;transition:border-color .2s;color:var(--fg)}
+.field select option{background:var(--card)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:110px}
+.field .err{color:#e88a7a;font-size:.8rem;min-height:1em}
+form .btn{justify-self:start}
+.thanks{display:none;grid-column:1/-1;padding:20px 0;color:var(--accent)}
+.thanks.show{display:block}
+
+/* ---------- Footer ---------- */
+footer{padding:40px 0;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+footer .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--fg)}
+
+/* ---------- Lightbox ---------- */
+.lightbox{position:fixed;inset:0;background:rgba(5,5,6,.96);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lb-stage{max-width:90vw;max-height:82vh;display:flex;flex-direction:column;align-items:center;gap:16px}
+.lb-media{width:min(80vw,900px);height:min(75vh,1000px);max-width:90vw;max-height:75vh;display:flex;align-items:center;justify-content:center}
+.lb-media img{max-width:100%;max-height:100%;object-fit:contain}
+.lb-media .ph{width:min(70vw,600px);aspect-ratio:4/5;max-height:75vh;background:linear-gradient(135deg,var(--h1),var(--h2))}
+.lb-caption{text-align:center;font-family:var(--serif);font-size:1.1rem}
+.lb-caption small{display:block;font-family:var(--sans);color:var(--accent);text-transform:uppercase;letter-spacing:.15em;font-size:.7rem;margin-top:4px}
+.lb-btn{position:absolute;background:none;border:0;color:var(--fg);cursor:pointer;font-size:2.4rem;line-height:1;padding:14px;opacity:.7;transition:opacity .2s}
+.lb-btn:hover{opacity:1}
+.lb-close{top:14px;right:18px;font-size:2rem}
+.lb-prev{left:12px;top:50%;transform:translateY(-50%)}
+.lb-next{right:12px;top:50%;transform:translateY(-50%)}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .menu-btn{display:block}
+  .nav ul{position:fixed;top:72px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);
+    max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .menu-open .nav ul{max-height:340px}
+  .nav ul li a{display:block;padding:16px 24px;font-size:1rem;border-top:1px solid var(--line)}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:50px}
+  .portrait{max-width:420px}
+}
+@media (max-width:560px){
+  section{padding:80px 0}
+  form{grid-template-columns:1fr}
+  .lb-prev,.lb-next{font-size:1.8rem;top:auto;bottom:10px;transform:none}
+  .lb-prev{left:10px}.lb-next{right:10px}
+  .lb-media{width:92vw}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="container nav">
+    <a href="#top" class="logo">Alex Rivera</a>
+    <button class="menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-list"><span></span><span></span><span></span></button>
+    <nav>
+      <ul id="nav-list">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="container hero-inner">
+      <span class="eyebrow">Portrait · Landscape · Events</span>
+      <h1>Stories held <em>still</em>.</h1>
+      <p>Freelance photographer based in Portland, creating honest, considered images for people and places that matter.</p>
+      <a href="#work" class="btn">View the work</a>
+      <a href="#contact" class="btn solid" style="margin-left:12px">Book a session</a>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="container">
+      <span class="eyebrow reveal">Selected work</span>
+      <h2 class="reveal">Recent photographs</h2>
+      <div class="filters reveal" role="group" aria-label="Filter photographs">
+        <button class="filter" aria-pressed="true" data-filter="all">All</button>
+        <button class="filter" aria-pressed="false" data-filter="portrait">Portraits</button>
+        <button class="filter" aria-pressed="false" data-filter="landscape">Landscapes</button>
+        <button class="filter" aria-pressed="false" data-filter="event">Events</button>
+        <button class="filter" aria-pressed="false" data-filter="street">Street</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container about-grid">
+      <div class="portrait reveal" id="portrait"></div>
+      <div class="reveal">
+        <span class="eyebrow">About</span>
+        <h2>Patient eyes, quiet frames.</h2>
+        <p>I have been photographing people and places for over a decade. My approach is unhurried: I spend time getting to know my subjects before I raise the camera, so the pictures feel like they belong to the moment rather than being staged for it.</p>
+        <p class="muted">I work primarily with natural light and shoot on film and digital. Clients include independent studios, small businesses, editorial publications, and families who want their milestones recorded with care.</p>
+        <div class="stats">
+          <div><strong>12+</strong><span>Years</span></div>
+          <div><strong>400+</strong><span>Sessions</span></div>
+          <div><strong>30</strong><span>Publications</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="container">
+      <span class="eyebrow reveal">Services</span>
+      <h2 class="reveal">Ways to work together</h2>
+      <p class="lead reveal">Every project is different. These are starting points, and I am happy to tailor a package to your needs.</p>
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info reveal">
+        <span class="eyebrow">Contact</span>
+        <h2>Let's make something.</h2>
+        <p class="muted">Tell me about your project and I will reply within two business days.</p>
+        <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+        <p class="muted">+1 (555) 014-2290</p>
+        <p class="muted">Portland, Oregon</p>
+      </div>
+      <form id="contact-form" class="reveal" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required autocomplete="name">
+          <span class="err" data-for="name"></span>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email">
+          <span class="err" data-for="email"></span>
+        </div>
+        <div class="field">
+          <label for="type">Project type</label>
+          <select id="type" name="type">
+            <option>Portrait session</option>
+            <option>Landscape / travel</option>
+            <option>Event coverage</option>
+            <option>Commercial / brand</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Preferred date</label>
+          <input id="date" name="date" type="date">
+        </div>
+        <div class="field full">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+          <span class="err" data-for="message"></span>
+        </div>
+        <div class="field full">
+          <button class="btn solid" type="submit">Send inquiry</button>
+        </div>
+        <p class="thanks" id="thanks" role="status">Thank you. Your inquiry has been received and I will be in touch soon.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <span>© <span id="year"></span> Alex Rivera Photography</span>
+    <span><a href="#">Instagram</a> · <a href="#">500px</a> · <a href="#">Email</a></span>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+  <button class="lb-btn lb-close" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" aria-label="Previous photo">&#8249;</button>
+  <div class="lb-stage">
+    <div class="lb-media" id="lb-media"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+  <button class="lb-btn lb-next" aria-label="Next photo">&#8250;</button>
+</div>
+
+<script>
+/* ============ CONFIG: edit these ============ */
+const SITE = {
+  // Optional: set to a form endpoint (Formspree, Netlify, etc.) to receive submissions.
+  // Leave empty to show the success message without sending anything.
+  formEndpoint: "",
+
+  services: [
+    { name: "Portrait Session", price: "$350", unit: "/ session",
+      items: ["60-minute studio or on-location shoot", "20 edited high-res images", "Online gallery for 30 days"],
+    },
+    { name: "Event Coverage", price: "$1,200", unit: "/ event",
+      items: ["Up to 6 hours of coverage", "150+ edited images", "Private gallery and print release"],
+    },
+    { name: "Commercial", price: "$900", unit: "/ day",
+      items: ["Brand and product imagery", "Usage licence for web and print", "Creative direction included"],
+    },
+  ],
+
+  // Add your own photos with `src` (path or URL). Omit `src` to show a placeholder.
+  photos: [
+    { title: "Golden Hour, Sara",     cat: "portrait",  src: "", hue: [28, 18] },
+    { title: "Cascade Creek",         cat: "landscape", src: "", hue: [200, 220] },
+    { title: "Harbor Lights",         cat: "event",     src: "", hue: [260, 290] },
+    { title: "Morning Commute",       cat: "street",    src: "", hue: [160, 180] },
+    { title: "Quiet Study",           cat: "portrait",  src: "", hue: [340, 10] },
+    { title: "Ridgeline at Dusk",     cat: "landscape", src: "", hue: [230, 250] },
+    { title: "The Wedding Toast",     cat: "event",     src: "", hue: [40, 55] },
+    { title: "Crosswalk",             cat: "street",    src: "", hue: [0, 15] },
+    { title: "Grandmother's Hands",   cat: "portrait",  src: "", hue: [18, 30] },
+    { title: "Fog Over the Valley",   cat: "landscape", src: "", hue: [190, 210] },
+    { title: "Festival Crowd",        cat: "event",     src: "", hue: [300, 320] },
+    { title: "Neon Alley",           cat: "street",    src: "", hue: [280, 300] },
+  ],
+};
+/* ============================================ */
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---- Render gallery ---- */
+const grid = $("#grid");
+grid.innerHTML = SITE.photos.map((p, i) => {
+  const media = p.src
+    ? `<img src="${esc(p.src)}" alt="${esc(p.title)}" loading="lazy">`
+    : `<div class="ph" style="--h1:hsl(${p.hue[0]} 35% 28%);--h2:hsl(${p.hue[1]} 30% 12%)"></div>`;
+  return `<button class="tile" data-index="${i}" data-cat="${p.cat}" aria-label="Open ${esc(p.title)}">
+    ${media}
+    <div class="cap"><small>${esc(p.cat)}</small><span>${esc(p.title)}</span></div>
+  </button>`;
+}).join("");
+
+/* ---- Filters ---- */
+$$(".filter").forEach(btn => btn.addEventListener("click", () => {
+  const f = btn.dataset.filter;
+  $$(".filter").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+  $$(".tile").forEach(t => { t.hidden = !(f === "all" || t.dataset.cat === f); });
+}));
+
+/* ---- Lightbox ---- */
+const lb = $("#lightbox"), lbMedia = $("#lb-media"), lbCap = $("#lb-caption");
+let current = 0, lastFocus = null;
+const visibleTiles = () => $$(".tile").filter(t => !t.hidden);
+
+function showPhoto(idx) {
+  const list = visibleTiles();
+  if (!list.length) return;
+  current = (idx + list.length) % list.length;
+  const p = SITE.photos[+list[current].dataset.index];
+  lbMedia.innerHTML = p.src
+    ? `<img src="${esc(p.src)}" alt="${esc(p.title)}">`
+    : `<div class="ph" style="--h1:hsl(${p.hue[0]} 35% 28%);--h2:hsl(${p.hue[1]} 30% 12%)"></div>`;
+  lbCap.innerHTML = `${esc(p.title)}<small>${esc(p.cat)}</small>`;
+}
+function openLB(idx) {
+  lastFocus = document.activeElement;
+  showPhoto(visibleTiles().findIndex(t => +t.dataset.index === idx));
+  lb.classList.add("open");
+  lb.setAttribute("aria-hidden", "false");
+  $(".lb-close", lb).focus();
+  document.body.style.overflow = "hidden";
+}
+function closeLB() {
+  lb.classList.remove("open");
+  lb.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  if (lastFocus) lastFocus.focus();
+}
+grid.addEventListener("click", e => {
+  const t = e.target.closest(".tile");
+  if (t) openLB(+t.dataset.index);
+});
+$(".lb-close", lb).addEventListener("click", closeLB);
+$(".lb-prev", lb).addEventListener("click", () => showPhoto(current - 1));
+$(".lb-next", lb).addEventListener("click", () => showPhoto(current + 1));
+lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("lb-stage")) closeLB(); });
+document.addEventListener("keydown", e => {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") closeLB();
+  if (e.key === "ArrowLeft") showPhoto(current - 1);
+  if (e.key === "ArrowRight") showPhoto(current + 1);
+});
+let touchX = null;
+lb.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) showPhoto(current + (dx < 0 ? 1 : -1));
+  touchX = null;
+});
+
+/* ---- Portrait placeholder ---- */
+const portrait = $("#portrait");
+portrait.innerHTML = `<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(212,163,115,.35),transparent 55%),linear-gradient(200deg,#3a3430,#1c1a19)"></div>`;
+
+/* ---- Services ---- */
+$("#services-grid").innerHTML = SITE.services.map(s => `
+  <article class="card reveal">
+    <h3>${esc(s.name)}</h3>
+    <div class="price">${esc(s.price)} <small>${esc(s.unit)}</small></div>
+    <ul>${s.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul>
+    <a href="#contact" class="btn">Enquire</a>
+  </article>`).join("");
+
+/* ---- Contact form ---- */
+const form = $("#contact-form");
+const fields = { name: v => v.trim().length >= 2 || "Please enter your name",
+                 email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "Enter a valid email",
+                 message: v => v.trim().length >= 10 || "Tell me a little more (10+ characters)" };
+
+function validate() {
+  let ok = true;
+  for (const [id, rule] of Object.entries(fields)) {
+    const el = form.elements[id];
+    const res = rule(el.value);
+    const err = $(`[data-for="${id}"]`);
+    err.textContent = res === true ? "" : res;
+    if (res !== true) ok = false;
+  }
+  return ok;
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!validate()) return;
+  const btn = form.querySelector("button[type=submit]");
+  btn.disabled = true;
+  btn.textContent = "Sending…";
+  try {
+    if (SITE.formEndpoint) {
+      const res = await fetch(SITE.formEndpoint, {
+        method: "POST", body: new FormData(form), headers: { Accept: "application/json" }
+      });
+      if (!res.ok) throw new Error("Request failed");
+    }
+    $("#thanks").classList.add("show");
+    form.reset();
+  } catch {
+    alert("Sorry, something went wrong. Please email me directly.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Send inquiry";
+  }
+});
+
+/* ---- Header state & mobile menu ---- */
+const header = $("#top");
+const menuBtn = $(".menu-btn");
+const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 40);
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+menuBtn.addEventListener("click", () => {
+  const open = header.classList.toggle("menu-open");
+  menuBtn.setAttribute("aria-expanded", String(open));
+});
+$$("#nav-list a").forEach(a => a.addEventListener("click", () => {
+  header.classList.remove("menu-open");
+  menuBtn.setAttribute("aria-expanded", "false");
+}));
+
+/* ---- Reveal on scroll ---- */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+}, { threshold: 0.12 });
+$$(".reveal").forEach((el, i) => { el.style.transitionDelay = `${(i % 4) * 80}ms`; io.observe(el); });
+
+/* ---- Footer year ---- */
+$("#year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

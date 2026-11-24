@@ -1,0 +1,683 @@
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/haiku-5.5__P1__r3.a1.gfr6ocno/index.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera — Plan, track, and ship projects together</title>
+<meta name="description" content="Tessera is the project management app that keeps your team aligned, your tasks moving, and your deadlines visible.">
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-alt: #11141b;
+    --surface: #171b24;
+    --border: #262c39;
+    --text: #e8ebf2;
+    --muted: #97a0b3;
+    --accent: #7c5cff;
+    --accent-2: #22d3ee;
+    --success: #34d399;
+    --warn: #fbbf24;
+    --radius: 14px;
+    --max: 1160px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img, svg { display: block; max-width: 100%; }
+  .container { width: min(var(--max), 92%); margin: 0 auto; }
+  section { padding: 96px 0; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 14px;
+  }
+  h1, h2, h3 { line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(2.4rem, 5.5vw, 4.2rem); }
+  h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); }
+  h3 { font-size: 1.2rem; margin-bottom: 8px; }
+  .lead { font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--muted); max-width: 620px; }
+  .section-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+  .section-head .lead { margin: 14px auto 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 22px; border-radius: 10px; font-weight: 600; font-size: 0.98rem;
+    border: 1px solid transparent; cursor: pointer; transition: transform .15s, background .2s, border-color .2s;
+    font-family: inherit;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 8px 30px -8px rgba(124,92,255,.6); }
+  .btn-primary:hover { background: #6a48f5; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--muted); }
+  .btn-block { width: 100%; }
+
+  /* Nav */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(180%) blur(12px);
+    background: rgba(11,13,18,.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; }
+  .logo-mark {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  .nav-links { display: flex; gap: 28px; font-size: 0.95rem; color: var(--muted); }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 10px; align-items: center; }
+  .menu-toggle { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+
+  /* Hero */
+  .hero { padding: 90px 0 70px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto; height: 700px; z-index: -1;
+    background:
+      radial-gradient(closest-side at 25% 40%, rgba(124,92,255,.35), transparent),
+      radial-gradient(closest-side at 75% 30%, rgba(34,211,238,.22), transparent);
+    filter: blur(20px);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .lead { margin: 22px 0 34px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-note { margin-top: 18px; font-size: 0.88rem; color: var(--muted); }
+
+  .board {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    padding: 18px; box-shadow: 0 40px 80px -30px rgba(0,0,0,.7);
+  }
+  .board-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .board-top strong { font-size: 0.95rem; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); display: block; }
+  .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .col { background: var(--bg-alt); border-radius: 12px; padding: 10px; min-height: 260px; }
+  .col-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 4px 6px 10px; display: flex; justify-content: space-between; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 8px; font-size: 0.82rem;
+  }
+  .card p { color: var(--text); margin-bottom: 8px; }
+  .tag { display: inline-block; font-size: 0.68rem; padding: 2px 7px; border-radius: 999px; font-weight: 600; }
+  .tag-a { background: rgba(124,92,255,.18); color: #b7a6ff; }
+  .tag-b { background: rgba(34,211,238,.15); color: #7de7f7; }
+  .tag-c { background: rgba(52,211,153,.15); color: #7ef0c2; }
+  .tag-d { background: rgba(251,191,36,.15); color: #fcd66b; }
+  .avatar { width: 20px; height: 20px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-left: 4px; }
+  .bar { height: 5px; border-radius: 4px; background: var(--border); overflow: hidden; margin-top: 6px; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+  /* Logos strip */
+  .logos { padding: 40px 0; border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); }
+  .logos p { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+  .logos-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px 40px; opacity: .6; font-weight: 700; font-size: 1.1rem; letter-spacing: .02em; }
+
+  /* Features */
+  .features { background: var(--bg-alt); }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .feature {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 28px; transition: border-color .2s, transform .2s;
+  }
+  .feature:hover { border-color: #3a4256; transform: translateY(-3px); }
+  .icon {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: rgba(124,92,255,.15); color: #b7a6ff; margin-bottom: 18px;
+  }
+  .icon svg { width: 22px; height: 22px; }
+  .feature p { color: var(--muted); font-size: 0.97rem; }
+
+  /* How it works */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; counter-reset: step; }
+  .step { position: relative; padding-top: 18px; border-top: 2px solid var(--border); }
+  .step::before {
+    counter-increment: step; content: "0" counter(step);
+    position: absolute; top: -14px; left: 0;
+    background: var(--bg); padding-right: 12px;
+    font-weight: 700; color: var(--accent-2); font-size: 0.9rem;
+  }
+  .step p { color: var(--muted); }
+
+  /* Product showcase */
+  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .checklist { list-style: none; margin-top: 26px; display: grid; gap: 14px; }
+  .checklist li { display: flex; gap: 12px; color: var(--muted); }
+  .checklist li::before {
+    content: ""; flex: 0 0 20px; height: 20px; margin-top: 3px; border-radius: 50%;
+    background: var(--success) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%230b0d12' d='M8.2 13.4 5 10.2l1.1-1.1 2.1 2.1 5.7-5.7 1.1 1.1z'/%3E%3C/svg%3E") center/contain no-repeat;
+  }
+  .timeline { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 26px; }
+  .gantt-row { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 0.85rem; color: var(--muted); }
+  .gantt-track { position: relative; height: 26px; background: var(--bg-alt); border-radius: 6px; }
+  .gantt-bar {
+    position: absolute; top: 3px; bottom: 3px; border-radius: 5px;
+    background: linear-gradient(90deg, var(--accent), #9b82ff);
+  }
+  .gantt-bar.b { background: linear-gradient(90deg, var(--accent-2), #67e8f9); }
+  .gantt-bar.c { background: linear-gradient(90deg, var(--success), #6ee7b7); }
+  .gantt-bar.d { background: linear-gradient(90deg, var(--warn), #fde68a); }
+
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .quote { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+  .quote blockquote { color: var(--text); font-size: 1rem; }
+  .who { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
+  .who .av { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4b3bb8, #0e7490); display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
+  .who small { display: block; color: var(--muted); }
+  .stars { color: var(--warn); letter-spacing: 2px; font-size: 0.9rem; }
+
+  /* Pricing */
+  .pricing-toggle { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 42px; color: var(--muted); font-size: 0.95rem; }
+  .switch { position: relative; width: 48px; height: 26px; background: var(--border); border-radius: 999px; border: none; cursor: pointer; transition: background .2s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
+  .switch[aria-checked="true"] { background: var(--accent); }
+  .switch[aria-checked="true"]::after { transform: translateX(22px); }
+  .save { font-size: 0.75rem; background: rgba(52,211,153,.15); color: #7ef0c2; padding: 3px 8px; border-radius: 999px; font-weight: 600; }
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+  .plan { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 32px; display: flex; flex-direction: column; }
+  .plan.featured { border-color: var(--accent); box-shadow: 0 30px 60px -30px rgba(124,92,255,.55); position: relative; }
+  .plan .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; letter-spacing: .06em; text-transform: uppercase; }
+  .plan .desc { color: var(--muted); font-size: 0.93rem; margin-bottom: 22px; }
+  .price { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; }
+  .price small { font-size: 0.95rem; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  .plan ul { list-style: none; margin: 24px 0 28px; display: grid; gap: 11px; font-size: 0.93rem; color: var(--muted); flex: 1; }
+  .plan li::before { content: "✓ "; color: var(--success); font-weight: 700; }
+
+  /* FAQ */
+  .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }
+  .faq details { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+  .faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-size: 1.3rem; color: var(--muted); transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { color: var(--muted); margin-top: 12px; font-size: 0.97rem; }
+
+  /* CTA */
+  .cta {
+    text-align: center; background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(34,211,238,.12));
+    border: 1px solid var(--border); border-radius: 24px; padding: 70px 30px;
+  }
+  .cta .lead { margin: 16px auto 32px; }
+  .email-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 480px; margin: 0 auto; }
+  .email-form input {
+    flex: 1 1 260px; padding: 13px 16px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font: inherit;
+  }
+  .email-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .form-msg { margin-top: 14px; font-size: 0.9rem; color: var(--success); min-height: 1.2em; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 56px 0 36px; color: var(--muted); font-size: 0.92rem; }
+  .foot-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; margin-bottom: 40px; }
+  .foot-grid h4 { color: var(--text); font-size: 0.9rem; margin-bottom: 14px; }
+  .foot-grid ul { list-style: none; display: grid; gap: 9px; }
+  .foot-grid a:hover { color: var(--text); }
+  .foot-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 0.85rem; }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .hero-grid, .showcase { grid-template-columns: 1fr; }
+    .feature-grid, .quotes, .price-grid, .steps { grid-template-columns: 1fr 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 640px) {
+    section { padding: 70px 0; }
+    .feature-grid, .quotes, .price-grid, .steps { grid-template-columns: 1fr; }
+    .columns { grid-template-columns: 1fr; }
+    .col { min-height: auto; }
+    .col:nth-child(n+3) { display: none; }
+    .nav-cta .hide-sm { display: none; }
+    .menu-toggle { display: block; }
+    .foot-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { transition: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#top" class="logo" aria-label="Tessera home">
+      <span class="logo-mark" aria-hidden="true"></span>
+      Tessera
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost hide-sm">Log in</a>
+      <a href="#get-started" class="btn btn-primary">Start free</a>
+      <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex'">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero" style="padding-top:80px;">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">Project management, simplified</span>
+        <h1>Plan it. Track it. <span>Ship it.</span></h1>
+        <p class="lead">Tessera gives your team one place for tasks, timelines, and conversations — so projects stay on track without another status meeting.</p>
+        <div class="hero-actions">
+          <a href="#get-started" class="btn btn-primary">Start for free &rarr;</a>
+          <a href="#showcase" class="btn btn-ghost">See how it works</a>
+        </div>
+        <p class="hero-note">Free forever for teams up to 5. No credit card required.</p>
+      </div>
+
+      <div class="reveal" aria-hidden="true">
+        <div class="board">
+          <div class="board-top">
+            <strong>Website Redesign — Sprint 4</strong>
+            <div class="dots"><i></i><i></i><i></i></div>
+          </div>
+          <div class="columns">
+            <div class="col">
+              <div class="col-title"><span>To do</span><span>2</span></div>
+              <div class="card"><p>Draft pricing page copy</p><span class="tag tag-a">Copy</span></div>
+              <div class="card"><p>Audit mobile nav</p><span class="tag tag-b">Design</span></div>
+            </div>
+            <div class="col">
+              <div class="col-title"><span>In progress</span><span>2</span></div>
+              <div class="card">
+                <p>Build new checkout flow</p>
+                <span class="tag tag-c">Eng</span>
+                <div class="bar"><span style="width:64%"></span></div>
+              </div>
+              <div class="card"><p>Launch-day email sequence</p><span class="tag tag-d">Marketing</span></div>
+            </div>
+            <div class="col">
+              <div class="col-title"><span>Done</span><span>3</span></div>
+              <div class="card"><p>Brand palette approved</p><span class="tag tag-c">Design</span></div>
+              <div class="card"><p>Stakeholder sign-off</p><span class="tag tag-a">Ops</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logos -->
+  <div class="logos">
+    <div class="container">
+      <p>Trusted by product, design, and operations teams at fast-moving companies</p>
+      <div class="logos-row">
+        <span>Northwind</span><span>Lumen&amp;Co</span><span>Parallax</span><span>Kestrel</span><span>Atlas Labs</span><span>Fieldstone</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features" class="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Features</span>
+        <h2>Everything your team needs. Nothing it doesn't.</h2>
+        <p class="lead">Powerful enough for complex launches, simple enough to adopt in an afternoon.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="18" rx="2"/><rect x="11" y="3" width="6" height="11" rx="2"/><rect x="19" y="3" width="2" height="14" rx="1"/></svg></div>
+          <h3>Flexible boards</h3>
+          <p>Switch between Kanban, list, and calendar views. Every view stays in sync in real time.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h7M3 12h12M3 18h9"/><path d="M16 4l2 2 4-4"/></svg></div>
+          <h3>Timelines &amp; dependencies</h3>
+          <p>Map out milestones and link tasks together. Know instantly when a slip will ripple downstream.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M15 15c2.8 0 6 1.5 6 4"/></svg></div>
+          <h3>Clear ownership</h3>
+          <p>Every task has one owner, a due date, and a status. No more “whose is this?” in standup.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 1 1-3-6.2"/><path d="M21 4v5h-5"/></svg></div>
+          <h3>Automations</h3>
+          <p>Set rules once — move cards, notify reviewers, or reassign work when a status changes.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg></div>
+          <h3>Threaded discussions</h3>
+          <p>Comment directly on tasks with mentions, attachments, and file previews. Context never gets lost.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3>Live reporting</h3>
+          <p>Burndown charts, workload views, and progress dashboards that update themselves. Share with one click.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2>From kickoff to launch in three steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <h3>Set up your project</h3>
+          <p>Start from a template for software, marketing, or events — or build your own. Invite your team in seconds.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Break work into tasks</h3>
+          <p>Create tasks, assign owners, set deadlines, and link dependencies. Your plan takes shape as you type.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Track &amp; ship</h3>
+          <p>Watch progress update live, get nudged before deadlines slip, and celebrate when it lands.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase -->
+  <section id="showcase" class="features">
+    <div class="container showcase">
+      <div class="reveal">
+        <span class="eyebrow">Roadmap view</span>
+        <h2>See the whole plan at a glance</h2>
+        <p class="lead" style="margin-top:16px;">Drag milestones across weeks, spot overloaded teammates, and make trade-offs before they become surprises.</p>
+        <ul class="checklist">
+          <li>Drag-and-drop scheduling with automatic conflict warnings</li>
+          <li>Workload heatmaps so no one quietly burns out</li>
+          <li>Baselines to compare the plan against reality</li>
+        </ul>
+      </div>
+      <div class="timeline reveal" aria-hidden="true">
+        <div class="gantt-row"><span>Research</span><div class="gantt-track"><div class="gantt-bar" style="left:0;width:28%"></div></div></div>
+        <div class="gantt-row"><span>Design</span><div class="gantt-track"><div class="gantt-bar b" style="left:18%;width:34%"></div></div></div>
+        <div class="gantt-row"><span>Build</span><div class="gantt-track"><div class="gantt-bar c" style="left:42%;width:40%"></div></div></div>
+        <div class="gantt-row"><span>QA</span><div class="gantt-track"><div class="gantt-bar d" style="left:72%;width:18%"></div></div></div>
+        <div class="gantt-row"><span>Launch</span><div class="gantt-track"><div class="gantt-bar" style="left:90%;width:10%"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Loved by teams</span>
+        <h2>Less coordinating. More shipping.</h2>
+      </div>
+      <div class="quotes">
+        <figure class="quote reveal">
+          <div class="stars" aria-label="5 stars">★★★★★</div>
+          <blockquote>“We cut our weekly status meetings in half the first month. Everyone just checks the board now.”</blockquote>
+          <figcaption class="who"><span class="av">AM</span><span>Alex Morgan<small>Head of Product, Northwind</small></span></figcaption>
+        </figure>
+        <figure class="quote reveal">
+          <div class="stars" aria-label="5 stars">★★★★★</div>
+          <blockquote>“The dependency view caught a blocked launch two weeks before it would have hurt us. Worth it for that alone.”</blockquote>
+          <figcaption class="who"><span class="av">JR</span><span>Jordan Reyes<small>Engineering Manager, Parallax</small></span></figcaption>
+        </figure>
+        <figure class="quote reveal">
+          <div class="stars" aria-label="5 stars">★★★★★</div>
+          <blockquote>“Our designers and engineers finally work from the same source of truth. It just feels calmer.”</blockquote>
+          <figcaption class="who"><span class="av">PS</span><span>Priya Shah<small>Design Lead, Kestrel</small></span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Pricing</span>
+        <h2>Simple plans that grow with you</h2>
+        <p class="lead">Start free. Upgrade when your team needs more power.</p>
+      </div>
+
+      <div class="pricing-toggle reveal">
+        <span>Monthly</span>
+        <button class="switch" role="switch" aria-checked="false" aria-label="Toggle annual billing" id="billing-switch"></button>
+        <span>Annual <span class="save">Save 20%</span></span>
+      </div>
+
+      <div class="price-grid">
+        <div class="plan reveal">
+          <h3>Starter</h3>
+          <p class="desc">For small teams getting organized.</p>
+          <div class="price"><span data-monthly="$0" data-annual="$0">$0</span><small> / forever</small></div>
+          <ul>
+            <li>Up to 5 members</li>
+            <li>3 active projects</li>
+            <li>Kanban and list views</li>
+            <li>7-day activity history</li>
+          </ul>
+          <a href="#get-started" class="btn btn-ghost btn-block">Get started</a>
+        </div>
+
+        <div class="plan featured reveal">
+          <span class="badge">Most popular</span>
+          <h3>Team</h3>
+          <p class="desc">For growing teams shipping every sprint.</p>
+          <div class="price"><span data-monthly="$12" data-annual="$10">$12</span><small> / user / mo</small></div>
+          <ul>
+            <li>Unlimited members &amp; projects</li>
+            <li>Timelines and dependencies</li>
+            <li>Automations and integrations</li>
+            <li>Live reporting dashboards</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#get-started" class="btn btn-primary btn-block">Start 14-day trial</a>
+        </div>
+
+        <div class="plan reveal">
+          <h3>Enterprise</h3>
+          <p class="desc">For organizations with advanced needs.</p>
+          <div class="price">Custom</div>
+          <ul>
+            <li>Everything in Team</li>
+            <li>SSO &amp; advanced permissions</li>
+            <li>Audit logs and data residency</li>
+            <li>Dedicated success manager</li>
+          </ul>
+          <a href="#get-started" class="btn btn-ghost btn-block">Talk to sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2>Questions, answered</h2>
+      </div>
+      <div class="faq reveal">
+        <details open>
+          <summary>Is there really a free plan?</summary>
+          <p>Yes. The Starter plan is free forever for teams of up to five people, with no credit card required.</p>
+        </details>
+        <details>
+          <summary>Can I import my existing projects?</summary>
+          <p>Tessera imports from CSV and common tools like Trello, Asana, and Jira. Your structure, assignees, and due dates come with you.</p>
+        </details>
+        <details>
+          <summary>How does the 14-day trial work?</summary>
+          <p>Try every Team feature for two weeks. We'll remind you before it ends. If you don't upgrade, your account drops back to the Starter plan and nothing is deleted.</p>
+        </details>
+        <details>
+          <summary>Where is my data stored?</summary>
+          <p>All data is encrypted in transit and at rest. Enterprise customers can choose data residency in the EU or US.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section id="get-started" style="padding-top:0;">
+    <div class="container">
+      <div class="cta reveal">
+        <h2>Your next launch starts here.</h2>
+        <p class="lead">Create your first project in under two minutes. Bring the team along when you're ready.</p>
+        <form class="email-form" id="signup-form" novalidate>
+          <input type="email" id="email" name="email" placeholder="you@company.com" aria-label="Work email" required>
+          <button type="submit" class="btn btn-primary">Get started free</button>
+        </form>
+        <div class="form-msg" id="form-msg" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="#top" class="logo" style="margin-bottom:14px;">
+          <span class="logo-mark" aria-hidden="true"></span> Tessera
+        </a>
+        <p style="max-width:280px;">Project management that keeps teams aligned and work moving.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#showcase">Roadmaps</a></li>
+          <li><a href="#">Integrations</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Help center</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="year"></span> Tessera, Inc. All rights reserved.</span>
+      <span><a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('in'));
+  }
+
+  // Monthly / annual toggle
+  const billingSwitch = document.getElementById('billing-switch');
+  billingSwitch.addEventListener('click', () => {
+    const annual = billingSwitch.getAttribute('aria-checked') !== 'true';
+    billingSwitch.setAttribute('aria-checked', String(annual));
+    document.querySelectorAll('[data-monthly]').forEach((el) => {
+      el.textContent = annual ? el.dataset.annual : el.dataset.monthly;
+    });
+  });
+
+  // Signup form (front-end only; wire to your backend)
+  const form = document.getElementById('signup-form');
+  const msg = document.getElementById('form-msg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!valid) {
+      msg.style.color = '#fca5a5';
+      msg.textContent = 'Please enter a valid work email.';
+      return;
+    }
+    msg.style.color = 'var(--success)';
+    msg.textContent = 'Thanks! Check your inbox to finish setting up Tessera.';
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
+</parameter>
+</invoke>
+="I wrote the landing page to `index.html` in the working directory. It's a single self-contained file with inline CSS and JavaScript and no external dependencies.
+
+What's on the page:
+
+- **Sticky nav** with section links, a login link, a "Start free" button, and a mobile menu toggle.
+- **Hero** with a headline, CTAs, and a CSS-drawn Kanban board preview.
+- **Trusted-by strip** with placeholder company names.
+- **Features** grid with six cards.
+- **How it works** in three steps.
+- **Roadmap showcase** with a CSS Gantt-style timeline.
+- **Testimonials** with placeholder quotes and names.
+- **Pricing** with Starter, Team, and Enterprise tiers and a working monthly/annual toggle.
+- **FAQ** using native `<details>` elements.
+- **Final CTA** with an email form that validates input client-side.
+- **Footer** with link columns and an auto-updating year.
+
+Some things to be aware of:
+
+- **Placeholder content.** The product name "Tessera," the prices, the testimonials, the customer logos, and the legal links are all invented. Swap them for your real content before publishing.
+- **Signup is front-end only.** The form validates the email and shows a success message, but nothing is sent anywhere. You'll need to point it at your backend or an email service.
+- **Not yet checked in a browser.** I haven't opened the file or tested it at different viewport widths, so it's worth a quick look at desktop and mobile before shipping.

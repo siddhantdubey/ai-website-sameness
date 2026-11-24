@@ -1,0 +1,3245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cairn — Project Management for High-Craft Teams</title>
+  <meta name="description" content="Cairn unifies roadmaps, live capacity, and execution cycles so product teams ship ambitious work without the status-meeting tax." />
+  <style>
+    /* ============================================================
+       DESIGN TOKENS & RESET
+       ============================================================ */
+    :root {
+      --bg: #FAF9F6;
+      --bg-subtle: #F2EFE9;
+      --surface: #FFFFFF;
+      --surface-hover: #FCFBF9;
+      --ink: #16181D;
+      --ink-secondary: #4E535E;
+      --ink-muted: #767B86;
+      --border: #E5E1D8;
+      --border-strong: #D2CCC0;
+
+      --accent: #D64924;
+      --accent-hover: #BC3C1A;
+      --accent-soft: #FCECE7;
+      --accent-text: #A83516;
+
+      --sage: #247852;
+      --sage-soft: #E6F4EC;
+      --cobalt: #2956C2;
+      --cobalt-soft: #E8EFFC;
+      --amber: #B97209;
+      --amber-soft: #FDF3DF;
+
+      --dark-bg: #131519;
+      --dark-surface: #1B1E24;
+      --dark-surface-2: #242830;
+      --dark-border: #2B303A;
+      --dark-ink: #F5F4F0;
+      --dark-muted: #9BA1AE;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --radius-pill: 999px;
+
+      --shadow-xs: 0 1px 2px rgba(22, 24, 29, 0.04);
+      --shadow-sm: 0 2px 8px rgba(22, 24, 29, 0.05), 0 1px 2px rgba(22, 24, 29, 0.04);
+      --shadow-md: 0 12px 32px rgba(22, 24, 29, 0.07), 0 2px 6px rgba(22, 24, 29, 0.04);
+      --shadow-lg: 0 24px 60px rgba(22, 24, 29, 0.11), 0 4px 14px rgba(22, 24, 29, 0.05);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+      --container: 1160px;
+      --nav-height: 68px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       BUTTONS & BADGES
+       ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14.5px;
+      font-weight: 550;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      transition: transform 0.16s var(--ease), background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-primary:hover {
+      background: #272B33;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #FFFFFF;
+      box-shadow: 0 2px 10px rgba(214, 73, 36, 0.24);
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 16px rgba(214, 73, 36, 0.32);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-strong);
+    }
+
+    .btn-ghost {
+      color: var(--ink-secondary);
+      padding: 8px 12px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: rgba(22, 24, 29, 0.045);
+    }
+
+    .btn-lg {
+      padding: 13px 22px;
+      font-size: 15px;
+      border-radius: 10px;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+      line-height: 1.2;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      margin-bottom: 14px;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: rgba(250, 249, 246, 0.84);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(229, 225, 216, 0.7);
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.025em;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      transition: color 0.16s ease, background 0.16s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      background: rgba(22, 24, 29, 0.045);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cmd-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 13px;
+      color: var(--ink-muted);
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cmd-trigger:hover {
+      border-color: var(--border-strong);
+      color: var(--ink);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      inset: var(--nav-height) 0 auto 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px 24px;
+      z-index: 99;
+      box-shadow: var(--shadow-md);
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mobile-drawer.open {
+      display: flex;
+    }
+
+    .mobile-drawer a {
+      padding: 10px 4px;
+      font-size: 16px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-drawer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .mobile-drawer-actions .btn {
+      flex: 1;
+    }
+
+    /* ============================================================
+       HERO SECTION
+       ============================================================ */
+    .hero {
+      position: relative;
+      padding: 68px 0 56px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(214, 73, 36, 0.08), transparent 52%),
+        linear-gradient(to right, rgba(22, 24, 29, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 24, 29, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 68%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 68%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero > .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-header {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .release-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 6px;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
+      font-size: 13px;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+      transition: border-color 0.16s ease, transform 0.16s ease;
+    }
+
+    .release-pill:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .release-tag {
+      background: var(--accent-soft);
+      color: var(--accent-text);
+      font-weight: 650;
+      font-size: 11.5px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.4vw, 4.15rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.036em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(1.02rem, 1.8vw, 1.2rem);
+      color: var(--ink-secondary);
+      max-width: 600px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-note span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ============================================================
+       INTERACTIVE PRODUCT PREVIEW (WORKSPACE MOCKUP)
+       ============================================================ */
+    .workspace-shell {
+      margin-top: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .workspace-chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 18px;
+      background: #F6F4EF;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .chrome-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #D9D4C9;
+    }
+
+    .workspace-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--ink);
+    }
+
+    .workspace-breadcrumb .sep {
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+
+    .cycle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--sage-soft);
+      color: var(--sage);
+    }
+
+    .view-switcher {
+      display: inline-flex;
+      background: #EAE6DD;
+      padding: 3px;
+      border-radius: 9px;
+      gap: 2px;
+    }
+
+    .view-tab {
+      font-size: 12.5px;
+      font-weight: 550;
+      color: var(--ink-secondary);
+      padding: 5px 12px;
+      border-radius: 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .view-tab.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .workspace-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+      background: var(--surface);
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--border-strong);
+      color: var(--ink);
+    }
+
+    .filter-pill.active {
+      background: var(--ink);
+      color: #FFFFFF;
+      border-color: var(--ink);
+    }
+
+    .cycle-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    .progress-track {
+      width: 112px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-subtle);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--sage);
+      border-radius: var(--radius-pill);
+      transition: width 0.35s var(--ease);
+    }
+
+    .quick-add-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: #FCFBF9;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .quick-add-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 13.5px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .quick-add-input::placeholder {
+      color: var(--ink-muted);
+    }
+
+    .quick-add-select {
+      font-size: 12.5px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-secondary);
+    }
+
+    .workspace-body {
+      padding: 18px;
+      background: #FAF9F6;
+      min-height: 360px;
+    }
+
+    /* Board View */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .board-col {
+      background: #F3F0EA;
+      border: 1px solid rgba(229, 225, 216, 0.9);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 310px;
+    }
+
+    .board-col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 6px;
+    }
+
+    .col-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--ink);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-planned { background: #8A8F9B; }
+    .dot-progress { background: var(--cobalt); }
+    .dot-done { background: var(--sage); }
+
+    .col-count {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      background: rgba(255, 255, 255, 0.75);
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 13px;
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      transition: transform 0.16s var(--ease), box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .task-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .task-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .task-title {
+      font-size: 13.5px;
+      font-weight: 550;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    .task-card.is-done .task-title {
+      text-decoration: line-through;
+      color: var(--ink-muted);
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .task-tags {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .tag-eng { background: var(--cobalt-soft); color: var(--cobalt); }
+    .tag-design { background: var(--accent-soft); color: var(--accent-text); }
+    .tag-ops { background: var(--amber-soft); color: var(--amber); }
+    .tag-high { background: #FDE8E8; color: #B42318; }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-grid;
+      place-items: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+
+    .advance-btn {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 7px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink-secondary);
+      transition: all 0.14s ease;
+    }
+
+    .advance-btn:hover {
+      background: var(--ink);
+      color: #FFFFFF;
+      border-color: var(--ink);
+    }
+
+    /* List View */
+    .list-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .list-row {
+      display: grid;
+      grid-template-columns: 32px 76px 1fr 110px 105px 88px;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13.5px;
+      transition: background 0.12s ease;
+    }
+
+    .list-row:last-child {
+      border-bottom: none;
+    }
+
+    .list-row:hover {
+      background: #FCFBF9;
+    }
+
+    .list-head {
+      background: #F6F4EF;
+      font-size: 11.5px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-muted);
+    }
+
+    .list-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      transition: all 0.14s ease;
+    }
+
+    .list-check.checked {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: #FFFFFF;
+    }
+
+    /* Timeline (Gantt) View */
+    .timeline-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+    }
+
+    .timeline-table {
+      min-width: 680px;
+    }
+
+    .timeline-header {
+      display: grid;
+      grid-template-columns: 240px repeat(5, 1fr);
+      border-bottom: 1px solid var(--border);
+      background: #F6F4EF;
+      font-size: 11.5px;
+      font-weight: 650;
+      color: var(--ink-muted);
+    }
+
+    .timeline-header div {
+      padding: 10px 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .timeline-header div:last-child {
+      border-right: none;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .timeline-row:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-label {
+      padding: 12px 14px;
+      border-right: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 550;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 44px;
+      background-image: linear-gradient(to right, rgba(229, 225, 216, 0.7) 1px, transparent 1px);
+      background-size: 20% 100%;
+    }
+
+    .timeline-bar {
+      position: absolute;
+      top: 9px;
+      height: 26px;
+      border-radius: 7px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #FFFFFF;
+      box-shadow: var(--shadow-xs);
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .timeline-bar:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    .workspace-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--ink-muted);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* ============================================================
+       LOGO STRIP
+       ============================================================ */
+    .logos-section {
+      padding: 28px 0 68px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logos-label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+    }
+
+    .logos-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 28px 48px;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #6B707B;
+      opacity: 0.78;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .brand-logo:hover {
+      opacity: 1;
+      color: var(--ink);
+    }
+
+    /* ============================================================
+       SECTION HEADERS & BENTO FEATURES
+       ============================================================ */
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-head {
+      max-width: 650px;
+      margin-bottom: 52px;
+    }
+
+    .section-head.centered {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+      font-weight: 700;
+      letter-spacing: -0.032em;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      font-size: 17px;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .bento-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s var(--ease);
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+
+    .bento-card h3 {
+      font-size: 19px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .bento-card p {
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      line-height: 1.58;
+    }
+
+    .bento-visual {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    /* Capacity Bars inside Bento */
+    .cap-row {
+      display: grid;
+      grid-template-columns: 96px 1fr 44px;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+      margin-bottom: 10px;
+    }
+
+    .cap-row:last-child { margin-bottom: 0; }
+
+    .cap-bar {
+      height: 9px;
+      background: #E7E3DA;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .cap-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    /* Command preview inside Bento */
+    .mini-cmd {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mini-cmd-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 11px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+
+    .mini-cmd-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    .mini-cmd-item.highlighted {
+      background: var(--ink);
+      color: #FFFFFF;
+    }
+
+    .mini-cmd-item.highlighted .kbd {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+    }
+
+    /* ============================================================
+       DARK WORKFLOW SHOWCASE BAND
+       ============================================================ */
+    .dark-band {
+      background: var(--dark-bg);
+      color: var(--dark-ink);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 82% 20%, rgba(214, 73, 36, 0.16), transparent 48%);
+      pointer-events: none;
+    }
+
+    .dark-band .eyebrow {
+      color: #F38B6F;
+    }
+
+    .dark-band .section-head p {
+      color: var(--dark-muted);
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .workflow-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .workflow-tab {
+      text-align: left;
+      padding: 20px 22px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--dark-border);
+      background: rgba(255, 255, 255, 0.02);
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .workflow-tab:hover {
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .workflow-tab.active {
+      background: var(--dark-surface);
+      border-color: rgba(214, 73, 36, 0.65);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .wf-step-num {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #F38B6F;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .workflow-tab h3 {
+      font-size: 17px;
+      font-weight: 650;
+      color: var(--dark-ink);
+      margin-bottom: 6px;
+    }
+
+    .workflow-tab p {
+      font-size: 14px;
+      color: var(--dark-muted);
+      line-height: 1.55;
+    }
+
+    .workflow-stage {
+      background: var(--dark-surface);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      min-height: 410px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .wf-panel {
+      display: none;
+      animation: fadeUp 0.28s var(--ease);
+    }
+
+    .wf-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wf-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .wf-badge {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(214, 73, 36, 0.16);
+      color: #F59B82;
+    }
+
+    .wf-item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .wf-item {
+      background: var(--dark-surface-2);
+      border: 1px solid var(--dark-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .wf-item-title {
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--dark-ink);
+      margin-bottom: 3px;
+    }
+
+    .wf-item-sub {
+      font-size: 12.5px;
+      color: var(--dark-muted);
+    }
+
+    .wf-pill {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .wf-pill-ok { background: rgba(36, 120, 82, 0.22); color: #6ED4A4; }
+    .wf-pill-warn { background: rgba(214, 73, 36, 0.22); color: #FA9B82; }
+    .wf-pill-info { background: rgba(41, 86, 194, 0.26); color: #91B4FA; }
+
+    /* ============================================================
+       METRICS & TESTIMONIALS
+       ============================================================ */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 64px;
+    }
+
+    .metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 22px;
+    }
+
+    .metric-val {
+      font-size: clamp(1.8rem, 3vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .metric-label {
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .quote-text {
+      font-size: 15.5px;
+      line-height: 1.62;
+      color: var(--ink);
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quote-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: #FFFFFF;
+    }
+
+    .quote-name {
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .quote-role {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+
+    /* ============================================================
+       PRICING SECTION
+       ============================================================ */
+    .pricing-section {
+      background: #F4F1EA;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .billing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      font-size: 14px;
+      font-weight: 550;
+    }
+
+    .switch {
+      width: 48px;
+      height: 26px;
+      border-radius: var(--radius-pill);
+      background: var(--ink);
+      position: relative;
+      padding: 3px;
+      transition: background 0.2s ease;
+    }
+
+    .switch-thumb {
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      transform: translateX(22px);
+      transition: transform 0.22s var(--ease);
+    }
+
+    .switch[aria-checked="false"] {
+      background: var(--border-strong);
+    }
+
+    .switch[aria-checked="false"] .switch-thumb {
+      transform: translateX(0);
+    }
+
+    .save-chip {
+      font-size: 11.5px;
+      font-weight: 650;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--sage-soft);
+      color: var(--sage);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+    }
+
+    .price-card.featured {
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow-md);
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: -12px;
+      right: 22px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 650;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .tier-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .tier-desc {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-bottom: 20px;
+    }
+
+    .tier-price {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .price-amount {
+      font-size: 40px;
+      font-weight: 750;
+      letter-spacing: -0.035em;
+      line-height: 1;
+    }
+
+    .price-unit {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+    }
+
+    .price-note {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      margin-bottom: 22px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      font-size: 14px;
+      color: var(--ink-secondary);
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+    }
+
+    .check-icon {
+      color: var(--sage);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       FAQ ACCORDION
+       ============================================================ */
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%;
+      text-align: left;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .faq-icon {
+      flex-shrink: 0;
+      transition: transform 0.2s var(--ease);
+      color: var(--ink-muted);
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 22px 18px;
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      line-height: 1.65;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    /* ============================================================
+       FINAL CTA & FOOTER
+       ============================================================ */
+    .cta-box {
+      background: var(--ink);
+      color: #FFFFFF;
+      border-radius: var(--radius-xl);
+      padding: 58px 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(214, 73, 36, 0.34), transparent 62%);
+      pointer-events: none;
+    }
+
+    .cta-box > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box h2 {
+      font-size: clamp(1.85rem, 3.6vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+
+    .cta-box p {
+      font-size: 16.5px;
+      color: #B4B9C4;
+      max-width: 520px;
+      margin: 0 auto 28px;
+    }
+
+    .cta-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 460px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .cta-input {
+      flex: 1;
+      min-width: 230px;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+      font-size: 14.5px;
+    }
+
+    .cta-input::placeholder {
+      color: #9399A6;
+    }
+
+    .cta-feedback {
+      margin-top: 14px;
+      font-size: 13.5px;
+      color: #77DDA9;
+      min-height: 20px;
+    }
+
+    footer {
+      padding: 64px 0 42px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 44px;
+    }
+
+    .footer-tagline {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-top: 12px;
+      max-width: 270px;
+      line-height: 1.6;
+    }
+
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .footer-col a {
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+      transition: color 0.15s ease;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--sage);
+      font-weight: 550;
+    }
+
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sage);
+      box-shadow: 0 0 0 3px rgba(36, 120, 82, 0.18);
+    }
+
+    /* ============================================================
+       MODALS (SIGNUP & COMMAND PALETTE)
+       ============================================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(19, 21, 25, 0.56);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeIn 0.16s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--ink-muted);
+    }
+
+    .modal-close:hover {
+      background: var(--bg-subtle);
+      color: var(--ink);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--ink);
+      background: var(--surface);
+    }
+
+    /* Command Palette */
+    .cmd-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .cmd-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-search-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    .cmd-results {
+      padding: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .cmd-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .cmd-option:hover, .cmd-option:focus {
+      background: var(--bg-subtle);
+      outline: none;
+    }
+
+    .cmd-option small {
+      color: var(--ink-muted);
+      font-size: 12px;
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ============================================================
+       RESPONSIVE BREAKPOINTS
+       ============================================================ */
+    @media (max-width: 980px) {
+      .board-grid { grid-template-columns: 1fr; }
+      .board-col { min-height: auto; }
+      .span-7, .span-5, .span-4, .span-6 { grid-column: span 12; }
+      .workflow-grid { grid-template-columns: 1fr; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .list-row { grid-template-columns: 28px 1fr 90px; }
+      .list-hide-sm { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links, .nav-actions .cmd-trigger, .nav-actions .btn-ghost { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+      .hero { padding: 48px 0 40px; }
+      .section, .dark-band { padding: 68px 0; }
+      .cta-box { padding: 40px 22px; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="logo" aria-label="Cairn home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <rect x="3" y="18" width="20" height="5" rx="2.5" fill="#16181D"/>
+            <rect x="6" y="10.5" width="14" height="5" rx="2.5" fill="#16181D"/>
+            <rect x="9.5" y="3" width="7" height="5" rx="2.5" fill="#D64924"/>
+          </svg>
+        </span>
+        Cairn
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#features">Product</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#customers">Customers</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cmd-trigger" id="openCmdBtn" type="button" aria-label="Open command menu">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>Quick jump</span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <button class="btn btn-ghost" type="button" data-open-signup="Log in to Cairn">Log in</button>
+        <button class="btn btn-primary" type="button" data-open-signup="Create your free workspace">Start free</button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="#features">Product</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#customers">Customers</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <div class="mobile-drawer-actions">
+      <button class="btn btn-secondary" type="button" data-open-signup="Log in to Cairn">Log in</button>
+      <button class="btn btn-primary" type="button" data-open-signup="Create your free workspace">Start free</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HERO + LIVE INTERACTIVE WORKSPACE
+       ============================================================ -->
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-header">
+          <a href="#workflow" class="release-pill">
+            <span class="release-tag">New in 3.4</span>
+            <span>Automated critical-path alerts &amp; live capacity</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </a>
+
+          <h1>Ship ambitious work without the <em>status-meeting</em> tax.</h1>
+
+          <p class="hero-sub">
+            Cairn brings roadmaps, live team capacity, and execution cycles into one calm workspace—so blockers surface early and plans stay honest.
+          </p>
+
+          <div class="hero-ctas">
+            <button class="btn btn-accent btn-lg" type="button" data-open-signup="Create your free workspace">
+              Start free workspace
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+            <a href="#live-demo" class="btn btn-secondary btn-lg">Explore live board</a>
+          </div>
+
+          <div class="hero-note">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#247852" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+              Free forever for teams up to 8
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#247852" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+              2-minute import from Jira &amp; Linear
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#247852" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+              No credit card required
+            </span>
+          </div>
+        </div>
+
+        <!-- LIVE INTERACTIVE PRODUCT DEMO -->
+        <div class="workspace-shell" id="live-demo" aria-label="Interactive Cairn workspace preview">
+          <div class="workspace-chrome">
+            <div class="chrome-left">
+              <div class="window-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="workspace-breadcrumb">
+                <span>Northstar Core</span>
+                <span class="sep">/</span>
+                <span>Cycle 14 — Q4 Launch</span>
+                <span class="cycle-pill" id="cycleStatusPill">On track</span>
+              </div>
+            </div>
+
+            <div class="view-switcher" role="tablist" aria-label="Workspace views">
+              <button class="view-tab active" type="button" role="tab" aria-selected="true" data-view="board">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="14" rx="1"/></svg>
+                Board
+              </button>
+              <button class="view-tab" type="button" role="tab" aria-selected="false" data-view="list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                List
+              </button>
+              <button class="view-tab" type="button" role="tab" aria-selected="false" data-view="timeline">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h10M7 12h12M5 17h9"/></svg>
+                Timeline
+              </button>
+            </div>
+          </div>
+
+          <div class="workspace-toolbar">
+            <div class="filter-pills" role="group" aria-label="Filter tasks by team">
+              <button class="filter-pill active" type="button" data-filter="all">All tasks</button>
+              <button class="filter-pill" type="button" data-filter="Engineering">Engineering</button>
+              <button class="filter-pill" type="button" data-filter="Design">Design</button>
+              <button class="filter-pill" type="button" data-filter="Ops">Ops</button>
+            </div>
+
+            <div class="cycle-progress-wrap">
+              <span id="progressLabel">2 of 6 shipped (33%)</span>
+              <div class="progress-track" aria-hidden="true">
+                <div class="progress-fill" id="progressFill" style="width: 33%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <form class="quick-add-bar" id="quickAddForm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767B86" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            <input type="text" class="quick-add-input" id="quickAddInput" placeholder="Try adding a task right here (e.g., Audit webhook retries)..." maxlength="80" aria-label="Add a demo task" />
+            <select class="quick-add-select" id="quickAddTeam" aria-label="Select team">
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Design</option>
+              <option value="Ops">Ops</option>
+            </select>
+            <button class="btn btn-primary" type="submit" style="padding: 6px 12px; font-size: 12.5px;">Add task</button>
+          </form>
+
+          <div class="workspace-body" id="workspaceBody"></div>
+
+          <div class="workspace-footer">
+            <span>Interactive preview — click <strong>Move →</strong> on any card or add your own task to see cycle progress update live.</span>
+            <span>Press <span class="kbd">⌘K</span> anytime to jump across the page</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TRUSTED BY STRIP
+         ============================================================ -->
+    <section class="logos-section" aria-label="Trusted teams">
+      <div class="container">
+        <p class="logos-label">Trusted by 1,400+ product, engineering, and hardware teams</p>
+        <div class="logos-grid">
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 15 9l7 3-7 3-3 7-3-7-7-3 7-3 3-7Z"/></svg>
+            Northstar
+          </div>
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/></svg>
+            Kova Robotics
+          </div>
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 16c3-8 6-8 8 0s5 8 8 0"/></svg>
+            Sable Audio
+          </div>
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg>
+            Helios Grid
+          </div>
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 19 12 5l7 14H5Z"/></svg>
+            Vellum
+          </div>
+          <div class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 8h16M4 12h12M4 16h16"/></svg>
+            Strata Bio
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         BENTO FEATURES
+         ============================================================ -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Built for momentum</div>
+          <h2>Everything connected, nothing bloated.</h2>
+          <p>Traditional trackers bury the real story in stale tickets. Cairn links specs, dependencies, and capacity so every teammate sees what matters today.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Card 1: Dependency Graph -->
+          <article class="bento-card span-7 reveal">
+            <div>
+              <h3>Auto-shifting dependency graphs</h3>
+              <p>Link upstream engineering specs to downstream launches. When a milestone slips by two days, Cairn recalculates the critical path and notifies owners before surprises compound.</p>
+            </div>
+            <div class="bento-visual">
+              <svg viewBox="0 0 540 155" width="100%" height="auto" role="img" aria-label="Dependency graph illustration">
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#9A9EA8"/>
+                  </marker>
+                  <marker id="arrow-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#D64924"/>
+                  </marker>
+                </defs>
+                <path d="M150 48 C190 48, 190 48, 224 48" stroke="#D64924" stroke-width="2" fill="none" marker-end="url(#arrow-accent)"/>
+                <path d="M150 48 C186 48, 186 112, 224 112" stroke="#9A9EA8" stroke-width="1.6" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow)"/>
+                <path d="M366 48 C400 48, 400 78, 424 78" stroke="#D64924" stroke-width="2" fill="none" marker-end="url(#arrow-accent)"/>
+                <path d="M366 112 C400 112, 400 84, 424 84" stroke="#9A9EA8" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+
+                <!-- Node 1 -->
+                <rect x="12" y="22" width="138" height="52" rx="10" fill="#FFFFFF" stroke="#E5E1D8"/>
+                <circle cx="28" cy="40" r="4" fill="#247852"/>
+                <text x="38" y="44" font-size="11.5" font-weight="650" fill="#16181D">OAuth v2 Spec</text>
+                <text x="24" y="61" font-size="10.5" fill="#767B86">Shipped · Nov 18</text>
+
+                <!-- Node 2 (Critical) -->
+                <rect x="228" y="22" width="138" height="52" rx="10" fill="#FCECE7" stroke="#D64924" stroke-width="1.4"/>
+                <circle cx="244" cy="40" r="4" fill="#D64924"/>
+                <text x="254" y="44" font-size="11.5" font-weight="650" fill="#16181D">Billing Webhooks</text>
+                <text x="240" y="61" font-size="10.5" fill="#A83516">Critical · +2d shift</text>
+
+                <!-- Node 3 -->
+                <rect x="228" y="86" width="138" height="52" rx="10" fill="#FFFFFF" stroke="#E5E1D8"/>
+                <circle cx="244" cy="104" r="4" fill="#2956C2"/>
+                <text x="254" y="108" font-size="11.5" font-weight="650" fill="#16181D">Empty States UI</text>
+                <text x="240" y="125" font-size="10.5" fill="#767B86">In review · Maya</text>
+
+                <!-- Node 4 -->
+                <rect x="428" y="54" width="102" height="52" rx="10" fill="#16181D"/>
+                <text x="442" y="76" font-size="11.5" font-weight="650" fill="#FFFFFF">GA Launch</text>
+                <text x="442" y="93" font-size="10.5" fill="#B6BBC7">Nov 29</text>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 2: Live Team Capacity -->
+          <article class="bento-card span-5 reveal">
+            <div>
+              <h3>Honest team capacity</h3>
+              <p>Spot overloaded engineers before the sprint starts. Cairn calculates realistic bandwidth from open tasks, reviews, and PTO.</p>
+            </div>
+            <div class="bento-visual">
+              <div class="cap-row">
+                <strong>Elena K.</strong>
+                <div class="cap-bar"><div class="cap-fill" style="width: 74%; background: #247852;"></div></div>
+                <span style="color:#247852; font-weight:600;">74%</span>
+              </div>
+              <div class="cap-row">
+                <strong>Marcus T.</strong>
+                <div class="cap-bar"><div class="cap-fill" style="width: 96%; background: #D64924;"></div></div>
+                <span style="color:#D64924; font-weight:600;">96%</span>
+              </div>
+              <div class="cap-row">
+                <strong>Priya N.</strong>
+                <div class="cap-bar"><div class="cap-fill" style="width: 62%; background: #2956C2;"></div></div>
+                <span style="color:#2956C2; font-weight:600;">62%</span>
+              </div>
+              <div class="cap-row">
+                <strong>Devon R.</strong>
+                <div class="cap-bar"><div class="cap-fill" style="width: 51%; background: #247852;"></div></div>
+                <span style="color:#247852; font-weight:600;">51%</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Keyboard First -->
+          <article class="bento-card span-4 reveal">
+            <div>
+              <h3>Keyboard-first speed</h3>
+              <p>Triage 30 issues in two minutes. Every action responds in under 50ms with zero page reloads.</p>
+            </div>
+            <div class="bento-visual">
+              <div class="mini-cmd">
+                <div class="mini-cmd-input">
+                  <span>Assign to Cycle 14...</span>
+                  <span class="kbd">⌘K</span>
+                </div>
+                <div class="mini-cmd-item highlighted">
+                  <span>Move to In Progress</span>
+                  <span class="kbd">S</span>
+                </div>
+                <div class="mini-cmd-item">
+                  <span>Set priority: High</span>
+                  <span class="kbd">P</span>
+                </div>
+                <div class="mini-cmd-item">
+                  <span>Link GitHub PR</span>
+                  <span class="kbd">L</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Scope & Velocity -->
+          <article class="bento-card span-4 reveal">
+            <div>
+              <h3>Scope-creep radar</h3>
+              <p>See immediately when mid-cycle additions threaten your delivery date—and trade scope consciously.</p>
+            </div>
+            <div class="bento-visual">
+              <svg viewBox="0 0 280 112" width="100%" height="auto" role="img" aria-label="Cycle velocity chart">
+                <line x1="12" y1="92" x2="268" y2="92" stroke="#E5E1D8" stroke-width="1"/>
+                <line x1="12" y1="54" x2="268" y2="54" stroke="#E5E1D8" stroke-dasharray="3 3" stroke-width="1"/>
+                <!-- Ideal -->
+                <path d="M18 86 L260 22" stroke="#B6B1A6" stroke-width="1.5" stroke-dasharray="4 4" fill="none"/>
+                <!-- Actual shipped -->
+                <path d="M18 86 C68 78, 108 66, 152 46 C190 30, 224 28, 260 18" stroke="#247852" stroke-width="2.6" fill="none"/>
+                <circle cx="260" cy="18" r="4.5" fill="#247852"/>
+                <text x="18" y="106" font-size="10" fill="#767B86">Day 1</text>
+                <text x="128" y="106" font-size="10" fill="#767B86">Day 7</text>
+                <text x="232" y="106" font-size="10" fill="#767B86">Day 14</text>
+                <rect x="166" y="6" width="84" height="20" rx="5" fill="#E6F4EC"/>
+                <text x="174" y="19.5" font-size="10" font-weight="650" fill="#247852">+12% velocity</text>
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 5: Async Briefs -->
+          <article class="bento-card span-4 reveal">
+            <div>
+              <h3>Specs live beside tasks</h3>
+              <p>Write crisp one-page briefs and highlight any sentence to turn it into a tracked deliverable with full context.</p>
+            </div>
+            <div class="bento-visual" style="font-size: 12.5px; color: var(--ink-secondary); line-height: 1.6;">
+              <div style="font-weight: 650; color: var(--ink); margin-bottom: 6px;">Brief: Offline Sync v2</div>
+              <p style="font-size: 12px; margin-bottom: 8px;">Queue local mutations in IndexedDB and <mark style="background:#FCECE7; color:#A83516; padding:1px 4px; border-radius:4px;">reconcile conflicts with LWW timestamps</mark>.</p>
+              <div style="display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px solid var(--border); border-radius:7px; padding:6px 9px; font-size:11.5px;">
+                <span><strong style="font-family:var(--font-mono); color:var(--cobalt);">CRN-412</strong> Created from brief</span>
+                <span style="color:var(--sage); font-weight:600;">Synced</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         DARK WORKFLOW SHOWCASE BAND
+         ============================================================ -->
+    <section class="dark-band" id="workflow">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Calm operating rhythm</div>
+          <h2>One system from roadmap to release.</h2>
+          <p>Replace scattered spreadsheets, standup docs, and changelog scripts with a three-beat cadence built for shipping.</p>
+        </div>
+
+        <div class="workflow-grid reveal">
+          <div class="workflow-tabs" role="tablist" aria-label="Workflow steps">
+            <button class="workflow-tab active" type="button" role="tab" aria-selected="true" data-wf="plan">
+              <span class="wf-step-num">01 / PLAN CYCLES</span>
+              <h3>Scope in 15 minutes, not half a day</h3>
+              <p>Pull priority bets from your quarterly roadmap while Cairn checks team capacity automatically.</p>
+            </button>
+
+            <button class="workflow-tab" type="button" role="tab" aria-selected="false" data-wf="unblock">
+              <span class="wf-step-num">02 / UNBLOCK FAST</span>
+              <h3>Zero-noise blocker detection</h3>
+              <p>Stalled PRs, unanswered review requests, and dependency collisions surface in one calm daily digest.</p>
+            </button>
+
+            <button class="workflow-tab" type="button" role="tab" aria-selected="false" data-wf="ship">
+              <span class="wf-step-num">03 / SHIP &amp; REVIEW</span>
+              <h3>Release notes that write themselves</h3>
+              <p>Close a cycle to generate stakeholder updates, velocity insights, and customer-ready changelogs in one click.</p>
+            </button>
+          </div>
+
+          <div class="workflow-stage">
+            <!-- Panel 1 -->
+            <div class="wf-panel active" id="wf-plan">
+              <div class="wf-panel-head">
+                <div>
+                  <strong style="font-size:15.5px;">Cycle 15 Scoping Preview</strong>
+                  <div style="font-size:12.5px; color:var(--dark-muted);">Nov 25 – Dec 8 · 42 story points available</div>
+                </div>
+                <span class="wf-badge">88% allocated</span>
+              </div>
+              <div class="wf-item-list">
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Multi-region read replicas</div>
+                    <div class="wf-item-sub">Infrastructure · 13 pts · Linked to Q4 Reliability</div>
+                  </div>
+                  <span class="wf-pill wf-pill-ok">Capacity OK</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Self-serve SAML SSO wizard</div>
+                    <div class="wf-item-sub">Enterprise · 8 pts · Blocked by Security Review</div>
+                  </div>
+                  <span class="wf-pill wf-pill-warn">1 dependency</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Mobile quick-capture widget</div>
+                    <div class="wf-item-sub">Design + iOS · 5 pts · Spec approved</div>
+                  </div>
+                  <span class="wf-pill wf-pill-info">Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2 -->
+            <div class="wf-panel" id="wf-unblock">
+              <div class="wf-panel-head">
+                <div>
+                  <strong style="font-size:15.5px;">Daily Blocker Radar</strong>
+                  <div style="font-size:12.5px; color:var(--dark-muted);">Only actionable risks—no vanity notifications</div>
+                </div>
+                <span class="wf-badge">2 items need eyes</span>
+              </div>
+              <div class="wf-item-list">
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">PR #842 awaiting review for 28 hours</div>
+                    <div class="wf-item-sub">CRN-391 · Blocking 2 downstream UI tasks</div>
+                  </div>
+                  <span class="wf-pill wf-pill-warn">Ping reviewer</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Stripe webhook rate-limit spike in staging</div>
+                    <div class="wf-item-sub">Auto-linked from Sentry alert · Owner: Marcus</div>
+                  </div>
+                  <span class="wf-pill wf-pill-warn">Critical path</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Design tokens merged cleanly</div>
+                    <div class="wf-item-sub">Unblocked 4 frontend cards automatically</div>
+                  </div>
+                  <span class="wf-pill wf-pill-ok">Resolved</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3 -->
+            <div class="wf-panel" id="wf-ship">
+              <div class="wf-panel-head">
+                <div>
+                  <strong style="font-size:15.5px;">Cycle 14 Digest — Ready to Publish</strong>
+                  <div style="font-size:12.5px; color:var(--dark-muted);">Compiled from 24 merged PRs &amp; 18 shipped tasks</div>
+                </div>
+                <span class="wf-badge">94% planned shipped</span>
+              </div>
+              <div class="wf-item-list">
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Executive Summary</div>
+                    <div class="wf-item-sub">Shipped billing webhooks, cut onboarding drop-off by 19%, zero Sev-1 regressions.</div>
+                  </div>
+                  <span class="wf-pill wf-pill-ok">Auto-drafted</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Customer Changelog v3.4</div>
+                    <div class="wf-item-sub">6 user-facing improvements formatted for Slack &amp; email</div>
+                  </div>
+                  <span class="wf-pill wf-pill-info">Copy Markdown</span>
+                </div>
+                <div class="wf-item">
+                  <div>
+                    <div class="wf-item-title">Carryover Hygiene</div>
+                    <div class="wf-item-sub">2 unfinished items gently archived for Cycle 15 triage</div>
+                  </div>
+                  <span class="wf-pill wf-pill-ok">Clean slate</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         METRICS & TESTIMONIALS
+         ============================================================ -->
+    <section class="section" id="customers">
+      <div class="container">
+        <div class="metrics-bar reveal">
+          <div class="metric-box">
+            <div class="metric-val">38%</div>
+            <div class="metric-label">Fewer recurring status meetings</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">2.4×</div>
+            <div class="metric-label">Faster spec-to-ship cycle time</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">&lt;45ms</div>
+            <div class="metric-label">Median interaction latency</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">4.9 / 5</div>
+            <div class="metric-label">Average rating across 1,400 teams</div>
+          </div>
+        </div>
+
+        <div class="section-head centered reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Customer stories</div>
+          <h2>Loved by teams who protect their focus.</h2>
+        </div>
+
+        <div class="testimonials-grid reveal">
+          <blockquote class="quote-card">
+            <p class="quote-text">“We cut three hours of weekly roadmap alignment across 40 engineers. Everyone actually trusts the timeline now because it updates itself when PRs move.”</p>
+            <footer class="quote-author">
+              <div class="quote-avatar" style="background:#2956C2;">SL</div>
+              <div>
+                <div class="quote-name">Sora Lindqvist</div>
+                <div class="quote-role">VP of Engineering, Kova Robotics</div>
+              </div>
+            </footer>
+          </blockquote>
+
+          <blockquote class="quote-card">
+            <p class="quote-text">“Other tools felt like filling out tax forms just to move a ticket. Cairn feels like a sharp notebook with a real scheduling engine quietly running underneath.”</p>
+            <footer class="quote-author">
+              <div class="quote-avatar" style="background:#D64924;">DM</div>
+              <div>
+                <div class="quote-name">David Mensah</div>
+                <div class="quote-role">Head of Product, Sable Audio</div>
+              </div>
+            </footer>
+          </blockquote>
+
+          <blockquote class="quote-card">
+            <p class="quote-text">“The capacity pulse saved our Q3 hardware launch. We spotted a firmware bottleneck two weeks early and rebalanced before anyone burned out.”</p>
+            <footer class="quote-author">
+              <div class="quote-avatar" style="background:#247852;">HC</div>
+              <div>
+                <div class="quote-name">Hannah Cho</div>
+                <div class="quote-role">Director of Operations, Helios Grid</div>
+              </div>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PRICING
+         ============================================================ -->
+    <section class="section pricing-section" id="pricing">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Simple pricing</div>
+          <h2>Start free. Scale without seat traps.</h2>
+          <p>Free guest viewers on every plan. Switch or cancel anytime with full JSON &amp; CSV export.</p>
+        </div>
+
+        <div class="billing-toggle-wrap reveal">
+          <span id="monthlyLabel" style="color: var(--ink-muted);">Monthly</span>
+          <button class="switch" id="billingSwitch" type="button" role="switch" aria-checked="true" aria-label="Toggle annual billing">
+            <span class="switch-thumb"></span>
+          </button>
+          <span id="annualLabel" style="color: var(--ink);">Annual</span>
+          <span class="save-chip">Save 20%</span>
+        </div>
+
+        <div class="pricing-grid reveal">
+          <!-- Starter -->
+          <div class="price-card">
+            <div>
+              <div class="tier-name">Starter</div>
+              <div class="tier-desc">For early teams finding their shipping cadence.</div>
+              <div class="tier-price">
+                <span class="price-amount">$0</span>
+                <span class="price-unit">/ forever</span>
+              </div>
+              <div class="price-note">Up to 8 active members · Unlimited guests</div>
+              <ul class="feature-list">
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Board, List &amp; Timeline views</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Unlimited tasks &amp; briefs</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>GitHub, GitLab &amp; Slack sync</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Command palette &amp; keyboard shortcuts</li>
+              </ul>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;" type="button" data-open-signup="Start with Starter ($0)">Get started free</button>
+          </div>
+
+          <!-- Team -->
+          <div class="price-card featured">
+            <span class="popular-tag">Most popular</span>
+            <div>
+              <div class="tier-name">Team</div>
+              <div class="tier-desc">For growing product and engineering orgs.</div>
+              <div class="tier-price">
+                <span class="price-amount" data-annual="12" data-monthly="15">$12</span>
+                <span class="price-unit">/ seat / mo</span>
+              </div>
+              <div class="price-note billing-note">Billed annually · 14-day free trial</div>
+              <ul class="feature-list">
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Everything in Starter, unlimited seats</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Auto-shifting dependency graphs</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Live team capacity &amp; workload pulse</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Automated release digests &amp; analytics</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Priority email &amp; Slack support</li>
+              </ul>
+            </div>
+            <button class="btn btn-accent" style="width:100%;" type="button" data-open-signup="Start 14-day Team trial">Start 14-day free trial</button>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="price-card">
+            <div>
+              <div class="tier-name">Enterprise</div>
+              <div class="tier-desc">For multi-team portfolios with strict governance.</div>
+              <div class="tier-price">
+                <span class="price-amount" data-annual="24" data-monthly="30">$24</span>
+                <span class="price-unit">/ seat / mo</span>
+              </div>
+              <div class="price-note billing-note">Billed annually · Custom invoicing</div>
+              <ul class="feature-list">
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Everything in Team</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>SAML SSO, SCIM provisioning &amp; RBAC</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>EU/US data residency &amp; SOC 2 Type II</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Cross-org portfolio rollups &amp; audit logs</li>
+                <li><svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Dedicated migration architect</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" type="button" data-open-signup="Book an Enterprise walkthrough">Talk to sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FAQ
+         ============================================================ -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Questions</div>
+          <h2>Everything you might want to know.</h2>
+        </div>
+
+        <div class="faq-list reveal">
+          <div class="faq-item open">
+            <button class="faq-q" type="button" aria-expanded="true">
+              How fast can we migrate from Jira, Linear, or Asana?
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">Most teams import active projects in under two minutes using our native API importers. Issues, assignees, labels, comments, and parent-child hierarchies transfer cleanly without breaking existing links.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">
+              Do stakeholders or clients need paid seats to view progress?
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">No. Every Cairn plan includes unlimited read-only guests and shareable live roadmap links so executives, agencies, or customers can follow milestones without inflating your bill.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">
+              How does Cairn calculate team capacity without time-tracking?
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">We never ask engineers to log hours. Cairn estimates load from lightweight task sizes (S/M/L or points), active code reviews, and synced calendar PTO—giving leads a clear early warning without micromanagement.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">
+              Does Cairn work offline on flights or poor connections?
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">Yes. Cairn uses a local-first sync engine. You can browse cycles, edit briefs, and create tasks completely offline; changes merge cleanly the moment you reconnect.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">
+              How do you secure our workspace data?
+              <svg class="faq-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="faq-a">All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Cairn is SOC 2 Type II audited, GDPR compliant, and offers EU or US single-region hosting on Enterprise plans.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FINAL CTA
+         ============================================================ -->
+    <section class="section" style="padding-top: 20px;">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2>Bring calm clarity to your next release.</h2>
+          <p>Spin up a workspace in 30 seconds. Invite your core team free forever—no demos required unless you want one.</p>
+          <form class="cta-form" id="bottomCtaForm">
+            <input type="email" class="cta-input" id="bottomCtaEmail" placeholder="you@company.com" required aria-label="Work email" />
+            <button class="btn btn-accent btn-lg" type="submit">Create workspace</button>
+          </form>
+          <div class="cta-feedback" id="bottomCtaFeedback" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="logo">
+            <span class="logo-mark" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+                <rect x="3" y="18" width="20" height="5" rx="2.5" fill="#16181D"/>
+                <rect x="6" y="10.5" width="14" height="5" rx="2.5" fill="#16181D"/>
+                <rect x="9.5" y="3" width="7" height="5" rx="2.5" fill="#D64924"/>
+              </svg>
+            </span>
+            Cairn
+          </a>
+          <p class="footer-tagline">Clear markers for complex work. Designed for product, engineering, and operations teams.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Dependency graphs</a></li>
+            <li><a href="#features">Capacity pulse</a></li>
+            <li><a href="#workflow">Release digests</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Integrations</h4>
+          <ul>
+            <li><a href="#live-demo">GitHub &amp; GitLab</a></li>
+            <li><a href="#live-demo">Slack &amp; Linear import</a></li>
+            <li><a href="#live-demo">Figma embeds</a></li>
+            <li><a href="#live-demo">REST &amp; Webhooks</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#customers">Customers</a></li>
+            <li><a href="#faq">Security &amp; SOC 2</a></li>
+            <li><a href="#faq">Changelog</a></li>
+            <li><a href="#faq">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#faq">Privacy Policy</a></li>
+            <li><a href="#faq">Terms of Service</a></li>
+            <li><a href="#faq">DPA</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Cairn Software, Inc. All rights reserved.</span>
+        <span class="status-badge">
+          <span class="status-pulse" aria-hidden="true"></span>
+          All systems operational · 99.98% uptime
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SIGNUP / WORKSPACE MODAL
+       ============================================================ -->
+  <div class="modal-backdrop" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupModalTitle">
+    <div class="modal-card">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close dialog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="eyebrow" style="margin-bottom:8px;"><span class="eyebrow-dot"></span>Cairn Workspace</div>
+      <h3 id="signupModalTitle" style="font-size:21px; font-weight:700; letter-spacing:-0.02em; margin-bottom:6px;">Create your free workspace</h3>
+      <p style="font-size:14px; color:var(--ink-secondary); margin-bottom:20px;">Free forever for up to 8 teammates. Ready in 30 seconds.</p>
+
+      <form id="modalSignupForm">
+        <div class="form-group">
+          <label for="modalEmail">Work email</label>
+          <input class="form-control" id="modalEmail" type="email" placeholder="alex@company.com" required />
+        </div>
+        <div class="form-group">
+          <label for="modalWorkspace">Workspace name</label>
+          <input class="form-control" id="modalWorkspace" type="text" placeholder="Acme Product" required />
+        </div>
+        <button class="btn btn-accent" style="width:100%; margin-top:6px; padding:12px;" type="submit">Continue to workspace</button>
+      </form>
+      <div id="modalSuccess" style="display:none; padding:14px; border-radius:10px; background:var(--sage-soft); color:var(--sage); font-size:14px; font-weight:550; margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       COMMAND PALETTE MODAL (⌘K / Ctrl+K)
+       ============================================================ -->
+  <div class="modal-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="cmd-card">
+      <div class="cmd-search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767B86" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" id="cmdSearchInput" placeholder="Type a command or jump to section..." autocomplete="off" />
+        <span class="kbd">ESC</span>
+      </div>
+      <div class="cmd-results" id="cmdResults"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       APPLICATION SCRIPT (SELF-CONTAINED)
+       ============================================================ -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ----------------------------------------------------------
+         1. INTERACTIVE HERO WORKSPACE DEMO
+         ---------------------------------------------------------- */
+      const tasks = [
+        { id: 'CRN-401', title: 'Ship Stripe webhook retry queue', team: 'Engineering', priority: 'High', status: 'progress', owner: 'MK', color: '#2956C2', start: 8, span: 44 },
+        { id: 'CRN-404', title: 'Audit empty states for Cycle 14', team: 'Design', priority: 'Normal', status: 'progress', owner: 'PN', color: '#D64924', start: 22, span: 36 },
+        { id: 'CRN-407', title: 'Configure EU read-replica failover', team: 'Ops', priority: 'High', status: 'planned', owner: 'DR', color: '#B97209', start: 46, span: 40 },
+        { id: 'CRN-409', title: 'Publish interactive onboarding checklist', team: 'Design', priority: 'Normal', status: 'planned', owner: 'EK', color: '#247852', start: 54, span: 34 },
+        { id: 'CRN-396', title: 'Finalize OAuth v2 token rotation spec', team: 'Engineering', priority: 'Normal', status: 'done', owner: 'MK', color: '#2956C2', start: 2, span: 30 },
+        { id: 'CRN-398', title: 'Migrate legacy CSV export workers', team: 'Ops', priority: 'Normal', status: 'done', owner: 'EK', color: '#247852', start: 10, span: 32 }
+      ];
+
+      let currentView = 'board';
+      let currentFilter = 'all';
+      let nextTaskNum = 412;
+
+      const workspaceBody = document.getElementById('workspaceBody');
+      const progressLabel = document.getElementById('progressLabel');
+      const progressFill = document.getElementById('progressFill');
+      const cycleStatusPill = document.getElementById('cycleStatusPill');
+
+      const STATUS_ORDER = ['planned', 'progress', 'done'];
+      const STATUS_LABELS = {
+        planned: 'Planned',
+        progress: 'In Progress',
+        done: 'Shipped'
+      };
+      const TEAM_TAG_CLASS = {
+        Engineering: 'tag-eng',
+        Design: 'tag-design',
+        Ops: 'tag-ops'
+      };
+
+      function getFilteredTasks() {
+        if (currentFilter === 'all') return tasks;
+        return tasks.filter(t => t.team === currentFilter);
+      }
+
+      function updateProgress() {
+        const total = tasks.length;
+        const done = tasks.filter(t => t.status === 'done').length;
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        progressLabel.textContent = `${done} of ${total} shipped (${pct}%)`;
+        progressFill.style.width = `${pct}%`;
+
+        if (pct === 100) {
+          cycleStatusPill.textContent = 'Cycle complete';
+        } else if (pct >= 50) {
+          cycleStatusPill.textContent = 'Ahead of pace';
+        } else {
+          cycleStatusPill.textContent = 'On track';
+        }
+      }
+
+      function cycleTaskStatus(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+        const idx = STATUS_ORDER.indexOf(task.status);
+        task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+        renderWorkspace();
+      }
+
+      function toggleTaskDone(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+        task.status = task.status === 'done' ? 'progress' : 'done';
+        renderWorkspace();
+      }
+
+      function escapeHTML(str) {
+        return str.replace(/[&<>"']/g, ch => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[ch]);
+      }
+
+      function renderBoard(list) {
+        const cols = [
+          { key: 'planned', dot: 'dot-planned', action: 'Start →' },
+          { key: 'progress', dot: 'dot-progress', action: 'Ship ✓' },
+          { key: 'done', dot: 'dot-done', action: 'Reopen' }
+        ];
+
+        const html = cols.map(col => {
+          const items = list.filter(t => t.status === col.key);
+          const cards = items.map(t => `
+            <div class="task-card ${t.status === 'done' ? 'is-done' : ''}">
+              <div class="task-top">
+                <span class="task-id">${t.id}</span>
+                ${t.priority === 'High' ? '<span class="tag tag-high">High</span>' : ''}
+              </div>
+              <div class="task-title">${escapeHTML(t.title)}</div>
+              <div class="task-meta">
+                <div class="task-tags">
+                  <span class="tag ${TEAM_TAG_CLASS[t.team] || 'tag-eng'}">${t.team}</span>
+                </div>
+                <div class="task-actions">
+                  <button class="advance-btn" type="button" data-advance="${t.id}">${col.action}</button>
+                  <span class="avatar" style="background:${t.color};" title="Assigned to ${t.owner}">${t.owner}</span>
+                </div>
+              </div>
+            </div>
+          `).join('');
+
+          return `
+            <div class="board-col">
+              <div class="board-col-head">
+                <span class="col-title"><span class="status-dot ${col.dot}"></span>${STATUS_LABELS[col.key]}</span>
+                <span class="col-count">${items.length}</span>
+              </div>
+              ${cards || '<div style="font-size:12.5px; color:var(--ink-muted); padding:14px 6px; text-align:center;">No tasks in this column</div>'}
+            </div>
+          `;
+        }).join('');
+
+        workspaceBody.innerHTML = `<div class="board-grid">${html}</div>`;
+      }
+
+      function renderList(list) {
+        const rows = list.map(t => `
+          <div class="list-row">
+            <button class="list-check ${t.status === 'done' ? 'checked' : ''}" type="button" data-toggle-done="${t.id}" aria-label="Toggle ${escapeHTML(t.title)}">
+              ${t.status === 'done' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' : ''}
+            </button>
+            <span class="task-id list-hide-sm">${t.id}</span>
+            <span style="font-weight:550; ${t.status === 'done' ? 'text-decoration:line-through; color:var(--ink-muted);' : ''}">${escapeHTML(t.title)}</span>
+            <span class="list-hide-sm"><span class="tag ${TEAM_TAG_CLASS[t.team] || 'tag-eng'}">${t.team}</span></span>
+            <span><button class="advance-btn" type="button" data-advance="${t.id}">${STATUS_LABELS[t.status]}</button></span>
+            <span class="list-hide-sm" style="display:flex; justify-content:flex-end;">
+              <span class="avatar" style="background:${t.color};">${t.owner}</span>
+            </span>
+          </div>
+        `).join('');
+
+        workspaceBody.innerHTML = `
+          <div class="list-view">
+            <div class="list-row list-head">
+              <span></span>
+              <span class="list-hide-sm">ID</span>
+              <span>Task</span>
+              <span class="list-hide-sm">Team</span>
+              <span>Status</span>
+              <span class="list-hide-sm" style="text-align:right;">Owner</span>
+            </div>
+            ${rows}
+          </div>
+        `;
+      }
+
+      function renderTimeline(list) {
+        const barColors = {
+          planned: '#6E7482',
+          progress: '#2956C2',
+          done: '#247852'
+        };
+
+        const rows = list.map(t => `
+          <div class="timeline-row">
+            <div class="timeline-label">
+              <span class="avatar" style="background:${t.color};">${t.owner}</span>
+              <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHTML(t.title)}</span>
+            </div>
+            <div class="timeline-track">
+              <div class="timeline-bar" data-advance="${t.id}" style="left:${t.start}%; width:${t.span}%; background:${barColors[t.status]};" title="Click to advance status">
+                <span>${t.id}</span>
+                <span>${STATUS_LABELS[t.status]}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        workspaceBody.innerHTML = `
+          <div class="timeline-wrap">
+            <div class="timeline-table">
+              <div class="timeline-header">
+                <div>Deliverable</div>
+                <div>Mon 24</div>
+                <div>Wed 26</div>
+                <div>Fri 28</div>
+                <div>Tue 2</div>
+                <div>Fri 5</div>
+              </div>
+              ${rows}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderWorkspace() {
+        const list = getFilteredTasks();
+        if (currentView === 'board') renderBoard(list);
+        else if (currentView === 'list') renderList(list);
+        else renderTimeline(list);
+        updateProgress();
+      }
+
+      workspaceBody.addEventListener('click', (e) => {
+        const adv = e.target.closest('[data-advance]');
+        if (adv) {
+          cycleTaskStatus(adv.getAttribute('data-advance'));
+          return;
+        }
+        const chk = e.target.closest('[data-toggle-done]');
+        if (chk) {
+          toggleTaskDone(chk.getAttribute('data-toggle-done'));
+        }
+      });
+
+      document.querySelectorAll('.view-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.view-tab').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          currentView = btn.dataset.view;
+          renderWorkspace();
+        });
+      });
+
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderWorkspace();
+        });
+      });
+
+      document.getElementById('quickAddForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('quickAddInput');
+        const team = document.getElementById('quickAddTeam').value;
+        const title = input.value.trim();
+        if (!title) return;
+
+        const palette = { Engineering: '#2956C2', Design: '#D64924', Ops: '#247852' };
+        tasks.unshift({
+          id: `CRN-${nextTaskNum++}`,
+          title,
+          team,
+          priority: 'Normal',
+          status: 'planned',
+          owner: 'YO',
+          color: palette[team] || '#16181D',
+          start: 18,
+          span: 38
+        });
+        input.value = '';
+        if (currentFilter !== 'all' && currentFilter !== team) {
+          currentFilter = 'all';
+          document.querySelectorAll('.filter-pill').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        }
+        renderWorkspace();
+      });
+
+      renderWorkspace();
+
+      /* ----------------------------------------------------------
+         2. WORKFLOW TABS (DARK BAND)
+         ---------------------------------------------------------- */
+      document.querySelectorAll('.workflow-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.wf;
+          document.querySelectorAll('.workflow-tab').forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+
+          document.querySelectorAll('.wf-panel').forEach(panel => {
+            panel.classList.toggle('active', panel.id === `wf-${target}`);
+          });
+        });
+      });
+
+      /* ----------------------------------------------------------
+         3. PRICING BILLING TOGGLE
+         ---------------------------------------------------------- */
+      const billingSwitch = document.getElementById('billingSwitch');
+      const monthlyLabel = document.getElementById('monthlyLabel');
+      const annualLabel = document.getElementById('annualLabel');
+      let isAnnual = true;
+
+      function updatePricing() {
+        billingSwitch.setAttribute('aria-checked', String(isAnnual));
+        annualLabel.style.color = isAnnual ? 'var(--ink)' : 'var(--ink-muted)';
+        monthlyLabel.style.color = isAnnual ? 'var(--ink-muted)' : 'var(--ink)';
+
+        document.querySelectorAll('[data-annual]').forEach(el => {
+          const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
+          el.textContent = `$${val}`;
+        });
+
+        document.querySelectorAll('.billing-note').forEach((note, idx) => {
+          if (idx === 0) {
+            note.textContent = isAnnual ? 'Billed annually · 14-day free trial' : 'Billed monthly · 14-day free trial';
+          } else {
+            note.textContent = isAnnual ? 'Billed annually · Custom invoicing' : 'Billed monthly · Custom invoicing';
+          }
+        });
+      }
+
+      billingSwitch.addEventListener('click', () => {
+        isAnnual = !isAnnual;
+        updatePricing();
+      });
+
+      /* ----------------------------------------------------------
+         4. FAQ ACCORDION
+         ---------------------------------------------------------- */
+      document.querySelectorAll('.faq-q').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.faq-item');
+          const wasOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+          });
+          if (!wasOpen) {
+            item.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      /* ----------------------------------------------------------
+         5. MOBILE DRAWER
+         ---------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+
+      mobileMenuBtn.addEventListener('click', () => {
+        const open = mobileDrawer.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+      });
+
+      mobileDrawer.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('click', () => {
+          mobileDrawer.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* ----------------------------------------------------------
+         6. SIGNUP MODAL & BOTTOM CTA FORM
+         ---------------------------------------------------------- */
+      const signupModal = document.getElementById('signupModal');
+      const signupTitle = document.getElementById('signupModalTitle');
+      const modalForm = document.getElementById('modalSignupForm');
+      const modalSuccess = document.getElementById('modalSuccess');
+
+      function openSignupModal(heading) {
+        signupTitle.textContent = heading || 'Create your free workspace';
+        modalSuccess.style.display = 'none';
+        modalForm.style.display = 'block';
+        modalForm.reset();
+        signupModal.classList.add('open');
+        setTimeout(() => document.getElementById('modalEmail').focus(), 40);
+      }
+
+      function closeAllModals() {
+        signupModal.classList.remove('open');
+        cmdModal.classList.remove('open');
+      }
+
+      document.querySelectorAll('[data-open-signup]').forEach(btn => {
+        btn.addEventListener('click', () => openSignupModal(btn.dataset.openSignup));
+      });
+
+      document.querySelectorAll('[data-close-modal]').forEach(btn => {
+        btn.addEventListener('click', closeAllModals);
+      });
+
+      signupModal.addEventListener('click', (e) => {
+        if (e.target === signupModal) closeAllModals();
+      });
+
+      modalForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('modalEmail').value.trim();
+        const ws = document.getElementById('modalWorkspace').value.trim();
+        modalForm.style.display = 'none';
+        modalSuccess.style.display = 'block';
+        modalSuccess.textContent = `Workspace "${ws}" is ready! We sent a magic sign-in link to ${email}.`;
+      });
+
+      document.getElementById('bottomCtaForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('bottomCtaEmail');
+        const feedback = document.getElementById('bottomCtaFeedback');
+        const email = emailInput.value.trim();
+        if (!email) return;
+        feedback.textContent = `Magic workspace link sent to ${email} — check your inbox.`;
+        emailInput.value = '';
+      });
+
+      /* ----------------------------------------------------------
+         7. COMMAND PALETTE (⌘K / Ctrl+K)
+         ---------------------------------------------------------- */
+      const cmdModal = document.getElementById('cmdModal');
+      const cmdSearchInput = document.getElementById('cmdSearchInput');
+      const cmdResults = document.getElementById('cmdResults');
+
+      const commands = [
+        { label: 'Jump to Interactive Board', hint: 'Hero demo', run: () => { document.getElementById('live-demo').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'Switch demo to Timeline (Gantt) view', hint: 'Workspace', run: () => { document.querySelector('[data-view="timeline"]').click(); document.getElementById('live-demo').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'Switch demo to List view', hint: 'Workspace', run: () => { document.querySelector('[data-view="list"]').click(); document.getElementById('live-demo').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'Explore Product Features', hint: 'Section', run: () => { document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'See Operating Workflow', hint: 'Section', run: () => { document.getElementById('workflow').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'View Pricing & Toggle Billing', hint: 'Section', run: () => { document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }); } },
+        { label: 'Create Free Workspace', hint: 'Action', run: () => { openSignupModal('Create your free workspace'); } }
+      ];
+
+      function renderCommands(query = '') {
+        const q = query.trim().toLowerCase();
+        const filtered = commands.filter(c => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q));
+        cmdResults.innerHTML = filtered.length
+          ? filtered.map((c, idx) => `
+              <button class="cmd-option" type="button" data-cmd-idx="${idx}">
+                <span>${c.label}</span>
+                <small>${c.hint}</small>
+              </button>
+            `).join('')
+          : '<div style="padding:16px; text-align:center; font-size:13.5px; color:var(--ink-muted);">No matching commands</div>';
+
+        cmdResults.querySelectorAll('.cmd-option').forEach((btn, i) => {
+          btn.addEventListener('click', () => {
+            closeAllModals();
+            filtered[i].run();
+          });
+        });
+      }
+
+      function openCmdPalette() {
+        closeAllModals();
+        cmdModal.classList.add('open');
+        cmdSearchInput.value = '';
+        renderCommands('');
+        setTimeout(() => cmdSearchInput.focus(), 30);
+      }
+
+      document.getElementById('openCmdBtn').addEventListener('click', openCmdPalette);
+      cmdSearchInput.addEventListener('input', () => renderCommands(cmdSearchInput.value));
+      cmdModal.addEventListener('click', (e) => {
+        if (e.target === cmdModal) closeAllModals();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          if (cmdModal.classList.contains('open')) closeAllModals();
+          else openCmdPalette();
+        } else if (e.key === 'Escape') {
+          closeAllModals();
+        }
+      });
+
+      /* ----------------------------------------------------------
+         8. SCROLL REVEAL
+         ---------------------------------------------------------- */
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+      } else {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+      }
+    })();
+  </script>
+</body>
+</html>

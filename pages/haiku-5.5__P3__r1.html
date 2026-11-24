@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio of a freelance photographer — portraits, weddings, editorial and landscape work.">
+<title>Your Name — Photography</title>
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --fg: #f2efe9;
+    --muted: #8a8680;
+    --line: #222;
+    --accent: #d9b58a;
+    --card: #161616;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* Header / nav */
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem clamp(1.25rem, 4vw, 3rem); background: linear-gradient(to bottom, rgba(14,14,14,.9), rgba(14,14,14,0)); }
+  .logo { font-family: var(--serif); font-size: 1.25rem; text-decoration: none; letter-spacing: .02em; }
+  nav ul { display: flex; gap: clamp(1rem, 2.5vw, 2.25rem); list-style: none; }
+  nav a { text-decoration: none; font-size: .85rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); transition: color .2s; }
+  nav a:hover, nav a.active { color: var(--fg); }
+  .menu-btn { display: none; background: none; border: 0; cursor: pointer; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* Hero */
+  .hero { position: relative; height: 100vh; min-height: 560px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background:
+      radial-gradient(circle at 25% 30%, #3b4a5a 0%, transparent 55%),
+      radial-gradient(circle at 80% 70%, #7a5a40 0%, transparent 50%),
+      linear-gradient(160deg, #1b1b1b, #0a0a0a); transform: scale(1.05); animation: drift 24s ease-in-out infinite alternate; }
+  @keyframes drift { to { transform: scale(1.12) translate(-1%, 1%); } }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.6)); }
+  .hero-content { position: relative; z-index: 1; padding: 0 1.5rem; }
+  .eyebrow { font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1.05; margin-bottom: 1.5rem; }
+  .hero p { color: #d8d4cc; max-width: 36rem; margin: 0 auto 2.25rem; font-size: 1.05rem; }
+  .btn { display: inline-block; padding: .85rem 1.9rem; border: 1px solid var(--fg); text-decoration: none; text-transform: uppercase; font-size: .8rem; letter-spacing: .15em; background: transparent; cursor: pointer; transition: background .2s, color .2s; }
+  .btn:hover { background: var(--fg); color: var(--bg); }
+  .btn.solid { background: var(--accent); border-color: var(--accent); color: #111; }
+  .btn.solid:hover { background: var(--fg); border-color: var(--fg); }
+  .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); z-index: 1; }
+
+  section { padding: clamp(4rem, 10vw, 7rem) clamp(1.25rem, 5vw, 4rem); }
+  .section-head { text-align: center; margin-bottom: 3rem; }
+  .section-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4vw, 2.9rem); margin-bottom: .6rem; }
+  .section-head p { color: var(--muted); max-width: 34rem; margin: 0 auto; }
+
+  /* Work / gallery */
+  .filters { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-bottom: 2.5rem; }
+  .filter { background: none; border: 1px solid var(--line); padding: .45rem 1.1rem; cursor: pointer; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: all .2s; }
+  .filter:hover { color: var(--fg); border-color: var(--muted); }
+  .filter[aria-pressed="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); }
+  .gallery { columns: 3 280px; column-gap: 1rem; max-width: 1400px; margin: 0 auto; }
+  .shot { position: relative; break-inside: avoid; margin-bottom: 1rem; cursor: zoom-in; overflow: hidden; background: var(--card); border: 0; width: 100%; padding: 0; display: block; }
+  .shot .ph { width: 100%; transition: transform .6s ease, filter .4s; }
+  .shot:hover .ph { transform: scale(1.04); filter: brightness(1.08); }
+  .shot .cap { position: absolute; inset: auto 0 0 0; padding: 2.5rem 1rem .9rem; background: linear-gradient(transparent, rgba(0,0,0,.85)); text-align: left; opacity: 0; transform: translateY(8px); transition: all .3s; }
+  .shot:hover .cap, .shot:focus-visible .cap { opacity: 1; transform: none; }
+  .shot .cap strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.05rem; }
+  .shot .cap span { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .shot.hidden { display: none; }
+
+  /* Placeholder "photographs" — replace <div class="ph"> with <img> tags */
+  .ph { aspect-ratio: var(--ar, 4/5); background: var(--g); }
+
+  /* About */
+  .about { background: var(--card); }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; max-width: 1100px; margin: 0 auto; }
+  .portrait { aspect-ratio: 3/4; background: radial-gradient(circle at 40% 35%, #c9a989 0%, #5b4636 45%, #1d1a18 100%); }
+  .about h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4vw, 2.9rem); margin-bottom: 1rem; }
+  .about p { color: #cfcac2; margin-bottom: 1rem; }
+  .stats { display: flex; gap: 2.5rem; margin-top: 2rem; flex-wrap: wrap; }
+  .stat strong { display: block; font-family: var(--serif); font-size: 2.2rem; font-weight: 400; color: var(--accent); }
+  .stat span { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .service { border: 1px solid var(--line); padding: 2.25rem 1.75rem; transition: border-color .3s, transform .3s; }
+  .service:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .service h3 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin-bottom: .5rem; }
+  .service .price { color: var(--accent); font-size: .9rem; letter-spacing: .05em; margin-bottom: 1rem; }
+  .service ul { list-style: none; color: var(--muted); font-size: .95rem; }
+  .service li { padding: .3rem 0; border-top: 1px solid var(--line); }
+
+  /* Contact */
+  .contact { max-width: 640px; margin: 0 auto; }
+  form { display: grid; gap: 1.1rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  label { display: block; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+  input, select, textarea { width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: .6rem 0; outline: none; transition: border-color .2s; border-radius: 0; }
+  select option { background: var(--bg); }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 120px; }
+  .form-note { font-size: .85rem; color: var(--muted); min-height: 1.2em; }
+  .form-note.ok { color: var(--accent); }
+  .form-actions { display: flex; justify-content: center; }
+  .contact-info { text-align: center; margin-top: 3rem; color: var(--muted); font-size: .95rem; }
+  .contact-info a { color: var(--fg); }
+
+  footer { padding: 2.5rem 1.5rem; text-align: center; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; letter-spacing: .08em; }
+
+  /* Lightbox */
+  .lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.94); display: none; align-items: center; justify-content: center; padding: 3rem 4.5rem; }
+  .lightbox.open { display: flex; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .lb-stage { width: min(1000px, 100%); text-align: center; }
+  .lb-stage .ph { max-height: 78vh; width: auto; margin: 0 auto; aspect-ratio: var(--ar, 4/5); height: 78vh; max-width: 100%; }
+  .lb-caption { margin-top: 1rem; font-family: var(--serif); font-size: 1.1rem; }
+  .lb-caption span { display: block; font-family: var(--sans); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-top: .25rem; }
+  .lb-btn { position: absolute; background: none; border: 0; color: var(--fg); cursor: pointer; font-size: 2.2rem; line-height: 1; padding: .75rem; opacity: .7; transition: opacity .2s; }
+  .lb-btn:hover { opacity: 1; }
+  .lb-close { top: 1rem; right: 1rem; font-size: 1.6rem; }
+  .lb-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 1rem; top: 50%; transform: translateY(-50%); }
+  .lb-count { position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%); font-size: .75rem; letter-spacing: .2em; color: var(--muted); }
+
+  /* Responsive */
+  @media (max-width: 760px) {
+    .menu-btn { display: block; }
+    nav ul { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: center; gap: 1.25rem; padding: 1.5rem; background: rgba(14,14,14,.97); border-bottom: 1px solid var(--line); }
+    nav.open ul { display: flex; }
+    .about-grid { grid-template-columns: 1fr; }
+    .portrait { aspect-ratio: 4/3; }
+    .row { grid-template-columns: 1fr; }
+    .lightbox { padding: 3.5rem 0.75rem; }
+    .lb-prev, .lb-next { top: auto; bottom: 1rem; transform: none; }
+    .lb-stage .ph { height: auto; aspect-ratio: var(--ar, 4/5); max-height: 65vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#top" class="logo">Your Name</a>
+  <nav id="nav">
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav-list" aria-label="Toggle menu">Menu</button>
+    <ul id="nav-list">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Freelance Photographer</p>
+      <h1>Light, Stillness,<br>and the Moment</h1>
+      <p>Portraits, weddings, editorial and landscape photography, made with care and a quiet eye.</p>
+      <a href="#work" class="btn">View the Work</a>
+    </div>
+    <span class="scroll-hint">Scroll</span>
+  </div>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-head">
+      <h2>Selected Work</h2>
+      <p>A curated collection across portraits, weddings, editorial and landscapes.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter work">
+      <button class="filter" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter" data-filter="portrait" aria-pressed="false">Portraits</button>
+      <button class="filter" data-filter="wedding" aria-pressed="false">Weddings</button>
+      <button class="filter" data-filter="editorial" aria-pressed="false">Editorial</button>
+      <button class="filter" data-filter="landscape" aria-pressed="false">Landscapes</button>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <!-- Replace each .ph div with <img src="..." alt="..." loading="lazy"> to use real photos -->
+      <button class="shot" data-cat="portrait" data-title="Quiet Afternoon" data-place="Studio, 2025" style="--ar:4/5">
+        <div class="ph" style="--g: linear-gradient(135deg,#8c6a52,#2b2019)"></div>
+        <div class="cap"><strong>Quiet Afternoon</strong><span>Portrait</span></div>
+      </button>
+      <button class="shot" data-cat="landscape" data-title="Coastal Dusk" data-place="Northern Coast, 2025" style="--ar:3/2">
+        <div class="ph" style="--g: linear-gradient(to bottom,#2e4a68,#e0a370 70%,#3a2c20)"></div>
+        <div class="cap"><strong>Coastal Dusk</strong><span>Landscape</span></div>
+      </button>
+      <button class="shot" data-cat="wedding" data-title="The Vows" data-place="Lakeside, 2025" style="--ar:4/5">
+        <div class="ph" style="--g: radial-gradient(circle at 50% 40%,#f3ece2,#b9a88f 60%,#4b4037)"></div>
+        <div class="cap"><strong>The Vows</strong><span>Wedding</span></div>
+      </button>
+      <button class="shot" data-cat="editorial" data-title="Monochrome Study" data-place="Commission, 2024" style="--ar:1/1">
+        <div class="ph" style="--g: linear-gradient(120deg,#111,#666 50%,#eee)"></div>
+        <div class="cap"><strong>Monochrome Study</strong><span>Editorial</span></div>
+      </button>
+      <button class="shot" data-cat="portrait" data-title="Golden Hour" data-place="Outdoors, 2024" style="--ar:2/3">
+        <div class="ph" style="--g: linear-gradient(200deg,#f0b77a,#6b3f2a 65%,#1a1210)"></div>
+        <div class="cap"><strong>Golden Hour</strong><span>Portrait</span></div>
+      </button>
+      <button class="shot" data-cat="wedding" data-title="First Dance" data-place="Vineyard, 2024" style="--ar:3/4">
+        <div class="ph" style="--g: linear-gradient(160deg,#c8d4dc,#4f6172 60%,#1b222a)"></div>
+        <div class="cap"><strong>First Dance</strong><span>Wedding</span></div>
+      </button>
+      <button class="shot" data-cat="landscape" data-title="Mountain Mist" data-place="Alpine Range, 2024" style="--ar:4/3">
+        <div class="ph" style="--g: linear-gradient(to bottom,#9fb3c2,#e6e9ec 45%,#4a5a48 75%,#1f2a1e)"></div>
+        <div class="cap"><strong>Mountain Mist</strong><span>Landscape</span></div>
+      </button>
+      <button class="shot" data-cat="editorial" data-title="Red Thread" data-place="Fashion Shoot, 2025" style="--ar:4/5">
+        <div class="ph" style="--g: linear-gradient(90deg,#3a0d12,#b22a33 50%,#2a0a0e)"></div>
+        <div class="cap"><strong>Red Thread</strong><span>Editorial</span></div>
+      </button>
+      <button class="shot" data-cat="portrait" data-title="Window Light" data-place="Studio, 2023" style="--ar:1/1">
+        <div class="ph" style="--g: linear-gradient(100deg,#d8d0c4,#6e6457 55%,#2d2822)"></div>
+        <div class="cap"><strong>Window Light</strong><span>Portrait</span></div>
+      </button>
+      <button class="shot" data-cat="landscape" data-title="Desert Lines" data-place="Mojave, 2023" style="--ar:16/10">
+        <div class="ph" style="--g: linear-gradient(to bottom,#4d6a8a,#d7a27a 60%,#7a4a2c)"></div>
+        <div class="cap"><strong>Desert Lines</strong><span>Landscape</span></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about">
+    <div class="about-grid">
+      <div class="portrait" role="img" aria-label="Portrait of the photographer (placeholder)"></div>
+      <div>
+        <h2>About the Photographer</h2>
+        <p>I photograph people and places with an emphasis on natural light, honest expression, and unhurried composition. Every session begins with a conversation, because the best images come from trust.</p>
+        <p>Based in your city and available for travel, I work with individuals, couples, families, magazines and brands who want imagery that feels真实 and lasting rather than staged.</p>
+        <div class="stats">
+          <div class="stat"><strong>10+</strong><span>Years</span></div>
+          <div class="stat"><strong>250+</strong><span>Sessions</span></div>
+          <div class="stat"><strong>80+</strong><span>Weddings</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-head">
+      <h2>Services</h2>
+      <p>Flexible packages for personal, commercial and event work. Custom quotes available.</p>
+    </div>
+    <div class="services">
+      <article class="service">
+        <h3>Portrait Session</h3>
+        <p class="price">From $350</p>
+        <ul>
+          <li>90-minute session</li>
+          <li>Location or studio</li>
+          <li>25 edited images</li>
+          <li>Online gallery</li>
+        </ul>
+      </article>
+      <article class="service">
+        <h3>Wedding Coverage</h3>
+        <p class="price">From $2,400</p>
+        <ul>
+          <li>Full-day coverage</li>
+          <li>Engagement session included</li>
+          <li>400+ edited images</li>
+          <li>Print-ready downloads</li>
+        </ul>
+      </article>
+      <article class="service">
+        <h3>Editorial & Commercial</h3>
+        <p class="price">Custom quote</p>
+        <ul>
+          <li>Concept development</li>
+          <li>Styling coordination</li>
+          <li>Licensing options</li>
+          <li>Fast turnaround</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="about">
+    <div class="section-head">
+      <h2>Get in Touch</h2>
+      <p>Tell me a little about your project and I'll reply within two business days.</p>
+    </div>
+    <div class="contact">
+      <form id="contact-form" novalidate>
+        <div class="row">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div>
+          <label for="service">Service</label>
+          <select id="service" name="service">
+            <option>Portrait Session</option>
+            <option>Wedding Coverage</option>
+            <option>Editorial & Commercial</option>
+            <option>Landscape / Prints</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+        <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+        <div class="form-actions">
+          <button type="submit" class="btn solid">Send Inquiry</button>
+        </div>
+      </form>
+      <p class="contact-info">Or email <a href="mailto:hello@example.com">hello@example.com</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; <span id="year"></span> Your Name Photography. All rights reserved.
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-btn lb-close" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" aria-label="Previous image">&#8249;</button>
+  <div class="lb-stage">
+    <div class="ph" id="lb-img"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+  <button class="lb-btn lb-next" aria-label="Next image">&#8250;</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
+
+<script>
+(function () {
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile nav
+  var nav = document.getElementById('nav');
+  var menuBtn = nav.querySelector('.menu-btn');
+  menuBtn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  nav.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      nav.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Gallery filtering
+  var filters = document.querySelectorAll('.filter');
+  var shots = Array.prototype.slice.call(document.querySelectorAll('.shot'));
+  var visible = shots.slice();
+
+  filters.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var f = btn.getAttribute('data-filter');
+      filters.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+      shots.forEach(function (s) {
+        var show = f === 'all' || s.getAttribute('data-cat') === f;
+        s.classList.toggle('hidden', !show);
+      });
+      visible = shots.filter(function (s) { return !s.classList.contains('hidden'); });
+    });
+  });
+
+  // Lightbox
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lb-img');
+  var lbCap = document.getElementById('lb-caption');
+  var lbCount = document.getElementById('lb-count');
+  var current = 0;
+  var lastFocus = null;
+
+  function render() {
+    var shot = visible[current];
+    if (!shot) return;
+    var ph = shot.querySelector('.ph');
+    lbImg.setAttribute('style', ph.getAttribute('style') || '');
+    lbImg.style.setProperty('--ar', shot.style.getPropertyValue('--ar') || '4/5');
+    lbImg.innerHTML = '';
+    lbCap.innerHTML = '';
+    var title = document.createElement('div');
+    title.textContent = shot.getAttribute('data-title');
+    var meta = document.createElement('span');
+    meta.textContent = shot.getAttribute('data-place');
+    lbCap.appendChild(title);
+    lbCap.appendChild(meta);
+    lbCount.textContent = (current + 1) + ' / ' + visible.length;
+  }
+
+  function openAt(shot) {
+    lastFocus = document.activeElement;
+    current = Math.max(0, visible.indexOf(shot));
+    render();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lb.querySelector('.lb-close').focus();
+  }
+
+  function close() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  function step(d) {
+    if (!visible.length) return;
+    current = (current + d + visible.length) % visible.length;
+    render();
+  }
+
+  shots.forEach(function (s) {
+    s.addEventListener('click', function () { openAt(s); });
+  });
+  lb.querySelector('.lb-close').addEventListener('click', close);
+  lb.querySelector('.lb-prev').addEventListener('click', function () { step(-1); });
+  lb.querySelector('.lb-next').addEventListener('click', function () { step(1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(1);
+  });
+
+  // Simple touch swipe in lightbox
+  var touchX = null;
+  lb.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+    touchX = null;
+  });
+
+  // Contact form (no network call: validates, then opens the user's mail client)
+  var form = document.getElementById('contact-form');
+  var note = document.getElementById('form-note');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var message = form.message.value.trim();
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    note.classList.remove('ok');
+    if (!name || !emailOk || !message) {
+      note.textContent = 'Please provide your name, a valid email, and a message.';
+      return;
+    }
+    var subject = encodeURIComponent('Photography inquiry: ' + form.service.value);
+    var body = encodeURIComponent(
+      'Name: ' + name + '\nEmail: ' + email + '\nService: ' + form.service.value + '\n\n' + message
+    );
+    window.location.href = 'mailto:hello@example.com?subject=' + subject + '&body=' + body;
+    note.classList.add('ok');
+    note.textContent = 'Thanks! Your email app should open with your message ready to send.';
+    form.reset();
+  });
+
+  // Highlight active nav link on scroll
+  var links = nav.querySelectorAll('#nav-list a');
+  var sections = ['work', 'about', 'services', 'contact'].map(function (id) {
+    return document.getElementById(id);
+  });
+  function onScroll() {
+    var y = window.scrollY + window.innerHeight * 0.35;
+    var activeId = null;
+    sections.forEach(function (s) { if (s && s.offsetTop <= y) activeId = s.id; });
+    links.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harrow &amp; Mercer LLP — Counselors at Law | Boston</title>
+  <meta name="description" content="Harrow & Mercer LLP is a Boston boutique law firm providing partner-led representation in commercial litigation, closely held business counsel, commercial real estate, and trusts & estates." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       Design Tokens & Base Setup
+       ========================================================================== */
+    :root {
+      --ink-950: #0e1613;
+      --ink-900: #131e1a;
+      --ink-800: #1c2b25;
+      --ink-700: #293c34;
+      --slate-600: #4a5550;
+      --slate-500: #636e69;
+
+      --paper-50: #fcfbf8;
+      --paper-100: #f6f2ea;
+      --paper-200: #ebe4d7;
+      --paper-300: #d9cfbe;
+
+      --brass-300: #d4b47c;
+      --brass-400: #bc9656;
+      --brass-500: #9b773c;
+      --brass-600: #7a5c2b;
+
+      --danger: #9e2a2b;
+      --success: #225c42;
+
+      --font-serif: 'Cormorant Garamond', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      --container: 1180px;
+      --gutter: clamp(1.25rem, 4vw, 3rem);
+      --radius-sm: 2px;
+      --radius-md: 4px;
+
+      --shadow-sm: 0 2px 10px rgba(14, 22, 19, 0.05);
+      --shadow-md: 0 14px 36px rgba(14, 22, 19, 0.10);
+      --shadow-lg: 0 24px 64px rgba(14, 22, 19, 0.24);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--paper-100);
+      color: var(--ink-900);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink-900);
+      background-color: var(--paper-100);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-weight: 500;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      margin: 0 0 1rem;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--brass-400);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--ink-900);
+      color: var(--paper-50);
+      padding: 0.75rem 1.25rem;
+      z-index: 2000;
+      font-size: 0.875rem;
+    }
+
+    .skip-link:focus {
+      left: 1rem;
+      top: 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: calc(var(--container) + var(--gutter) * 2);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--brass-600);
+    }
+
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .eyebrow--light {
+      color: var(--brass-300);
+    }
+
+    .section {
+      padding-block: clamp(4.5rem, 8vw, 7.5rem);
+      position: relative;
+    }
+
+    .section--paper {
+      background-color: var(--paper-50);
+    }
+
+    .section--warm {
+      background-color: var(--paper-100);
+    }
+
+    .section--dark {
+      background-color: var(--ink-900);
+      color: var(--paper-100);
+    }
+
+    .section-header {
+      max-width: 680px;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .section-title {
+      font-size: clamp(2.15rem, 4vw, 3.25rem);
+      margin-top: 0.9rem;
+      color: inherit;
+    }
+
+    .section-lead {
+      margin-top: 1.1rem;
+      font-size: 1.05rem;
+      color: var(--slate-600);
+      max-width: 60ch;
+    }
+
+    .section--dark .section-lead {
+      color: rgba(246, 242, 234, 0.76);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.7rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+
+    .btn--brass {
+      background-color: var(--brass-400);
+      color: var(--ink-950);
+      border-color: var(--brass-400);
+    }
+
+    .btn--brass:hover {
+      background-color: var(--brass-300);
+      border-color: var(--brass-300);
+      transform: translateY(-1px);
+    }
+
+    .btn--dark {
+      background-color: var(--ink-900);
+      color: var(--paper-50);
+      border-color: var(--ink-900);
+    }
+
+    .btn--dark:hover {
+      background-color: var(--ink-700);
+      border-color: var(--ink-700);
+      transform: translateY(-1px);
+    }
+
+    .btn--outline-light {
+      background-color: transparent;
+      color: var(--paper-50);
+      border-color: rgba(246, 242, 234, 0.32);
+    }
+
+    .btn--outline-light:hover {
+      border-color: var(--brass-300);
+      color: var(--brass-300);
+    }
+
+    .btn--outline-dark {
+      background-color: transparent;
+      color: var(--ink-900);
+      border-color: var(--paper-300);
+    }
+
+    .btn--outline-dark:hover {
+      border-color: var(--ink-900);
+      background-color: var(--ink-900);
+      color: var(--paper-50);
+    }
+
+    .btn--sm {
+      padding: 0.62rem 1.2rem;
+      font-size: 0.8125rem;
+    }
+
+    /* Reveal Animations (progressive enhancement) */
+    .js-ready [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+
+    .js-ready [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      .js-ready [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ==========================================================================
+       Utility Bar & Header
+       ========================================================================== */
+    .utility-bar {
+      background-color: var(--ink-950);
+      color: rgba(246, 242, 234, 0.72);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(246, 242, 234, 0.08);
+    }
+
+    .utility-bar__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-block: 0.55rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .utility-bar__group {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .utility-bar a:hover {
+      color: var(--brass-300);
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(19, 30, 26, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(246, 242, 234, 0.09);
+      transition: box-shadow 0.3s var(--ease), background-color 0.3s var(--ease);
+    }
+
+    .site-header.is-scrolled {
+      background-color: rgba(14, 22, 19, 0.98);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      color: var(--paper-50);
+    }
+
+    .brand__mark {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .brand__text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand__name {
+      font-family: var(--font-serif);
+      font-size: 1.38rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--paper-50);
+    }
+
+    .brand__sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-300);
+      margin-top: 0.18rem;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav__list {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1.85rem;
+    }
+
+    .nav__link {
+      font-size: 0.86rem;
+      font-weight: 400;
+      color: rgba(246, 242, 234, 0.82);
+      letter-spacing: 0.02em;
+      position: relative;
+      padding-block: 0.25rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav__link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 1px;
+      background-color: var(--brass-300);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.25s var(--ease);
+    }
+
+    .nav__link:hover,
+    .nav__link:focus-visible {
+      color: var(--paper-50);
+    }
+
+    .nav__link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid rgba(246, 242, 234, 0.24);
+      color: var(--paper-50);
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mobile-drawer {
+      display: none;
+      background-color: var(--ink-950);
+      border-bottom: 1px solid rgba(246, 242, 234, 0.1);
+      padding: 1.25rem var(--gutter) 1.75rem;
+    }
+
+    .mobile-drawer.is-open {
+      display: block;
+    }
+
+    .mobile-drawer__list {
+      list-style: none;
+      margin: 0 0 1.25rem;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .mobile-drawer__link {
+      display: block;
+      padding: 0.7rem 0;
+      color: var(--paper-100);
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(246, 242, 234, 0.08);
+    }
+
+    /* ==========================================================================
+       Hero Section
+       ========================================================================== */
+    .hero {
+      background-color: var(--ink-900);
+      color: var(--paper-50);
+      position: relative;
+      overflow: hidden;
+      padding-top: clamp(3.5rem, 6vw, 5.5rem);
+      padding-bottom: 0;
+    }
+
+    /* Subtle architectural grid lines */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(246, 242, 234, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(246, 242, 234, 0.03) 1px, transparent 1px);
+      background-size: 120px 120px;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 80% 75% at 65% 35%, #000 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 75% at 65% 35%, #000 30%, transparent 100%);
+    }
+
+    .hero__grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: center;
+      padding-bottom: clamp(3.5rem, 6vw, 5.25rem);
+    }
+
+    .hero__title {
+      font-size: clamp(2.65rem, 5.2vw, 4.45rem);
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -0.015em;
+      margin-top: 1.25rem;
+      color: var(--paper-50);
+    }
+
+    .hero__title em {
+      font-style: italic;
+      color: var(--brass-300);
+      font-weight: 400;
+    }
+
+    .hero__lead {
+      margin-top: 1.5rem;
+      font-size: 1.08rem;
+      line-height: 1.72;
+      color: rgba(246, 242, 234, 0.78);
+      max-width: 54ch;
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2.25rem;
+    }
+
+    .hero__note {
+      margin-top: 1.5rem;
+      font-size: 0.8125rem;
+      color: rgba(246, 242, 234, 0.54);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    /* Hero Editorial Frame (Right Column) */
+    .hero-dossier {
+      position: relative;
+      background: linear-gradient(165deg, rgba(28, 43, 37, 0.92), rgba(14, 22, 19, 0.96));
+      border: 1px solid rgba(212, 180, 124, 0.24);
+      border-radius: var(--radius-md);
+      padding: clamp(1.75rem, 3vw, 2.35rem);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-dossier::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(246, 242, 234, 0.07);
+      border-radius: var(--radius-sm);
+      pointer-events: none;
+    }
+
+    .hero-dossier__art {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(246, 242, 234, 0.1);
+      padding-bottom: 1.25rem;
+    }
+
+    .hero-dossier__eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass-300);
+      margin-bottom: 1rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem 1.5rem;
+    }
+
+    .hero-metric {
+      border-left: 1px solid rgba(212, 180, 124, 0.32);
+      padding-left: 0.95rem;
+    }
+
+    .hero-metric__value {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.05;
+      color: var(--paper-50);
+    }
+
+    .hero-metric__label {
+      font-size: 0.78rem;
+      color: rgba(246, 242, 234, 0.66);
+      margin-top: 0.25rem;
+      line-height: 1.35;
+    }
+
+    /* Admissions Strip */
+    .admissions-strip {
+      position: relative;
+      background-color: var(--ink-950);
+      border-top: 1px solid rgba(246, 242, 234, 0.09);
+      padding-block: 1.25rem;
+    }
+
+    .admissions-strip__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem 2rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(246, 242, 234, 0.62);
+    }
+
+    .admissions-strip__label {
+      color: var(--brass-300);
+      font-weight: 600;
+    }
+
+    .admissions-strip__items {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .admissions-strip__dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: rgba(212, 180, 124, 0.45);
+    }
+
+    /* ==========================================================================
+       Section 01: The Practice / Philosophy
+       ========================================================================== */
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: clamp(2.5rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    .philosophy__sticky {
+      position: sticky;
+      top: 108px;
+    }
+
+    .philosophy__quote {
+      margin-top: 2rem;
+      padding: 1.5rem 1.75rem;
+      background-color: var(--paper-100);
+      border-left: 2px solid var(--brass-500);
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--ink-800);
+    }
+
+    .philosophy__quote cite {
+      display: block;
+      margin-top: 0.8rem;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate-500);
+    }
+
+    .pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pillar {
+      padding: 1.85rem 2rem;
+      background-color: var(--paper-50);
+      border: 1px solid var(--paper-200);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.25s ease, transform 0.25s var(--ease);
+    }
+
+    .pillar:hover {
+      border-color: var(--brass-400);
+      transform: translateY(-2px);
+    }
+
+    .pillar__num {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--brass-600);
+      margin-bottom: 0.55rem;
+    }
+
+    .pillar__title {
+      font-size: 1.55rem;
+      margin-bottom: 0.65rem;
+      color: var(--ink-900);
+    }
+
+    .pillar__body {
+      font-size: 0.95rem;
+      color: var(--slate-600);
+    }
+
+    /* ==========================================================================
+       Section 02: Practice Areas
+       ========================================================================== */
+    .practices-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.75rem;
+    }
+
+    .practice-card {
+      background-color: var(--paper-50);
+      border: 1px solid var(--paper-200);
+      border-top: 3px solid var(--ink-900);
+      border-radius: var(--radius-sm);
+      padding: clamp(1.85rem, 3vw, 2.5rem);
+      display: flex;
+      flex-direction: column;
+      transition: border-top-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+
+    .practice-card:hover {
+      border-top-color: var(--brass-500);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .practice-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.4rem;
+    }
+
+    .practice-card__icon {
+      width: 42px;
+      height: 42px;
+      color: var(--brass-600);
+    }
+
+    .practice-card__index {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--slate-500);
+      letter-spacing: 0.08em;
+    }
+
+    .practice-card__title {
+      font-size: 1.75rem;
+      color: var(--ink-900);
+      margin-bottom: 0.85rem;
+    }
+
+    .practice-card__desc {
+      font-size: 0.95rem;
+      color: var(--slate-600);
+      margin-bottom: 1.4rem;
+    }
+
+    .practice-card__list {
+      list-style: none;
+      margin: auto 0 0;
+      padding: 1.25rem 0 0;
+      border-top: 1px solid var(--paper-200);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .practice-card__list li {
+      position: relative;
+      padding-left: 1.15rem;
+      font-size: 0.88rem;
+      color: var(--ink-800);
+    }
+
+    .practice-card__list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 6px;
+      height: 1px;
+      background-color: var(--brass-500);
+    }
+
+    /* ==========================================================================
+       Section 03: Representative Matters (Filterable)
+       ========================================================================== */
+    .matters-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .matters-head .section-header {
+      margin-bottom: 0;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid rgba(246, 242, 234, 0.22);
+      color: rgba(246, 242, 234, 0.78);
+      padding: 0.55rem 1.05rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--brass-300);
+      color: var(--paper-50);
+    }
+
+    .filter-btn.is-active {
+      background-color: var(--brass-400);
+      border-color: var(--brass-400);
+      color: var(--ink-950);
+      font-weight: 500;
+    }
+
+    .matters-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .matter-item {
+      background-color: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(246, 242, 234, 0.11);
+      border-radius: var(--radius-sm);
+      padding: 1.65rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .matter-item:hover {
+      border-color: rgba(212, 180, 124, 0.45);
+      background-color: rgba(255, 255, 255, 0.055);
+    }
+
+    .matter-item.is-hidden {
+      display: none;
+    }
+
+    .matter-item__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .matter-item__tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brass-300);
+      font-weight: 600;
+    }
+
+    .matter-item__venue {
+      font-size: 0.76rem;
+      color: rgba(246, 242, 234, 0.54);
+    }
+
+    .matter-item__title {
+      font-size: 1.42rem;
+      color: var(--paper-50);
+      margin-bottom: 0.65rem;
+      line-height: 1.2;
+    }
+
+    .matter-item__summary {
+      font-size: 0.9rem;
+      color: rgba(246, 242, 234, 0.72);
+    }
+
+    .matters-disclaimer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: rgba(246, 242, 234, 0.5);
+      font-style: italic;
+    }
+
+    /* ==========================================================================
+       Section 04: Attorneys
+       ========================================================================== */
+    .attorneys-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .attorney-card {
+      background-color: var(--paper-50);
+      border: 1px solid var(--paper-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s ease;
+    }
+
+    .attorney-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--brass-400);
+    }
+
+    .attorney-card__plate {
+      position: relative;
+      aspect-ratio: 4 / 3.4;
+      background: linear-gradient(155deg, var(--ink-800) 0%, var(--ink-950) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      border-bottom: 2px solid var(--brass-400);
+    }
+
+    .attorney-card__plate svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .attorney-card__body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .attorney-card__role {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brass-600);
+      margin-bottom: 0.35rem;
+    }
+
+    .attorney-card__name {
+      font-size: 1.5rem;
+      color: var(--ink-900);
+      margin-bottom: 0.65rem;
+    }
+
+    .attorney-card__focus {
+      font-size: 0.88rem;
+      color: var(--slate-600);
+      margin-bottom: 1.15rem;
+      flex: 1;
+    }
+
+    .attorney-card__edu {
+      font-size: 0.78rem;
+      color: var(--slate-500);
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--paper-200);
+      margin-bottom: 1.1rem;
+    }
+
+    .attorney-card__btn {
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       Section 05: Client Remarks
+       ========================================================================== */
+    .remarks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .remark-card {
+      background-color: var(--paper-100);
+      border: 1px solid var(--paper-200);
+      border-radius: var(--radius-sm);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .remark-card__mark {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      line-height: 0.7;
+      color: var(--brass-400);
+      margin-bottom: 0.85rem;
+    }
+
+    .remark-card__quote {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      line-height: 1.5;
+      color: var(--ink-900);
+      margin-bottom: 1.5rem;
+    }
+
+    .remark-card__author {
+      padding-top: 1rem;
+      border-top: 1px solid var(--paper-300);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink-900);
+    }
+
+    .remark-card__context {
+      font-size: 0.78rem;
+      color: var(--slate-500);
+      margin-top: 0.15rem;
+    }
+
+    /* ==========================================================================
+       Section 06: Consultation & Contact
+       ========================================================================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: start;
+    }
+
+    .office-card {
+      background-color: var(--ink-900);
+      color: var(--paper-100);
+      padding: clamp(2rem, 3.5vw, 2.75rem);
+      border-radius: var(--radius-sm);
+      border-top: 3px solid var(--brass-400);
+    }
+
+    .office-card__title {
+      font-size: 1.85rem;
+      color: var(--paper-50);
+      margin-bottom: 1.5rem;
+    }
+
+    .office-details {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .office-details__label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--brass-300);
+      margin-bottom: 0.25rem;
+    }
+
+    .office-details__value {
+      font-size: 0.95rem;
+      color: rgba(246, 242, 234, 0.88);
+    }
+
+    .office-details a:hover {
+      color: var(--brass-300);
+      text-decoration: underline;
+    }
+
+    .office-notice {
+      margin-top: 2rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(246, 242, 234, 0.12);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: rgba(246, 242, 234, 0.62);
+    }
+
+    .form-panel {
+      background-color: var(--paper-50);
+      border: 1px solid var(--paper-200);
+      border-radius: var(--radius-sm);
+      padding: clamp(1.85rem, 3.5vw, 2.75rem);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-panel__title {
+      font-size: 1.85rem;
+      color: var(--ink-900);
+      margin-bottom: 0.45rem;
+    }
+
+    .form-panel__sub {
+      font-size: 0.92rem;
+      color: var(--slate-600);
+      margin-bottom: 1.75rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.15rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field--full {
+      grid-column: 1 / -1;
+    }
+
+    .field__label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-800);
+    }
+
+    .field__input,
+    .field__select,
+    .field__textarea {
+      width: 100%;
+      padding: 0.78rem 0.9rem;
+      font-size: 0.94rem;
+      color: var(--ink-900);
+      background-color: #ffffff;
+      border: 1px solid var(--paper-300);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field__input:focus,
+    .field__select:focus,
+    .field__textarea:focus {
+      outline: none;
+      border-color: var(--ink-800);
+      box-shadow: 0 0 0 3px rgba(155, 119, 60, 0.16);
+    }
+
+    .field__textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field__error {
+      font-size: 0.78rem;
+      color: var(--danger);
+      min-height: 1em;
+    }
+
+    .field.has-error .field__input,
+    .field.has-error .field__select,
+    .field.has-error .field__textarea {
+      border-color: var(--danger);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.82rem;
+      color: var(--slate-600);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .checkbox-row input {
+      margin-top: 0.22rem;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--ink-900);
+      flex-shrink: 0;
+    }
+
+    .form-actions {
+      margin-top: 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .form-response-note {
+      font-size: 0.78rem;
+      color: var(--slate-500);
+    }
+
+    .form-confirmation {
+      display: none;
+      padding: 1.75rem;
+      background-color: #f0f6f2;
+      border: 1px solid #b9d5c5;
+      border-left: 3px solid var(--success);
+      border-radius: var(--radius-sm);
+    }
+
+    .form-confirmation.is-visible {
+      display: block;
+    }
+
+    .form-confirmation__title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      color: var(--ink-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-confirmation__ref {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      background: rgba(34, 92, 66, 0.1);
+      color: var(--success);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    /* ==========================================================================
+       Footer
+       ========================================================================== */
+    .site-footer {
+      background-color: var(--ink-950);
+      color: rgba(246, 242, 234, 0.72);
+      padding-top: 4rem;
+      padding-bottom: 2.5rem;
+      border-top: 1px solid rgba(212, 180, 124, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 2.5rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(246, 242, 234, 0.1);
+    }
+
+    .footer__summary {
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: rgba(246, 242, 234, 0.64);
+      max-width: 36ch;
+    }
+
+    .footer__heading {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--brass-300);
+      margin-bottom: 1rem;
+    }
+
+    .footer__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      font-size: 0.88rem;
+    }
+
+    .footer__list a:hover {
+      color: var(--paper-50);
+    }
+
+    .footer-bottom {
+      padding-top: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      font-size: 0.78rem;
+      color: rgba(246, 242, 234, 0.5);
+    }
+
+    .footer-bottom__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ==========================================================================
+       Attorney Biography Modal
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(10, 16, 14, 0.76);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal {
+      background-color: var(--paper-50);
+      color: var(--ink-900);
+      width: 100%;
+      max-width: 680px;
+      max-height: 88vh;
+      overflow-y: auto;
+      border-radius: var(--radius-md);
+      border-top: 4px solid var(--brass-500);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      padding: clamp(1.75rem, 4vw, 2.75rem);
+    }
+
+    .modal__close {
+      position: absolute;
+      top: 1.15rem;
+      right: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--paper-300);
+      background: transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-900);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .modal__close:hover {
+      background-color: var(--ink-900);
+      color: var(--paper-50);
+      border-color: var(--ink-900);
+    }
+
+    .modal__role {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--brass-600);
+      margin-bottom: 0.35rem;
+    }
+
+    .modal__name {
+      font-size: 2.25rem;
+      margin-bottom: 1.25rem;
+      padding-right: 2.5rem;
+    }
+
+    .modal__bio {
+      font-size: 0.96rem;
+      color: var(--slate-600);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal__meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--paper-200);
+      margin-bottom: 1.5rem;
+    }
+
+    .modal__meta-heading {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brass-600);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.87rem;
+      color: var(--ink-800);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    /* ==========================================================================
+       Responsive Breakpoints
+       ========================================================================== */
+    @media (max-width: 1060px) {
+      .attorneys-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 920px) {
+      .nav {
+        display: none;
+      }
+      .menu-toggle {
+        display: inline-flex;
+      }
+      .hero__grid,
+      .philosophy-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      .philosophy__sticky {
+        position: static;
+      }
+      .practices-grid,
+      .matters-list,
+      .remarks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .utility-bar {
+        display: none;
+      }
+      .attorneys-grid,
+      .form-grid,
+      .footer-grid,
+      .modal__meta-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+      .admissions-strip__dot {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Top Utility Bar -->
+  <div class="utility-bar">
+    <div class="container utility-bar__inner">
+      <div class="utility-bar__group">
+        <span>One Beacon Street, Suite 1420 · Boston, MA</span>
+        <span>By Appointment &amp; Virtual Counsel</span>
+      </div>
+      <div class="utility-bar__group">
+        <a href="tel:+16175550194">Direct: (617) 555-0194</a>
+        <a href="mailto:counsel@harrowmercer.example">counsel@harrowmercer.example</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Navigation -->
+  <header class="site-header" id="siteHeader">
+    <div class="container site-header__inner">
+      <a href="#top" class="brand" aria-label="Harrow and Mercer LLP Home">
+        <svg class="brand__mark" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="41" height="41" stroke="#D4B47C" stroke-width="1.2"/>
+          <rect x="5.5" y="5.5" width="33" height="33" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="0.9"/>
+          <path d="M13 13V31M13 22H20M20 13V31" stroke="#FCFBF8" stroke-width="1.6" stroke-linecap="square"/>
+          <path d="M24 31V13L28 21.5L32 13V31" stroke="#D4B47C" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">Harrow &amp; Mercer</span>
+          <span class="brand__sub">Counselors at Law · LLP</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#practice">The Firm</a></li>
+          <li><a class="nav__link" href="#areas">Practice Areas</a></li>
+          <li><a class="nav__link" href="#matters">Representative Matters</a></li>
+          <li><a class="nav__link" href="#attorneys">Attorneys</a></li>
+          <li><a class="nav__link" href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="btn btn--brass btn--sm">Request Consultation</a>
+      </nav>
+
+      <button
+        type="button"
+        class="menu-toggle"
+        id="menuToggle"
+        aria-expanded="false"
+        aria-controls="mobileDrawer"
+        aria-label="Open navigation menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation">
+      <ul class="mobile-drawer__list">
+        <li><a class="mobile-drawer__link" href="#practice">The Firm</a></li>
+        <li><a class="mobile-drawer__link" href="#areas">Practice Areas</a></li>
+        <li><a class="mobile-drawer__link" href="#matters">Representative Matters</a></li>
+        <li><a class="mobile-drawer__link" href="#attorneys">Attorneys</a></li>
+        <li><a class="mobile-drawer__link" href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="btn btn--brass" style="width:100%;">Request Consultation</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero" id="top">
+      <div class="container hero__grid">
+        <div>
+          <span class="eyebrow eyebrow--light">Boston Boutique Trial &amp; Advisory Counsel · Est. 2008</span>
+          <h1 class="hero__title">
+            Measured counsel for <em>complex disputes</em> and enduring enterprises.
+          </h1>
+          <p class="hero__lead">
+            Harrow &amp; Mercer LLP is a six-attorney Boston law firm advising founders, family-owned businesses, fiduciaries, and commercial property owners. Every matter is led directly by a partner from initial assessment through resolution.
+          </p>
+          <div class="hero__actions">
+            <a href="#contact" class="btn btn--brass">
+              Schedule a Consultation
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="#areas" class="btn btn--outline-light">Explore Practice Areas</a>
+          </div>
+          <p class="hero__note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4B47C" stroke-width="1.8" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+            </svg>
+            Initial conflict check &amp; partner response within one business day.
+          </p>
+        </div>
+
+        <aside class="hero-dossier" aria-label="Firm Profile Summary">
+          <!-- Bespoke Architectural Courthouse & Balance SVG -->
+          <svg class="hero-dossier__art" viewBox="0 0 420 175" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architectural line illustration of neoclassical columns and balanced scales">
+            <!-- Pediment -->
+            <path d="M32 54L210 14L388 54" stroke="#D4B47C" stroke-width="1.15"/>
+            <path d="M56 54L210 21L364 54" stroke="#D4B47C" stroke-opacity="0.4" stroke-width="0.9"/>
+            <line x1="24" y1="54" x2="396" y2="54" stroke="#F6F2EA" stroke-opacity="0.45" stroke-width="1.1"/>
+            <line x1="34" y1="62" x2="386" y2="62" stroke="#F6F2EA" stroke-opacity="0.22" stroke-width="0.9"/>
+            <!-- Columns -->
+            <g stroke="#F6F2EA" stroke-opacity="0.35" stroke-width="1">
+              <rect x="58" y="62" width="18" height="86"/>
+              <line x1="64" y1="62" x2="64" y2="148" stroke-opacity="0.2"/>
+              <line x1="70" y1="62" x2="70" y2="148" stroke-opacity="0.2"/>
+
+              <rect x="114" y="62" width="18" height="86"/>
+              <line x1="120" y1="62" x2="120" y2="148" stroke-opacity="0.2"/>
+              <line x1="126" y1="62" x2="126" y2="148" stroke-opacity="0.2"/>
+
+              <rect x="288" y="62" width="18" height="86"/>
+              <line x1="294" y1="62" x2="294" y2="148" stroke-opacity="0.2"/>
+              <line x1="300" y1="62" x2="300" y2="148" stroke-opacity="0.2"/>
+
+              <rect x="344" y="62" width="18" height="86"/>
+              <line x1="350" y1="62" x2="350" y2="148" stroke-opacity="0.2"/>
+              <line x1="356" y1="62" x2="356" y2="148" stroke-opacity="0.2"/>
+            </g>
+            <!-- Central Emblem & Balanced Scales -->
+            <circle cx="210" cy="105" r="34" stroke="#D4B47C" stroke-opacity="0.45" stroke-width="1"/>
+            <circle cx="210" cy="105" r="28" stroke="#D4B47C" stroke-opacity="0.2" stroke-dasharray="2 3" stroke-width="0.9"/>
+            <line x1="210" y1="81" x2="210" y2="128" stroke="#D4B47C" stroke-width="1.3"/>
+            <line x1="196" y1="128" x2="224" y2="128" stroke="#D4B47C" stroke-width="1.3"/>
+            <line x1="186" y1="93" x2="234" y2="93" stroke="#FCFBF8" stroke-width="1.2"/>
+            <path d="M186 93L178 111H194L186 93Z" stroke="#D4B47C" stroke-width="1"/>
+            <path d="M234 93L226 111H242L234 93Z" stroke="#D4B47C" stroke-width="1"/>
+            <!-- Steps -->
+            <line x1="28" y1="148" x2="392" y2="148" stroke="#F6F2EA" stroke-opacity="0.45" stroke-width="1.1"/>
+            <line x1="18" y1="156" x2="402" y2="156" stroke="#F6F2EA" stroke-opacity="0.28" stroke-width="1"/>
+            <line x1="10" y1="164" x2="410" y2="164" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="1"/>
+          </svg>
+
+          <div class="hero-dossier__eyebrow">Firm Standing &amp; Scope</div>
+          <div class="hero-metrics">
+            <div class="hero-metric">
+              <div class="hero-metric__value">18 Years</div>
+              <div class="hero-metric__label">Serving New England businesses &amp; families</div>
+            </div>
+            <div class="hero-metric">
+              <div class="hero-metric__value">100%</div>
+              <div class="hero-metric__label">Partner-led representation on every file</div>
+            </div>
+            <div class="hero-metric">
+              <div class="hero-metric__value">4 Core</div>
+              <div class="hero-metric__label">Interconnected civil &amp; advisory practices</div>
+            </div>
+            <div class="hero-metric">
+              <div class="hero-metric__value">MA · NH · RI</div>
+              <div class="hero-metric__label">State &amp; federal trial and appellate courts</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="admissions-strip">
+        <div class="container admissions-strip__inner">
+          <span class="admissions-strip__label">Bar &amp; Court Admissions</span>
+          <div class="admissions-strip__items">
+            <span>Supreme Judicial Court of Massachusetts</span>
+            <span class="admissions-strip__dot" aria-hidden="true"></span>
+            <span>U.S. District Court (D. Mass.)</span>
+            <span class="admissions-strip__dot" aria-hidden="true"></span>
+            <span>U.S. Court of Appeals (First Circuit)</span>
+            <span class="admissions-strip__dot" aria-hidden="true"></span>
+            <span>Boston Bar Association</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 01: The Firm / Philosophy -->
+    <section class="section section--paper" id="practice">
+      <div class="container philosophy-grid">
+        <div class="philosophy__sticky" data-reveal>
+          <span class="eyebrow">§ 01 — The Practice</span>
+          <h2 class="section-title">Deliberately small. Uncompromisingly thorough.</h2>
+          <p class="section-lead">
+            Large firms are structured around leverage—staffing matters with rotating layers of junior associates. We built Harrow &amp; Mercer around the opposite premise: seasoned lawyers who know your business, understand your risk tolerance, and do the actual work.
+          </p>
+          <blockquote class="philosophy__quote">
+            “Good legal judgment is rarely loud. It is prepared, candid about downside risk, and grounded in how courts and counterparties actually behave.”
+            <cite>— Eleanor Harrow, Founding Partner</cite>
+          </blockquote>
+        </div>
+
+        <div class="pillars">
+          <article class="pillar" data-reveal>
+            <div class="pillar__num">I · DIRECT ENGAGEMENT</div>
+            <h3 class="pillar__title">The partner you meet is your counsel</h3>
+            <p class="pillar__body">
+              No intake hand-offs and no learning curves billed to your account. The partner overseeing your engagement conducts the strategy sessions, drafts key pleadings or agreements, and stands beside you at the negotiating table or courtroom podium.
+            </p>
+          </article>
+
+          <article class="pillar" data-reveal>
+            <div class="pillar__num">II · DISCIPLINED DOCKET</div>
+            <h3 class="pillar__title">Selective caseloads for deeper preparation</h3>
+            <p class="pillar__body">
+              We intentionally limit the number of active litigation and transactional matters we accept at any time. That restraint gives us the bandwidth to master technical records, anticipate counterarguments early, and respond promptly when decisions cannot wait.
+            </p>
+          </article>
+
+          <article class="pillar" data-reveal>
+            <div class="pillar__num">III · COMMERCIAL CLARITY</div>
+            <h3 class="pillar__title">Plainspoken advice &amp; predictable fee structures</h3>
+            <p class="pillar__body">
+              Clients deserve clear assessments of cost, timeline, and realistic outcomes—not hedged memoranda. Where appropriate, we offer phased budgets, capped-fee transactional arrangements, or tailored retainer structures agreed upon in writing up front.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 02: Practice Areas -->
+    <section class="section section--warm" id="areas">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="eyebrow">§ 02 — Areas of Practice</span>
+          <h2 class="section-title">Focused counsel across four interconnected disciplines.</h2>
+          <p class="section-lead">
+            Disputes rarely exist in isolation from ownership agreements, property rights, or succession plans. Our attorneys collaborate across practices so strategy remains cohesive.
+          </p>
+        </header>
+
+        <div class="practices-grid">
+          <article class="practice-card" data-reveal>
+            <div class="practice-card__top">
+              <svg class="practice-card__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <path d="M20 6v28M12 34h16M8 13h24"/>
+                <path d="M8 13L4 23h8L8 13zM32 13l-4 10h8l-4-10z"/>
+              </svg>
+              <span class="practice-card__index">01</span>
+            </div>
+            <h3 class="practice-card__title">Commercial Litigation &amp; Disputes</h3>
+            <p class="practice-card__desc">
+              Trial-ready representation in Massachusetts Superior Court, the Business Litigation Session, federal court, and private arbitration—focused on protecting enterprise value without unnecessary escalation.
+            </p>
+            <ul class="practice-card__list">
+              <li>Shareholder, partner &amp; LLC freeze-out disputes</li>
+              <li>Breach of contract &amp; Chapter 93A claims</li>
+              <li>Fiduciary duty &amp; executive employment litigation</li>
+              <li>Emergency injunctive relief &amp; appellate briefs</li>
+            </ul>
+          </article>
+
+          <article class="practice-card" data-reveal>
+            <div class="practice-card__top">
+              <svg class="practice-card__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <rect x="6" y="10" width="28" height="22" rx="1"/>
+                <path d="M14 10V7a2 2 0 012-2h8a2 2 0 012 2v3M6 19h28"/>
+                <circle cx="20" cy="19" r="2.2" fill="currentColor"/>
+              </svg>
+              <span class="practice-card__index">02</span>
+            </div>
+            <h3 class="practice-card__title">Closely Held Business &amp; Corporate</h3>
+            <p class="practice-card__desc">
+              Pragmatic outside general counsel and transactional representation for privately owned companies, professional practices, and lower middle-market acquisitions across New England.
+            </p>
+            <ul class="practice-card__list">
+              <li>Founder, shareholder &amp; buy-sell agreements</li>
+              <li>Asset &amp; equity acquisitions and exits ($2M–$45M)</li>
+              <li>Commercial vendor, licensing &amp; distribution contracts</li>
+              <li>Corporate governance &amp; ownership transitions</li>
+            </ul>
+          </article>
+
+          <article class="practice-card" data-reveal>
+            <div class="practice-card__top">
+              <svg class="practice-card__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <path d="M6 34h28M9 34V12l11-6 11 6v22"/>
+                <path d="M15 34v-9h10v9M14 16h3M23 16h3M14 21h3M23 21h3"/>
+              </svg>
+              <span class="practice-card__index">03</span>
+            </div>
+            <h3 class="practice-card__title">Commercial Real Estate</h3>
+            <p class="practice-card__desc">
+              End-to-end counsel for developers, landlords, institutional tenants, and private investors navigating acquisitions, financing, leasing, and land-use disputes.
+            </p>
+            <ul class="practice-card__list">
+              <li>Acquisitions, dispositions &amp; commercial financing</li>
+              <li>Office, industrial, lab &amp; retail lease negotiation</li>
+              <li>Zoning appeals, easements &amp; boundary litigation</li>
+              <li>Joint venture &amp; real estate syndicate structuring</li>
+            </ul>
+          </article>
+
+          <article class="practice-card" data-reveal>
+            <div class="practice-card__top">
+              <svg class="practice-card__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <path d="M10 6h15l7 7v21H10V6z"/>
+                <path d="M25 6v7h7M15 19h12M15 24h12M15 29h7"/>
+              </svg>
+              <span class="practice-card__index">04</span>
+            </div>
+            <h3 class="practice-card__title">Trusts, Estates &amp; Succession</h3>
+            <p class="practice-card__desc">
+              Thoughtful wealth preservation and multi-generational planning tailored to business owners, executives, and trustees—paired with steady courtroom advocacy when estates are contested.
+            </p>
+            <ul class="practice-card__list">
+              <li>Revocable, irrevocable &amp; dynasty trust design</li>
+              <li>Closely held business succession planning</li>
+              <li>Estate &amp; trust administration and tax coordination</li>
+              <li>Probate &amp; contested fiduciary litigation</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 03: Representative Matters -->
+    <section class="section section--dark" id="matters">
+      <div class="container">
+        <div class="matters-head">
+          <header class="section-header" data-reveal>
+            <span class="eyebrow eyebrow--light">§ 03 — Selected Matters</span>
+            <h2 class="section-title">A record of quiet resolve and decisive outcomes.</h2>
+            <p class="section-lead">
+              Representative engagements illustrating the scope and judgment we bring to high-stakes commercial and private client matters.
+            </p>
+          </header>
+
+          <div class="filter-bar" role="tablist" aria-label="Filter matters by practice area">
+            <button type="button" class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All Matters</button>
+            <button type="button" class="filter-btn" data-filter="litigation" role="tab" aria-selected="false">Litigation</button>
+            <button type="button" class="filter-btn" data-filter="corporate" role="tab" aria-selected="false">Corporate</button>
+            <button type="button" class="filter-btn" data-filter="realestate" role="tab" aria-selected="false">Real Estate</button>
+            <button type="button" class="filter-btn" data-filter="estates" role="tab" aria-selected="false">Trusts &amp; Estates</button>
+          </div>
+        </div>
+
+        <div class="matters-list" id="mattersList">
+          <article class="matter-item" data-category="litigation" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Commercial Litigation</span>
+              <span class="matter-item__venue">Suffolk Superior Court · BLS</span>
+            </div>
+            <h3 class="matter-item__title">Minority Shareholder Freeze-Out &amp; Valuation Resolution</h3>
+            <p class="matter-item__summary">
+              Represented a 35% co-founder of a precision manufacturing company in a closely held corporation fiduciary action. Secured preliminary injunctive relief preserving dividend distributions and negotiated a structured $8.4M buyout without operational disruption.
+            </p>
+          </article>
+
+          <article class="matter-item" data-category="corporate" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Corporate &amp; M&amp;A</span>
+              <span class="matter-item__venue">Sell-Side Transaction</span>
+            </div>
+            <h3 class="matter-item__title">$27M Strategic Sale of Regional Logistics Operator</h3>
+            <p class="matter-item__summary">
+              Served as lead transaction counsel to second-generation owners in the sale of a multi-state cold-chain distributor to a private equity platform, negotiating working-capital collars, seller rollover equity, and long-term facility leases.
+            </p>
+          </article>
+
+          <article class="matter-item" data-category="realestate" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Commercial Real Estate</span>
+              <span class="matter-item__venue">Massachusetts Land Court</span>
+            </div>
+            <h3 class="matter-item__title">Title &amp; Access Easement Defense for Mixed-Use Development</h3>
+            <p class="matter-item__summary">
+              Obtained summary judgment defeating an abutting landowner’s prescriptive easement claim that threatened construction financing for a 94,000 sq. ft. mixed-use redevelopment in Cambridge.
+            </p>
+          </article>
+
+          <article class="matter-item" data-category="estates" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Trusts &amp; Estates</span>
+              <span class="matter-item__venue">Private Client Advisory</span>
+            </div>
+            <h3 class="matter-item__title">Multi-Generational Recapitalization &amp; Estate Plan</h3>
+            <p class="matter-item__summary">
+              Designed a voting/non-voting recapitalization, grantor retained annuity trusts, and updated governance charter enabling a family-owned engineering enterprise to transition operational control to two active children while treating non-active heirs equitably.
+            </p>
+          </article>
+
+          <article class="matter-item" data-category="litigation" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Commercial Litigation</span>
+              <span class="matter-item__venue">U.S. District Court · D. Mass.</span>
+            </div>
+            <h3 class="matter-item__title">Defense of Trade Secret &amp; Non-Solicitation Claims</h3>
+            <p class="matter-item__summary">
+              Defended a boutique biomedical consultancy and two senior principals against an emergency temporary restraining order brought by a national competitor; defeated preliminary injunctive relief on the merits and resolved remaining claims on favorable terms.
+            </p>
+          </article>
+
+          <article class="matter-item" data-category="realestate" data-reveal>
+            <div class="matter-item__meta">
+              <span class="matter-item__tag">Commercial Real Estate</span>
+              <span class="matter-item__venue">Greater Boston Leasing</span>
+            </div>
+            <h3 class="matter-item__title">Anchor Laboratory &amp; Office Lease Portfolio Restructuring</h3>
+            <p class="matter-item__summary">
+              Represented a private real estate partnership in renegotiating four commercial leases totaling 140,000 sq. ft., securing enhanced letter-of-credit protections, sublease recapture rights, and tenant-improvement cap controls.
+            </p>
+          </article>
+        </div>
+
+        <p class="matters-disclaimer">
+          Prior results do not guarantee a similar outcome. Every legal matter depends on its distinct facts and applicable law.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 04: Attorneys -->
+    <section class="section section--paper" id="attorneys">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="eyebrow">§ 04 — Leadership</span>
+          <h2 class="section-title">Counsel you know by name.</h2>
+          <p class="section-lead">
+            Our partners spent their early careers at leading Boston trial and corporate firms before uniting to offer senior-level representation in a focused boutique setting.
+          </p>
+        </header>
+
+        <div class="attorneys-grid">
+          <!-- Attorney 1 -->
+          <article class="attorney-card" data-reveal>
+            <div class="attorney-card__plate" aria-hidden="true">
+              <svg viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="212" height="172" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="1"/>
+                <rect x="22" y="22" width="196" height="156" stroke="#F6F2EA" stroke-opacity="0.1" stroke-width="0.9"/>
+                <circle cx="120" cy="100" r="50" stroke="#D4B47C" stroke-opacity="0.5" stroke-width="1.1"/>
+                <circle cx="120" cy="100" r="42" stroke="#D4B47C" stroke-opacity="0.2" stroke-dasharray="2 3" stroke-width="0.9"/>
+                <text x="120" y="112" text-anchor="middle" fill="#FCFBF8" font-family="Cormorant Garamond, Georgia, serif" font-size="36" font-weight="500" letter-spacing="4">EH</text>
+                <text x="120" y="166" text-anchor="middle" fill="#D4B47C" font-family="Inter, sans-serif" font-size="8.5" letter-spacing="3">TRIAL &amp; APPELLATE</text>
+              </svg>
+            </div>
+            <div class="attorney-card__body">
+              <span class="attorney-card__role">Founding Partner</span>
+              <h3 class="attorney-card__name">Eleanor Harrow</h3>
+              <p class="attorney-card__focus">
+                Commercial litigation, closely held shareholder disputes, fiduciary actions, and appellate advocacy.
+              </p>
+              <div class="attorney-card__edu">J.D., Harvard Law School · Former Law Clerk, Mass. SJC</div>
+              <button type="button" class="btn btn--outline-dark btn--sm attorney-card__btn" data-attorney="harrow">
+                View Credentials
+              </button>
+            </div>
+          </article>
+
+          <!-- Attorney 2 -->
+          <article class="attorney-card" data-reveal>
+            <div class="attorney-card__plate" aria-hidden="true">
+              <svg viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="212" height="172" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="1"/>
+                <rect x="22" y="22" width="196" height="156" stroke="#F6F2EA" stroke-opacity="0.1" stroke-width="0.9"/>
+                <circle cx="120" cy="100" r="50" stroke="#D4B47C" stroke-opacity="0.5" stroke-width="1.1"/>
+                <circle cx="120" cy="100" r="42" stroke="#D4B47C" stroke-opacity="0.2" stroke-dasharray="2 3" stroke-width="0.9"/>
+                <text x="120" y="112" text-anchor="middle" fill="#FCFBF8" font-family="Cormorant Garamond, Georgia, serif" font-size="36" font-weight="500" letter-spacing="4">DM</text>
+                <text x="120" y="166" text-anchor="middle" fill="#D4B47C" font-family="Inter, sans-serif" font-size="8.5" letter-spacing="3">CORPORATE &amp; M&amp;A</text>
+              </svg>
+            </div>
+            <div class="attorney-card__body">
+              <span class="attorney-card__role">Founding Partner</span>
+              <h3 class="attorney-card__name">David Mercer</h3>
+              <p class="attorney-card__focus">
+                Closely held business counsel, lower middle-market acquisitions, governance, and commercial contracts.
+              </p>
+              <div class="attorney-card__edu">J.D., University of Virginia School of Law</div>
+              <button type="button" class="btn btn--outline-dark btn--sm attorney-card__btn" data-attorney="mercer">
+                View Credentials
+              </button>
+            </div>
+          </article>
+
+          <!-- Attorney 3 -->
+          <article class="attorney-card" data-reveal>
+            <div class="attorney-card__plate" aria-hidden="true">
+              <svg viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="212" height="172" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="1"/>
+                <rect x="22" y="22" width="196" height="156" stroke="#F6F2EA" stroke-opacity="0.1" stroke-width="0.9"/>
+                <circle cx="120" cy="100" r="50" stroke="#D4B47C" stroke-opacity="0.5" stroke-width="1.1"/>
+                <circle cx="120" cy="100" r="42" stroke="#D4B47C" stroke-opacity="0.2" stroke-dasharray="2 3" stroke-width="0.9"/>
+                <text x="120" y="112" text-anchor="middle" fill="#FCFBF8" font-family="Cormorant Garamond, Georgia, serif" font-size="36" font-weight="500" letter-spacing="4">NO</text>
+                <text x="120" y="166" text-anchor="middle" fill="#D4B47C" font-family="Inter, sans-serif" font-size="8.5" letter-spacing="3">REAL ESTATE</text>
+              </svg>
+            </div>
+            <div class="attorney-card__body">
+              <span class="attorney-card__role">Partner</span>
+              <h3 class="attorney-card__name">Nadia Okafor</h3>
+              <p class="attorney-card__focus">
+                Commercial acquisitions, leasing, joint ventures, zoning appeals, and Land Court title litigation.
+              </p>
+              <div class="attorney-card__edu">J.D., Boston College Law School</div>
+              <button type="button" class="btn btn--outline-dark btn--sm attorney-card__btn" data-attorney="okafor">
+                View Credentials
+              </button>
+            </div>
+          </article>
+
+          <!-- Attorney 4 -->
+          <article class="attorney-card" data-reveal>
+            <div class="attorney-card__plate" aria-hidden="true">
+              <svg viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="212" height="172" stroke="#D4B47C" stroke-opacity="0.35" stroke-width="1"/>
+                <rect x="22" y="22" width="196" height="156" stroke="#F6F2EA" stroke-opacity="0.1" stroke-width="0.9"/>
+                <circle cx="120" cy="100" r="50" stroke="#D4B47C" stroke-opacity="0.5" stroke-width="1.1"/>
+                <circle cx="120" cy="100" r="42" stroke="#D4B47C" stroke-opacity="0.2" stroke-dasharray="2 3" stroke-width="0.9"/>
+                <text x="120" y="112" text-anchor="middle" fill="#FCFBF8" font-family="Cormorant Garamond, Georgia, serif" font-size="36" font-weight="500" letter-spacing="4">TC</text>
+                <text x="120" y="166" text-anchor="middle" fill="#D4B47C" font-family="Inter, sans-serif" font-size="8.5" letter-spacing="3">TRUSTS &amp; ESTATES</text>
+              </svg>
+            </div>
+            <div class="attorney-card__body">
+              <span class="attorney-card__role">Partner</span>
+              <h3 class="attorney-card__name">Thomas Callahan</h3>
+              <p class="attorney-card__focus">
+                Estate planning, family business succession, trust administration, and fiduciary representation.
+              </p>
+              <div class="attorney-card__edu">J.D., Boston University · LL.M. in Taxation</div>
+              <button type="button" class="btn btn--outline-dark btn--sm attorney-card__btn" data-attorney="callahan">
+                View Credentials
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 05: Client Remarks -->
+    <section class="section section--warm" id="remarks">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="eyebrow">§ 05 — Client Perspectives</span>
+          <h2 class="section-title">Trusted by owners and fiduciaries across New England.</h2>
+        </header>
+
+        <div class="remarks-grid">
+          <figure class="remark-card" data-reveal>
+            <div>
+              <div class="remark-card__mark" aria-hidden="true">“</div>
+              <blockquote class="remark-card__quote" style="margin:0 0 1.5rem;">
+                When a former partner threatened to derail our company, Eleanor didn’t just recite legal theory—she mapped out three pragmatic paths on day one and guided us to a clean buyout in four months.
+              </blockquote>
+            </div>
+            <figcaption>
+              <div class="remark-card__author">Managing Principal</div>
+              <div class="remark-card__context">Precision Manufacturing Client · Middlesex County</div>
+            </figcaption>
+          </figure>
+
+          <figure class="remark-card" data-reveal>
+            <div>
+              <div class="remark-card__mark" aria-hidden="true">“</div>
+              <blockquote class="remark-card__quote" style="margin:0 0 1.5rem;">
+                We moved from a 400-lawyer firm to Harrow &amp; Mercer six years ago. Our turnaround times improved immediately, our legal spend became predictable, and David knows every nuance of our operating agreements.
+              </blockquote>
+            </div>
+            <figcaption>
+              <div class="remark-card__author">Chief Executive Officer</div>
+              <div class="remark-card__context">Regional Distribution Company · Greater Boston</div>
+            </figcaption>
+          </figure>
+
+          <figure class="remark-card" data-reveal>
+            <div>
+              <div class="remark-card__mark" aria-hidden="true">“</div>
+              <blockquote class="remark-card__quote" style="margin:0 0 1.5rem;">
+                Nadia and Thomas worked seamlessly with our accountants to restructure our commercial holdings and family trusts. Their judgment kept a complex transition calm, clear, and harmonious.
+              </blockquote>
+            </div>
+            <figcaption>
+              <div class="remark-card__author">Family Trustee</div>
+              <div class="remark-card__context">Real Estate &amp; Private Wealth Client · Brookline</div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 06: Consultation & Contact -->
+    <section class="section section--paper" id="contact">
+      <div class="container">
+        <header class="section-header" data-reveal>
+          <span class="eyebrow">§ 06 — Inquiries</span>
+          <h2 class="section-title">Begin a confidential conversation.</h2>
+          <p class="section-lead">
+            Tell us briefly about the matter you are navigating. A partner will review your inquiry for potential conflicts and follow up directly within one business day.
+          </p>
+        </header>
+
+        <div class="contact-grid">
+          <aside class="office-card" data-reveal>
+            <h3 class="office-card__title">Boston Chambers</h3>
+            <ul class="office-details">
+              <li>
+                <span class="office-details__label">Office Address</span>
+                <span class="office-details__value">
+                  One Beacon Street, Suite 1420<br />
+                  Boston, Massachusetts 02108
+                </span>
+              </li>
+              <li>
+                <span class="office-details__label">Telephone</span>
+                <span class="office-details__value">
+                  <a href="tel:+16175550194">(617) 555-0194</a>
+                </span>
+              </li>
+              <li>
+                <span class="office-details__label">Electronic Mail</span>
+                <span class="office-details__value">
+                  <a href="mailto:counsel@harrowmercer.example">counsel@harrowmercer.example</a>
+                </span>
+              </li>
+              <li>
+                <span class="office-details__label">Hours &amp; Access</span>
+                <span class="office-details__value">
+                  Monday – Friday, 8:30 AM – 6:00 PM ET<br />
+                  Steps from Park Street &amp; Government Center stations; validated garage parking available.
+                </span>
+              </li>
+            </ul>
+            <p class="office-notice">
+              <strong>Ethical Notice:</strong> Submitting an inquiry through this website or via email does not create an attorney-client relationship. Please do not transmit confidential, proprietary, or time-sensitive information until we have completed a conflict check and executed a written engagement letter.
+            </p>
+          </aside>
+
+          <div class="form-panel" data-reveal>
+            <h3 class="form-panel__title">Request an Initial Consultation</h3>
+            <p class="form-panel__sub">
+              Please provide general background only so we may route your inquiry to the appropriate partner.
+            </p>
+
+            <form id="consultationForm" novalidate>
+              <div class="form-grid">
+                <div class="field" id="fieldName">
+                  <label class="field__label" for="fullName">Full Name *</label>
+                  <input class="field__input" type="text" id="fullName" name="fullName" autocomplete="name" required placeholder="e.g., Margaret Ellis" />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+
+                <div class="field" id="fieldEmail">
+                  <label class="field__label" for="email">Email Address *</label>
+                  <input class="field__input" type="email" id="email" name="email" autocomplete="email" required placeholder="name@company.com" />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+
+                <div class="field" id="fieldPhone">
+                  <label class="field__label" for="phone">Telephone</label>
+                  <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(617) 555-0100" />
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+
+                <div class="field" id="fieldArea">
+                  <label class="field__label" for="practiceArea">Practice Area *</label>
+                  <select class="field__select" id="practiceArea" name="practiceArea" required>
+                    <option value="">Select an area of law</option>
+                    <option value="Commercial Litigation & Disputes">Commercial Litigation &amp; Disputes</option>
+                    <option value="Closely Held Business & Corporate">Closely Held Business &amp; Corporate</option>
+                    <option value="Commercial Real Estate">Commercial Real Estate</option>
+                    <option value="Trusts, Estates & Succession">Trusts, Estates &amp; Succession</option>
+                    <option value="General / Unsure">General Inquiry / Unsure</option>
+                  </select>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+
+                <div class="field field--full" id="fieldOverview">
+                  <label class="field__label" for="overview">General Matter Overview *</label>
+                  <textarea class="field__textarea" id="overview" name="overview" required placeholder="Briefly describe the nature of the dispute, transaction, or planning need (please omit confidential details)."></textarea>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+
+                <div class="field field--full" id="fieldConsent">
+                  <label class="checkbox-row">
+                    <input type="checkbox" id="consent" name="consent" required />
+                    <span>
+                      I understand that submitting this inquiry does not create an attorney-client relationship and that no confidential information should be shared prior to a formal conflict check.
+                    </span>
+                  </label>
+                  <span class="field__error" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn--dark">Submit Consultation Request</button>
+                <span class="form-response-note">Reviewed directly by a firm partner.</span>
+              </div>
+            </form>
+
+            <div class="form-confirmation" id="formConfirmation" role="status" aria-live="polite">
+              <h4 class="form-confirmation__title">Inquiry Received</h4>
+              <p id="confirmationText" style="font-size:0.93rem;color:var(--ink-800);"></p>
+              <span class="form-confirmation__ref" id="confirmationRef"></span>
+              <div style="margin-top:1.25rem;">
+                <button type="button" class="btn btn--outline-dark btn--sm" id="resetFormBtn">Submit Another Inquiry</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="brand" aria-label="Harrow and Mercer LLP">
+            <svg class="brand__mark" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="1.5" y="1.5" width="41" height="41" stroke="#D4B47C" stroke-width="1.2"/>
+              <path d="M13 13V31M13 22H20M20 13V31" stroke="#FCFBF8" stroke-width="1.6" stroke-linecap="square"/>
+              <path d="M24 31V13L28 21.5L32 13V31" stroke="#D4B47C" stroke-width="1.6" stroke-linecap="square"/>
+            </svg>
+            <span class="brand__text">
+              <span class="brand__name">Harrow &amp; Mercer</span>
+              <span class="brand__sub">Counselors at Law · LLP</span>
+            </span>
+          </a>
+          <p class="footer__summary">
+            Partner-led civil litigation, closely held business advisory, commercial real estate, and trusts &amp; estates counsel from Beacon Hill.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Practice Areas</h4>
+          <ul class="footer__list">
+            <li><a href="#areas">Commercial Litigation</a></li>
+            <li><a href="#areas">Business &amp; Corporate</a></li>
+            <li><a href="#areas">Commercial Real Estate</a></li>
+            <li><a href="#areas">Trusts, Estates &amp; Succession</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">The Firm</h4>
+          <ul class="footer__list">
+            <li><a href="#practice">Our Philosophy</a></li>
+            <li><a href="#matters">Representative Matters</a></li>
+            <li><a href="#attorneys">Attorneys</a></li>
+            <li><a href="#contact">Schedule Consultation</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Boston Office</h4>
+          <ul class="footer__list">
+            <li>One Beacon Street, Suite 1420</li>
+            <li>Boston, MA 02108</li>
+            <li><a href="tel:+16175550194">(617) 555-0194</a></li>
+            <li><a href="mailto:counsel@harrowmercer.example">counsel@harrowmercer.example</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom__row">
+          <span>&copy; 2026 Harrow &amp; Mercer LLP. All rights reserved.</span>
+          <span>Attorney Advertising · Massachusetts Supreme Judicial Court Rule 3:07</span>
+        </div>
+        <p style="margin:0;">
+          This website is for general informational purposes only and does not constitute legal advice. Viewing these materials or contacting Harrow &amp; Mercer LLP does not establish an attorney-client relationship. Prior results do not guarantee a similar outcome.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Attorney Biography Modal -->
+  <div class="modal-backdrop" id="bioModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalName" aria-hidden="true">
+    <div class="modal" id="bioModal" tabindex="-1">
+      <button type="button" class="modal__close" id="modalCloseBtn" aria-label="Close biography modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal__role" id="modalRole"></div>
+      <h3 class="modal__name" id="modalName"></h3>
+      <p class="modal__bio" id="modalBio"></p>
+      <div class="modal__meta-grid">
+        <div>
+          <h4 class="modal__meta-heading">Education</h4>
+          <ul class="modal__list" id="modalEducation"></ul>
+        </div>
+        <div>
+          <h4 class="modal__meta-heading">Bar Admissions</h4>
+          <ul class="modal__list" id="modalAdmissions"></ul>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--paper-200);">
+        <span id="modalContact" style="font-size:0.85rem;color:var(--slate-600);"></span>
+        <a href="#contact" class="btn btn--dark btn--sm" id="modalConsultCta">Inquire With This Partner</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      document.documentElement.classList.add('js-ready');
+
+      /* ----------------------------------------------------------------------
+         Sticky Header Elevation
+         ---------------------------------------------------------------------- */
+      const siteHeader = document.getElementById('siteHeader');
+      function updateHeader() {
+        if (window.scrollY > 20) {
+          siteHeader.classList.add('is-scrolled');
+        } else {
+          siteHeader.classList.remove('is-scrolled');
+        }
+      }
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      updateHeader();
+
+      /* ----------------------------------------------------------------------
+         Mobile Navigation Drawer
+         ---------------------------------------------------------------------- */
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+
+      function setMenuOpen(isOpen) {
+        mobileDrawer.classList.toggle('is-open', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+      }
+
+      menuToggle.addEventListener('click', function () {
+        const isOpen = mobileDrawer.classList.contains('is-open');
+        setMenuOpen(!isOpen);
+      });
+
+      mobileDrawer.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          setMenuOpen(false);
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         Scroll Reveal Observer
+         ---------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
+        );
+        revealEls.forEach(function (el) {
+          observer.observe(el);
+        });
+      } else {
+        revealEls.forEach(function (el) {
+          el.classList.add('is-visible');
+        });
+      }
+
+      /* ----------------------------------------------------------------------
+         Representative Matters Filter
+         ---------------------------------------------------------------------- */
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const matterItems = document.querySelectorAll('.matter-item');
+
+      filterButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const selected = btn.getAttribute('data-filter');
+
+          filterButtons.forEach(function (b) {
+            const active = b === btn;
+            b.classList.toggle('is-active', active);
+            b.setAttribute('aria-selected', String(active));
+          });
+
+          matterItems.forEach(function (item) {
+            const category = item.getAttribute('data-category');
+            const show = selected === 'all' || category === selected;
+            item.classList.toggle('is-hidden', !show);
+            if (show) {
+              item.classList.add('is-visible');
+            }
+          });
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         Attorney Biography Modal
+         ---------------------------------------------------------------------- */
+      const attorneyProfiles = {
+        harrow: {
+          role: 'Founding Partner · Litigation Chair',
+          name: 'Eleanor Harrow',
+          bio: 'Eleanor Harrow has tried complex business, shareholder, and fiduciary cases in Massachusetts state and federal courts for more than twenty-two years. Prior to co-founding Harrow & Mercer in 2008, she was a litigation partner at a prominent Boston firm and clerked for an Associate Justice of the Massachusetts Supreme Judicial Court. Clients rely on her measured courtroom presence and candid early case assessments.',
+          education: [
+            'J.D., Harvard Law School, cum laude',
+            'B.A., Williams College, magna cum laude'
+          ],
+          admissions: [
+            'Commonwealth of Massachusetts',
+            'U.S. District Court, District of Massachusetts',
+            'U.S. Court of Appeals, First Circuit'
+          ],
+          contact: 'Direct: (617) 555-0194 ext. 101 · eharrow@harrowmercer.example',
+          areaValue: 'Commercial Litigation & Disputes'
+        },
+        mercer: {
+          role: 'Founding Partner · Corporate & M&A Chair',
+          name: 'David Mercer',
+          bio: 'David Mercer serves as trusted outside general counsel to closely held companies, family enterprises, and founders throughout New England. He advises boards and owners through lower middle-market acquisitions, divestitures, commercial contracting, and ownership restructurings, bringing practical deal discipline rather than unnecessary friction.',
+          education: [
+            'J.D., University of Virginia School of Law',
+            'B.S., Economics, Boston College'
+          ],
+          admissions: [
+            'Commonwealth of Massachusetts',
+            'State of New Hampshire'
+          ],
+          contact: 'Direct: (617) 555-0194 ext. 102 · dmercer@harrowmercer.example',
+          areaValue: 'Closely Held Business & Corporate'
+        },
+        okafor: {
+          role: 'Partner · Commercial Real Estate Chair',
+          name: 'Nadia Okafor',
+          bio: 'Nadia Okafor concentrates her practice on commercial real estate transactions, complex leasing, and land-use litigation. She represents private developers, life-science landlords, and institutional investors in acquisitions, financing, joint ventures, and contested Massachusetts Land Court matters.',
+          education: [
+            'J.D., Boston College Law School, Order of the Coif',
+            'B.A., Brown University'
+          ],
+          admissions: [
+            'Commonwealth of Massachusetts',
+            'State of Rhode Island',
+            'U.S. District Court, District of Massachusetts'
+          ],
+          contact: 'Direct: (617) 555-0194 ext. 103 · nokafor@harrowmercer.example',
+          areaValue: 'Commercial Real Estate'
+        },
+        callahan: {
+          role: 'Partner · Trusts & Estates Chair',
+          name: 'Thomas Callahan',
+          bio: 'Thomas Callahan advises business owners, executives, and fiduciaries on estate planning, wealth transfer taxation, closely held business succession, and trust administration. Holding an LL.M. in Taxation, he coordinates closely with clients’ wealth advisors and CPAs to craft durable, tax-efficient plans.',
+          education: [
+            'LL.M. in Taxation, Boston University School of Law',
+            'J.D., Boston University School of Law',
+            'B.A., College of the Holy Cross'
+          ],
+          admissions: [
+            'Commonwealth of Massachusetts',
+            'State of New Hampshire',
+            'U.S. Tax Court'
+          ],
+          contact: 'Direct: (617) 555-0194 ext. 104 · tcallahan@harrowmercer.example',
+          areaValue: 'Trusts, Estates & Succession'
+        }
+      };
+
+      const backdrop = document.getElementById('bioModalBackdrop');
+      const modalEl = document.getElementById('bioModal');
+      const closeModalBtn = document.getElementById('modalCloseBtn');
+      const modalConsultCta = document.getElementById('modalConsultCta');
+      const practiceAreaSelect = document.getElementById('practiceArea');
+      let lastFocusedBtn = null;
+      let activeProfile = null;
+
+      function populateList(el, items) {
+        el.innerHTML = '';
+        items.forEach(function (text) {
+          const li = document.createElement('li');
+          li.textContent = text;
+          el.appendChild(li);
+        });
+      }
+
+      function openBioModal(key, triggerBtn) {
+        const profile = attorneyProfiles[key];
+        if (!profile) return;
+        activeProfile = profile;
+        lastFocusedBtn = triggerBtn;
+
+        document.getElementById('modalRole').textContent = profile.role;
+        document.getElementById('modalName').textContent = profile.name;
+        document.getElementById('modalBio').textContent = profile.bio;
+        document.getElementById('modalContact').textContent = profile.contact;
+        populateList(document.getElementById('modalEducation'), profile.education);
+        populateList(document.getElementById('modalAdmissions'), profile.admissions);
+
+        backdrop.classList.add('is-open');
+        backdrop.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modalEl.focus();
+      }
+
+      function closeBioModal() {
+        backdrop.classList.remove('is-open');
+        backdrop.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (lastFocusedBtn) {
+          lastFocusedBtn.focus();
+        }
+      }
+
+      document.querySelectorAll('[data-attorney]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          openBioModal(btn.getAttribute('data-attorney'), btn);
+        });
+      });
+
+      closeModalBtn.addEventListener('click', closeBioModal);
+
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) {
+          closeBioModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
+          closeBioModal();
+        }
+      });
+
+      modalConsultCta.addEventListener('click', function () {
+        if (activeProfile && practiceAreaSelect) {
+          practiceAreaSelect.value = activeProfile.areaValue;
+        }
+        closeBioModal();
+      });
+
+      /* ----------------------------------------------------------------------
+         Consultation Form Validation & Confirmation
+         ---------------------------------------------------------------------- */
+      const form = document.getElementById('consultationForm');
+      const confirmation = document.getElementById('formConfirmation');
+      const confirmationText = document.getElementById('confirmationText');
+      const confirmationRef = document.getElementById('confirmationRef');
+      const resetFormBtn = document.getElementById('resetFormBtn');
+
+      function setFieldError(fieldId, message) {
+        const wrapper = document.getElementById(fieldId);
+        const errorSpan = wrapper.querySelector('.field__error');
+        wrapper.classList.toggle('has-error', Boolean(message));
+        errorSpan.textContent = message || '';
+      }
+
+      function validateEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const area = document.getElementById('practiceArea').value;
+        const overview = document.getElementById('overview').value.trim();
+        const consent = document.getElementById('consent').checked;
+
+        let valid = true;
+
+        if (fullName.length < 2) {
+          setFieldError('fieldName', 'Please enter your full name.');
+          valid = false;
+        } else {
+          setFieldError('fieldName', '');
+        }
+
+        if (!validateEmail(email)) {
+          setFieldError('fieldEmail', 'Please enter a valid email address.');
+          valid = false;
+        } else {
+          setFieldError('fieldEmail', '');
+        }
+
+        if (!area) {
+          setFieldError('fieldArea', 'Please select a practice area.');
+          valid = false;
+        } else {
+          setFieldError('fieldArea', '');
+        }
+
+        if (overview.length < 15) {
+          setFieldError('fieldOverview', 'Please provide a brief overview (at least 15 characters).');
+          valid = false;
+        } else {
+          setFieldError('fieldOverview', '');
+        }
+
+        if (!consent) {
+          setFieldError('fieldConsent', 'Please acknowledge the pre-engagement notice above.');
+          valid = false;
+        } else {
+          setFieldError('fieldConsent', '');
+        }
+
+        if (!valid) {
+          const firstError = form.querySelector('.has-error input, .has-error select, .has-error textarea');
+          if (firstError) firstError.focus();
+          return;
+        }
+
+        const refCode = 'HM-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+        confirmationText.textContent =
+          'Thank you, ' + fullName + '. Your consultation inquiry regarding ' + area +
+          ' has been logged for conflict review. A partner will contact you at ' + email +
+          ' within one business day.';
+        confirmationRef.textContent = 'INQUIRY REF: ' + refCode;
+
+        form.style.display = 'none';
+        confirmation.classList.add('is-visible');
+      });
+
+      resetFormBtn.addEventListener('click', function () {
+        form.reset();
+        ['fieldName', 'fieldEmail', 'fieldArea', 'fieldOverview', 'fieldConsent'].forEach(function (id) {
+          setFieldError(id, '');
+        });
+        confirmation.classList.remove('is-visible');
+        form.style.display = 'block';
+        document.getElementById('fullName').focus();
+      });
+    })();
+  </script>
+</body>
+</html>

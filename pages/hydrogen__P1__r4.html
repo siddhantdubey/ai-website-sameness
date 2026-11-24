@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadence — Project management built for momentum</title>
+  <meta name="description" content="Plan roadmaps, triage issues, and ship complex projects with a keyboard-first project management workspace." />
+  <style>
+    :root {
+      --bg: #FBFBF9;
+      --bg-subtle: #F3F2EE;
+      --surface: #FFFFFF;
+      --surface-hover: #F8F7F4;
+      --ink: #111315;
+      --ink-muted: #555B64;
+      --ink-faint: #878D96;
+      --border: #E5E3DC;
+      --border-strong: #D0CDC3;
+      --accent: #E04F16;
+      --accent-hover: #C8420E;
+      --accent-soft: #FDF0EA;
+      --accent-ring: rgba(224, 79, 22, 0.22);
+      --blue: #1D63DC;
+      --blue-soft: #EEF4FF;
+      --green: #147A50;
+      --green-soft: #EAF7F1;
+      --amber: #A86408;
+      --amber-soft: #FEF5E6;
+      --purple: #6439D8;
+      --purple-soft: #F3EEFE;
+      --dark-bg: #111315;
+      --dark-surface: #1A1D21;
+      --dark-border: #2B2F36;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+      --shadow-xs: 0 1px 2px rgba(17, 19, 21, 0.04);
+      --shadow-sm: 0 2px 8px rgba(17, 19, 21, 0.05), 0 1px 2px rgba(17, 19, 21, 0.04);
+      --shadow-md: 0 12px 32px -8px rgba(17, 19, 21, 0.09), 0 2px 6px rgba(17, 19, 21, 0.04);
+      --shadow-lg: 0 24px 64px -12px rgba(17, 19, 21, 0.14), 0 4px 16px rgba(17, 19, 21, 0.05);
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      background-color: var(--bg);
+      line-height: 1.55;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Subtle architectural grid background on hero */
+    .hero-backdrop {
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(224, 79, 22, 0.08), transparent 65%),
+        linear-gradient(to right, rgba(17, 19, 21, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(17, 19, 21, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    /* Navigation */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(251, 251, 249, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--ink);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cmd-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-muted);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+
+    .cmd-trigger:hover {
+      border-color: var(--border-strong);
+      color: var(--ink);
+      box-shadow: var(--shadow-xs);
+    }
+
+    kbd {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--ink-muted);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(224, 79, 22, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-dark {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-dark:hover {
+      background: #23272C;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-muted);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-subtle);
+      color: var(--ink);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--ink);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
+    }
+
+    .btn-lg {
+      padding: 12px 22px;
+      font-size: 15px;
+      border-radius: var(--radius-md);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .mobile-drawer {
+      display: none;
+      padding: 16px 24px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer a {
+      display: block;
+      padding: 10px 0;
+      font-weight: 500;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 64px;
+      text-align: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 8px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .hero h1 {
+      margin: 0 auto 20px;
+      max-width: 780px;
+      font-size: clamp(2.4rem, 5vw, 4.1rem);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .hero-sub {
+      margin: 0 auto 32px;
+      max-width: 600px;
+      font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin-bottom: 48px;
+    }
+
+    /* Interactive Workspace Preview */
+    .app-frame {
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      background: #FAF9F6;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .app-crumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+      margin-right: 6px;
+    }
+
+    .window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border-strong);
+    }
+
+    .sprint-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .app-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--bg-subtle);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 11px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .seg-btn[aria-selected="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .filter-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pill.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      font-weight: 600;
+    }
+
+    .quick-add-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-wrap: wrap;
+    }
+
+    .quick-add-form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .quick-input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 11px;
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .quick-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+
+    .quick-select {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 9px;
+      font-size: 12.5px;
+      background: var(--surface);
+      color: var(--ink-muted);
+    }
+
+    .workspace-hint {
+      font-size: 12px;
+      color: var(--ink-faint);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Board View */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 14px;
+      padding: 18px;
+      background: #F6F5F1;
+      overflow-x: auto;
+      min-height: 390px;
+    }
+
+    .board-col {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .board-col.drag-over {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 4px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .col-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-backlog { background: #9CA3AF; }
+    .dot-progress { background: var(--blue); }
+    .dot-review { background: var(--amber); }
+    .dot-done { background: var(--green); }
+
+    .col-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      background: var(--bg-subtle);
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      box-shadow: var(--shadow-xs);
+      cursor: grab;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+    }
+
+    .task-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .task-card.dragging {
+      opacity: 0.5;
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      font-weight: 500;
+    }
+
+    .priority-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .prio-Urgent { background: #FDECEC; color: #C02626; }
+    .prio-High { background: var(--accent-soft); color: var(--accent-hover); }
+    .prio-Normal { background: var(--blue-soft); color: var(--blue); }
+
+    .task-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0 0 10px;
+      line-height: 1.38;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .tag-chip {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--bg-subtle);
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .task-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .advance-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink-muted);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .advance-btn:hover {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* List View */
+    .list-view {
+      display: none;
+      overflow-x: auto;
+      min-height: 390px;
+      background: var(--surface);
+    }
+
+    .list-view.active { display: block; }
+    .board-grid.hidden { display: none; }
+
+    .issue-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .issue-table th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-faint);
+      background: #FAF9F6;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .issue-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .issue-table tr:hover td {
+      background: var(--surface-hover);
+    }
+
+    .status-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .status-pill-btn:hover {
+      border-color: var(--border-strong);
+    }
+
+    /* Timeline View */
+    .timeline-view {
+      display: none;
+      padding: 20px;
+      min-height: 390px;
+      overflow-x: auto;
+      background: var(--surface);
+    }
+
+    .timeline-view.active { display: block; }
+
+    .timeline-grid {
+      min-width: 720px;
+    }
+
+    .timeline-header {
+      display: grid;
+      grid-template-columns: 230px repeat(6, 1fr);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-faint);
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 230px repeat(6, 1fr);
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .timeline-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 12px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .timeline-track {
+      grid-column: 2 / -1;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      position: relative;
+      align-items: center;
+    }
+
+    .gantt-bar {
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+
+    .gantt-bar:hover {
+      filter: brightness(0.96);
+    }
+
+    /* Logos & Metrics Strip */
+    .proof-section {
+      padding: 36px 0 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-caption {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-faint);
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 36px 52px;
+      opacity: 0.72;
+      margin-bottom: 40px;
+    }
+
+    .logo-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .metric-cell {
+      padding: 22px 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .metric-cell:last-child { border-right: none; }
+
+    .metric-val {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* Section Headings */
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.85rem, 3.2vw, 2.65rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      font-size: 17px;
+      color: var(--ink-muted);
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .bento-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      box-shadow: var(--shadow-xs);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+
+    .bento-card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
+
+    .bento-card p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    .mini-window {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .cmd-preview-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .cmd-preview-row.active {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
+      font-weight: 600;
+    }
+
+    .sync-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin-bottom: 8px;
+    }
+
+    .sync-row:last-child { margin-bottom: 0; }
+
+    /* Workflow Interactive Tabs */
+    .workflow-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .wf-step {
+      text-align: left;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .wf-step:hover {
+      background: var(--bg);
+    }
+
+    .wf-step.active {
+      background: var(--bg);
+      border-color: var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .wf-num {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .wf-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .wf-desc {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    .wf-stage {
+      background: var(--dark-bg);
+      color: #F4F4F2;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wf-stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--dark-border);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #9CA3AF;
+    }
+
+    .wf-panel { display: none; }
+    .wf-panel.active { display: block; animation: fadeIn 0.22s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Testimonials */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .quote-text {
+      font-size: 15.5px;
+      line-height: 1.6;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Pricing */
+    .billing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .save-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .price-card.featured {
+      border-color: var(--ink);
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: -11px;
+      right: 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    .price-amount {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 14px 0 6px;
+    }
+
+    .price-amount span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      letter-spacing: 0;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    /* FAQ */
+    .faq-list {
+      max-width: 780px;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      font-size: 16.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .faq-icon {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--ink-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-btn[aria-expanded="true"] .faq-icon {
+      transform: rotate(45deg);
+      color: var(--accent);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 0 20px;
+      font-size: 15px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    .faq-answer.open {
+      display: block;
+    }
+
+    /* Final CTA Banner */
+    .cta-banner {
+      background: var(--dark-bg);
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 56px 48px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 32px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .cta-banner p {
+      margin: 0;
+      color: #A6ACB5;
+      font-size: 16px;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cta-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 13px 15px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--dark-border);
+      background: var(--dark-surface);
+      color: #fff;
+      font-size: 14.5px;
+    }
+
+    .cta-input::placeholder { color: #7C838E; }
+
+    .cta-status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #5CE0A4;
+      min-height: 20px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 56px 0 40px;
+      margin-top: 88px;
+      background: #F6F5F1;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 44px;
+    }
+
+    .footer-col h4 {
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .footer-col a:hover { color: var(--ink); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--ink-faint);
+    }
+
+    .status-operational {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .green-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* Modals & Drawers */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 19, 21, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 80px 16px 24px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .cmd-modal {
+      width: 100%;
+      max-width: 560px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .cmd-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-search-input {
+      flex: 1;
+      border: none;
+      font-size: 15px;
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .cmd-search-input:focus { outline: none; }
+
+    .cmd-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .cmd-item {
+      width: 100%;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .cmd-item:hover, .cmd-item.selected {
+      background: var(--bg-subtle);
+    }
+
+    .issue-modal {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: #fff;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 120;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .span-7, .span-5, .span-6 { grid-column: span 12; }
+      .workflow-wrap { grid-template-columns: 1fr; }
+      .quotes-grid, .pricing-grid { grid-template-columns: 1fr; }
+      .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+      .metric-cell:nth-child(2) { border-right: none; }
+      .metric-cell:nth-child(1), .metric-cell:nth-child(2) { border-bottom: 1px solid var(--border); }
+      .cta-banner { grid-template-columns: 1fr; padding: 36px 28px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links, .nav-actions .cmd-trigger, .nav-actions .btn-ghost { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+      .hero { padding: 48px 0 40px; }
+      .section { padding: 60px 0; }
+      .metrics-strip { grid-template-columns: 1fr; }
+      .metric-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .metric-cell:last-child { border-bottom: none; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="Cadence Home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="3" width="12" height="2.4" rx="1.2" fill="currentColor"/>
+            <rect x="2" y="6.8" width="8.5" height="2.4" rx="1.2" fill="#E04F16"/>
+            <rect x="2" y="10.6" width="10.5" height="2.4" rx="1.2" fill="currentColor"/>
+          </svg>
+        </span>
+        Cadence
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#workspace">Product</a></li>
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="cmd-trigger" id="openCmdBtn" type="button" aria-label="Open command palette">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span>Quick jump</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <button class="btn btn-ghost" type="button" id="signInDemoBtn">Sign in</button>
+        <a href="#get-started" class="btn btn-primary">Start free</a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 5H17M3 10H17M3 15H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <a href="#workspace">Product</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <div style="margin-top: 14px; display: flex; gap: 10px;">
+        <a href="#get-started" class="btn btn-primary" style="flex:1; border-bottom:none;">Start free</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero + Interactive Workspace -->
+    <div class="hero-backdrop">
+      <section class="hero container">
+        <div class="hero-pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          <span>Cadence 4.2 · Autonomous Sprint Triage is now live</span>
+        </div>
+
+        <h1>Ship complex projects at a steady cadence.</h1>
+        <p class="hero-sub">
+          Plan roadmaps, triage incoming work, and keep engineering and design in lockstep inside a fast, keyboard-first workspace without status-meeting bloat.
+        </p>
+
+        <div class="hero-cta">
+          <a href="#get-started" class="btn btn-primary btn-lg">Start 14-day free trial</a>
+          <a href="#workspace" class="btn btn-outline btn-lg">Try live workspace below</a>
+        </div>
+        <div class="hero-note">No credit card required · Import from Jira, Asana, or Linear in 90 seconds</div>
+
+        <!-- Live Interactive Product Frame -->
+        <div class="app-frame" id="workspace" aria-label="Interactive Cadence Workspace Preview">
+          <div class="app-topbar">
+            <div class="app-crumb">
+              <div class="window-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <span>Core Platform</span>
+              <span style="color:var(--ink-faint)">/</span>
+              <span>Cycle 18 · Q4 Launch</span>
+              <span class="sprint-badge">On Track · 74%</span>
+            </div>
+
+            <div class="app-controls">
+              <div class="segmented" role="tablist" aria-label="Workspace view mode">
+                <button class="seg-btn" role="tab" aria-selected="true" data-view="board" type="button">Board</button>
+                <button class="seg-btn" role="tab" aria-selected="false" data-view="list" type="button">List</button>
+                <button class="seg-btn" role="tab" aria-selected="false" data-view="timeline" type="button">Timeline</button>
+              </div>
+              <button class="filter-pill active" data-filter="all" type="button">All</button>
+              <button class="filter-pill" data-filter="high" type="button">Urgent &amp; High</button>
+            </div>
+          </div>
+
+          <div class="quick-add-bar">
+            <form class="quick-add-form" id="quickAddForm">
+              <input class="quick-input" id="newTaskTitle" type="text" placeholder="Add a real task to this board (e.g., Audit webhook retries)..." maxlength="72" required />
+              <select class="quick-select" id="newTaskPriority" aria-label="Task priority">
+                <option value="Normal">Normal</option>
+                <option value="High" selected>High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+              <button class="btn btn-dark" type="submit" style="padding: 7px 13px; font-size: 12.5px;">+ Add issue</button>
+            </form>
+            <div class="workspace-hint">
+              <span>Tip: Drag cards between columns or click <strong>→</strong> to advance</span>
+            </div>
+          </div>
+
+          <!-- Board View -->
+          <div class="board-grid" id="boardView"></div>
+
+          <!-- List View -->
+          <div class="list-view" id="listView">
+            <table class="issue-table">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Issue</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Tag</th>
+                  <th>Owner</th>
+                </tr>
+              </thead>
+              <tbody id="listTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Timeline View -->
+          <div class="timeline-view" id="timelineView">
+            <div class="timeline-grid" id="timelineGrid"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Social Proof & Metrics -->
+    <section class="proof-section">
+      <div class="container">
+        <div class="proof-caption">TRUSTED BY PRODUCT &amp; ENGINEERING TEAMS AT 4,200+ COMPANIES</div>
+        <div class="logo-row" aria-label="Customer logos">
+          <div class="logo-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,1 17,15 1,15" stroke="currentColor" stroke-width="1.8"/></svg>
+            Northstar
+          </div>
+          <div class="logo-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M6 9H12" stroke="currentColor" stroke-width="1.8"/></svg>
+            Monolith
+          </div>
+          <div class="logo-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="9" r="2.5" fill="currentColor"/></svg>
+            Halcyon
+          </div>
+          <div class="logo-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 14L9 3L16 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Vektor Labs
+          </div>
+          <div class="logo-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5H15M3 9H11M3 13H15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Fieldwork
+          </div>
+        </div>
+
+        <div class="metrics-strip">
+          <div class="metric-cell">
+            <div class="metric-val">18ms</div>
+            <div class="metric-label">Median UI response with local-first sync</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-val">38%</div>
+            <div class="metric-label">Faster sprint planning &amp; issue triage</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-val">99.98%</div>
+            <div class="metric-label">Verified uptime across global regions</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-val">90 sec</div>
+            <div class="metric-label">One-click migration from Jira or Linear</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities Bento Grid -->
+    <section class="section container" id="capabilities">
+      <div class="section-head">
+        <span class="section-eyebrow">Capabilities</span>
+        <h2>Engineered for focus, not busywork.</h2>
+        <p>Every interaction in Cadence removes friction between deciding what matters and shipping it to production.</p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Bento 1 -->
+        <div class="bento-card span-7">
+          <div>
+            <h3>Keyboard-first command palette</h3>
+            <p>Assign owners, change cycle targets, create sub-issues, or jump across projects in under a second without touching your mouse.</p>
+          </div>
+          <div class="mini-window">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border); font-size:12.5px; color:var(--ink-faint);">
+              <span>&gt; move CAD-142 to In Review</span>
+              <button type="button" class="btn btn-outline" id="demoCmdLaunch" style="padding:3px 9px; font-size:11.5px;">Try ⌘K now</button>
+            </div>
+            <div class="cmd-preview-row active">
+              <span>Move <strong>CAD-142</strong> → In Review</span>
+              <kbd>↵</kbd>
+            </div>
+            <div class="cmd-preview-row">
+              <span>Assign to Maya Lin</span>
+              <kbd>A</kbd>
+            </div>
+            <div class="cmd-preview-row">
+              <span>Switch view to Timeline</span>
+              <kbd>G T</kbd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 2 -->
+        <div class="bento-card span-5">
+          <div>
+            <h3>Predictable cycle velocity</h3>
+            <p>Automatic scope-creep alerts and real-time burndown curves keep commitments realistic before Friday afternoon.</p>
+          </div>
+          <div class="mini-window">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px;">
+              <span style="font-weight:600;">Cycle 18 Burndown</span>
+              <span style="color:var(--green); font-weight:600;">-14 pts ahead</span>
+            </div>
+            <svg viewBox="0 0 280 96" width="100%" height="96" aria-label="Sprint burndown chart">
+              <line x1="8" y1="84" x2="272" y2="84" stroke="#E5E3DC" stroke-width="1"/>
+              <line x1="8" y1="16" x2="272" y2="84" stroke="#D0CDC3" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <path d="M8 16 L60 24 L110 38 L165 42 L215 62 L255 72" fill="none" stroke="#E04F16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="255" cy="72" r="4" fill="#E04F16"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Bento 3 -->
+        <div class="bento-card span-6">
+          <div>
+            <h3>Two-way Git &amp; Figma sync</h3>
+            <p>Branches, pull requests, and design frames stay linked to the source ticket. When a PR merges, the issue advances automatically.</p>
+          </div>
+          <div class="mini-window">
+            <div class="sync-row">
+              <span><strong>PR #814</strong> · feat/rate-limiter merged</span>
+              <span class="tag-chip" style="background:var(--green-soft); color:var(--green);">Auto → Shipped</span>
+            </div>
+            <div class="sync-row">
+              <span><strong>Figma</strong> · Checkout v3 specs approved</span>
+              <span class="tag-chip" style="background:var(--blue-soft); color:var(--blue);">Linked CAD-149</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 4 -->
+        <div class="bento-card span-6">
+          <div>
+            <h3>Decision logs, not endless chat</h3>
+            <p>Turn messy Slack threads into structured specs with inline approvals, clear owners, and searchable decision history.</p>
+          </div>
+          <div class="mini-window">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="avatar" style="background:var(--purple);">ML</span>
+                <span style="font-size:13px; font-weight:600;">Maya Lin</span>
+                <span style="font-size:12px; color:var(--ink-faint);">2h ago</span>
+              </div>
+              <span class="tag-chip" style="background:var(--green-soft); color:var(--green);">Approved</span>
+            </div>
+            <p style="font-size:13px; color:var(--ink-muted); margin:0;">
+              “Let’s cap batch exports at 10k rows for v1 so latency stays under 400ms. Tracking follow-up in <strong>CAD-158</strong>.”
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Workflow Section -->
+    <section class="section container" id="workflow">
+      <div class="section-head">
+        <span class="section-eyebrow">How teams work</span>
+        <h2>From raw request to shipped release in four clean beats.</h2>
+        <p>Select a stage to inspect how Cadence keeps every handoff crisp across product, design, and engineering.</p>
+      </div>
+
+      <div class="workflow-wrap">
+        <div class="workflow-steps" role="tablist" aria-label="Workflow stages">
+          <button class="wf-step active" type="button" data-wf="0" role="tab" aria-selected="true">
+            <div class="wf-num">01 / CAPTURE</div>
+            <div class="wf-title">Intake &amp; Smart Triage</div>
+            <div class="wf-desc">Collect bug reports, customer feedback, and Slack pings in a unified triage queue with duplicate detection.</div>
+          </button>
+          <button class="wf-step" type="button" data-wf="1" role="tab" aria-selected="false">
+            <div class="wf-num">02 / PLAN</div>
+            <div class="wf-title">Cycle &amp; Roadmap Shaping</div>
+            <div class="wf-desc">Balance team capacity against roadmap milestones with drag-and-drop timeline ranges.</div>
+          </button>
+          <button class="wf-step" type="button" data-wf="2" role="tab" aria-selected="false">
+            <div class="wf-num">03 / BUILD</div>
+            <div class="wf-title">Focused Execution</div>
+            <div class="wf-desc">Developers get clean specs, linked branches, and zero notification noise while in flow.</div>
+          </button>
+          <button class="wf-step" type="button" data-wf="3" role="tab" aria-selected="false">
+            <div class="wf-num">04 / SHIP</div>
+            <div class="wf-title">Automated Release Notes</div>
+            <div class="wf-desc">Generate stakeholder summaries and changelogs straight from merged work the moment a cycle closes.</div>
+          </button>
+        </div>
+
+        <div class="wf-stage">
+          <div class="wf-stage-head">
+            <span id="wfStageLabel">STAGE 01 · TRIAGE INBOX</span>
+            <span>WORKSPACE: ACME CORE</span>
+          </div>
+
+          <div class="wf-panel active" data-wf-panel="0">
+            <h3 style="margin:0 0 12px; font-size:22px;">3 incoming items ready for review</h3>
+            <p style="color:#A6ACB5; font-size:14.5px; margin:0 0 20px;">Cadence automatically clusters duplicates and suggests the right owner based on recent commits.</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="background:var(--dark-surface); border:1px solid var(--dark-border); border-radius:10px; padding:13px 15px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                <div>
+                  <div style="font-size:13.5px; font-weight:600;">OAuth callback fails on Safari private tabs</div>
+                  <div style="font-size:12px; color:#8C939E;">From #support-escalations · Suggested owner: Dev Patel</div>
+                </div>
+                <span style="font-size:11px; padding:3px 9px; border-radius:999px; background:rgba(224,79,22,0.2); color:#FF8B5E;">Urgent</span>
+              </div>
+              <div style="background:var(--dark-surface); border:1px solid var(--dark-border); border-radius:10px; padding:13px 15px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                <div>
+                  <div style="font-size:13.5px; font-weight:600;">CSV export missing timezone offset column</div>
+                  <div style="font-size:12px; color:#8C939E;">2 similar customer requests merged</div>
+                </div>
+                <span style="font-size:11px; padding:3px 9px; border-radius:999px; background:rgba(29,99,220,0.25); color:#7EB0FF;">Cycle 19</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wf-panel" data-wf-panel="1">
+            <h3 style="margin:0 0 12px; font-size:22px;">Capacity-aware roadmap planning</h3>
+            <p style="color:#A6ACB5; font-size:14.5px; margin:0 0 20px;">Spot over-allocated engineers immediately and lock realistic sprint commitments in minutes.</p>
+            <div style="background:var(--dark-surface); border:1px solid var(--dark-border); border-radius:10px; padding:16px;">
+              <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:8px;">
+                <span>Platform Squad · 34 / 40 pts</span>
+                <span style="color:#5CE0A4;">Healthy load (85%)</span>
+              </div>
+              <div style="height:10px; background:#262A32; border-radius:999px; overflow:hidden; margin-bottom:16px;">
+                <div style="width:85%; height:100%; background:#5CE0A4;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:8px;">
+                <span>Growth Squad · 28 / 30 pts</span>
+                <span style="color:#FBBF24;">Near cap (93%)</span>
+              </div>
+              <div style="height:10px; background:#262A32; border-radius:999px; overflow:hidden;">
+                <div style="width:93%; height:100%; background:#FBBF24;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wf-panel" data-wf-panel="2">
+            <h3 style="margin:0 0 12px; font-size:22px;">Zero-distraction build mode</h3>
+            <p style="color:#A6ACB5; font-size:14.5px; margin:0 0 20px;">Copy branch names with one shortcut and let GitHub/GitLab webhooks keep ticket statuses honest.</p>
+            <div style="background:var(--dark-surface); border:1px solid var(--dark-border); border-radius:10px; padding:16px; font-family:var(--font-mono); font-size:12.5px; line-height:1.8;">
+              <div style="color:#8C939E;">$ git checkout -b cad-142-webhook-signing</div>
+              <div style="color:#5CE0A4;">✓ Linked to CAD-142 · Status updated to In Progress</div>
+              <div style="color:#7EB0FF;">✓ Preview deploy ready: pr-819.acme.dev</div>
+              <div style="color:#F4F4F2;">✓ 2/2 reviewers approved · Auto-queued for merge</div>
+            </div>
+          </div>
+
+          <div class="wf-panel" data-wf-panel="3">
+            <h3 style="margin:0 0 12px; font-size:22px;">Instant stakeholder release digest</h3>
+            <p style="color:#A6ACB5; font-size:14.5px; margin:0 0 20px;">No more Friday slide decks. Cadence compiles shipped epics and impact metrics automatically.</p>
+            <div style="background:var(--dark-surface); border:1px solid var(--dark-border); border-radius:10px; padding:16px;">
+              <div style="font-size:12px; color:#FF8B5E; font-weight:700; margin-bottom:6px;">RELEASE DIGEST · CYCLE 18</div>
+              <div style="font-size:14px; font-weight:600; margin-bottom:10px;">19 issues shipped · 96% planned commitment met</div>
+              <ul style="margin:0; padding-left:18px; color:#C4C9D1; font-size:13px; line-height:1.7;">
+                <li>Reduced dashboard cold-load latency by 44%</li>
+                <li>Launched SSO SAML provisioning for Enterprise</li>
+                <li>Resolved 7 high-priority billing edge cases</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section container" style="padding-top: 24px;">
+      <div class="section-head">
+        <span class="section-eyebrow">Customer stories</span>
+        <h2>Teams switch to Cadence and never look back.</h2>
+      </div>
+
+      <div class="quotes-grid">
+        <article class="quote-card">
+          <p class="quote-text">“We cut our Monday planning meeting from 75 minutes down to 20. Everyone shows up aligned because the roadmap and issues actually stay current on their own.”</p>
+          <div class="quote-author">
+            <span class="avatar" style="width:36px; height:36px; font-size:13px; background:var(--accent);">SR</span>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Sora Takahashi</div>
+              <div style="font-size:12.5px; color:var(--ink-muted);">VP of Engineering, Northstar</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="quote-card">
+          <p class="quote-text">“Our previous tracker felt like filing tax forms. Cadence is so responsive that engineers actually enjoy updating tickets—and our cycle predictability jumped to 94%.”</p>
+          <div class="quote-author">
+            <span class="avatar" style="width:36px; height:36px; font-size:13px; background:var(--blue);">DK</span>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Devon Kowalski</div>
+              <div style="font-size:12.5px; color:var(--ink-muted);">Head of Product, Halcyon</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="quote-card">
+          <p class="quote-text">“Migrating 6,000 issues took less than two minutes. Having design specs, PR status, and customer context in one clean view transformed how our squads ship.”</p>
+          <div class="quote-author">
+            <span class="avatar" style="width:36px; height:36px; font-size:13px; background:var(--green);">AN</span>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Amara Nwosu</div>
+              <div style="font-size:12.5px; color:var(--ink-muted);">CTO, Fieldwork</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section container" id="pricing">
+      <div class="section-head">
+        <span class="section-eyebrow">Pricing</span>
+        <h2>Simple, predictable plans that scale with your team.</h2>
+        <p>Start free with up to 10 teammates. Upgrade only when you need advanced roadmaps, SSO, and unlimited cycles.</p>
+
+        <div class="billing-toggle-wrap">
+          <div class="segmented" role="group" aria-label="Billing interval">
+            <button class="seg-btn" id="billMonthly" aria-selected="false" type="button">Monthly</button>
+            <button class="seg-btn" id="billAnnual" aria-selected="true" type="button">Annual</button>
+          </div>
+          <span class="save-badge">Save 20%</span>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div>
+            <div style="font-weight:700; font-size:18px;">Starter</div>
+            <div style="font-size:13.5px; color:var(--ink-muted); margin-top:4px;">For small teams finding their rhythm.</div>
+            <div class="price-amount">$0 <span>/ forever</span></div>
+            <ul class="feature-list">
+              <li><span style="color:var(--green);">✓</span> Up to 10 workspace members</li>
+              <li><span style="color:var(--green);">✓</span> Unlimited issues &amp; 2 active projects</li>
+              <li><span style="color:var(--green);">✓</span> Board, List &amp; Command Palette</li>
+              <li><span style="color:var(--green);">✓</span> GitHub &amp; Slack integration</li>
+            </ul>
+          </div>
+          <a href="#get-started" class="btn btn-outline" style="width:100%;">Get started free</a>
+        </div>
+
+        <div class="price-card featured">
+          <span class="popular-tag">MOST POPULAR</span>
+          <div>
+            <div style="font-weight:700; font-size:18px;">Pro</div>
+            <div style="font-size:13.5px; color:var(--ink-muted); margin-top:4px;">For growing product &amp; engineering orgs.</div>
+            <div class="price-amount" data-monthly="$12" data-annual="$10">$10 <span>/ member / mo</span></div>
+            <ul class="feature-list">
+              <li><span style="color:var(--green);">✓</span> Unlimited members &amp; projects</li>
+              <li><span style="color:var(--green);">✓</span> Timeline roadmaps &amp; velocity charts</li>
+              <li><span style="color:var(--green);">✓</span> Automated sprint triage &amp; rules</li>
+              <li><span style="color:var(--green);">✓</span> Guest seats &amp; Figma two-way sync</li>
+            </ul>
+          </div>
+          <a href="#get-started" class="btn btn-primary" style="width:100%;">Start 14-day free trial</a>
+        </div>
+
+        <div class="price-card">
+          <div>
+            <div style="font-weight:700; font-size:18px;">Enterprise</div>
+            <div style="font-size:13.5px; color:var(--ink-muted); margin-top:4px;">For organizations with strict compliance.</div>
+            <div class="price-amount" data-monthly="$28" data-annual="$24">$24 <span>/ member / mo</span></div>
+            <ul class="feature-list">
+              <li><span style="color:var(--green);">✓</span> SAML SSO &amp; SCIM provisioning</li>
+              <li><span style="color:var(--green);">✓</span> SOC 2 Type II &amp; audit logs</li>
+              <li><span style="color:var(--green);">✓</span> Cross-team portfolio rollups</li>
+              <li><span style="color:var(--green);">✓</span> Dedicated migration engineer &amp; SLA</li>
+            </ul>
+          </div>
+          <a href="#get-started" class="btn btn-dark" style="width:100%;">Contact sales</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section container" id="faq" style="padding-top: 24px;">
+      <div class="section-head">
+        <span class="section-eyebrow">FAQ</span>
+        <h2>Answers before you migrate.</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="true">
+            <span>How fast can we import from Jira, Linear, or Asana?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer open">
+            Connect via OAuth and select the projects you want to bring over. Cadence maps statuses, assignees, comments, attachments, and historical sprint dates in under 90 seconds—without altering your existing workspace.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>Does Cadence work well for non-engineering teams?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Yes. Design, marketing, and operations teams use the exact same Board, List, and Timeline views with customizable workflows and zero developer jargon required.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>Is our project data encrypted and SOC 2 compliant?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Cadence is SOC 2 Type II certified, GDPR compliant, and offers EU or US data residency on Enterprise plans.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>Are external stakeholders or clients billed as seats?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Read-only viewers and external guest collaborators on shared roadmaps are free on Pro and Enterprise plans. You only pay for active full-access members.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Banner -->
+    <section class="container" id="get-started">
+      <div class="cta-banner">
+        <div>
+          <h2>Give your team a calmer, faster way to ship.</h2>
+          <p>Spin up a workspace in 30 seconds. Bring your current sprint with one click.</p>
+        </div>
+        <div>
+          <form class="cta-form" id="signupForm">
+            <input class="cta-input" id="workEmail" type="email" placeholder="you@company.com" required aria-label="Work email" />
+            <button class="btn btn-primary btn-lg" type="submit">Create workspace</button>
+          </form>
+          <div class="cta-status" id="ctaStatus" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" style="margin-bottom: 12px;">
+            <span class="brand-mark" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="3" width="12" height="2.4" rx="1.2" fill="currentColor"/>
+                <rect x="2" y="6.8" width="8.5" height="2.4" rx="1.2" fill="#E04F16"/>
+                <rect x="2" y="10.6" width="10.5" height="2.4" rx="1.2" fill="currentColor"/>
+              </svg>
+            </span>
+            Cadence
+          </a>
+          <p style="font-size:13.5px; color:var(--ink-muted); max-width:260px; margin:8px 0 0;">
+            The project management workspace engineered for clarity, speed, and predictable delivery.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#workspace">Boards &amp; Lists</a></li>
+            <li><a href="#workspace">Timelines</a></li>
+            <li><a href="#capabilities">Integrations</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Workflow</h4>
+          <ul>
+            <li><a href="#workflow">Sprint Triage</a></li>
+            <li><a href="#workflow">Roadmaps</a></li>
+            <li><a href="#workflow">Git Sync</a></li>
+            <li><a href="#workflow">Changelogs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#faq">Migration Guide</a></li>
+            <li><a href="#faq">API Docs</a></li>
+            <li><a href="#faq">Keyboard Shortcuts</a></li>
+            <li><a href="#faq">Security</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#get-started">About</a></li>
+            <li><a href="#get-started">Customers</a></li>
+            <li><a href="#get-started">Privacy</a></li>
+            <li><a href="#get-started">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Cadence Software Inc. All rights reserved.</span>
+        <span class="status-operational">
+          <span class="green-pulse" aria-hidden="true"></span>
+          All systems operational
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Command Palette Modal -->
+  <div class="modal-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="cmd-modal">
+      <div class="cmd-search-wrap">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="color:var(--ink-faint);">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input class="cmd-search-input" id="cmdInput" type="text" placeholder="Type a command or jump to section..." />
+        <kbd>ESC</kbd>
+      </div>
+      <div class="cmd-list" id="cmdList"></div>
+    </div>
+  </div>
+
+  <!-- Issue Detail Modal -->
+  <div class="modal-backdrop" id="issueModal" role="dialog" aria-modal="true" aria-label="Issue details">
+    <div class="issue-modal" id="issueModalContent"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      const STATUSES = ['Backlog', 'In Progress', 'In Review', 'Shipped'];
+      const DOT_CLASS = {
+        'Backlog': 'dot-backlog',
+        'In Progress': 'dot-progress',
+        'In Review': 'dot-review',
+        'Shipped': 'dot-done'
+      };
+
+      const INITIAL_TASKS = [
+        { id: 'CAD-142', title: 'Add HMAC webhook signature verification', status: 'In Progress', priority: 'Urgent', tag: 'Security', owner: 'DP', color: '#E04F16', weekStart: 1, weekSpan: 2, notes: 'Verify X-Cadence-Signature header with constant-time compare before processing payloads.' },
+        { id: 'CAD-144', title: 'Timeline drag-to-resize sprint bars', status: 'In Review', priority: 'High', tag: 'Frontend', owner: 'ML', color: '#6439D8', weekStart: 2, weekSpan: 3, notes: 'Snap milestone edges cleanly to week boundaries with keyboard nudging support.' },
+        { id: 'CAD-147', title: 'Slack /cadence triage slash command', status: 'Backlog', priority: 'Normal', tag: 'Integrations', owner: 'SR', color: '#1D63DC', weekStart: 3, weekSpan: 2, notes: 'Allow creating pre-tagged issues directly from any Slack thread.' },
+        { id: 'CAD-149', title: 'Figma frame embed caching layer', status: 'In Progress', priority: 'High', tag: 'Design', owner: 'AN', color: '#147A50', weekStart: 1, weekSpan: 3, notes: 'Cache preview thumbnails at edge POPs for instant spec loading.' },
+        { id: 'CAD-151', title: 'CSV export with ISO-8601 timestamps', status: 'Shipped', priority: 'Normal', tag: 'Core', owner: 'DK', color: '#0F766E', weekStart: 1, weekSpan: 1, notes: 'Shipped in v4.2.1 with full UTC offset preservation.' },
+        { id: 'CAD-153', title: 'Cycle scope-creep alert threshold', status: 'Backlog', priority: 'High', tag: 'Analytics', owner: 'ML', color: '#6439D8', weekStart: 4, weekSpan: 2, notes: 'Notify squad leads when mid-sprint additions exceed 15% of committed points.' },
+        { id: 'CAD-155', title: 'SSO SAML metadata auto-refresh', status: 'Shipped', priority: 'Urgent', tag: 'Enterprise', owner: 'DP', color: '#E04F16', weekStart: 1, weekSpan: 2, notes: 'Automatically rotate IdP certificates 14 days prior to expiry.' }
+      ];
+
+      let tasks = [...INITIAL_TASKS];
+      let nextKeyNum = 158;
+      let activeView = 'board';
+      let activeFilter = 'all';
+      let draggedId = null;
+
+      const boardView = document.getElementById('boardView');
+      const listView = document.getElementById('listView');
+      const listTableBody = document.getElementById('listTableBody');
+      const timelineView = document.getElementById('timelineView');
+      const timelineGrid = document.getElementById('timelineGrid');
+      const toastEl = document.getElementById('toast');
+
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => toastEl.classList.remove('show'), 2600);
+      }
+
+      function filteredTasks() {
+        if (activeFilter === 'high') {
+          return tasks.filter(t => t.priority === 'Urgent' || t.priority === 'High');
+        }
+        return tasks;
+      }
+
+      function advanceTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        const idx = STATUSES.indexOf(task.status);
+        const nextStatus = STATUSES[(idx + 1) % STATUSES.length];
+        task.status = nextStatus;
+        renderWorkspace();
+        showToast(`${task.id} moved to ${nextStatus}`);
+      }
+
+      function openIssueModal(id) {
+        const task = tasks.find(t => t.id === id);
+        if (!task) return;
+        const modal = document.getElementById('issueModal');
+        const box = document.getElementById('issueModalContent');
+        box.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-faint);">${task.id} · ${task.tag}</span>
+            <button type="button" id="closeIssueModal" class="btn btn-ghost" style="padding:4px 8px;">✕</button>
+          </div>
+          <h3 style="margin:0 0 10px; font-size:19px;">${escapeHtml(task.title)}</h3>
+          <p style="font-size:14px; color:var(--ink-muted); margin:0 0 18px; line-height:1.55;">${escapeHtml(task.notes)}</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; font-size:13px; margin-bottom:18px;">
+            <div><span style="color:var(--ink-faint);">Status:</span> <strong>${task.status}</strong></div>
+            <div><span style="color:var(--ink-faint);">Priority:</span> <strong>${task.priority}</strong></div>
+            <div><span style="color:var(--ink-faint);">Owner:</span> <strong>${task.owner}</strong></div>
+            <div><span style="color:var(--ink-faint);">Window:</span> <strong>Week ${task.weekStart}–${task.weekStart + task.weekSpan - 1}</strong></div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" class="btn btn-outline" id="advanceFromModal">Advance status →</button>
+            <button type="button" class="btn btn-dark" id="doneIssueModal">Close</button>
+          </div>
+        `;
+        modal.classList.add('open');
+        document.getElementById('closeIssueModal').onclick = () => modal.classList.remove('open');
+        document.getElementById('doneIssueModal').onclick = () => modal.classList.remove('open');
+        document.getElementById('advanceFromModal').onclick = () => {
+          advanceTask(task.id);
+          openIssueModal(task.id);
+        };
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
+      }
+
+      function renderBoard() {
+        const list = filteredTasks();
+        boardView.innerHTML = '';
+
+        STATUSES.forEach(status => {
+          const colTasks = list.filter(t => t.status === status);
+          const col = document.createElement('div');
+          col.className = 'board-col';
+          col.dataset.status = status;
+
+          col.addEventListener('dragover', e => {
+            e.preventDefault();
+            col.classList.add('drag-over');
+          });
+          col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+          col.addEventListener('drop', e => {
+            e.preventDefault();
+            col.classList.remove('drag-over');
+            if (!draggedId) return;
+            const task = tasks.find(t => t.id === draggedId);
+            if (task && task.status !== status) {
+              task.status = status;
+              renderWorkspace();
+              showToast(`${task.id} moved to ${status}`);
+            }
+          });
+
+          col.innerHTML = `
+            <div class="col-header">
+              <span class="col-title"><span class="status-dot ${DOT_CLASS[status]}"></span>${status}</span>
+              <span class="col-count">${colTasks.length}</span>
+            </div>
+          `;
+
+          colTasks.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.draggable = true;
+            card.innerHTML = `
+              <div class="task-top">
+                <span class="task-id">${task.id}</span>
+                <span class="priority-tag prio-${task.priority}">${task.priority}</span>
+              </div>
+              <div class="task-title">${escapeHtml(task.title)}</div>
+              <div class="task-meta">
+                <span class="tag-chip">${escapeHtml(task.tag)}</span>
+                <div class="task-right">
+                  <button class="advance-btn" type="button" title="Move to next status" aria-label="Advance ${task.id}">→</button>
+                  <span class="avatar" style="background:${task.color};">${task.owner}</span>
+                </div>
+              </div>
+            `;
+
+            card.addEventListener('dragstart', () => {
+              draggedId = task.id;
+              card.classList.add('dragging');
+            });
+            card.addEventListener('dragend', () => {
+              draggedId = null;
+              card.classList.remove('dragging');
+            });
+            card.querySelector('.advance-btn').addEventListener('click', e => {
+              e.stopPropagation();
+              advanceTask(task.id);
+            });
+            card.addEventListener('click', () => openIssueModal(task.id));
+            col.appendChild(card);
+          });
+
+          boardView.appendChild(col);
+        });
+      }
+
+      function renderList() {
+        const list = filteredTasks();
+        listTableBody.innerHTML = list.map(task => `
+          <tr>
+            <td style="font-family:var(--font-mono); color:var(--ink-faint); font-size:12px;">${task.id}</td>
+            <td style="font-weight:600; cursor:pointer;" data-open="${task.id}">${escapeHtml(task.title)}</td>
+            <td>
+              <button class="status-pill-btn" type="button" data-advance="${task.id}">
+                <span class="status-dot ${DOT_CLASS[task.status]}"></span>
+                ${task.status}
+              </button>
+            </td>
+            <td><span class="priority-tag prio-${task.priority}">${task.priority}</span></td>
+            <td><span class="tag-chip">${escapeHtml(task.tag)}</span></td>
+            <td><span class="avatar" style="background:${task.color};">${task.owner}</span></td>
+          </tr>
+        `).join('');
+
+        listTableBody.querySelectorAll('[data-advance]').forEach(btn => {
+          btn.addEventListener('click', () => advanceTask(btn.dataset.advance));
+        });
+        listTableBody.querySelectorAll('[data-open]').forEach(cell => {
+          cell.addEventListener('click', () => openIssueModal(cell.dataset.open));
+        });
+      }
+
+      function renderTimeline() {
+        const list = filteredTasks();
+        const barColors = {
+          'Backlog': 'background:#ECEAE4; color:#3F444C;',
+          'In Progress': 'background:#EEF4FF; color:#1D63DC; border:1px solid #C7DAFE;',
+          'In Review': 'background:#FEF5E6; color:#A86408; border:1px solid #FDE2B3;',
+          'Shipped': 'background:#EAF7F1; color:#147A50; border:1px solid #BCEAD5;'
+        };
+
+        let html = `
+          <div class="timeline-header">
+            <div>Deliverable</div>
+            <div>Week 1</div><div>Week 2</div><div>Week 3</div><div>Week 4</div><div>Week 5</div><div>Week 6</div>
+          </div>
+        `;
+
+        list.forEach(task => {
+          const endCol = Math.min(7, task.weekStart + task.weekSpan);
+          html += `
+            <div class="timeline-row">
+              <div class="timeline-label" title="${escapeHtml(task.title)}">
+                <span class="status-dot ${DOT_CLASS[task.status]}"></span>
+                <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink-faint);">${task.id}</span>
+                <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(task.title)}</span>
+              </div>
+              <div class="timeline-track">
+                <div class="gantt-bar" data-open="${task.id}" style="grid-column:${task.weekStart} / ${endCol}; ${barColors[task.status]}">
+                  <span>${task.status}</span>
+                  <span>${task.owner}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        timelineGrid.innerHTML = html;
+        timelineGrid.querySelectorAll('[data-open]').forEach(bar => {
+          bar.addEventListener('click', () => openIssueModal(bar.dataset.open));
+        });
+      }
+
+      function renderWorkspace() {
+        renderBoard();
+        renderList();
+        renderTimeline();
+      }
+
+      function setView(view) {
+        activeView = view;
+        document.querySelectorAll('.seg-btn[data-view]').forEach(btn => {
+          btn.setAttribute('aria-selected', btn.dataset.view === view ? 'true' : 'false');
+        });
+        boardView.classList.toggle('hidden', view !== 'board');
+        listView.classList.toggle('active', view === 'list');
+        timelineView.classList.toggle('active', view === 'timeline');
+      }
+
+      document.querySelectorAll('.seg-btn[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => setView(btn.dataset.view));
+      });
+
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          activeFilter = pill.dataset.filter;
+          document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p === pill));
+          renderWorkspace();
+        });
+      });
+
+      document.getElementById('quickAddForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const input = document.getElementById('newTaskTitle');
+        const prio = document.getElementById('newTaskPriority').value;
+        const title = input.value.trim();
+        if (!title) return;
+
+        const newTask = {
+          id: `CAD-${nextKeyNum++}`,
+          title,
+          status: 'Backlog',
+          priority: prio,
+          tag: 'Sprint',
+          owner: 'YOU',
+          color: '#111315',
+          weekStart: 2,
+          weekSpan: 2,
+          notes: 'Created live inside the interactive Cadence landing page preview.'
+        };
+        tasks.unshift(newTask);
+        input.value = '';
+        renderWorkspace();
+        showToast(`Created ${newTask.id} in Backlog`);
+      });
+
+      // Workflow Tabs
+      const wfLabels = [
+        'STAGE 01 · TRIAGE INBOX',
+        'STAGE 02 · CAPACITY & ROADMAP',
+        'STAGE 03 · EXECUTION FLOW',
+        'STAGE 04 · RELEASE DIGEST'
+      ];
+      document.querySelectorAll('.wf-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = btn.dataset.wf;
+          document.querySelectorAll('.wf-step').forEach(b => {
+            const isActive = b === btn;
+            b.classList.toggle('active', isActive);
+            b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          document.querySelectorAll('.wf-panel').forEach(p => {
+            p.classList.toggle('active', p.dataset.wfPanel === idx);
+          });
+          document.getElementById('wfStageLabel').textContent = wfLabels[Number(idx)];
+        });
+      });
+
+      // Pricing Billing Toggle
+      const billMonthly = document.getElementById('billMonthly');
+      const billAnnual = document.getElementById('billAnnual');
+      function setBilling(mode) {
+        billMonthly.setAttribute('aria-selected', mode === 'monthly' ? 'true' : 'false');
+        billAnnual.setAttribute('aria-selected', mode === 'annual' ? 'true' : 'false');
+        document.querySelectorAll('.price-amount[data-monthly]').forEach(el => {
+          const price = el.dataset[mode];
+          el.innerHTML = `${price} <span>/ member / mo</span>`;
+        });
+      }
+      billMonthly.addEventListener('click', () => setBilling('monthly'));
+      billAnnual.addEventListener('click', () => setBilling('annual'));
+
+      // FAQ Accordion
+      document.querySelectorAll('.faq-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+          btn.nextElementSibling.classList.toggle('open', !expanded);
+        });
+      });
+
+      // Signup Form
+      document.getElementById('signupForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const email = document.getElementById('workEmail').value.trim();
+        if (!email) return;
+        document.getElementById('ctaStatus').textContent = `✓ Workspace invite sent to ${email}. Check your inbox to finish setup.`;
+        document.getElementById('workEmail').value = '';
+        showToast('Trial workspace provisioned!');
+      });
+
+      // Mobile Drawer
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      mobileBtn.addEventListener('click', () => {
+        const open = mobileDrawer.classList.toggle('open');
+        mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      mobileDrawer.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          mobileDrawer.classList.remove('open');
+          mobileBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Command Palette
+      const cmdModal = document.getElementById('cmdModal');
+      const cmdInput = document.getElementById('cmdInput');
+      const cmdList = document.getElementById('cmdList');
+      const COMMANDS = [
+        { label: 'Switch workspace to Board view', hint: 'View', action: () => { setView('board'); location.hash = '#workspace'; } },
+        { label: 'Switch workspace to List view', hint: 'View', action: () => { setView('list'); location.hash = '#workspace'; } },
+        { label: 'Switch workspace to Timeline view', hint: 'View', action: () => { setView('timeline'); location.hash = '#workspace'; } },
+        { label: 'Focus Quick Add issue input', hint: 'Create', action: () => { location.hash = '#workspace'; setTimeout(() => document.getElementById('newTaskTitle').focus(), 120); } },
+        { label: 'Jump to Capabilities', hint: 'Section', action: () => { location.hash = '#capabilities'; } },
+        { label: 'Jump to Workflow Stages', hint: 'Section', action: () => { location.hash = '#workflow'; } },
+        { label: 'Jump to Pricing (Toggle Annual/Monthly)', hint: 'Section', action: () => { location.hash = '#pricing'; } },
+        { label: 'Start 14-day free trial', hint: 'Action', action: () => { location.hash = '#get-started'; setTimeout(() => document.getElementById('workEmail').focus(), 120); } }
+      ];
+
+      function renderCommands(q = '') {
+        const query = q.toLowerCase();
+        const matches = COMMANDS.filter(c => c.label.toLowerCase().includes(query) || c.hint.toLowerCase().includes(query));
+        cmdList.innerHTML = matches.length ? '' : '<div style="padding:14px; font-size:13px; color:var(--ink-faint);">No matching commands</div>';
+        matches.forEach((cmd, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'cmd-item' + (idx === 0 ? ' selected' : '');
+          btn.innerHTML = `<span>${cmd.label}</span><kbd>${cmd.hint}</kbd>`;
+          btn.addEventListener('click', () => {
+            cmdModal.classList.remove('open');
+            cmd.action();
+          });
+          cmdList.appendChild(btn);
+        });
+      }
+
+      function openCmdPalette() {
+        cmdModal.classList.add('open');
+        cmdInput.value = '';
+        renderCommands('');
+        setTimeout(() => cmdInput.focus(), 20);
+      }
+
+      document.getElementById('openCmdBtn').addEventListener('click', openCmdPalette);
+      document.getElementById('demoCmdLaunch').addEventListener('click', openCmdPalette);
+      document.getElementById('signInDemoBtn').addEventListener('click', () => {
+        showToast('Signed in as Demo Member · Try editing the live board');
+        location.hash = '#workspace';
+      });
+
+      cmdInput.addEventListener('input', e => renderCommands(e.target.value));
+      cmdInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const first = cmdList.querySelector('.cmd-item');
+          if (first) first.click();
+        }
+      });
+
+      document.addEventListener('keydown', e => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          if (cmdModal.classList.contains('open')) cmdModal.classList.remove('open');
+          else openCmdPalette();
+        } else if (e.key === 'Escape') {
+          cmdModal.classList.remove('open');
+          document.getElementById('issueModal').classList.remove('open');
+        }
+      });
+
+      [cmdModal, document.getElementById('issueModal')].forEach(backdrop => {
+        backdrop.addEventListener('click', e => {
+          if (e.target === backdrop) backdrop.classList.remove('open');
+        });
+      });
+
+      renderWorkspace();
+    })();
+  </script>
+</body>
+</html>

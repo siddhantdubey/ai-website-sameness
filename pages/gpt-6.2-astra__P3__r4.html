@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f4ed">
+<title>Mara Vale — Freelance Photographer</title>
+<style>
+*{box-sizing:border-box}
+:root{--paper:#f6f4ed;--ink:#242820;--line:#c6c8bc;--accent:#b94b2b}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Helvetica Neue",Arial,sans-serif}
+main,header,footer{width:min(94%,1540px);margin:auto}
+header,nav,.section-head,.caption,footer{display:flex;align-items:center;justify-content:space-between}
+header{height:74px;border-bottom:1px solid var(--ink)}
+a{color:inherit;text-decoration:none}
+.brand{font:italic bold 27px Georgia,serif;letter-spacing:-2px}
+nav{gap:28px;font-size:13px}
+a:hover{text-decoration:underline;text-underline-offset:4px}
+.intro{padding:48px 0 28px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+h1,h2,h3,p,figure{margin:0}
+h1{font:normal clamp(74px,11.2vw,180px)/.84 Georgia,serif;letter-spacing:-.08em}
+h1 em{font-weight:normal}
+.intro p{font:16px/1.4 Georgia,serif;max-width:240px}
+.mono{font:11px/1.5 "Courier New",monospace;letter-spacing:.07em;text-transform:uppercase}
+.hero{position:relative;overflow:hidden;background:#687463}
+canvas{display:block;width:100%;height:100%;object-fit:cover}
+.hero canvas{height:clamp(310px,32vw,530px)}
+.hero:after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#101c17a8);pointer-events:none}
+.hero figcaption{position:absolute;bottom:24px;left:26px;color:white;z-index:1}
+.hero h2{font:italic clamp(32px,4vw,62px)/1.1 Georgia,serif;letter-spacing:-.05em}
+.hero .mono{display:block;margin-bottom:6px}
+.section-head{margin:44px 0 18px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.section-head h2,.about h2{font:normal clamp(32px,4vw,58px)/1 Georgia,serif;letter-spacing:-.055em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+button{font:inherit;color:inherit;cursor:pointer}
+.card{display:block;width:100%;background:none;border:0;text-align:left;padding:0}
+.card canvas{aspect-ratio:1.5;height:auto;transition:filter .2s}
+.card:hover canvas{filter:brightness(1.08)}
+.caption{align-items:baseline;margin-top:12px;gap:8px}
+.caption strong{font:normal clamp(19px,2.2vw,32px) Georgia,serif;letter-spacing:-.045em}
+.about{margin:65px 0 50px;border-top:1px solid var(--line);padding-top:32px;display:grid;grid-template-columns:1fr 2fr;gap:24px}
+.about p{max-width:650px;font:clamp(21px,2.4vw,36px)/1.25 Georgia,serif;letter-spacing:-.03em}
+.contact{display:inline-block;margin-top:22px;color:var(--accent);border-bottom:1px solid;padding-bottom:3px}
+footer{border-top:1px solid var(--ink);padding:18px 0 24px}
+dialog{background:var(--paper);color:var(--ink);border:0;padding:16px;width:min(900px,94vw);max-height:94dvh}
+dialog::backdrop{background:#131811db}
+dialog img{display:block;width:100%;max-height:68dvh;object-fit:contain}
+dialog h2{font:normal 30px Georgia,serif}
+dialog p{margin:10px 0;font:16px/1.4 Georgia,serif}
+dialog button{border:1px solid var(--line);background:none;padding:6px 12px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media(max-width:650px){header{height:58px}nav{gap:16px}.intro{display:block;padding:32px 0 17px}.intro p{margin-top:16px;max-width:none;font-size:15px}.hero figcaption{left:16px;bottom:18px}.grid{grid-template-columns:1fr;gap:26px}.about{grid-template-columns:1fr;margin:40px 0}.section-head{margin-top:32px}.caption strong{font-size:27px}}
+</style>
+</head>
+<body id="top">
+<header>
+<a class="brand" href="#top" aria-label="Mara Vale home">mv.</a>
+<nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact ↗</a></nav>
+</header>
+<main>
+<section class="intro" aria-label="Introduction">
+<h1>Mara <em>Vale</em></h1>
+<p>Freelance photographer of landscapes and the traces we leave in them.</p>
+</section>
+<figure class="hero">
+<canvas id="ridge" width="1600" height="560" role="img" aria-label="Layers of forested mountain ridges receding into pale golden mist"></canvas>
+<figcaption><span class="mono">Field notes / Oregon Cascades</span><h2>Before the valley wakes</h2></figcaption>
+</figure>
+<section id="work">
+<div class="section-head"><h2>Selected work</h2><span class="mono">2023 — 2025</span></div>
+<div class="grid">
+<button class="card" data-note="The last light catches a dune crest. Beyond it, the sand has already turned the color of rust."><canvas id="sand" width="780" height="520" role="img" aria-label="Warm ochre dunes with sweeping shadowed faces"></canvas><span class="caption"><strong>Shifting Ground</strong><span class="mono">2025 ↗</span></span></button>
+<button class="card" data-note="On the headland at low tide, each new line of foam marks a little more of the dark rock."><canvas id="sea" width="780" height="520" role="img" aria-label="Silver surf below a dark coastal headland"></canvas><span class="caption"><strong>Tidal Hours</strong><span class="mono">2024 ↗</span></span></button>
+<button class="card" data-note="A walk through the firs on a wet morning. The far trees disappear first, until only the nearest trunks hold their shape."><canvas id="wood" width="780" height="520" role="img" aria-label="Tall conifers disappearing into green-gray fog"></canvas><span class="caption"><strong>Still Timber</strong><span class="mono">2023 ↗</span></span></button>
+</div>
+</section>
+<section class="about" id="about"><h2>About Mara</h2><div><p>I’m based in Portland, Oregon. I work slowly, often returning to the same stretch of coast or stand of trees to see what the weather has changed.</p><a class="contact" id="contact" href="mailto:hello@maravale.example">Commission enquiries ↗</a></div></section>
+</main>
+<footer class="mono"><span>© Mara Vale</span><a href="#top">Back to top ↑</a></footer>
+<dialog aria-labelledby="project-title"><img alt=""><div class="caption"><h2 id="project-title"></h2><form method="dialog"><button autofocus>Close ×</button></form></div><p></p></dialog>
+<script>
+/* Original, procedurally rendered landscape studies keep the portfolio offline. */
+let seed=1731;
+function random(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}
+function hash(n){const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v)}
+function noise(x){const i=Math.floor(x),t=x-i,s=t*t*(3-2*t);return hash(i)*(1-s)+hash(i+1)*s}
+function landscape(id){
+ const el=document.getElementById(id),c=el.getContext('2d'),w=el.width,h=el.height;
+ function gradient(top,bottom){const g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,top);g.addColorStop(1,bottom);return g}
+ function fill(paint){c.fillStyle=paint;c.fillRect(0,0,w,h)}
+ function layer(y,paint){c.beginPath();c.moveTo(0,h);for(let x=0;x<=w;x+=2)c.lineTo(x,y(x));c.lineTo(w,h);c.closePath();c.fillStyle=paint;c.fill()}
+ function fir(x,y,size,color){
+  c.fillStyle=color;c.beginPath();c.moveTo(x,y-size);
+  for(const side of [1,-1]){for(let j=1;j<=16;j++){const t=(side===1?j:17-j)/16;c.lineTo(x+side*size*t*(.07+.09*random()),y-size*(1-t))}}
+  c.closePath();c.fill()
+ }
+ if(id==='ridge'){
+  fill(gradient('#dedbc5','#fbebbd'));
+  const glow=c.createRadialGradient(w*.7,h*.23,0,w*.7,h*.23,w*.36);glow.addColorStop(0,'#fff3cf');glow.addColorStop(1,'#fff3cf00');fill(glow);
+  ['#bbc0ad','#a8b39f','#92a28e','#788c79','#5e7665','#435f50','#304b40'].forEach((color,i)=>{
+   const y=x=>h*(.26+i*.094+.11*Math.sin(x/w*5+i*1.72)+.12*(noise(x/230+i*13)-.5)+.025*noise(x/47+i*31));
+   layer(y,color);
+   for(let x=0;x<w;x+=2+random()*3)fir(x,y(x)+2,2+i*i*.24+random()*5,color)
+  })
+ }else if(id==='sand'){
+  fill(gradient('#cbc0ac','#f5d2a3'));
+  for(let i=0;i<5;i++){
+   const y=x=>h*(.32+i*.145+.10*Math.sin(x/w*4.6+i*2.3)+.045*noise(x/240+i));
+   layer(y,gradient(['#bd8862','#da9b62','#bd774a','#d89962','#a96943'][i],['#efd3a3','#f7b97b','#b56a40','#e5a873','#cb895b'][i]));
+   for(let j=0;j<9000;j++){const x=random()*w,t=random();c.fillStyle='rgba(85,43,25,.08)';c.fillRect(x,y(x)+t*t*h*.23,1+random()*3,1)}
+  }
+ }else if(id==='sea'){
+  fill(gradient('#aeb9b5','#e8e0c9'));const horizon=h*.37;
+  c.fillStyle=gradient('#afbab0','#577773');c.fillRect(0,horizon,w,h);
+  for(let i=0;i<12500;i++){const x=random()*w,t=random(),y=horizon+t*(h-horizon);c.fillStyle=`rgba(237,237,214,${random()*.44})`;c.fillRect(x,y,(2+random()*29)*(.17+t),.4+t)}
+  for(let i=0;i<6;i++){const edge=x=>h*(.52+i*.081+.034*Math.sin(x/96+i)+.012*noise(x/17+i));for(let j=0;j<1900;j++){const x=random()*w;c.fillStyle='rgba(242,241,219,.36)';c.fillRect(x,edge(x)+random()**2*9,random()*8,1)}}
+  layer(x=>h*(.52+.73*x/w+.1*noise(x/85)+.026*noise(x/9)),gradient('#59615a','#2c3732'))
+ }else{
+  fill(gradient('#b5b9a4','#849887'));
+  for(let i=0;i<5;i++){const color=['#9aa997','#849a89','#708875','#516d5d','#354f44'][i];
+   for(let j=0;j<75-i*13;j++){const x=random()*w,y=h*(.6+i*.12+random()*.2);fir(x,y,h*(.19+random()*.47+i*.025),color)}
+  }
+ }
+ const pixels=c.getImageData(0,0,w,h);
+ for(let i=0;i<pixels.data.length;i+=4){const grain=(random()-.5)*13;for(let k=0;k<3;k++)pixels.data[i+k]+=grain}
+ c.putImageData(pixels,0,0)
+}
+['ridge','sand','sea','wood'].forEach(landscape);
+const dialog=document.querySelector('dialog');
+document.querySelectorAll('.card').forEach(card=>card.addEventListener('click',()=>{
+ const canvas=card.querySelector('canvas'),img=dialog.querySelector('img');
+ img.src=canvas.toDataURL();img.alt=canvas.getAttribute('aria-label');
+ dialog.querySelector('h2').textContent=card.querySelector('strong').textContent;
+ dialog.querySelector('p').textContent=card.dataset.note;dialog.showModal()
+}));
+dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
+</script>
+</body>
+</html>

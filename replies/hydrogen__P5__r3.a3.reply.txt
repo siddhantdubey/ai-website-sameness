@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keel — Project work without the theatre</title>
+  <meta name="description" content="A calm, structured project ledger for product and engineering teams. Specs, cycles, and decisions in one place." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f2eb;
+      --bg-elevated: #fbf9f5;
+      --bg-sunk: #ece8de;
+      --ink: #161513;
+      --ink-muted: #5a5750;
+      --ink-faint: #8a857b;
+      --rule: #d8d3c8;
+      --rule-strong: #bfb8aa;
+      --accent: #c4411d;
+      --accent-soft: #f6e4dd;
+      --ok: #286246;
+      --ok-soft: #e2ede7;
+      --warn: #8c5a12;
+      --warn-soft: #f5ebd9;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --radius: 4px;
+      --container: 1160px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1;
+      color: var(--ink-muted);
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule-strong);
+      border-bottom-width: 2px;
+      border-radius: 3px;
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(245, 242, 235, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--ink-muted);
+      font-size: 14px;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 14px;
+      font-size: 13.5px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 80ms ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-muted);
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: var(--bg-sunk);
+    }
+
+    .btn-outline {
+      background: var(--bg-elevated);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--ink);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg-elevated);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: #2b2926;
+      border-color: #2b2926;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: clamp(38px, 5.2vw, 62px);
+      line-height: 1.03;
+      letter-spacing: -0.035em;
+    }
+
+    h1 em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-side {
+      padding-bottom: 6px;
+    }
+
+    .hero-lead {
+      margin: 0 0 22px;
+      font-size: 16.5px;
+      line-height: 1.55;
+      color: var(--ink-muted);
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-cta-row .btn {
+      padding: 10px 18px;
+      font-size: 14px;
+    }
+
+    .hero-meta {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink-faint);
+      font-size: 12.5px;
+    }
+
+    /* Interactive Workspace Specimen */
+    .specimen-section {
+      padding: 36px 0 72px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .specimen-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      color: var(--ink-muted);
+      font-size: 12.5px;
+    }
+
+    .specimen-hints {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .specimen-hints span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .app-frame {
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule-strong);
+      border-radius: 6px;
+      box-shadow: 0 1px 0 rgba(22, 21, 19, 0.04), 0 18px 40px -24px rgba(22, 21, 19, 0.16);
+      overflow: hidden;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 16px;
+      background: var(--bg-sunk);
+      border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap;
+    }
+
+    .app-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .app-breadcrumbs .sep {
+      color: var(--ink-faint);
+    }
+
+    .cycle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .app-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 190px;
+      padding: 5px 28px 5px 10px;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      color: var(--ink);
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 120ms ease, width 150ms ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--ink);
+      width: 230px;
+    }
+
+    .search-slash {
+      position: absolute;
+      right: 6px;
+      pointer-events: none;
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 205px 1fr 290px;
+      min-height: 430px;
+    }
+
+    .app-sidebar {
+      border-right: 1px solid var(--rule);
+      padding: 14px 10px;
+      background: #f7f4ee;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar-group-title {
+      padding: 6px 10px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
+
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 13px;
+      text-align: left;
+      color: var(--ink-muted);
+      background: transparent;
+      border: 0;
+      border-radius: 3px;
+    }
+
+    .sidebar-btn:hover {
+      background: var(--bg-sunk);
+      color: var(--ink);
+    }
+
+    .sidebar-btn.is-active {
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-weight: 500;
+      box-shadow: inset 0 0 0 1px var(--rule);
+    }
+
+    .sidebar-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+    }
+
+    .cycle-progress-card {
+      padding: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--bg-sunk);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--ok);
+      transition: width 200ms ease;
+    }
+
+    .progress-foot {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+    }
+
+    .app-main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap;
+    }
+
+    .stream-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stream-tab {
+      padding: 4px 10px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 3px;
+    }
+
+    .stream-tab:hover {
+      color: var(--ink);
+    }
+
+    .stream-tab.is-active {
+      background: var(--bg-sunk);
+      color: var(--ink);
+      font-weight: 500;
+      border-color: var(--rule);
+    }
+
+    .new-issue-bar {
+      display: none;
+      padding: 10px 16px;
+      background: #f9f6ef;
+      border-bottom: 1px solid var(--rule);
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .new-issue-bar.is-open {
+      display: flex;
+    }
+
+    .new-issue-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 6px 10px;
+      font-family: var(--sans);
+      font-size: 13px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+      color: var(--ink);
+    }
+
+    .new-issue-select {
+      padding: 6px 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+      color: var(--ink);
+    }
+
+    .ledger-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 28px 64px 1fr auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: background-color 100ms ease;
+    }
+
+    .ledger-row:hover {
+      background: #f7f4ee;
+    }
+
+    .ledger-row.is-selected {
+      background: #f2eee4;
+    }
+
+    .status-toggle {
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+    }
+
+    .status-toggle:hover {
+      background: var(--bg-sunk);
+    }
+
+    .issue-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
+
+    .issue-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 450;
+    }
+
+    .ledger-row.is-done .issue-title {
+      color: var(--ink-faint);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule-strong);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      font-family: var(--mono);
+      font-size: 11px;
+      border-radius: 3px;
+      border: 1px solid var(--rule);
+      color: var(--ink-muted);
+      background: var(--bg);
+    }
+
+    .tag-effort {
+      color: var(--ink-faint);
+      min-width: 26px;
+      justify-content: center;
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      background: var(--bg-sunk);
+      border: 1px solid var(--rule-strong);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-muted);
+    }
+
+    .ledger-empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--ink-faint);
+      font-size: 13.5px;
+    }
+
+    .app-inspector {
+      border-left: 1px solid var(--rule);
+      padding: 16px;
+      background: #faf8f3;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .inspector-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid transparent;
+    }
+
+    .status-queued {
+      background: var(--bg-sunk);
+      color: var(--ink-muted);
+      border-color: var(--rule);
+    }
+
+    .status-active {
+      background: var(--warn-soft);
+      color: var(--warn);
+      border-color: #e4cfab;
+    }
+
+    .status-done {
+      background: var(--ok-soft);
+      color: var(--ok);
+      border-color: #bed6c8;
+    }
+
+    .inspector-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+    }
+
+    .inspector-spec {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-muted);
+    }
+
+    .inspector-meta {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 8px 10px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-size: 12.5px;
+    }
+
+    .inspector-meta dt {
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .inspector-meta dd {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .inspector-note {
+      font-size: 12px;
+      color: var(--ink-muted);
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+
+    .inspector-note strong {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-faint);
+      margin-bottom: 4px;
+    }
+
+    /* Editorial Strip: Quiet Proof */
+    .teams-strip {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .teams-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .teams-label {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .teams-list {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      color: var(--ink-muted);
+    }
+
+    .teams-list span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Numbered Architecture Section */
+    .section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 40px;
+      margin-bottom: 52px;
+      align-items: end;
+    }
+
+    .section-kicker {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(28px, 3.6vw, 40px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .section-intro {
+      margin: 0;
+      font-size: 16px;
+      color: var(--ink-muted);
+      max-width: 520px;
+    }
+
+    .pillar-list {
+      border-top: 1px solid var(--rule);
+    }
+
+    .pillar-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1.05fr;
+      gap: 32px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+    }
+
+    .pillar-num {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--ink-faint);
+      padding-top: 4px;
+    }
+
+    .pillar-copy h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .pillar-copy p {
+      margin: 0;
+      color: var(--ink-muted);
+      max-width: 420px;
+    }
+
+    .pillar-artifact {
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule-strong);
+      border-radius: 5px;
+      padding: 16px;
+    }
+
+    /* Artifact 1: Cycle Strip */
+    .cycle-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .cycle-box {
+      padding: 10px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: var(--bg);
+    }
+
+    .cycle-box.is-current {
+      background: var(--bg-elevated);
+      border-color: var(--ink);
+    }
+
+    .cycle-box-head {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+
+    .cycle-box-stat {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .cycle-box-sub {
+      font-size: 11.5px;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+
+    /* Artifact 2: Inline Spec */
+    .spec-snippet {
+      font-size: 13px;
+    }
+
+    .spec-snippet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-muted);
+    }
+
+    .spec-snippet p {
+      margin: 0 0 10px;
+      color: var(--ink-muted);
+    }
+
+    .inline-ref {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 1px 6px;
+      background: var(--ok-soft);
+      color: var(--ok);
+      border: 1px solid #bed6c8;
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    /* Artifact 3: Digest */
+    .digest-card {
+      font-size: 13px;
+    }
+
+    .digest-top {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+    }
+
+    .digest-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-top: 1px dashed var(--rule);
+    }
+
+    /* Anti-features / Comparison */
+    .manifesto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .compare-card {
+      border: 1px solid var(--rule-strong);
+      border-radius: 5px;
+      background: var(--bg-elevated);
+      overflow: hidden;
+    }
+
+    .compare-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg-sunk);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .compare-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .compare-list li {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+
+    .compare-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .compare-mark {
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .compare-muted {
+      color: var(--ink-muted);
+    }
+
+    /* Pull Quotes */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .note-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule);
+      border-radius: 5px;
+    }
+
+    .note-quote {
+      margin: 0 0 20px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+
+    .note-author {
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .note-name {
+      font-weight: 600;
+      font-size: 13.5px;
+    }
+
+    .note-role {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      margin-top: 3px;
+    }
+
+    /* Pricing */
+    .pricing-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      padding: 3px;
+      background: var(--bg-sunk);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      gap: 2px;
+    }
+
+    .billing-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      border: 0;
+      border-radius: 3px;
+      background: transparent;
+      color: var(--ink-muted);
+    }
+
+    .billing-btn.is-active {
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .plan-card {
+      padding: 28px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule-strong);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .plan-card.is-studio-plus {
+      border-color: var(--ink);
+    }
+
+    .plan-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .plan-name {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 18px 0 6px;
+    }
+
+    .plan-amount {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .plan-unit {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
+
+    .plan-desc {
+      margin: 0 0 20px;
+      color: var(--ink-muted);
+      font-size: 14px;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 18px 0 24px;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--ink-muted);
+    }
+
+    .plan-features li {
+      display: flex;
+      gap: 10px;
+    }
+
+    .solo-strip {
+      margin-top: 20px;
+      padding: 16px 22px;
+      background: var(--bg-sunk);
+      border: 1px solid var(--rule);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    /* Final CTA + Modal */
+    .closing-band {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .closing-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .closing-grid h2 {
+      max-width: 560px;
+    }
+
+    /* Footer */
+    .site-footer {
+      padding: 40px 0 48px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .footer-col h4 {
+      margin: 0 0 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-faint);
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-faint);
+    }
+
+    .status-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-muted);
+    }
+
+    .status-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ok);
+    }
+
+    /* Simple Dialog */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(22, 21, 19, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--rule-strong);
+      border-radius: 6px;
+      padding: 24px;
+      box-shadow: 0 24px 48px -18px rgba(22, 21, 19, 0.35);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-close {
+      border: 1px solid var(--rule);
+      background: var(--bg);
+      border-radius: 3px;
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+      line-height: 1;
+      color: var(--ink-muted);
+    }
+
+    .field-label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin: 14px 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 9px 11px;
+      font-family: var(--sans);
+      font-size: 14px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .modal-note {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .hero-grid,
+      .section-head,
+      .pillar-row,
+      .manifesto-grid,
+      .pricing-grid,
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pillar-row {
+        gap: 16px;
+      }
+
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+
+      .app-sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--rule);
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .sidebar-nav {
+        flex-direction: row;
+        margin-bottom: 0;
+        flex-wrap: wrap;
+      }
+
+      .cycle-progress-card {
+        min-width: 220px;
+      }
+
+      .app-inspector {
+        border-left: 0;
+        border-top: 1px solid var(--rule);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+
+      .specimen-hints {
+        display: none;
+      }
+
+      .ledger-row {
+        grid-template-columns: 26px 56px 1fr auto;
+      }
+
+      .ledger-row .tag-effort {
+        display: none;
+      }
+
+      .cycle-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Keel home">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="3" stroke="#161513" stroke-width="1.75"/>
+          <path d="M6 16.5L12 7.5L18 16.5" stroke="#161513" stroke-width="1.75" stroke-linecap="square"/>
+          <path d="M12 7.5V19" stroke="#C4411D" stroke-width="1.75"/>
+        </svg>
+        <span>Keel</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#system">System</a>
+        <a href="#boundaries">Boundaries</a>
+        <a href="#notes">Teams</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-ghost" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary" data-open-modal="workspace">Start workspace</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>Release 2.4 · Calm issue &amp; cycle ledger</span>
+          </div>
+          <h1>Project work <em>without</em> the theatre.</h1>
+        </div>
+        <div class="hero-side">
+          <p class="hero-lead">
+            Keel keeps specs, fixed two-week cycles, and product decisions in one plainspoken ledger—so small teams spend Friday afternoons shipping, not grooming backlogs.
+          </p>
+          <div class="hero-cta-row">
+            <button type="button" class="btn btn-primary" data-open-modal="workspace">Create a workspace</button>
+            <a href="#specimen" class="btn btn-outline">Inspect live ledger</a>
+          </div>
+          <div class="hero-meta">
+            <span>Free for solo &amp; open source</span>
+            <span>·</span>
+            <span>Import from Linear or Jira in 2 min</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Specimen -->
+    <section class="specimen-section" id="specimen" aria-label="Interactive workspace preview">
+      <div class="container">
+        <div class="specimen-caption">
+          <span class="mono">LIVE WORKSPACE SPECIMEN — CLICK ANY ROW OR STATUS BOX</span>
+          <div class="specimen-hints">
+            <span><kbd class="kbd">/</kbd> filter</span>
+            <span><kbd class="kbd">N</kbd> log item</span>
+          </div>
+        </div>
+
+        <div class="app-frame">
+          <div class="app-topbar">
+            <div class="app-breadcrumbs">
+              <span>Northstar Studio</span>
+              <span class="sep">/</span>
+              <span id="view-title">Cycle 18</span>
+              <span class="cycle-pill">Nov 11 – Nov 25</span>
+            </div>
+
+            <div class="app-controls">
+              <div class="search-input-wrap">
+                <input id="ledger-search" class="search-input" type="search" placeholder="Filter issues..." aria-label="Filter issues" />
+                <kbd class="kbd search-slash">/</kbd>
+              </div>
+              <button type="button" class="btn btn-outline" id="toggle-new-issue" style="padding: 5px 10px; font-size: 12.5px;">
+                + New item <kbd class="kbd">N</kbd>
+              </button>
+            </div>
+          </div>
+
+          <div class="app-body">
+            <aside class="app-sidebar" aria-label="Workspace views">
+              <div>
+                <div class="sidebar-group-title">Ledger</div>
+                <div class="sidebar-nav">
+                  <button type="button" class="sidebar-btn is-active" data-view="cycle">
+                    <span>Cycle 18</span>
+                    <span class="sidebar-count" id="count-cycle">6</span>
+                  </button>
+                  <button type="button" class="sidebar-btn" data-view="backlog">
+                    <span>Backlog</span>
+                    <span class="sidebar-count" id="count-backlog">3</span>
+                  </button>
+                  <button type="button" class="sidebar-btn" data-view="decisions">
+                    <span>Decisions</span>
+                    <span class="sidebar-count" id="count-decisions">2</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="cycle-progress-card">
+                <div class="progress-header">
+                  <strong>Cycle 18 progress</strong>
+                  <span class="mono" id="progress-pct">33%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="progress-fill" style="width: 33%"></div>
+                </div>
+                <div class="progress-foot" id="progress-foot">2 of 6 shipped · 2 days left</div>
+              </div>
+            </aside>
+
+            <div class="app-main">
+              <div class="filter-bar">
+                <div class="stream-tabs" role="tablist" aria-label="Filter by stream">
+                  <button type="button" class="stream-tab is-active" data-stream="all">All</button>
+                  <button type="button" class="stream-tab" data-stream="Core">Core</button>
+                  <button type="button" class="stream-tab" data-stream="Design">Design</button>
+                  <button type="button" class="stream-tab" data-stream="Infra">Infra</button>
+                </div>
+                <span class="mono" style="color: var(--ink-faint);" id="visible-count">6 items</span>
+              </div>
+
+              <form class="new-issue-bar" id="new-issue-form">
+                <input type="text" id="new-issue-title" class="new-issue-input" placeholder="Describe the concrete task (e.g. Fix keyboard trap in export modal)" required />
+                <select id="new-issue-stream" class="new-issue-select" aria-label="Stream">
+                  <option value="Core">Core</option>
+                  <option value="Design">Design</option>
+                  <option value="Infra">Infra</option>
+                </select>
+                <select id="new-issue-effort" class="new-issue-select" aria-label="Effort">
+                  <option value="S">S</option>
+                  <option value="M" selected>M</option>
+                  <option value="L">L</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="padding: 6px 12px; font-size: 12.5px;">Add</button>
+                <button type="button" class="btn btn-ghost" id="cancel-new-issue" style="padding: 6px 8px; font-size: 12.5px;">Esc</button>
+              </form>
+
+              <div class="ledger-list" id="ledger-list" role="list"></div>
+            </div>
+
+            <aside class="app-inspector" id="inspector" aria-label="Issue specification">
+              <!-- Populated by JS -->
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiet Social Proof Strip -->
+    <section class="teams-strip" aria-label="Teams using Keel">
+      <div class="container teams-row">
+        <span class="teams-label">In daily use at</span>
+        <div class="teams-list">
+          <span>Kestrel Labs</span>
+          <span>Studio Feld</span>
+          <span>Northstar Freight</span>
+          <span>Haldane Bio</span>
+          <span>Portway Press</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- System / Numbered Pillars -->
+    <section class="section" id="system">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Architecture</div>
+            <h2>Three deliberate constraints that keep projects legible.</h2>
+          </div>
+          <p class="section-intro">
+            Most trackers degrade into write-only databases after six months. Keel introduces mild, productive friction where teams usually lose clarity.
+          </p>
+        </div>
+
+        <div class="pillar-list">
+          <div class="pillar-row">
+            <div class="pillar-num">01 / 03</div>
+            <div class="pillar-copy">
+              <h3>Scoped cycles with honest endings</h3>
+              <p>
+                Work happens in fixed two-week windows. When a cycle closes, unfinished items do not silently roll over—you explicitly re-commit them or return them to the ledger.
+              </p>
+            </div>
+            <div class="pillar-artifact">
+              <div class="cycle-strip">
+                <div class="cycle-box">
+                  <div class="cycle-box-head"><span>C-16</span><span>CLOSED</span></div>
+                  <div class="cycle-box-stat">14 / 15</div>
+                  <div class="cycle-box-sub">1 dropped</div>
+                </div>
+                <div class="cycle-box">
+                  <div class="cycle-box-head"><span>C-17</span><span>CLOSED</span></div>
+                  <div class="cycle-box-stat">11 / 11</div>
+                  <div class="cycle-box-sub">0 rollover</div>
+                </div>
+                <div class="cycle-box is-current">
+                  <div class="cycle-box-head"><span>C-18</span><span style="color: var(--accent);">ACTIVE</span></div>
+                  <div class="cycle-box-stat">2 / 6</div>
+                  <div class="cycle-box-sub">2d remaining</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pillar-row">
+            <div class="pillar-num">02 / 03</div>
+            <div class="pillar-copy">
+              <h3>Specs live beside the tasks they spawn</h3>
+              <p>
+                Stop splitting context across a wiki and an issue tracker. Write a one-page markdown brief, highlight any sentence, and link it directly to an executable ticket.
+              </p>
+            </div>
+            <div class="pillar-artifact spec-snippet">
+              <div class="spec-snippet-head">
+                <span>BRIEF · OFFLINE SYNC V2</span>
+                <span>UPDATED 2H AGO</span>
+              </div>
+              <p>
+                When a client reconnects on a flaky cellular link, queued mutations must preserve local ordering before reconciling server timestamps.
+              </p>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <span class="inline-ref">✓ K-142 · Optimistic rollback</span>
+                <span class="mono" style="color: var(--ink-faint);">Linked by @mira</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pillar-row">
+            <div class="pillar-num">03 / 03</div>
+            <div class="pillar-copy">
+              <h3>Quiet by default, urgent only when blocked</h3>
+              <p>
+                Keel batches routine status changes into one morning digest at 09:00 local time. Notifications only interrupt your day when someone marks a task <code>@blocking</code>.
+              </p>
+            </div>
+            <div class="pillar-artifact digest-card">
+              <div class="digest-top">
+                <span>MORNING DIGEST · 09:00</span>
+                <span>3 UPDATES</span>
+              </div>
+              <div class="digest-line">
+                <span><strong>K-144</strong> Cache invalidation shipped</span>
+                <span class="mono" style="color: var(--ok);">DONE</span>
+              </div>
+              <div class="digest-line">
+                <span><strong>K-148</strong> Focus ring audit ready for review</span>
+                <span class="mono" style="color: var(--warn);">REVIEW</span>
+              </div>
+              <div class="digest-line">
+                <span><strong>D-019</strong> Decision logged: drop IE/old Safari</span>
+                <span class="mono" style="color: var(--ink-faint);">NOTE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What Keel refuses to build -->
+    <section class="section" id="boundaries">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Boundaries</div>
+            <h2>What Keel refuses to build.</h2>
+          </div>
+          <p class="section-intro">
+            Software gets slow when every enterprise checkbox becomes a permanent tab. Here is where we draw the line.
+          </p>
+        </div>
+
+        <div class="manifesto-grid">
+          <div class="compare-card">
+            <div class="compare-head">
+              <span>Typical project trackers</span>
+              <span class="mono" style="color: var(--ink-faint);">STATUS QUO</span>
+            </div>
+            <ul class="compare-list compare-muted">
+              <li><span class="compare-mark">×</span><span>Story-point velocity charts that turn engineering estimates into theatre.</span></li>
+              <li><span class="compare-mark">×</span><span>Six levels of nested epics, initiatives, sub-tasks, and custom required fields.</span></li>
+              <li><span class="compare-mark">×</span><span>Real-time notification badges for every label edit and emoji reaction.</span></li>
+              <li><span class="compare-mark">×</span><span>Per-seat surcharges just to unlock SSO, audit logs, or API webhooks.</span></li>
+            </ul>
+          </div>
+
+          <div class="compare-card" style="border-color: var(--ink);">
+            <div class="compare-head">
+              <span>Keel ledger</span>
+              <span class="mono" style="color: var(--accent);">OPINIONATED</span>
+            </div>
+            <ul class="compare-list">
+              <li><span class="compare-mark" style="color: var(--ok);">✓</span><span>Plain effort tags (<code>S</code>, <code>M</code>, <code>L</code>) and actual cycle completion ratios.</span></li>
+              <li><span class="compare-mark" style="color: var(--ok);">✓</span><span>Flat two-level hierarchy: a brief and its tasks. Nothing deeper.</span></li>
+              <li><span class="compare-mark" style="color: var(--ok);">✓</span><span>Once-daily digest by default; instant alerts reserved strictly for blockers.</span></li>
+              <li><span class="compare-mark" style="color: var(--ok);">✓</span><span>Full REST + GraphQL API, webhooks, and Markdown export on every plan.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Field Notes / Testimonials -->
+    <section class="section" id="notes">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Field notes</div>
+            <h2>From teams who left bloated boards behind.</h2>
+          </div>
+          <p class="section-intro">
+            Short dispatches from engineering and product leads after their first three cycles.
+          </p>
+        </div>
+
+        <div class="notes-grid">
+          <article class="note-card">
+            <p class="note-quote">
+              “We deleted 400 zombie tickets during our migration from Jira and never missed one. Having the spec directly beside the issue stopped half our Slack threads.”
+            </p>
+            <div class="note-author">
+              <div class="note-name">Lukas Meier</div>
+              <div class="note-role">STAFF ENGINEER · KESTREL LABS (14 SEATS)</div>
+            </div>
+          </article>
+
+          <article class="note-card">
+            <p class="note-quote">
+              “Monday planning used to take 90 minutes of dragging cards around. Now we review the ledger in fifteen minutes and get back to building.”
+            </p>
+            <div class="note-author">
+              <div class="note-name">Nadia Okafor</div>
+              <div class="note-role">HEAD OF PRODUCT · PORTWAY PRESS (9 SEATS)</div>
+            </div>
+          </article>
+
+          <article class="note-card">
+            <p class="note-quote">
+              “It feels like an instrument rather than a dashboard. Keyboard navigation is instantaneous and nobody has asked for a custom workflow state in eight months.”
+            </p>
+            <div class="note-author">
+              <div class="note-name">Tomasz Zieliński</div>
+              <div class="note-role">DESIGN LEAD · STUDIO FELD (6 SEATS)</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="pricing-top">
+          <div>
+            <div class="section-kicker">Pricing</div>
+            <h2>Flat, predictable pricing.</h2>
+          </div>
+          <div class="billing-toggle" role="group" aria-label="Billing interval">
+            <button type="button" class="billing-btn is-active" data-billing="annual">Annual (save 20%)</button>
+            <button type="button" class="billing-btn" data-billing="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="plan-card">
+            <div>
+              <div class="plan-name-row">
+                <span class="plan-name">Studio</span>
+                <span class="mono" style="color: var(--ink-faint);">UP TO 25 SEATS</span>
+              </div>
+              <div class="plan-price">
+                <span class="plan-amount" data-annual="$10" data-monthly="$12">$10</span>
+                <span class="plan-unit">/ active seat / mo</span>
+              </div>
+              <p class="plan-desc">Everything a focused product &amp; engineering team needs to plan cycles and ship reliably.</p>
+              <ul class="plan-features">
+                <li><span>—</span><span>Unlimited cycles, briefs, and decision logs</span></li>
+                <li><span>—</span><span>GitHub &amp; GitLab PR auto-linking</span></li>
+                <li><span>—</span><span>Morning digest &amp; Slack blocker bridge</span></li>
+                <li><span>—</span><span>Full JSON &amp; Markdown workspace export anytime</span></li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-outline" data-open-modal="workspace">Start 14-day trial</button>
+          </div>
+
+          <div class="plan-card is-studio-plus">
+            <div>
+              <div class="plan-name-row">
+                <span class="plan-name">Company</span>
+                <span class="mono" style="color: var(--accent);">MULTI-TEAM</span>
+              </div>
+              <div class="plan-price">
+                <span class="plan-amount" data-annual="$18" data-monthly="$22">$18</span>
+                <span class="plan-unit">/ active seat / mo</span>
+              </div>
+              <p class="plan-desc">For multi-squad organizations that want cross-team visibility without administrative sprawl.</p>
+              <ul class="plan-features">
+                <li><span>—</span><span>Everything in Studio, plus unlimited teams</span></li>
+                <li><span>—</span><span>SAML SSO &amp; SCIM provisioning</span></li>
+                <li><span>—</span><span>Read-only guest links for clients &amp; stakeholders</span></li>
+                <li><span>—</span><span>99.95% SLA &amp; dedicated onboarding engineer</span></li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-primary" data-open-modal="workspace">Start 14-day trial</button>
+          </div>
+        </div>
+
+        <div class="solo-strip">
+          <div>
+            <strong>Solo &amp; Open Source — $0 forever.</strong>
+            <span style="color: var(--ink-muted);">Up to 3 contributors, unlimited issues, no credit card required.</span>
+          </div>
+          <button type="button" class="btn btn-outline" data-open-modal="workspace">Start free</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing Band -->
+    <section class="closing-band">
+      <div class="container closing-grid">
+        <div>
+          <div class="section-kicker">Ready in two minutes</div>
+          <h2>Bring your current sprint. Leave the clutter behind.</h2>
+        </div>
+        <div class="hero-cta-row">
+          <button type="button" class="btn btn-primary" data-open-modal="workspace" style="padding: 12px 20px;">Create workspace</button>
+          <a href="#specimen" class="btn btn-outline" style="padding: 12px 20px;">Try the ledger above</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom: 10px;">
+            <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="3" stroke="#161513" stroke-width="1.75"/>
+              <path d="M6 16.5L12 7.5L18 16.5" stroke="#161513" stroke-width="1.75" stroke-linecap="square"/>
+              <path d="M12 7.5V19" stroke="#C4411D" stroke-width="1.75"/>
+            </svg>
+            <span>Keel</span>
+          </div>
+          <p style="margin: 0; max-width: 280px; color: var(--ink-faint);">
+            Built independently in Zurich &amp; Montreal. Plaintext-friendly, keyboard-first, zero ad tracking.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#system">Cycle architecture</a></li>
+            <li><a href="#boundaries">What we refuse</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#specimen">Live specimen</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="#system">Keyboard shortcuts</a></li>
+            <li><a href="#system">CLI &amp; REST API</a></li>
+            <li><a href="#system">Jira / Linear importer</a></li>
+            <li><a href="#system">Markdown format</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#notes">Customer notes</a></li>
+            <li><a href="mailto:hello@keel.work">hello@keel.work</a></li>
+            <li><a href="#pricing">Security &amp; SOC2</a></li>
+            <li><a href="#pricing">Changelog (v2.4)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Keel Software AG</span>
+        <span class="status-live"><span class="status-live-dot"></span>All systems operational · 99.98% 90d</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Workspace / Sign-in Modal -->
+  <div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="modal-title">Start a Keel workspace</h3>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">×</button>
+      </div>
+      <form id="modal-form">
+        <div id="modal-workspace-fields">
+          <label class="field-label" for="ws-name">Workspace name</label>
+          <input class="field-input" id="ws-name" type="text" placeholder="e.g. Northstar Studio" required />
+        </div>
+        <label class="field-label" for="ws-email">Work email</label>
+        <input class="field-input" id="ws-email" type="email" placeholder="you@company.com" required />
+
+        <div style="margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" id="modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-submit">Continue</button>
+        </div>
+        <div class="modal-note" id="modal-feedback"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const INITIAL_ITEMS = [
+        {
+          id: "K-142",
+          view: "cycle",
+          stream: "Core",
+          title: "Fix optimistic rollback when offline queue replays on 3G",
+          status: "done",
+          effort: "M",
+          owner: "LM",
+          ownerName: "Lukas Meier",
+          spec: "Preserve local client sequence numbers when the WebSocket reconnects mid-mutation so edits do not jump out of order.",
+          decision: "Checked in PR #814. Verified under Chrome 3G throttling profile."
+        },
+        {
+          id: "K-144",
+          view: "cycle",
+          stream: "Infra",
+          title: "Invalidate stale workspace cache keys after role downgrade",
+          status: "done",
+          effort: "S",
+          owner: "MK",
+          ownerName: "Mira Kapoor",
+          spec: "Emit a scoped pubsub event whenever a member shifts from Admin to Member so edge KV drops cached permissions within 2s.",
+          decision: "Deployed to EU & US-East clusters on Nov 18."
+        },
+        {
+          id: "K-148",
+          view: "cycle",
+          stream: "Design",
+          title: "Audit keyboard focus rings against warm paper background",
+          status: "active",
+          effort: "S",
+          owner: "TZ",
+          ownerName: "Tomasz Zielinski",
+          spec: "Ensure every interactive row, status button, and tab meets 4.5:1 contrast with a crisp 2px charcoal focus ring.",
+          decision: "In review. Waiting on final pass in Safari VoiceOver."
+        },
+        {
+          id: "K-151",
+          view: "cycle",
+          stream: "Infra",
+          title: "Deprecate legacy webhook v1 signing secret header",
+          status: "active",
+          effort: "M",
+          owner: "MK",
+          ownerName: "Mira Kapoor",
+          spec: "Send X-Keel-Signature-256 alongside legacy header for 14 days and email the 4 remaining endpoints still on v1.",
+          decision: "2 of 4 customer endpoints migrated as of Tuesday."
+        },
+        {
+          id: "K-154",
+          view: "cycle",
+          stream: "Core",
+          title: "Keyboard shortcut palette for moving items between cycles",
+          status: "queued",
+          effort: "M",
+          owner: "NO",
+          ownerName: "Nadia Okafor",
+          spec: "Pressing M on any focused row opens a compact picker for Current Cycle, Next Cycle, or Backlog without touching the mouse.",
+          decision: "Scoped cleanly; ready to pick up after K-148."
+        },
+        {
+          id: "K-156",
+          view: "cycle",
+          stream: "Design",
+          title: "Print stylesheet for exporting cycle summaries as PDF",
+          status: "queued",
+          effort: "S",
+          owner: "TZ",
+          ownerName: "Tomasz Zielinski",
+          spec: "Strip navigation chrome and format the ledger cleanly on A4/Letter for Friday stakeholder notes.",
+          decision: "Nice-to-have inside Cycle 18; drop if K-154 expands."
+        },
+        {
+          id: "K-161",
+          view: "backlog",
+          stream: "Core",
+          title: "Bulk import CSV mapping preview before commit",
+          status: "queued",
+          effort: "L",
+          owner: "LM",
+          ownerName: "Lukas Meier",
+          spec: "Let migrating teams inspect the first 10 rows and resolve unknown owners before writing tickets to the ledger.",
+          decision: "Candidate for Cycle 19."
+        },
+        {
+          id: "K-164",
+          view: "backlog",
+          stream: "Infra",
+          title: "Read-only SQLite snapshot download in workspace settings",
+          status: "queued",
+          effort: "M",
+          owner: "MK",
+          ownerName: "Mira Kapoor",
+          spec: "Generate a compressed weekly archive containing issues, briefs, and decision logs for self-hosted backups.",
+          decision: "Requested by Studio Feld & Haldane Bio."
+        },
+        {
+          id: "K-167",
+          view: "backlog",
+          stream: "Design",
+          title: "Compact density toggle for 25+ row triage sessions",
+          status: "queued",
+          effort: "S",
+          owner: "TZ",
+          ownerName: "Tomasz Zielinski",
+          spec: "Reduce row vertical padding from 10px to 6px when triage mode is active.",
+          decision: "Waiting for user feedback on default row height."
+        },
+        {
+          id: "D-019",
+          view: "decisions",
+          stream: "Core",
+          title: "Keep hierarchy flat: specs + tasks only, no nested subtasks",
+          status: "done",
+          effort: "S",
+          owner: "NO",
+          ownerName: "Nadia Okafor",
+          spec: "Multiple customers asked for 4-level sub-issues. Deeper nesting hides scope creep; large tasks should split into peer items instead.",
+          decision: "Ratified Nov 12 by product & engineering leads."
+        },
+        {
+          id: "D-021",
+          view: "decisions",
+          stream: "Infra",
+          title: "Batch routine notifications into 09:00 local morning digest",
+          status: "done",
+          effort: "S",
+          owner: "MK",
+          ownerName: "Mira Kapoor",
+          spec: "Only @blocking tags trigger immediate push/Slack alerts. Everything else waits for the single daily summary.",
+          decision: "Enabled by default across all new workspaces in v2.4."
+        }
+      ];
+
+      let items = INITIAL_ITEMS.map((item) => ({ ...item }));
+      let activeView = "cycle";
+      let activeStream = "all";
+      let searchQuery = "";
+      let selectedId = items[2].id;
+      let nextIssueNumber = 170;
+
+      const listEl = document.getElementById("ledger-list");
+      const inspectorEl = document.getElementById("inspector");
+      const viewTitleEl = document.getElementById("view-title");
+      const visibleCountEl = document.getElementById("visible-count");
+      const searchInput = document.getElementById("ledger-search");
+      const newIssueBar = document.getElementById("new-issue-form");
+      const newIssueTitle = document.getElementById("new-issue-title");
+      const newIssueStream = document.getElementById("new-issue-stream");
+      const newIssueEffort = document.getElementById("new-issue-effort");
+
+      const STATUS_ORDER = ["queued", "active", "done"];
+      const STATUS_LABEL = {
+        queued: "Queued",
+        active: "In progress",
+        done: "Shipped"
+      };
+
+      function statusIcon(status) {
+        if (status === "done") {
+          return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="#286246" stroke="#286246"/><path d="M4.5 8.2L6.9 10.6L11.5 5.6" stroke="#FBF9F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+        if (status === "active") {
+          return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke="#8C5A12" stroke-width="1.4"/><circle cx="8" cy="8" r="3.2" fill="#C4411D"/></svg>';
+        }
+        return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke="#8A857B" stroke-width="1.4"/></svg>';
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function updateCounts() {
+        const cycleItems = items.filter((i) => i.view === "cycle");
+        const doneCount = cycleItems.filter((i) => i.status === "done").length;
+        const pct = cycleItems.length ? Math.round((doneCount / cycleItems.length) * 100) : 0;
+
+        document.getElementById("count-cycle").textContent = cycleItems.length;
+        document.getElementById("count-backlog").textContent = items.filter((i) => i.view === "backlog").length;
+        document.getElementById("count-decisions").textContent = items.filter((i) => i.view === "decisions").length;
+        document.getElementById("progress-pct").textContent = pct + "%";
+        document.getElementById("progress-fill").style.width = pct + "%";
+        document.getElementById("progress-foot").textContent =
+          doneCount + " of " + cycleItems.length + " shipped · 2 days left";
+      }
+
+      function getFilteredItems() {
+        return items.filter((item) => {
+          if (item.view !== activeView) return false;
+          if (activeStream !== "all" && item.stream !== activeStream) return false;
+          if (searchQuery) {
+            const hay = (item.id + " " + item.title + " " + item.stream).toLowerCase();
+            if (!hay.includes(searchQuery.toLowerCase())) return false;
+          }
+          return true;
+        });
+      }
+
+      function renderInspector() {
+        const item = items.find((i) => i.id === selectedId) || getFilteredItems()[0] || items[0];
+        if (!item) return;
+
+        const statusClass =
+          item.status === "done"
+            ? "status-done"
+            : item.status === "active"
+            ? "status-active"
+            : "status-queued";
+
+        inspectorEl.innerHTML =
+          '<div class="inspector-top">' +
+            '<span class="mono" style="color: var(--ink-faint);">' + escapeHtml(item.id) + "</span>" +
+            '<button type="button" class="status-badge ' + statusClass + '" id="inspector-cycle-status" title="Click to change status">' +
+              STATUS_LABEL[item.status] +
+            "</button>" +
+          "</div>" +
+          '<h3 class="inspector-title">' + escapeHtml(item.title) + "</h3>" +
+          '<p class="inspector-spec">' + escapeHtml(item.spec) + "</p>" +
+          '<dl class="inspector-meta">' +
+            "<dt>Stream</dt><dd>" + escapeHtml(item.stream) + "</dd>" +
+            "<dt>Effort</dt><dd>" + escapeHtml(item.effort) + "</dd>" +
+            "<dt>Owner</dt><dd>" + escapeHtml(item.ownerName) + "</dd>" +
+            "<dt>Ledger</dt><dd>" + (item.view === "cycle" ? "Cycle 18" : item.view === "backlog" ? "Backlog" : "Decisions") + "</dd>" +
+          "</dl>" +
+          '<div class="inspector-note">' +
+            "<strong>Decision / Log</strong>" +
+            escapeHtml(item.decision) +
+          "</div>";
+
+        const badgeBtn = document.getElementById("inspector-cycle-status");
+        if (badgeBtn) {
+          badgeBtn.addEventListener("click", function () {
+            cycleStatus(item.id);
+          });
+        }
+      }
+
+      function cycleStatus(id) {
+        const target = items.find((i) => i.id === id);
+        if (!target) return;
+        const nextIdx = (STATUS_ORDER.indexOf(target.status) + 1) % STATUS_ORDER.length;
+        target.status = STATUS_ORDER[nextIdx];
+        render();
+      }
+
+      function render() {
+        updateCounts();
+        const filtered = getFilteredItems();
+        visibleCountEl.textContent = filtered.length + (filtered.length === 1 ? " item" : " items");
+
+        if (!filtered.some((i) => i.id === selectedId) && filtered.length > 0) {
+          selectedId = filtered[0].id;
+        }
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = '<div class="ledger-empty">No matching items in this view.</div>';
+        } else {
+          listEl.innerHTML = filtered
+            .map((item) => {
+              const rowClasses = [
+                "ledger-row",
+                item.status === "done" ? "is-done" : "",
+                item.id === selectedId ? "is-selected" : ""
+              ]
+                .filter(Boolean)
+                .join(" ");
+
+              return (
+                '<div class="' + rowClasses + '" data-id="' + escapeHtml(item.id) + '" role="listitem">' +
+                  '<button type="button" class="status-toggle" data-toggle-id="' + escapeHtml(item.id) + '" aria-label="Cycle status for ' + escapeHtml(item.id) + '">' +
+                    statusIcon(item.status) +
+                  "</button>" +
+                  '<span class="issue-id">' + escapeHtml(item.id) + "</span>" +
+                  '<span class="issue-title">' + escapeHtml(item.title) + "</span>" +
+                  '<span class="tag">' + escapeHtml(item.stream) + "</span>" +
+                  '<span class="tag tag-effort">' + escapeHtml(item.effort) + "</span>" +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        renderInspector();
+      }
+
+      listEl.addEventListener("click", function (e) {
+        const toggleBtn = e.target.closest("[data-toggle-id]");
+        if (toggleBtn) {
+          e.stopPropagation();
+          cycleStatus(toggleBtn.getAttribute("data-toggle-id"));
+          return;
+        }
+        const row = e.target.closest(".ledger-row");
+        if (row) {
+          selectedId = row.getAttribute("data-id");
+          render();
+        }
+      });
+
+      document.querySelectorAll("[data-view]").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll("[data-view]").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          activeView = btn.getAttribute("data-view");
+          viewTitleEl.textContent =
+            activeView === "cycle" ? "Cycle 18" : activeView === "backlog" ? "Backlog" : "Decisions";
+          render();
+        });
+      });
+
+      document.querySelectorAll("[data-stream]").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          document.querySelectorAll("[data-stream]").forEach((t) => t.classList.remove("is-active"));
+          tab.classList.add("is-active");
+          activeStream = tab.getAttribute("data-stream");
+          render();
+        });
+      });
+
+      searchInput.addEventListener("input", function (e) {
+        searchQuery = e.target.value.trim();
+        render();
+      });
+
+      function openNewIssueBar() {
+        newIssueBar.classList.add("is-open");
+        newIssueTitle.focus();
+      }
+
+      function closeNewIssueBar() {
+        newIssueBar.classList.remove("is-open");
+        newIssueTitle.value = "";
+      }
+
+      document.getElementById("toggle-new-issue").addEventListener("click", function () {
+        if (newIssueBar.classList.contains("is-open")) {
+          closeNewIssueBar();
+        } else {
+          openNewIssueBar();
+        }
+      });
+
+      document.getElementById("cancel-new-issue").addEventListener("click", closeNewIssueBar);
+
+      newIssueBar.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const title = newIssueTitle.value.trim();
+        if (!title) return;
+        const prefix = activeView === "decisions" ? "D-" : "K-";
+        const id = prefix + nextIssueNumber++;
+        items.unshift({
+          id: id,
+          view: activeView,
+          stream: newIssueStream.value,
+          title: title,
+          status: "queued",
+          effort: newIssueEffort.value,
+          owner: "YO",
+          ownerName: "You (Demo)",
+          spec: "Logged directly from the live specimen. Click the status badge above to move this item through the cycle.",
+          decision: "Added just now."
+        });
+        selectedId = id;
+        closeNewIssueBar();
+        render();
+      });
+
+      // Keyboard shortcuts inside specimen
+      document.addEventListener("keydown", function (e) {
+        const tag = (document.activeElement && document.activeElement.tagName) || "";
+        const inField = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+
+        if (e.key === "Escape") {
+          if (modalBackdrop.classList.contains("is-open")) {
+            closeModal();
+            return;
+          }
+          if (newIssueBar.classList.contains("is-open")) {
+            closeNewIssueBar();
+            return;
+          }
+          if (inField) {
+            document.activeElement.blur();
+          }
+          return;
+        }
+
+        if (inField) return;
+
+        if (e.key === "/") {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key === "n" || e.key === "N") {
+          e.preventDefault();
+          openNewIssueBar();
+        }
+      });
+
+      // Billing toggle
+      document.querySelectorAll("[data-billing]").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll("[data-billing]").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          const mode = btn.getAttribute("data-billing");
+          document.querySelectorAll(".plan-amount").forEach((el) => {
+            el.textContent = el.getAttribute("data-" + mode);
+          });
+        });
+      });
+
+      // Modal handling
+      const modalBackdrop = document.getElementById("modal-backdrop");
+      const modalTitle = document.getElementById("modal-title");
+      const modalWsFields = document.getElementById("modal-workspace-fields");
+      const modalWsInput = document.getElementById("ws-name");
+      const modalEmailInput = document.getElementById("ws-email");
+      const modalFeedback = document.getElementById("modal-feedback");
+      const modalSubmit = document.getElementById("modal-submit");
+      let modalMode = "workspace";
+
+      function openModal(mode) {
+        modalMode = mode;
+        modalFeedback.textContent = "";
+        modalSubmit.disabled = false;
+        if (mode === "signin") {
+          modalTitle.textContent = "Sign in to Keel";
+          modalWsFields.style.display = "none";
+          modalWsInput.required = false;
+          modalSubmit.textContent = "Send login link";
+        } else {
+          modalTitle.textContent = "Start a Keel workspace";
+          modalWsFields.style.display = "block";
+          modalWsInput.required = true;
+          modalSubmit.textContent = "Create workspace";
+        }
+        modalBackdrop.classList.add("is-open");
+        setTimeout(() => {
+          (mode === "signin" ? modalEmailInput : modalWsInput).focus();
+        }, 30);
+      }
+
+      function closeModal() {
+        modalBackdrop.classList.remove("is-open");
+      }
+
+      document.querySelectorAll("[data-open-modal]").forEach((trigger) => {
+        trigger.addEventListener("click", function () {
+          openModal(trigger.getAttribute("data-open-modal"));
+        });
+      });
+
+      document.getElementById("modal-close").addEventListener("click", closeModal);
+      document.getElementById("modal-cancel").addEventListener("click", closeModal);
+      modalBackdrop.addEventListener("click", function (e) {
+        if (e.target === modalBackdrop) closeModal();
+      });
+
+      document.getElementById("modal-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = modalEmailInput.value.trim();
+        if (modalMode === "signin") {
+          modalFeedback.textContent = "If an account exists for " + email + ", a single-use sign-in link has been dispatched.";
+        } else {
+          const ws = modalWsInput.value.trim();
+          modalFeedback.textContent = "Workspace \"" + ws + "\" reserved. Check " + email + " to finish setup.";
+        }
+        modalSubmit.disabled = true;
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

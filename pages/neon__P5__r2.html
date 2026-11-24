@@ -1,0 +1,2855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trestle — Project software that respects the work</title>
+  <meta name="description" content="A fast, keyboard-first project management workspace for small product teams. Cycles, clear owners, and a permanent record of what shipped." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #F4F1EA;
+      --paper-raised: #FAF8F4;
+      --paper-sunk: #EAE5D9;
+      --paper-hover: #EFEBE1;
+      --ink: #161614;
+      --ink-2: #4B4841;
+      --ink-3: #6D6960;
+      --rule: #D6D0C3;
+      --rule-strong: #B9B1A0;
+      --accent: #BC4322;
+      --accent-hover: #9E3518;
+      --accent-soft: #F3E2DC;
+      --forest: #24513B;
+      --forest-soft: #DCE9E1;
+      --slate: #264866;
+      --slate-soft: #DEE7EF;
+      --ochre: #8C5E14;
+      --ochre-soft: #F3E8D2;
+
+      --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --max-w: 1200px;
+      --radius: 3px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle rag-paper texture overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top hairline utility bar */
+    .utility-strip {
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      background: var(--paper-sunk);
+    }
+
+    .utility-strip-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 7px 0;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--forest);
+      display: inline-block;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(244, 241, 234, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .nav-links a {
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      transition: background-color 0.14s ease, border-color 0.14s ease, transform 0.08s ease;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: var(--paper-sunk);
+    }
+
+    .btn-outline {
+      background: var(--paper-raised);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+    }
+
+    .btn-outline:hover {
+      background: var(--paper-hover);
+      border-color: var(--ink);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper-raised);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: #2C2B27;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: var(--paper-raised);
+      border-color: var(--accent);
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .kbd {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1;
+      padding: 3px 5px;
+      border: 1px solid var(--rule-strong);
+      border-bottom-width: 2px;
+      border-radius: 3px;
+      background: var(--paper-raised);
+      color: var(--ink-2);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 58px 0 44px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
+      gap: 48px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.65rem, 5.2vw, 4.25rem);
+      line-height: 1.03;
+      letter-spacing: -0.025em;
+      margin: 0 0 22px;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      font-size: 17.5px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 56ch;
+      margin: 0 0 28px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-note {
+      margin-top: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .hero-spec-card {
+      border: 1px solid var(--rule);
+      background: var(--paper-raised);
+      padding: 20px 22px;
+    }
+
+    .spec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .spec-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 11px;
+    }
+
+    .spec-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 13.5px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    .spec-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .spec-label {
+      color: var(--ink-2);
+    }
+
+    .spec-val {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* Interactive App Demo Showcase */
+    .showcase-section {
+      padding: 36px 0 72px;
+      border-bottom: 1px solid var(--rule);
+      background: linear-gradient(to bottom, var(--paper) 0%, var(--paper-sunk) 100%);
+    }
+
+    .showcase-caption-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      flex-wrap: wrap;
+    }
+
+    .app-frame {
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+      border-radius: 4px;
+      box-shadow: 0 18px 40px -24px rgba(22, 22, 20, 0.22), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+      overflow: hidden;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 16px;
+      background: var(--paper-sunk);
+      border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap;
+    }
+
+    .app-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .app-breadcrumb strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .app-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--paper);
+      padding: 3px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+    }
+
+    .app-tab {
+      border: none;
+      background: transparent;
+      padding: 5px 11px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .app-tab:hover {
+      color: var(--ink);
+    }
+
+    .app-tab[aria-selected="true"] {
+      background: var(--paper-raised);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(22, 22, 20, 0.09);
+    }
+
+    .app-tab .kbd {
+      font-size: 10px;
+      padding: 2px 4px;
+    }
+
+    .cycle-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper-raised);
+      flex-wrap: wrap;
+    }
+
+    .cycle-title-group h2 {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cycle-dates {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink-3);
+    }
+
+    .cycle-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 240px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 7px;
+      background: var(--paper-sunk);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--forest);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .progress-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+
+    /* Main interactive app body */
+    .app-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) 330px;
+      min-height: 430px;
+    }
+
+    .app-body.board-mode,
+    .app-body.decisions-mode {
+      grid-template-columns: 1fr;
+    }
+
+    .app-main {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--rule);
+    }
+
+    .app-body.board-mode .app-main,
+    .app-body.decisions-mode .app-main {
+      border-right: none;
+    }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--rule);
+      background: #F7F4ED;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-2);
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-pill:hover {
+      background: var(--paper-sunk);
+    }
+
+    .filter-pill.active {
+      background: var(--paper-raised);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+    }
+
+    .pill-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 26px 68px minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 0.1s ease;
+    }
+
+    .task-row:hover {
+      background: var(--paper-hover);
+    }
+
+    .task-row.selected {
+      background: #EFE9DC;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .task-check {
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper-raised);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .task-check[aria-checked="true"] {
+      background: var(--forest);
+      border-color: var(--forest);
+      color: #fff;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .task-title {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .task-row.is-shipped .task-title {
+      color: var(--ink-3);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule-strong);
+    }
+
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 2px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .badge-active {
+      background: var(--slate-soft);
+      color: var(--slate);
+    }
+
+    .badge-review {
+      background: var(--ochre-soft);
+      color: var(--ochre);
+    }
+
+    .badge-blocked {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge-shipped {
+      background: var(--forest-soft);
+      color: var(--forest);
+    }
+
+    .task-days {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      width: 28px;
+      text-align: right;
+    }
+
+    .owner-chip {
+      width: 24px;
+      height: 24px;
+      border-radius: 2px;
+      background: var(--paper-sunk);
+      border: 1px solid var(--rule-strong);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-2);
+    }
+
+    /* Quick add row */
+    .quick-add-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: #F7F4ED;
+      border-top: 1px solid var(--rule);
+    }
+
+    .quick-add-input {
+      flex: 1;
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+      border-radius: 2px;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
+    .quick-add-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    /* Right inspector */
+    .app-inspector {
+      padding: 18px;
+      background: var(--paper-raised);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .inspector-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .inspector-desc {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--ink-2);
+      margin: 0;
+    }
+
+    .inspector-meta {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      row-gap: 10px;
+      column-gap: 10px;
+      font-size: 12.5px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      align-items: center;
+    }
+
+    .inspector-meta dt {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .inspector-meta dd {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .inspector-select {
+      border: 1px solid var(--rule-strong);
+      background: var(--paper);
+      padding: 4px 8px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .inspector-branch {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: var(--paper-sunk);
+      padding: 3px 6px;
+      border-radius: 2px;
+      display: inline-block;
+      word-break: break-all;
+    }
+
+    .inspector-note-box {
+      background: #F6F3EC;
+      border: 1px solid var(--rule);
+      padding: 11px 12px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    .inspector-note-author {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    /* Board view inside demo */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      min-height: 410px;
+    }
+
+    .board-col {
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      background: var(--paper-raised);
+    }
+
+    .board-col:last-child {
+      border-right: none;
+    }
+
+    .board-col-head {
+      padding: 11px 14px;
+      background: #F7F4ED;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .board-cards {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .board-card {
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      padding: 11px 12px;
+      border-radius: 2px;
+    }
+
+    .board-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .board-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.38;
+      margin: 0 0 10px;
+    }
+
+    .board-card-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .board-move-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 7px;
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+      border-radius: 2px;
+      color: var(--ink-2);
+    }
+
+    .board-move-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    /* Decisions view inside demo */
+    .decisions-list {
+      padding: 20px 24px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .decision-entry {
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .decision-meta {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .decision-body h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .decision-body p {
+      margin: 0 0 8px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .decision-links {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--slate);
+    }
+
+    /* Editorial Sections */
+    .section {
+      padding: 84px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-index {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .section-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 3.5vw, 2.95rem);
+      line-height: 1.09;
+      letter-spacing: -0.02em;
+      margin: 0 0 18px;
+    }
+
+    .section-heading em {
+      font-style: italic;
+    }
+
+    /* Philosophy / What we left out */
+    .split-manifesto {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+      gap: 56px;
+      align-items: start;
+    }
+
+    .manifesto-copy p {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin: 0 0 18px;
+    }
+
+    .manifesto-sig {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .comparison-ledger {
+      border: 1px solid var(--rule);
+      background: var(--paper-raised);
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .ledger-row:last-child {
+      border-bottom: none;
+    }
+
+    .ledger-head {
+      background: var(--paper-sunk);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+    }
+
+    .ledger-cell {
+      padding: 15px 18px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .ledger-cell:first-child {
+      border-right: 1px solid var(--rule);
+    }
+
+    .ledger-omitted {
+      color: var(--ink-3);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule-strong);
+    }
+
+    .ledger-kept {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .ledger-kept span {
+      display: block;
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--ink-2);
+      margin-top: 3px;
+    }
+
+    /* Mechanics / Three structured rows */
+    .mechanics-list {
+      border-top: 1px solid var(--rule);
+      margin-top: 44px;
+    }
+
+    .mechanic-row {
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: 32px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+    }
+
+    .mechanic-num {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      padding-top: 4px;
+    }
+
+    .mechanic-copy h3 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 27px;
+      line-height: 1.18;
+      margin: 0 0 12px;
+      letter-spacing: -0.015em;
+    }
+
+    .mechanic-copy p {
+      margin: 0 0 14px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink-2);
+    }
+
+    .mechanic-detail {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .mechanic-artifact {
+      border: 1px solid var(--rule);
+      background: var(--paper-raised);
+      padding: 18px 20px;
+    }
+
+    /* Digest switcher artifact */
+    .digest-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 10px;
+    }
+
+    .digest-tab {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 4px 9px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink-3);
+      border-radius: 2px;
+    }
+
+    .digest-tab.active {
+      background: var(--paper-sunk);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+    }
+
+    .digest-pre {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      white-space: pre-wrap;
+    }
+
+    .digest-email-view {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .digest-email-view h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .digest-email-view ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .digest-email-view li {
+      margin-bottom: 5px;
+    }
+
+    /* Field notes / Testimonials */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--rule);
+      background: var(--paper-raised);
+      margin-top: 38px;
+    }
+
+    .note-card {
+      padding: 28px 26px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .note-card:last-child {
+      border-right: none;
+    }
+
+    .note-quote {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.45;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .note-meta {
+      border-top: 1px solid var(--rule);
+      padding-top: 14px;
+    }
+
+    .note-author {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--ink);
+    }
+
+    .note-org {
+      font-size: 13px;
+      color: var(--ink-2);
+      margin-top: 2px;
+    }
+
+    .note-switched {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-top: 8px;
+    }
+
+    /* Pricing */
+    .pricing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 34px;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+      padding: 3px;
+      border-radius: var(--radius);
+    }
+
+    .billing-btn {
+      border: none;
+      background: transparent;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    .billing-btn.active {
+      background: var(--ink);
+      color: var(--paper-raised);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+    }
+
+    .plan-col {
+      padding: 34px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .plan-col:first-child {
+      border-right: 1px solid var(--rule-strong);
+    }
+
+    .plan-col.plan-team {
+      background: #FCFBF8;
+    }
+
+    .plan-tag {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .plan-name {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 400;
+      margin: 0 0 14px;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .price-num {
+      font-family: var(--font-mono);
+      font-size: 38px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+    }
+
+    .price-unit {
+      font-size: 13.5px;
+      color: var(--ink-3);
+    }
+
+    .plan-desc {
+      font-size: 14.5px;
+      color: var(--ink-2);
+      margin: 0 0 22px;
+      line-height: 1.55;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin: 0;
+      padding: 20px 0 0;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .plan-features li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .plan-features li::before {
+      content: "—";
+      font-family: var(--font-mono);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .estimator-bar {
+      margin-top: 20px;
+      border: 1px solid var(--rule);
+      background: var(--paper-sunk);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .estimator-control {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .estimator-control label {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+
+    .estimator-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .estimator-output {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      color: var(--ink);
+    }
+
+    .guarantees-strip {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .guarantees-strip strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    /* Changelog Strip */
+    .changelog-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .changelog-entries {
+      border-top: 1px solid var(--rule);
+    }
+
+    .changelog-item {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .changelog-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      padding-top: 2px;
+    }
+
+    .changelog-text strong {
+      display: block;
+      font-size: 14.5px;
+      margin-bottom: 4px;
+    }
+
+    .changelog-text p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    /* Closing CTA */
+    .closing-band {
+      padding: 76px 0;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .closing-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .closing-band h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 3.6vw, 3rem);
+      line-height: 1.08;
+      margin: 0 0 10px;
+      color: var(--paper-raised);
+    }
+
+    .closing-band p {
+      margin: 0;
+      color: #B8B2A6;
+      font-size: 15.5px;
+      max-width: 50ch;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--paper-sunk);
+      padding: 48px 0 36px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr repeat(3, 1fr);
+      gap: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin: 0 0 12px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(22, 22, 20, 0.56);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 460px;
+      background: var(--paper-raised);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      box-shadow: 0 24px 60px rgba(22, 22, 20, 0.32);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 16px 20px;
+      background: var(--paper-sunk);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 6px;
+      color: var(--ink-2);
+    }
+
+    .modal-body {
+      padding: 22px 20px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper);
+      font-size: 14px;
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--ink);
+      background: var(--paper-raised);
+    }
+
+    .slug-preview {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .modal-success {
+      display: none;
+      padding: 8px 0;
+    }
+
+    .modal-success.visible {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .hero-grid,
+      .split-manifesto,
+      .changelog-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+
+      .app-main {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .mechanic-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .notes-grid,
+      .pricing-grid,
+      .guarantees-strip,
+      .board-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .note-card,
+      .plan-col:first-child,
+      .board-col {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .note-card:last-child,
+      .board-col:last-child {
+        border-bottom: none;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-links {
+        display: none;
+      }
+
+      .task-row {
+        grid-template-columns: 24px 60px minmax(0, 1fr) auto;
+      }
+
+      .task-days,
+      .owner-chip {
+        display: none;
+      }
+
+      .decision-entry {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .ledger-row {
+        grid-template-columns: 1fr;
+      }
+
+      .ledger-cell:first-child {
+        border-right: none;
+        border-bottom: 1px dashed var(--rule);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="utility-strip">
+    <div class="container utility-strip-inner">
+      <div class="status-pill">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Trestle v2.4 · Independent &amp; bootstrapped since 2023</span>
+      </div>
+      <div>Median interaction latency: 34ms · EU &amp; US hosting · Plain SQLite export</div>
+    </div>
+  </div>
+
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="Trestle home">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 6.5H21" stroke="#161614" stroke-width="2.2" stroke-linecap="square"/>
+          <path d="M7.5 6.5L4.5 20" stroke="#161614" stroke-width="2" stroke-linecap="square"/>
+          <path d="M16.5 6.5L19.5 20" stroke="#161614" stroke-width="2" stroke-linecap="square"/>
+          <path d="M6.2 14H17.8" stroke="#BC4322" stroke-width="2" stroke-linecap="square"/>
+        </svg>
+        <span>Trestle</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#workspace">Live demo</a>
+        <a href="#manifesto">Philosophy</a>
+        <a href="#mechanics">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary" data-open-modal="signup">Start a workspace</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Project software for small product teams</div>
+          <h1>Run the work, <em>not the tracker.</em></h1>
+          <p class="hero-lead">
+            Trestle is a quiet, keyboard-first workspace for teams of 4 to 40. Organize two-week cycles, attach technical decisions directly to tasks, and ship without story points, sprint ceremonies, or status decks.
+          </p>
+          <div class="hero-ctas">
+            <button type="button" class="btn btn-accent" data-open-modal="signup">Create a workspace — free up to 4 seats</button>
+            <a href="#workspace" class="btn btn-outline">Try the live board below ↓</a>
+          </div>
+          <div class="hero-note">No credit card required · Import from Jira, Linear, or CSV in under two minutes</div>
+        </div>
+
+        <aside class="hero-spec-card" aria-label="Product specifications">
+          <div class="spec-header">
+            <span>Spec Sheet</span>
+            <span>Build 2.4.11</span>
+          </div>
+          <ul class="spec-list">
+            <li>
+              <span class="spec-label">Target team size</span>
+              <span class="spec-val">4 – 40 people</span>
+            </li>
+            <li>
+              <span class="spec-label">Offline read/write</span>
+              <span class="spec-val">Local-first sync</span>
+            </li>
+            <li>
+              <span class="spec-label">Required ticket fields</span>
+              <span class="spec-val">Title only</span>
+            </li>
+            <li>
+              <span class="spec-label">Git integration</span>
+              <span class="spec-val">GitHub · GitLab · Radicle</span>
+            </li>
+            <li>
+              <span class="spec-label">Data portability</span>
+              <span class="spec-val">1-click SQLite / JSON</span>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Interactive Workspace Showcase -->
+    <section class="showcase-section" id="workspace" aria-label="Interactive Trestle workspace demo">
+      <div class="container">
+        <div class="showcase-caption-bar">
+          <span>Interactive sandbox — click any task, toggle completion, switch views, or add your own item.</span>
+          <span>Shortcuts: <kbd class="kbd">1</kbd> Ledger &nbsp;<kbd class="kbd">2</kbd> Board &nbsp;<kbd class="kbd">3</kbd> Decisions</span>
+        </div>
+
+        <div class="app-frame">
+          <div class="app-topbar">
+            <div class="app-breadcrumb">
+              <span>fieldwork-studio</span>
+              <span>/</span>
+              <span>core-app</span>
+              <span>/</span>
+              <strong>Cycle 18</strong>
+            </div>
+
+            <div class="app-tabs" role="tablist" aria-label="Workspace views">
+              <button type="button" class="app-tab" role="tab" data-view="ledger" aria-selected="true">
+                Ledger <kbd class="kbd">1</kbd>
+              </button>
+              <button type="button" class="app-tab" role="tab" data-view="board" aria-selected="false">
+                Board <kbd class="kbd">2</kbd>
+              </button>
+              <button type="button" class="app-tab" role="tab" data-view="decisions" aria-selected="false">
+                Decisions <kbd class="kbd">3</kbd>
+              </button>
+            </div>
+          </div>
+
+          <div class="cycle-meta-bar">
+            <div class="cycle-title-group">
+              <h2>
+                Cycle 18: Billing &amp; Export Reliability
+                <span class="cycle-dates">Nov 16 – Nov 29 · Day 8 of 14</span>
+              </h2>
+            </div>
+
+            <div class="cycle-progress-wrap">
+              <div class="progress-track" aria-hidden="true">
+                <div class="progress-fill" id="cycleProgressFill"></div>
+              </div>
+              <span class="progress-label" id="cycleProgressText">0 of 0 shipped</span>
+            </div>
+          </div>
+
+          <div class="app-body" id="appBody">
+            <div class="app-main" id="appMain">
+              <!-- Populated by JS -->
+            </div>
+            <aside class="app-inspector" id="appInspector" aria-label="Task inspector">
+              <!-- Populated by JS -->
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy / What we left out -->
+    <section class="section" id="manifesto">
+      <div class="container split-manifesto">
+        <div class="manifesto-copy">
+          <div class="section-index">01 / Point of view</div>
+          <h2 class="section-heading">Built by leaving the <em>bureaucracy</em> out.</h2>
+          <p>
+            Most project trackers start out simple, then get redesigned around the person who wants a quarterly slide deck instead of the engineer fixing a webhook timeout or the designer refining an empty state.
+          </p>
+          <p>
+            Every mandatory dropdown, story-point Fibonacci debate, and nested sub-epic steals fifteen minutes from the actual build. We designed Trestle as a working bench: crisp lists, fast keyboard navigation, and deliberate limits on how much work a cycle can hold.
+          </p>
+          <div class="manifesto-sig">
+            — Hannah Lindqvist &amp; Tomàs Vega, co-founders (Portland &amp; Gothenburg)
+          </div>
+        </div>
+
+        <div class="comparison-ledger" role="table" aria-label="What Trestle leaves out versus what it provides">
+          <div class="ledger-row ledger-head" role="row">
+            <div class="ledger-cell" role="columnheader">Left on the cutting-room floor</div>
+            <div class="ledger-cell" role="columnheader">What Trestle does instead</div>
+          </div>
+          <div class="ledger-row" role="row">
+            <div class="ledger-cell ledger-omitted" role="cell">Story points &amp; velocity charts</div>
+            <div class="ledger-cell ledger-kept" role="cell">
+              Plain day estimates (0.5d, 1d, 3d)
+              <span>Everyone already knows what two days feels like.</span>
+            </div>
+          </div>
+          <div class="ledger-row" role="row">
+            <div class="ledger-cell ledger-omitted" role="cell">2,400-item infinite backlogs</div>
+            <div class="ledger-cell ledger-kept" role="cell">
+              Auto-expiring ideas drawer
+              <span>Anything untouched for 90 days archives quietly. If it matters, it comes back.</span>
+            </div>
+          </div>
+          <div class="ledger-row" role="row">
+            <div class="ledger-cell ledger-omitted" role="cell">Custom 14-stage workflow state machines</div>
+            <div class="ledger-cell ledger-kept" role="cell">
+              Four honest states
+              <span>Active, Review, Blocked, Shipped. Zero admin consultants required.</span>
+            </div>
+          </div>
+          <div class="ledger-row" role="row">
+            <div class="ledger-cell ledger-omitted" role="cell">AI-generated status prose</div>
+            <div class="ledger-cell ledger-kept" role="cell">
+              Deterministic Friday digests
+              <span>Exact links to merged commits, shipped tasks, and logged decisions.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Core Mechanics -->
+    <section class="section" id="mechanics">
+      <div class="container">
+        <div class="section-index">02 / How it works</div>
+        <h2 class="section-heading">Three mechanics that keep a two-week cycle honest.</h2>
+
+        <div class="mechanics-list">
+          <!-- Mechanic 1 -->
+          <div class="mechanic-row">
+            <div class="mechanic-num">02.1</div>
+            <div class="mechanic-copy">
+              <h3>Cycles with visible scope creep.</h3>
+              <p>
+                Set a two-week commitment on Monday morning. Whenever someone adds a mid-cycle request, Trestle draws a thin vermilion tick on the scope line so the team immediately sees the trade-off—not two weeks later during a retrospective.
+              </p>
+              <div class="mechanic-detail">Tracks planned vs. added items · Zero burndown shaming</div>
+            </div>
+            <div class="mechanic-artifact" aria-label="Cycle 18 scope versus shipped chart">
+              <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-3); margin-bottom:10px;">
+                <span>CYCLE 18 SCOPE LEDGER</span>
+                <span>10 PLANNED · +2 ADDED</span>
+              </div>
+              <svg viewBox="0 0 460 155" width="100%" height="auto" role="img" aria-label="Line chart showing scope steady at 10 items, increasing to 12 on day 5, while shipped items climb steadily to 8 by day 8">
+                <!-- Gridlines -->
+                <line x1="36" y1="20" x2="444" y2="20" stroke="#E2DDD2" stroke-dasharray="3 3" />
+                <line x1="36" y1="56" x2="444" y2="56" stroke="#E2DDD2" stroke-dasharray="3 3" />
+                <line x1="36" y1="92" x2="444" y2="92" stroke="#E2DDD2" stroke-dasharray="3 3" />
+                <line x1="36" y1="128" x2="444" y2="128" stroke="#B9B1A0" />
+                <!-- Y Labels -->
+                <text x="26" y="24" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">12</text>
+                <text x="26" y="60" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">8</text>
+                <text x="26" y="96" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">4</text>
+                <text x="26" y="131" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">0</text>
+                <!-- X Labels -->
+                <text x="36" y="146" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">Nov 16</text>
+                <text x="172" y="146" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">Day 5</text>
+                <text x="268" y="146" font-family="IBM Plex Mono, monospace" font-size="10" fill="#BC4322">Today</text>
+                <text x="444" y="146" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6D6960">Nov 29</text>
+                <!-- Scope line (stepped up at Day 5) -->
+                <polyline points="36,38 176,38 176,20 444,20" fill="none" stroke="#8C867B" stroke-width="1.6" stroke-dasharray="5 3" />
+                <!-- Scope addition marker -->
+                <circle cx="176" cy="20" r="3.5" fill="#BC4322" />
+                <text x="184" y="14" font-family="IBM Plex Mono, monospace" font-size="10" fill="#BC4322">+2 mid-cycle</text>
+                <!-- Shipped progress area -->
+                <polygon points="36,128 84,119 132,101 176,92 224,74 272,56 272,128" fill="#24513B" fill-opacity="0.11" />
+                <!-- Shipped line -->
+                <polyline points="36,128 84,119 132,101 176,92 224,74 272,56" fill="none" stroke="#24513B" stroke-width="2.2" />
+                <!-- Today vertical marker -->
+                <line x1="272" y1="20" x2="272" y2="128" stroke="#BC4322" stroke-width="1" stroke-dasharray="2 2" />
+                <circle cx="272" cy="56" r="4" fill="#24513B" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Mechanic 2 -->
+          <div class="mechanic-row">
+            <div class="mechanic-num">02.2</div>
+            <div class="mechanic-copy">
+              <h3>Decisions stay pinned to the work.</h3>
+              <p>
+                Six months from now, nobody will find the Slack thread explaining why you dropped Redis for Postgres advisory locks. Trestle gives every project a lightweight Decisions ledger that cross-links directly to task IDs and pull requests.
+              </p>
+              <div class="mechanic-detail">Markdown-native · Permanent URLs · Searchable in &lt;40ms</div>
+            </div>
+            <div class="mechanic-artifact">
+              <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-3); padding-bottom:10px; border-bottom:1px solid var(--rule); margin-bottom:12px;">
+                <span>DEC-042 · ACCEPTED</span>
+                <span>Nov 19 · @mira</span>
+              </div>
+              <div style="font-weight:600; font-size:14.5px; margin-bottom:6px;">Use SQLite WAL snapshots instead of daily CSV dumps for workspace exports</div>
+              <p style="margin:0 0 12px; font-size:13.5px; color:var(--ink-2); line-height:1.55;">
+                Customers asked for lossless offline backups including decision history. Shipping a single <code class="mono" style="font-size:12px; background:var(--paper-sunk); padding:1px 4px;">.sqlite</code> file takes 140ms on median workspaces and avoids fragile multi-file ZIP schemas.
+              </p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; font-family:var(--font-mono); font-size:11.5px;">
+                <span style="background:var(--slate-soft); color:var(--slate); padding:2px 7px;">Linked: TR-114</span>
+                <span style="background:var(--paper-sunk); color:var(--ink-2); padding:2px 7px;">PR #819 merged</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mechanic 3 -->
+          <div class="mechanic-row">
+            <div class="mechanic-num">02.3</div>
+            <div class="mechanic-copy">
+              <h3>Friday digests that write themselves—literally.</h3>
+              <p>
+                At 4:00 PM Friday, Trestle compiles a clean summary from shipped tasks, resolved blockers, and newly recorded decisions. No hallucinated AI fluff—just structured facts you can paste into an investor update or send to clients.
+              </p>
+              <div class="mechanic-detail">Toggle format below to inspect the exact output</div>
+            </div>
+            <div class="mechanic-artifact">
+              <div class="digest-tabs" role="tablist" aria-label="Digest output format">
+                <button type="button" class="digest-tab active" data-digest="plain">Plain text</button>
+                <button type="button" class="digest-tab" data-digest="markdown">Markdown</button>
+                <button type="button" class="digest-tab" data-digest="email">Email preview</button>
+              </div>
+              <div id="digestOutput"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Field Notes / Customers -->
+    <section class="section">
+      <div class="container">
+        <div class="section-index">03 / Field notes</div>
+        <h2 class="section-heading">Used by teams who would rather ship than groom a backlog.</h2>
+
+        <div class="notes-grid">
+          <article class="note-card">
+            <p class="note-quote">
+              “We deleted 1,100 zombie Jira tickets the afternoon we moved to Trestle. Our Monday planning meeting dropped from ninety minutes to twelve.”
+            </p>
+            <div class="note-meta">
+              <div class="note-author">David Okonkwo</div>
+              <div class="note-org">Engineering Lead, Kestrel Maps (11 people · Bristol)</div>
+              <div class="note-switched">Switched from Jira + Confluence · Jan 2025</div>
+            </div>
+          </article>
+
+          <article class="note-card">
+            <p class="note-quote">
+              “It feels like a well-kept workshop. Every designer and engineer actually keeps their items current because updating a task takes two keystrokes.”
+            </p>
+            <div class="note-meta">
+              <div class="note-author">Ingrid Solberg</div>
+              <div class="note-org">Co-founder, Norden Instruments (24 people · Oslo)</div>
+              <div class="note-switched">Switched from Asana + spreadsheets · Aug 2025</div>
+            </div>
+          </article>
+
+          <article class="note-card">
+            <p class="note-quote">
+              “The Decisions ledger paid for our annual subscription in the first month. New hires read twenty entries and immediately understand our architecture.”
+            </p>
+            <div class="note-meta">
+              <div class="note-author">Samira Haddad</div>
+              <div class="note-org">Principal Engineer, Clearline Freight (18 people · Montreal)</div>
+              <div class="note-switched">Switched from Linear + Notion · Mar 2026</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="pricing-header">
+          <div>
+            <div class="section-index">04 / Pricing</div>
+            <h2 class="section-heading" style="margin-bottom:0;">Simple math. No enterprise tax.</h2>
+          </div>
+
+          <div class="billing-toggle" role="group" aria-label="Billing interval">
+            <button type="button" class="billing-btn active" data-billing="annual">Annual (save 22%)</button>
+            <button type="button" class="billing-btn" data-billing="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="plan-col">
+            <div>
+              <div class="plan-tag">Small crews &amp; side projects</div>
+              <h3 class="plan-name">Independent</h3>
+              <div class="plan-price">
+                <span class="price-num">$0</span>
+                <span class="price-unit">forever, up to 4 people</span>
+              </div>
+              <p class="plan-desc">
+                The full product—not a crippled trial. Run unlimited cycles and export your full database anytime.
+              </p>
+              <ul class="plan-features">
+                <li>Up to 4 full workspace members</li>
+                <li>Unlimited projects, cycles, and decision logs</li>
+                <li>GitHub &amp; GitLab branch/PR linking</li>
+                <li>Full offline mode &amp; 1-click SQLite export</li>
+              </ul>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline" style="width:100%;" data-open-modal="signup">Start free workspace</button>
+            </div>
+          </div>
+
+          <div class="plan-col plan-team">
+            <div>
+              <div class="plan-tag">Growing studios &amp; product teams</div>
+              <h3 class="plan-name">Team</h3>
+              <div class="plan-price">
+                <span class="price-num" id="teamPriceNum">$7</span>
+                <span class="price-unit" id="teamPriceUnit">per seat / month, billed annually</span>
+              </div>
+              <p class="plan-desc">
+                One transparent tier for everyone. SAML SSO and audit logs are included—we never hold security hostage behind a sales call.
+              </p>
+              <ul class="plan-features">
+                <li>Everything in Independent, unlimited seats</li>
+                <li>Free read-only client &amp; stakeholder guests</li>
+                <li>SAML SSO, SCIM, and 2-year audit ledger</li>
+                <li>Direct email support from the engineers who build it</li>
+              </ul>
+            </div>
+            <div>
+              <button type="button" class="btn btn-accent" style="width:100%;" data-open-modal="signup">Start 30-day team trial</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="estimator-bar">
+          <div class="estimator-control">
+            <label for="seatSlider">Team size: <strong id="seatCountLabel">12 seats</strong></label>
+            <input type="range" id="seatSlider" min="1" max="40" value="12" />
+          </div>
+          <div class="estimator-output" id="seatCostOutput">$84 / month · billed annually ($1,008/yr)</div>
+        </div>
+
+        <div class="guarantees-strip">
+          <div>
+            <strong>Zero lock-in export</strong>
+            Download a clean, documented SQLite file of every task, comment, and decision whenever you want.
+          </div>
+          <div>
+            <strong>Two-year price lock</strong>
+            Your per-seat rate stays fixed for at least 24 months from the day you subscribe.
+          </div>
+          <div>
+            <strong>No seat-count gotchas</strong>
+            Inactive members are automatically prorated back as account credit at the end of the month.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Changelog -->
+    <section class="section" id="changelog">
+      <div class="container changelog-grid">
+        <div>
+          <div class="section-index">05 / Recent releases</div>
+          <h2 class="section-heading">Shipped in the open.</h2>
+          <p style="font-size:15px; color:var(--ink-2); margin:0 0 18px; line-height:1.6;">
+            We ship small, boringly reliable improvements every two weeks using Trestle itself.
+          </p>
+          <a href="#workspace" class="mono" style="font-size:12.5px; color:var(--accent); text-decoration:underline;">Subscribe via RSS / Atom →</a>
+        </div>
+
+        <div class="changelog-entries">
+          <div class="changelog-item">
+            <div class="changelog-date">2026-11-18</div>
+            <div class="changelog-text">
+              <strong>Offline conflict resolver for cycle edits</strong>
+              <p>Edit task states on a flight and reconcile cleanly when back online, with field-level merge instead of last-write-wins overwrites.</p>
+            </div>
+          </div>
+          <div class="changelog-item">
+            <div class="changelog-date">2026-11-04</div>
+            <div class="changelog-text">
+              <strong>Print stylesheet for cycle reviews</strong>
+              <p>Hit Cmd+P on any cycle or decision log to get a crisp A4/Letter monochrome sheet with page breaks that never split a task row.</p>
+            </div>
+          </div>
+          <div class="changelog-item">
+            <div class="changelog-date">2026-10-21</div>
+            <div class="changelog-text">
+              <strong>Radicle &amp; self-hosted GitLab webhook parity</strong>
+              <p>Reference a Trestle ID in any commit trailer or merge request to link diffs and auto-move tasks into Review.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing Band -->
+    <section class="closing-band">
+      <div class="container closing-inner">
+        <div>
+          <h2>Give your next two-week cycle a quieter home.</h2>
+          <p>Set up a workspace in thirty seconds. Keep it free for teams of four, or try Team free for 30 days.</p>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-accent" data-open-modal="signup">Create your workspace</button>
+          <a href="#workspace" class="btn btn-outline" style="background:transparent; color:var(--paper); border-color:#5A564E;">Explore sandbox</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:10px;">
+            <svg class="brand-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3 6.5H21" stroke="#161614" stroke-width="2.2" stroke-linecap="square"/>
+              <path d="M7.5 6.5L4.5 20" stroke="#161614" stroke-width="2" stroke-linecap="square"/>
+              <path d="M16.5 6.5L19.5 20" stroke="#161614" stroke-width="2" stroke-linecap="square"/>
+              <path d="M6.2 14H17.8" stroke="#BC4322" stroke-width="2" stroke-linecap="square"/>
+            </svg>
+            <span>Trestle</span>
+          </div>
+          <p style="margin:0; max-width:34ch; line-height:1.55;">
+            Calm project management software built by Trestle Software AB. Independent, profitable, and funded solely by customer subscriptions.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#workspace">Interactive demo</a></li>
+            <li><a href="#mechanics">Cycles &amp; Decisions</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#changelog">Changelog</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="#manifesto">Design philosophy</a></li>
+            <li><a href="#pricing">SQLite export schema</a></li>
+            <li><a href="#changelog">Keyboard reference</a></li>
+            <li><a href="#changelog">Import from Jira / Linear</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="mailto:hello@trestle.work">hello@trestle.work</a></li>
+            <li><a href="#pricing">Security &amp; GDPR</a></li>
+            <li><a href="#changelog">Uptime ledger (99.99%)</a></li>
+            <li><a href="#manifesto">Plain-English Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Trestle Software AB · No third-party ad trackers or analytics scripts.</span>
+        <span>Set in Newsreader &amp; IBM Plex.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Workspace Signup / Signin Modal -->
+  <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 id="modalTitle">Create a Trestle workspace</h3>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close modal">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="workspaceForm">
+          <div class="field" id="workspaceNameField">
+            <label for="wsNameInput">Team or studio name</label>
+            <input type="text" id="wsNameInput" placeholder="e.g. Fieldwork Studio" autocomplete="organization" />
+            <div class="slug-preview">Workspace URL: <strong id="slugPreview">trestle.work/your-team</strong></div>
+          </div>
+
+          <div class="field">
+            <label for="wsEmailInput">Work email</label>
+            <input type="email" id="wsEmailInput" placeholder="you@company.com" required autocomplete="email" />
+          </div>
+
+          <button type="submit" class="btn btn-accent" style="width:100%;" id="modalSubmitBtn">Create workspace</button>
+          <p class="mono" style="font-size:11px; color:var(--ink-3); margin:12px 0 0; text-align:center;">
+            We’ll send a single-use sign-in link. No marketing drip sequence.
+          </p>
+        </form>
+
+        <div class="modal-success" id="modalSuccess">
+          <div class="mono" style="font-size:11.5px; color:var(--forest); margin-bottom:8px;">✓ SIGN-IN LINK QUEUED</div>
+          <p style="margin:0 0 14px; font-size:14.5px; line-height:1.55;" id="modalSuccessText"></p>
+          <button type="button" class="btn btn-outline" id="modalDoneBtn" style="width:100%;">Back to page</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // --- Interactive Workspace State ---
+      const tasks = [
+        {
+          id: 'TR-114',
+          title: 'Migrate Stripe invoice webhooks off legacy queue',
+          status: 'shipped',
+          owner: 'ML',
+          ownerName: 'Mira Lind',
+          days: '2d',
+          branch: 'ml/tr-114-webhook-worker',
+          desc: 'Move invoice.paid and customer.subscription.updated handlers onto the idempotent Postgres worker so retries survive deploys.',
+          noteAuthor: 'Mira Lind · Nov 21',
+          note: 'Deployed to EU and US clusters. Zero duplicate billing events across 4,800 test replays.'
+        },
+        {
+          id: 'TR-118',
+          title: 'Fix keyboard focus trap when closing export drawer',
+          status: 'review',
+          owner: 'DK',
+          ownerName: 'Devon K.',
+          days: '0.5d',
+          branch: 'dk/tr-118-focus-restore',
+          desc: 'Return focus to the invoking trigger button when Escape is pressed inside the SQLite export dialog.',
+          noteAuthor: 'Devon K. · Yesterday',
+          note: 'PR #824 open. Verified in Safari 19, Firefox 132, and VoiceOver.'
+        },
+        {
+          id: 'TR-121',
+          title: 'Draft monochrome print stylesheet for Cycle summaries',
+          status: 'shipped',
+          owner: 'AS',
+          ownerName: 'Anja S.',
+          days: '1d',
+          branch: 'as/tr-121-print-css',
+          desc: 'Ensure A4 and US Letter printouts keep task IDs aligned, hide navigation chrome, and avoid mid-row page breaks.',
+          noteAuthor: 'Anja S. · Nov 20',
+          note: 'Tested on physical Brother laser printer; hairline borders look crisp at 600dpi.'
+        },
+        {
+          id: 'TR-124',
+          title: 'Trim cold-start SQLite pragma overhead on desktop client',
+          status: 'active',
+          owner: 'TV',
+          ownerName: 'Tomàs V.',
+          days: '1.5d',
+          branch: 'tv/tr-124-sqlite-boot',
+          desc: 'Batch initial WAL checkpoint and mmap sizing during app launch to bring median cold start under 110ms.',
+          noteAuthor: 'Tomàs V. · 3h ago',
+          note: 'Down from 184ms to 102ms on a 40k-row workspace fixture. Polishing migration guard.'
+        },
+        {
+          id: 'TR-127',
+          title: 'Confirm EU VAT reverse-charge line items with accountant',
+          status: 'blocked',
+          owner: 'HL',
+          ownerName: 'Hannah L.',
+          days: '0.5d',
+          branch: 'docs/vat-invoice-copy',
+          desc: 'Need written sign-off on Swedish & German reverse-charge footer wording before enabling self-serve PDF regeneration.',
+          noteAuthor: 'Hannah L. · Yesterday',
+          note: 'Waiting on reply from Nordisk Revision; follow-up scheduled for tomorrow morning.'
+        },
+        {
+          id: 'TR-129',
+          title: 'Empty state copy for archived ideas drawer',
+          status: 'active',
+          owner: 'AS',
+          ownerName: 'Anja S.',
+          days: '0.5d',
+          branch: 'as/tr-129-archive-empty',
+          desc: 'Explain clearly that items untouched for 90 days move here automatically and can be restored with one keystroke.',
+          noteAuthor: 'Anja S. · Today',
+          note: 'Two copy variants drafted; leaning toward the shorter two-sentence version.'
+        },
+        {
+          id: 'TR-130',
+          title: 'Add CSV column auto-mapping for Linear exports',
+          status: 'shipped',
+          owner: 'ML',
+          ownerName: 'Mira Lind',
+          days: '1d',
+          branch: 'ml/tr-130-linear-import',
+          desc: 'Preserve original issue identifiers in a reference tag and map cycle dates cleanly during onboarding import.',
+          noteAuthor: 'Mira Lind · Nov 19',
+          note: 'Shipped and tested against three anonymized customer exports.'
+        }
+      ];
+
+      const decisions = [
+        {
+          id: 'DEC-042',
+          date: 'Nov 19, 2026',
+          author: 'Mira Lind',
+          status: 'Accepted',
+          title: 'Use SQLite WAL snapshots instead of multi-file CSV zips for full exports',
+          body: 'Customers wanted lossless offline archives that preserve comments and decision links. Generating a single .sqlite database takes 140ms on median workspaces and opens natively in standard tools.',
+          links: 'TR-114 · PR #819'
+        },
+        {
+          id: 'DEC-041',
+          date: 'Nov 12, 2026',
+          author: 'Tomàs Vega',
+          status: 'Accepted',
+          title: 'Cap active cycle status states at four fixed columns',
+          body: 'Two prospects requested custom 9-step QA workflows. Adding arbitrary state machines degrades keyboard predictability and breaks cross-project reporting. Teams needing sub-checklists can use Markdown checkboxes inside task descriptions.',
+          links: 'TR-109 · Manifesto §3'
+        },
+        {
+          id: 'DEC-039',
+          date: 'Oct 28, 2026',
+          author: 'Hannah Lindqvist',
+          status: 'Accepted',
+          title: 'Include SAML SSO in the standard $7/seat Team plan',
+          body: 'Gating baseline authentication behind an enterprise tier penalizes security-conscious 12-person teams. Keeping one paid tier simplifies billing code and matches our public promise.',
+          links: 'Pricing v2.4'
+        }
+      ];
+
+      let currentView = 'ledger';
+      let currentFilter = 'all';
+      let selectedId = 'TR-124';
+      let nextTaskNum = 132;
+
+      const appBody = document.getElementById('appBody');
+      const appMain = document.getElementById('appMain');
+      const appInspector = document.getElementById('appInspector');
+      const progressFill = document.getElementById('cycleProgressFill');
+      const progressText = document.getElementById('cycleProgressText');
+      const tabButtons = document.querySelectorAll('.app-tab');
+
+      const statusLabels = {
+        active: 'Active',
+        review: 'Review',
+        blocked: 'Blocked',
+        shipped: 'Shipped'
+      };
+
+      function updateProgress() {
+        const total = tasks.length;
+        const shipped = tasks.filter(t => t.status === 'shipped').length;
+        const pct = total ? Math.round((shipped / total) * 100) : 0;
+        progressFill.style.width = pct + '%';
+        progressText.textContent = `${shipped} of ${total} shipped (${pct}%)`;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function renderInspector() {
+        const task = tasks.find(t => t.id === selectedId) || tasks[0];
+        if (!task) return;
+        selectedId = task.id;
+
+        appInspector.innerHTML = `
+          <div class="inspector-top">
+            <span>${escapeHtml(task.id)}</span>
+            <span class="badge badge-${task.status}">${statusLabels[task.status]}</span>
+          </div>
+          <h3 class="inspector-title">${escapeHtml(task.title)}</h3>
+          <p class="inspector-desc">${escapeHtml(task.desc)}</p>
+          <dl class="inspector-meta">
+            <dt>State</dt>
+            <dd>
+              <select class="inspector-select" id="inspectorStatusSelect" aria-label="Change task status">
+                <option value="active" ${task.status === 'active' ? 'selected' : ''}>Active</option>
+                <option value="review" ${task.status === 'review' ? 'selected' : ''}>Review</option>
+                <option value="blocked" ${task.status === 'blocked' ? 'selected' : ''}>Blocked</option>
+                <option value="shipped" ${task.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+              </select>
+            </dd>
+            <dt>Owner</dt>
+            <dd>${escapeHtml(task.ownerName)}</dd>
+            <dt>Estimate</dt>
+            <dd class="mono">${escapeHtml(task.days)}</dd>
+            <dt>Branch</dt>
+            <dd><span class="inspector-branch">${escapeHtml(task.branch)}</span></dd>
+          </dl>
+          <div class="inspector-note-box">
+            <span class="inspector-note-author">${escapeHtml(task.noteAuthor)}</span>
+            ${escapeHtml(task.note)}
+          </div>
+        `;
+
+        const select = document.getElementById('inspectorStatusSelect');
+        select.addEventListener('change', function () {
+          task.status = this.value;
+          renderApp();
+        });
+      }
+
+      function renderLedger() {
+        appBody.className = 'app-body';
+        appInspector.style.display = 'flex';
+
+        const counts = {
+          all: tasks.length,
+          active: tasks.filter(t => t.status === 'active').length,
+          review: tasks.filter(t => t.status === 'review').length,
+          blocked: tasks.filter(t => t.status === 'blocked').length,
+          shipped: tasks.filter(t => t.status === 'shipped').length
+        };
+
+        const filtered = currentFilter === 'all'
+          ? tasks
+          : tasks.filter(t => t.status === currentFilter);
+
+        const filtersHtml = ['all', 'active', 'review', 'blocked', 'shipped'].map(f => {
+          const label = f === 'all' ? 'All items' : statusLabels[f];
+          return `
+            <button type="button" class="filter-pill ${currentFilter === f ? 'active' : ''}" data-filter="${f}">
+              ${label} <span class="pill-count">${counts[f]}</span>
+            </button>
+          `;
+        }).join('');
+
+        const rowsHtml = filtered.map(task => {
+          const isShipped = task.status === 'shipped';
+          const isSelected = task.id === selectedId;
+          return `
+            <li class="task-row ${isShipped ? 'is-shipped' : ''} ${isSelected ? 'selected' : ''}" data-task-id="${task.id}">
+              <button type="button" class="task-check" role="checkbox" aria-checked="${isShipped}" aria-label="Mark ${escapeHtml(task.id)} as shipped" data-toggle-id="${task.id}">
+                ${isShipped ? '<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.2 6.3L4.8 8.8L9.8 3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>' : ''}
+              </button>
+              <span class="task-id">${escapeHtml(task.id)}</span>
+              <span class="task-title">${escapeHtml(task.title)}</span>
+              <span class="badge badge-${task.status}">${statusLabels[task.status]}</span>
+              <span class="task-days">${escapeHtml(task.days)}</span>
+              <span class="owner-chip" title="${escapeHtml(task.ownerName)}">${escapeHtml(task.owner)}</span>
+            </li>
+          `;
+        }).join('');
+
+        appMain.innerHTML = `
+          <div class="filter-bar">
+            <div class="filter-pills">${filtersHtml}</div>
+          </div>
+          <ul class="task-list">${rowsHtml}</ul>
+          <form class="quick-add-form" id="quickAddForm">
+            <input type="text" class="quick-add-input" id="quickAddInput" placeholder="Add an item to Cycle 18 (e.g. Audit invoice PDF fonts)..." aria-label="New task title" />
+            <button type="submit" class="btn btn-outline" style="padding:7px 12px; font-size:12.5px;">+ Add item</button>
+          </form>
+        `;
+
+        appMain.querySelectorAll('[data-filter]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentFilter = btn.dataset.filter;
+            renderApp();
+          });
+        });
+
+        appMain.querySelectorAll('[data-toggle-id]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const t = tasks.find(item => item.id === btn.dataset.toggleId);
+            if (t) {
+              t.status = t.status === 'shipped' ? 'active' : 'shipped';
+              selectedId = t.id;
+              renderApp();
+            }
+          });
+        });
+
+        appMain.querySelectorAll('.task-row').forEach(row => {
+          row.addEventListener('click', () => {
+            selectedId = row.dataset.taskId;
+            renderApp();
+          });
+        });
+
+        const quickAddForm = document.getElementById('quickAddForm');
+        const quickAddInput = document.getElementById('quickAddInput');
+        quickAddForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const title = quickAddInput.value.trim();
+          if (!title) return;
+          const newId = 'TR-' + nextTaskNum++;
+          tasks.unshift({
+            id: newId,
+            title,
+            status: 'active',
+            owner: 'YO',
+            ownerName: 'You (Sandbox)',
+            days: '1d',
+            branch: `you/${newId.toLowerCase()}-draft`,
+            desc: 'Added live inside the interactive Trestle demo. Try toggling its status or switching to the Board view.',
+            noteAuthor: 'You · Just now',
+            note: 'Added mid-cycle to Cycle 18.'
+          });
+          currentFilter = 'all';
+          selectedId = newId;
+          renderApp();
+        });
+
+        renderInspector();
+      }
+
+      function renderBoard() {
+        appBody.className = 'app-body board-mode';
+        appInspector.style.display = 'none';
+
+        const columns = [
+          { key: 'active', label: 'Active & Blocked', items: tasks.filter(t => t.status === 'active' || t.status === 'blocked'), nextStatus: 'review', nextLabel: 'Move to Review →' },
+          { key: 'review', label: 'In Review', items: tasks.filter(t => t.status === 'review'), nextStatus: 'shipped', nextLabel: 'Mark Shipped ✓' },
+          { key: 'shipped', label: 'Shipped', items: tasks.filter(t => t.status === 'shipped'), nextStatus: 'active', nextLabel: '← Reopen' }
+        ];
+
+        appMain.innerHTML = `
+          <div class="board-grid">
+            ${columns.map(col => `
+              <div class="board-col">
+                <div class="board-col-head">
+                  <span>${col.label}</span>
+                  <span style="color:var(--ink-3);">${col.items.length}</span>
+                </div>
+                <div class="board-cards">
+                  ${col.items.map(t => `
+                    <div class="board-card">
+                      <div class="board-card-top">
+                        <span>${escapeHtml(t.id)} · ${escapeHtml(t.days)}</span>
+                        <span class="badge badge-${t.status}">${statusLabels[t.status]}</span>
+                      </div>
+                      <p class="board-card-title">${escapeHtml(t.title)}</p>
+                      <div class="board-card-foot">
+                        <span class="owner-chip" title="${escapeHtml(t.ownerName)}">${escapeHtml(t.owner)}</span>
+                        <button type="button" class="board-move-btn" data-move-id="${t.id}" data-next-status="${col.nextStatus}">${col.nextLabel}</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        appMain.querySelectorAll('[data-move-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const t = tasks.find(item => item.id === btn.dataset.moveId);
+            if (t) {
+              t.status = btn.dataset.nextStatus;
+              renderApp();
+            }
+          });
+        });
+      }
+
+      function renderDecisions() {
+        appBody.className = 'app-body decisions-mode';
+        appInspector.style.display = 'none';
+
+        appMain.innerHTML = `
+          <div class="decisions-list">
+            ${decisions.map(d => `
+              <article class="decision-entry">
+                <div class="decision-meta">
+                  <strong style="color:var(--ink);">${escapeHtml(d.id)}</strong>
+                  <span>${escapeHtml(d.date)}</span>
+                  <span>${escapeHtml(d.author)}</span>
+                  <span class="badge badge-shipped" style="width:fit-content;">${escapeHtml(d.status)}</span>
+                </div>
+                <div class="decision-body">
+                  <h3>${escapeHtml(d.title)}</h3>
+                  <p>${escapeHtml(d.body)}</p>
+                  <div class="decision-links">References: ${escapeHtml(d.links)}</div>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function renderApp() {
+        updateProgress();
+        tabButtons.forEach(btn => {
+          btn.setAttribute('aria-selected', String(btn.dataset.view === currentView));
+        });
+        if (currentView === 'ledger') renderLedger();
+        else if (currentView === 'board') renderBoard();
+        else renderDecisions();
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentView = btn.dataset.view;
+          renderApp();
+        });
+      });
+
+      // Keyboard shortcuts 1 / 2 / 3 when not typing in an input
+      document.addEventListener('keydown', (e) => {
+        const tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === '1') { currentView = 'ledger'; renderApp(); }
+        if (e.key === '2') { currentView = 'board'; renderApp(); }
+        if (e.key === '3') { currentView = 'decisions'; renderApp(); }
+        if (e.key === 'Escape') closeModal();
+      });
+
+      renderApp();
+
+      // --- Friday Digest Preview Switcher ---
+      const digestContent = {
+        plain: `<pre class="digest-pre">FIELDWORK STUDIO — WEEKLY DIGEST (NOV 21)
+Cycle 18 · Day 6 of 14 · 3 items shipped
+
+SHIPPED
+  [TR-114] Migrate Stripe invoice webhooks off legacy queue (@mira)
+  [TR-121] Draft monochrome print stylesheet for Cycle summaries (@anja)
+  [TR-130] Add CSV column auto-mapping for Linear exports (@mira)
+
+BLOCKED
+  [TR-127] Confirm EU VAT reverse-charge line items (@hannah)
+           Note: Waiting on reply from Nordisk Revision.
+
+DECISIONS RECORDED
+  DEC-042  Use SQLite WAL snapshots for workspace exports</pre>`,
+        markdown: `<pre class="digest-pre">## Weekly Digest — Nov 21 (Cycle 18)
+
+### Shipped (3)
+- **TR-114** Migrate Stripe invoice webhooks off legacy queue (\`PR #819\`)
+- **TR-121** Draft monochrome print stylesheet for Cycle summaries (\`PR #822\`)
+- **TR-130** Add CSV column auto-mapping for Linear exports (\`PR #815\`)
+
+### Decisions
+- [DEC-042](#) SQLite WAL snapshots over multi-file CSV zips</pre>`,
+        email: `<div class="digest-email-view">
+          <div class="mono" style="font-size:11px; color:var(--ink-3); margin-bottom:10px;">Subject: Fieldwork Studio · Week of Nov 16 (3 shipped, 1 decision)</div>
+          <h4>Shipped this week</h4>
+          <ul>
+            <li><strong>TR-114</strong> — Stripe invoice webhooks moved to idempotent Postgres worker.</li>
+            <li><strong>TR-121</strong> — Monochrome print stylesheet shipped for cycle sheets.</li>
+            <li><strong>TR-130</strong> — Auto-mapping added for Linear CSV imports.</li>
+          </ul>
+          <p style="margin:12px 0 0; font-size:12.5px; color:var(--ink-3);">Generated deterministically from Cycle 18 state. Reply to comment in Trestle.</p>
+        </div>`
+      };
+
+      const digestOutput = document.getElementById('digestOutput');
+      const digestTabs = document.querySelectorAll('.digest-tab');
+
+      function setDigest(type) {
+        digestOutput.innerHTML = digestContent[type];
+        digestTabs.forEach(t => t.classList.toggle('active', t.dataset.digest === type));
+      }
+
+      digestTabs.forEach(t => t.addEventListener('click', () => setDigest(t.dataset.digest)));
+      setDigest('plain');
+
+      // --- Pricing Toggle & Seat Estimator ---
+      let billingMode = 'annual';
+      const billingBtns = document.querySelectorAll('.billing-btn');
+      const teamPriceNum = document.getElementById('teamPriceNum');
+      const teamPriceUnit = document.getElementById('teamPriceUnit');
+      const seatSlider = document.getElementById('seatSlider');
+      const seatCountLabel = document.getElementById('seatCountLabel');
+      const seatCostOutput = document.getElementById('seatCostOutput');
+
+      function updatePricing() {
+        const seats = Number(seatSlider.value);
+        const rate = billingMode === 'annual' ? 7 : 9;
+        teamPriceNum.textContent = '$' + rate;
+        teamPriceUnit.textContent = billingMode === 'annual'
+          ? 'per seat / month, billed annually'
+          : 'per seat / month, billed monthly';
+
+        seatCountLabel.textContent = seats === 1 ? '1 seat' : `${seats} seats`;
+
+        if (seats <= 4) {
+          seatCostOutput.textContent = '$0 / month — covered by Independent tier';
+        } else {
+          const monthly = seats * rate;
+          seatCostOutput.textContent = billingMode === 'annual'
+            ? `$${monthly} / month · billed annually ($${(monthly * 12).toLocaleString()}/yr)`
+            : `$${monthly} / month · billed monthly`;
+        }
+      }
+
+      billingBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          billingMode = btn.dataset.billing;
+          billingBtns.forEach(b => b.classList.toggle('active', b === btn));
+          updatePricing();
+        });
+      });
+
+      seatSlider.addEventListener('input', updatePricing);
+      updatePricing();
+
+      // --- Modal Handling ---
+      const modal = document.getElementById('authModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+      const wsNameField = document.getElementById('workspaceNameField');
+      const wsNameInput = document.getElementById('wsNameInput');
+      const wsEmailInput = document.getElementById('wsEmailInput');
+      const slugPreview = document.getElementById('slugPreview');
+      const workspaceForm = document.getElementById('workspaceForm');
+      const modalSuccess = document.getElementById('modalSuccess');
+      const modalSuccessText = document.getElementById('modalSuccessText');
+
+      function openModal(mode) {
+        workspaceForm.style.display = 'block';
+        modalSuccess.classList.remove('visible');
+        workspaceForm.reset();
+        slugPreview.textContent = 'trestle.work/your-team';
+
+        if (mode === 'signin') {
+          modalTitle.textContent = 'Sign in to Trestle';
+          wsNameField.style.display = 'none';
+          wsNameInput.required = false;
+          modalSubmitBtn.textContent = 'Send sign-in link';
+        } else {
+          modalTitle.textContent = 'Create a Trestle workspace';
+          wsNameField.style.display = 'block';
+          wsNameInput.required = true;
+          modalSubmitBtn.textContent = 'Create workspace';
+        }
+
+        modal.classList.add('open');
+        setTimeout(() => (mode === 'signin' ? wsEmailInput : wsNameInput).focus(), 40);
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+      }
+
+      document.querySelectorAll('[data-open-modal]').forEach(btn => {
+        btn.addEventListener('click', () => openModal(btn.dataset.openModal));
+      });
+
+      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+      document.getElementById('modalDoneBtn').addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      wsNameInput.addEventListener('input', () => {
+        const slug = wsNameInput.value
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '') || 'your-team';
+        slugPreview.textContent = 'trestle.work/' + slug;
+      });
+
+      workspaceForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = wsEmailInput.value.trim();
+        const ws = wsNameInput.value.trim();
+        workspaceForm.style.display = 'none';
+        modalSuccess.classList.add('visible');
+        modalSuccessText.textContent = ws
+          ? `We’ve sent a magic link to ${email} to initialize "${ws}" at ${slugPreview.textContent}.`
+          : `If an account exists for ${email}, a single-use sign-in link is on its way.`;
+      });
+    })();
+  </script>
+</body>
+</html>

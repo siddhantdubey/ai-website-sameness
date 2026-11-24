@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Søren Lindqvist — Editorial, Architecture & Portrait Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #111110;
+      --bg-elevated: #1A1A18;
+      --bg-subtle: #22221F;
+      --text-primary: #F4F2ED;
+      --text-secondary: #A6A39B;
+      --text-muted: #6E6C65;
+      --accent: #C56B41;
+      --accent-hover: #D87A4E;
+      --border: #2C2B28;
+      --border-light: rgba(244, 242, 237, 0.14);
+      
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #F4F2ED;
+      --bg-elevated: #EAE6DF;
+      --bg-subtle: #E0DDD5;
+      --text-primary: #141413;
+      --text-secondary: #5C5A54;
+      --text-muted: #8C8980;
+      --accent: #B85930;
+      --accent-hover: #9E4924;
+      --border: #DCD9D0;
+      --border-light: rgba(20, 20, 19, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.45s var(--ease-out-expo), color 0.45s var(--ease-out-expo);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Subtle analog film grain */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 4vw, 4rem);
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* HEADER / NAVIGATION */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.4rem 0;
+      transition: background-color 0.35s ease, border-color 0.35s ease, padding 0.35s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .site-header.scrolled {
+      background-color: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-link {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      transition: color 0.25s ease;
+      position: relative;
+      padding: 0.25rem 0;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s var(--ease-out-expo);
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .theme-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      display: inline-block;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      padding-top: 7.5rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.25rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #6B8E63;
+      box-shadow: 0 0 8px rgba(107, 142, 99, 0.7);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: clamp(2rem, 4.5vw, 5rem);
+      align-items: end;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6.2vw, 5.75rem);
+      font-weight: 400;
+      line-height: 0.96;
+      letter-spacing: -0.025em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .hero-lead {
+      font-size: clamp(1rem, 1.15vw, 1.15rem);
+      color: var(--text-secondary);
+      max-width: 52ch;
+      font-weight: 300;
+      line-height: 1.65;
+      margin-bottom: 2.75rem;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.95rem 1.75rem;
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent);
+      color: #F4F2ED;
+      transform: translateY(-1px);
+    }
+
+    .btn-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.35rem;
+      transition: color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn-text:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .hero-specs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+    }
+
+    .spec-val {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .hero-feature-frame {
+      position: relative;
+      cursor: pointer;
+      group: feature;
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-elevated);
+      aspect-ratio: 4 / 5;
+      border: 1px solid var(--border);
+    }
+
+    .hero-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.85s var(--ease-out-expo), filter 0.6s ease;
+    }
+
+    .hero-feature-frame:hover .hero-image-wrap img {
+      transform: scale(1.03);
+    }
+
+    .hero-caption-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* SECTION HEADERS */
+    .section-pad {
+      padding: clamp(4.5rem, 8vw, 7.5rem) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .section-index {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.25rem, 4vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 3rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border);
+    }
+
+    .filter-btn.active {
+      color: var(--text-primary);
+      border-color: var(--accent);
+      background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    }
+
+    .filter-count {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+    }
+
+    /* EDITORIAL BENTO / ASYMMETRIC GALLERY GRID */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(1.5rem, 2.8vw, 2.75rem);
+      align-items: start;
+    }
+
+    .photo-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
+    }
+
+    .photo-card.hidden {
+      display: none;
+    }
+
+    .col-span-7 { grid-column: span 7; }
+    .col-span-5 { grid-column: span 5; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-8 { grid-column: span 8; }
+    .col-span-12 { grid-column: span 12; }
+
+    .offset-top {
+      margin-top: 3.5rem;
+    }
+
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+    }
+
+    .aspect-4-5 { aspect-ratio: 4 / 5; }
+    .aspect-16-10 { aspect-ratio: 16 / 10; }
+    .aspect-3-2 { aspect-ratio: 3 / 2; }
+    .aspect-1-1 { aspect-ratio: 1 / 1; }
+    .aspect-21-9 { aspect-ratio: 21 / 9; }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.75s var(--ease-out-expo), filter 0.5s ease;
+    }
+
+    .photo-card:hover .photo-frame img {
+      transform: scale(1.03);
+    }
+
+    .photo-hover-exif {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(17, 17, 16, 0.85) 0%, rgba(17, 17, 16, 0.15) 45%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      color: #F4F2ED;
+    }
+
+    .photo-card:hover .photo-hover-exif {
+      opacity: 1;
+    }
+
+    .exif-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: rgba(244, 242, 237, 0.88);
+    }
+
+    .exif-pill {
+      padding: 0.2rem 0.5rem;
+      background: rgba(17, 17, 16, 0.7);
+      border: 1px solid rgba(244, 242, 237, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .photo-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 0.85rem;
+      gap: 1rem;
+    }
+
+    .photo-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .photo-number {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+    }
+
+    .photo-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .photo-submeta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* FEATURED MONOGRAPH ESSAYS (HORIZONTAL TABLE) */
+    .essays-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+
+    .essay-row {
+      display: grid;
+      grid-template-columns: 80px 2fr 1.2fr 1fr 140px;
+      align-items: center;
+      padding: 1.65rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1.5rem;
+      cursor: pointer;
+      transition: background-color 0.25s ease, padding-left 0.3s var(--ease-out-expo);
+    }
+
+    .essay-row:hover {
+      background-color: var(--bg-elevated);
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .essay-name {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+
+    .essay-client {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .essay-location {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .essay-action {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ABOUT & PRACTICE */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(2.5rem, 5vw, 5.5rem);
+      align-items: start;
+    }
+
+    .portrait-card {
+      border: 1px solid var(--border);
+      background-color: var(--bg-elevated);
+      padding: 1rem;
+    }
+
+    .portrait-card img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.08);
+      margin-bottom: 1rem;
+    }
+
+    .portrait-caption {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .about-statement {
+      font-family: var(--font-serif);
+      font-size: clamp(1.65rem, 2.5vw, 2.35rem);
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 2rem;
+      color: var(--text-primary);
+    }
+
+    .about-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .credentials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      padding-top: 2.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cred-col h4 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .cred-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .cred-list span {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      margin-right: 0.4rem;
+    }
+
+    /* SERVICES & COMMISSION TIERS */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      background-color: var(--bg-elevated);
+    }
+
+    .service-card {
+      padding: clamp(2rem, 3.2vw, 3rem);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2.5rem;
+    }
+
+    .service-card:last-child {
+      border-right: none;
+    }
+
+    .service-num {
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .service-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .service-desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    .deliverables-list {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .deliverables-list li::before {
+      content: "—";
+      color: var(--accent);
+      margin-right: 0.6rem;
+    }
+
+    .service-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* BOOKING & INQUIRY SECTION */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(2.5rem, 5vw, 5.5rem);
+    }
+
+    .contact-info-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2.5rem;
+    }
+
+    .contact-lead {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin-top: 1.25rem;
+    }
+
+    .rep-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .rep-item h5 {
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .rep-item p, .rep-item a {
+      font-size: 0.98rem;
+      color: var(--text-primary);
+    }
+
+    .rep-item a:hover {
+      color: var(--accent);
+    }
+
+    .inquiry-form {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: clamp(1.75rem, 3.5vw, 3rem);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .form-field.full {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      transition: border-color 0.25s ease;
+      border-radius: 0;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-submit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+    }
+
+    .form-feedback {
+      display: none;
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid #6B8E63;
+      background-color: rgba(107, 142, 99, 0.1);
+      color: var(--text-primary);
+      font-size: 0.88rem;
+    }
+
+    .form-feedback.visible {
+      display: block;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      padding: 3.5rem 0;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background-color: rgba(13, 13, 12, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(1.25rem, 2.5vw, 2.5rem);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease-out-expo);
+      color: #F4F2ED;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(244, 242, 237, 0.12);
+      padding-bottom: 1rem;
+    }
+
+    .lightbox-close {
+      padding: 0.45rem 0.9rem;
+      border: 1px solid rgba(244, 242, 237, 0.25);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #F4F2ED;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      border-color: var(--accent);
+      background-color: var(--accent);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+
+    .lightbox-img {
+      max-height: 72vh;
+      max-width: 86vw;
+      object-fit: contain;
+      border: 1px solid rgba(244, 242, 237, 0.14);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+      transition: opacity 0.25s ease;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(244, 242, 237, 0.2);
+      background-color: rgba(17, 17, 16, 0.75);
+      color: #F4F2ED;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      transition: all 0.25s ease;
+    }
+
+    .lightbox-nav:hover {
+      border-color: var(--accent);
+      background-color: var(--accent);
+    }
+
+    .lightbox-prev { left: 0.5rem; }
+    .lightbox-next { right: 0.5rem; }
+
+    .lightbox-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(244, 242, 237, 0.12);
+      padding-top: 1.1rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .lb-title {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+
+    .lb-story {
+      color: #A6A39B;
+      font-size: 0.88rem;
+      max-width: 60ch;
+    }
+
+    .lb-exif-specs {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .lb-spec {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .lb-spec-label {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: #6E6C65;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .lb-spec-value {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #F4F2ED;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .service-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .essay-row {
+        grid-template-columns: 50px 1.6fr 1fr auto;
+      }
+
+      .essay-location {
+        display: none;
+      }
+
+      .offset-top {
+        margin-top: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .col-span-7,
+      .col-span-5,
+      .col-span-6,
+      .col-span-4,
+      .col-span-8 {
+        grid-column: span 12;
+      }
+
+      .about-body,
+      .credentials-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-field.full {
+        grid-column: span 1;
+      }
+
+      .essay-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .essay-row .mono,
+      .essay-client {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FIXED HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <span class="brand-name">Søren Lindqvist</span>
+        <span class="brand-sub mono">Copenhagen &bull; Paris &bull; New York</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#works" class="nav-link">Archive (01)</a>
+        <a href="#monographs" class="nav-link">Monographs (02)</a>
+        <a href="#practice" class="nav-link">Practice (03)</a>
+        <a href="#commissions" class="nav-link">Commissions (04)</a>
+        <a href="#inquire" class="nav-link">Inquire (05)</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle Darkroom or Daylight viewing mode">
+          <span class="theme-dot"></span>
+          <span id="themeLabel">Daylight Loupe</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-top-meta mono">
+          <span>FOLIO VOL. IV &mdash; ARCHIVE 2019&ndash;2026</span>
+          <span class="status-badge">
+            <span class="status-indicator"></span>
+            AVAILABLE FOR Q1/Q2 COMMISSIONS &bull; CURRENTLY IN COPENHAGEN (55.6761&deg; N)
+          </span>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div>
+              <h1 class="hero-title">
+                Quiet studies of <em>form</em>, brute structure, and the human presence.
+              </h1>
+              <p class="hero-lead">
+                Søren Lindqvist is an editorial and architectural photographer working predominantly on medium-format film and digital backs. His work documents spatial permanence, Nordic light, and unguarded portraiture for international publications, architects, and design houses.
+              </p>
+              <div class="hero-cta-row">
+                <a href="#works" class="btn-primary">
+                  <span>Enter Contact Sheet</span>
+                  <span>&darr;</span>
+                </a>
+                <a href="#inquire" class="btn-text">Request Print Tearsheets &amp; Rates &rarr;</a>
+              </div>
+            </div>
+
+            <div class="hero-specs">
+              <div class="spec-item">
+                <span class="spec-label mono">PRIMARY FORMATS</span>
+                <span class="spec-val">6&times;7 Medium Format / 100MP Digital</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label mono">REPRESENTATION</span>
+                <span class="spec-val">Atelier Vane (EU) &bull; Direct (US)</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-label mono">EDITION PRINTS</span>
+                <span class="spec-val">Archival Silver Gelatin &amp; Pigment</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEATURED HERO PLATE -->
+          <div class="hero-feature-frame" data-open-index="0" role="button" tabindex="0" aria-label="Inspect Plate 01 in Lightbox">
+            <div class="hero-image-wrap">
+              <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=85" alt="Sunlight cutting across minimalist concrete interior in Aarhus">
+            </div>
+            <div class="hero-caption-bar mono">
+              <span>PLATE 01 &mdash; KUNSTHAL AARHUS STUDY</span>
+              <span>HASSELBLAD 500C/M &bull; 80MM F/2.8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 / CURATED ARCHIVE GALLERY -->
+    <section class="section-pad" id="works">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-index mono">01 // SELECTED PLATES</span>
+            <h2 class="section-title">Curated Works &amp; Commissions</h2>
+          </div>
+          <p class="mono" style="color: var(--text-secondary);">CLICK ANY PLATE TO INSPECT FULL FRAME &amp; EXIF DATA</p>
+        </div>
+
+        <!-- FILTER CONTROLS -->
+        <div class="filter-bar">
+          <div class="filter-group" role="tablist" aria-label="Filter photography archive by discipline">
+            <button class="filter-btn active" data-filter="all">All Plates <span class="filter-count">[11]</span></button>
+            <button class="filter-btn" data-filter="architecture">Architecture <span class="filter-count">[04]</span></button>
+            <button class="filter-btn" data-filter="editorial">Editorial &amp; Portrait <span class="filter-count">[04]</span></button>
+            <button class="filter-btn" data-filter="analog">35mm &amp; 120 Film <span class="filter-count">[03]</span></button>
+          </div>
+          <div class="mono" id="activeFilterStatus" style="color: var(--text-muted);">SHOWING 11 OF 11 ARCHIVAL PLATES</div>
+        </div>
+
+        <!-- ASYMMETRIC GALLERY GRID -->
+        <div class="gallery-grid" id="galleryGrid">
+          
+          <!-- Item 1 -->
+          <article class="photo-card col-span-7" data-category="architecture" data-index="1">
+            <div class="photo-frame aspect-16-10">
+              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85" alt="Concrete cantilever house at dusk" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">PHASE ONE XF IQ4</span>
+                  <span class="exif-pill">35MM LS &bull; F/8 &bull; 1/60S &bull; ISO 64</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">01</span>
+                <h3 class="photo-title">Pavilion in North Zealand</h3>
+              </div>
+              <span class="photo-submeta">Architecture &bull; 2026</span>
+            </div>
+          </article>
+
+          <!-- Item 2 -->
+          <article class="photo-card col-span-5 offset-top" data-category="editorial" data-index="2">
+            <div class="photo-frame aspect-4-5">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="Studio portrait of ceramicist Freja Holm" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">LEICA SL2-S</span>
+                  <span class="exif-pill">90MM APO &bull; F/2.8 &bull; 1/250S &bull; ISO 160</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">02</span>
+                <h3 class="photo-title">Freja Holm for Ark Journal</h3>
+              </div>
+              <span class="photo-submeta">Editorial &bull; 2025</span>
+            </div>
+          </article>
+
+          <!-- Item 3 -->
+          <article class="photo-card col-span-5" data-category="analog" data-index="3">
+            <div class="photo-frame aspect-4-5">
+              <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1100&q=85" alt="Fog rolling over Faroe Islands basalt cliffs" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">MAMIYA 7II &bull; ILFORD HP5</span>
+                  <span class="exif-pill">65MM &bull; F/5.6 &bull; 1/125S</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">03</span>
+                <h3 class="photo-title">Basalt &amp; Sea Fog, Streymoy</h3>
+              </div>
+              <span class="photo-submeta">120 Film &bull; 2025</span>
+            </div>
+          </article>
+
+          <!-- Item 4 -->
+          <article class="photo-card col-span-7 offset-top" data-category="architecture" data-index="4">
+            <div class="photo-frame aspect-3-2">
+              <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=85" alt="Monolithic limestone stairwell in Zurich" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">CAMBO WRS &bull; IQ4 150MP</span>
+                  <span class="exif-pill">40MM HR &bull; F/11 &bull; 1/4S &bull; ISO 50</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">04</span>
+                <h3 class="photo-title">Kunsthaus Passage Study</h3>
+              </div>
+              <span class="photo-submeta">Architecture &bull; 2025</span>
+            </div>
+          </article>
+
+          <!-- Item 5 (Full Span Cinema Plate) -->
+          <article class="photo-card col-span-12" data-category="analog" data-index="5">
+            <div class="photo-frame aspect-21-9">
+              <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1800&q=85" alt="Panoramic mist at dawn in the Scottish Highlands" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">HASSELBLAD XPAN &bull; KODAK PORTRA 400</span>
+                  <span class="exif-pill">45MM &bull; F/8 &bull; 1/60S</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">05</span>
+                <h3 class="photo-title">First Light over Glen Etive (Panoramic Contact)</h3>
+              </div>
+              <span class="photo-submeta">35mm Panoramic Film &bull; 2024</span>
+            </div>
+          </article>
+
+          <!-- Item 6 -->
+          <article class="photo-card col-span-4" data-category="editorial" data-index="6">
+            <div class="photo-frame aspect-4-5">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85" alt="Portrait of composer Henrik Lind in Berlin" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">HASSELBLAD 500C/M</span>
+                  <span class="exif-pill">150MM F/4 &bull; TRI-X 400</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">06</span>
+                <h3 class="photo-title">Henrik Lind, Funkhaus Berlin</h3>
+              </div>
+              <span class="photo-submeta">Editorial &bull; 2025</span>
+            </div>
+          </article>
+
+          <!-- Item 7 -->
+          <article class="photo-card col-span-4" data-category="architecture" data-index="7">
+            <div class="photo-frame aspect-4-5">
+              <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=85" alt="Timber courtyard house in Kyoto" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">LEICA SL2-S</span>
+                  <span class="exif-pill">35MM APO &bull; F/5.6 &bull; 1/30S &bull; ISO 100</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">07</span>
+                <h3 class="photo-title">Cedar &amp; Rainwater, Kyoto</h3>
+              </div>
+              <span class="photo-submeta">Architecture &bull; 2024</span>
+            </div>
+          </article>
+
+          <!-- Item 8 -->
+          <article class="photo-card col-span-4" data-category="editorial" data-index="8">
+            <div class="photo-frame aspect-4-5">
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=85" alt="Editorial fashion profile in raw linen coat" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">PENTAX 67II &bull; PORTRA 160</span>
+                  <span class="exif-pill">105MM F/2.4 &bull; 1/500S</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">08</span>
+                <h3 class="photo-title">Autumn Silhouette for Lemaire</h3>
+              </div>
+              <span class="photo-submeta">Editorial &bull; 2025</span>
+            </div>
+          </article>
+
+          <!-- Item 9 -->
+          <article class="photo-card col-span-6" data-category="architecture" data-index="9">
+            <div class="photo-frame aspect-3-2">
+              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85" alt="Brutalist facade repetition in Antwerp" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">PHASE ONE IQ4</span>
+                  <span class="exif-pill">90MM HR &bull; F/11 &bull; 1/125S &bull; ISO 50</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">09</span>
+                <h3 class="photo-title">Harbor Granary Grid, Antwerp</h3>
+              </div>
+              <span class="photo-submeta">Architecture &bull; 2024</span>
+            </div>
+          </article>
+
+          <!-- Item 10 -->
+          <article class="photo-card col-span-6" data-category="analog" data-index="10">
+            <div class="photo-frame aspect-3-2">
+              <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1200&q=85" alt="Rain-slicked cobblestones in Paris at twilight" loading="lazy">
+              <div class="photo-hover-exif">
+                <div class="exif-row">
+                  <span class="exif-pill">LEICA M6 &bull; CINESTILL 800T</span>
+                  <span class="exif-pill">35MM SUMMILUX &bull; F/2 &bull; 1/30S</span>
+                </div>
+              </div>
+            </div>
+            <div class="photo-meta">
+              <div class="photo-title-wrap">
+                <span class="photo-number">10</span>
+                <h3 class="photo-title">Rue de Turenne After Rain</h3>
+              </div>
+              <span class="photo-submeta">35mm Film &bull; 2025</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 / MONOGRAPHS & EDITORIAL STORIES -->
+    <section class="section-pad" id="monographs">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-index mono">02 // SERIALIZED STORIES</span>
+            <h2 class="section-title">Recent Monographs &amp; Features</h2>
+          </div>
+          <span class="mono" style="color: var(--text-secondary);">PUBLISHED PRINT &amp; EXHIBITION FOLIOS</span>
+        </div>
+
+        <div class="essays-list">
+          <div class="essay-row" data-open-index="1">
+            <span class="mono" style="color: var(--text-muted);">VOL. 01</span>
+            <h3 class="essay-name">Silent Concrete: Post-War Churches of Jutland</h3>
+            <span class="essay-client">Published by Mack Books / 96 Plates</span>
+            <span class="essay-location">DENMARK &bull; 2025</span>
+            <span class="essay-action">Inspect Plate &rarr;</span>
+          </div>
+
+          <div class="essay-row" data-open-index="2">
+            <span class="mono" style="color: var(--text-muted);">VOL. 02</span>
+            <h3 class="essay-name">Ateliers of the North Sea Ceramicists</h3>
+            <span class="essay-client">Ark Journal Issue XIII Cover Dossier</span>
+            <span class="essay-location">BORNHOLM &bull; 2025</span>
+            <span class="essay-action">Inspect Plate &rarr;</span>
+          </div>
+
+          <div class="essay-row" data-open-index="5">
+            <span class="mono" style="color: var(--text-muted);">VOL. 03</span>
+            <h3 class="essay-name">The Winter Salt Line (35mm Panoramic Index)</h3>
+            <span class="essay-client">Foam Magazine &amp; Solo Exhibition</span>
+            <span class="essay-location">SCOTLAND &bull; 2024</span>
+            <span class="essay-action">Inspect Plate &rarr;</span>
+          </div>
+
+          <div class="essay-row" data-open-index="7">
+            <span class="mono" style="color: var(--text-muted);">VOL. 04</span>
+            <h3 class="essay-name">Joinery &amp; Shadow: Contemporary Machiya</h3>
+            <span class="essay-client">Monocle &amp; Casa Brutus Special</span>
+            <span class="essay-location">KYOTO &bull; 2024</span>
+            <span class="essay-action">Inspect Plate &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 / ABOUT & PRACTICE -->
+    <section class="section-pad" id="practice">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-index mono">03 // BIOGRAPHY &amp; METHODOLOGY</span>
+            <h2 class="section-title">The Practice</h2>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="portrait-card">
+            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=85" alt="Portrait of Søren Lindqvist in his Vesterbro darkroom">
+            <div class="portrait-caption mono">
+              <span>FIG. A &mdash; SØREN LINDQVIST</span>
+              <span>VESTERBRO DARKROOM, CPH</span>
+            </div>
+          </div>
+
+          <div>
+            <p class="about-statement">
+              &ldquo;I approach buildings as slow portraits and portraits as lived architecture. Wait long enough in any space, and the light will tell you what the structure is trying to hold together.&rdquo;
+            </p>
+
+            <div class="about-body">
+              <p>
+                Trained initially in architectural conservation at the Royal Danish Academy before turning full-time to photography in 2016, Søren Lindqvist brings a structural discipline to editorial and commercial image-making. Working strictly with natural and continuous ambient light, his frames prioritize tonal depth, tactile grain, and unhurried stillness.
+              </p>
+              <p>
+                Alongside commissioned assignments for architectural practices, fashion houses, and print journals, Søren maintains a personal darkroom in Copenhagen where he hand-prints silver gelatin editions and oversees drum scanning for large-scale museum exhibitions.
+              </p>
+            </div>
+
+            <div class="credentials-grid">
+              <div class="cred-col">
+                <h4 class="mono">SELECTED CLIENTS</h4>
+                <ul class="cred-list">
+                  <li>Ark Journal</li>
+                  <li>Herzog &amp; de Meuron</li>
+                  <li>Kvadrat Textiles</li>
+                  <li>Lemaire Paris</li>
+                  <li>Norm Architects</li>
+                  <li>T Magazine (NYT)</li>
+                </ul>
+              </div>
+
+              <div class="cred-col">
+                <h4 class="mono">EXHIBITIONS</h4>
+                <ul class="cred-list">
+                  <li><span>2025</span> Kunsthal Charlottenborg</li>
+                  <li><span>2024</span> Foam Amsterdam (Group)</li>
+                  <li><span>2023</span> C/O Berlin Talent Shortlist</li>
+                  <li><span>2022</span> Fotografiska Stockholm</li>
+                </ul>
+              </div>
+
+              <div class="cred-col">
+                <h4 class="mono">LOCKER &amp; OPTICS</h4>
+                <ul class="cred-list">
+                  <li>Phase One XF IQ4 150MP</li>
+                  <li>Cambo WRS Technical Body</li>
+                  <li>Hasselblad 500C/M &amp; XPan</li>
+                  <li>Mamiya 7II (6&times;7 Rangefinder)</li>
+                  <li>Leica SL2-S &amp; M6 TTL</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 / COMMISSIONS & DELIVERABLES -->
+    <section class="section-pad" id="commissions">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-index mono">04 // WORKING TOGETHER</span>
+            <h2 class="section-title">Commissions &amp; Production</h2>
+          </div>
+          <span class="mono" style="color: var(--text-secondary);">TAILORED PRODUCTION FOR PRINT, CAMPAIGN &amp; ARCHIVE</span>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div>
+              <span class="service-num mono">SCOPE 01 // SPATIAL</span>
+              <h3 class="service-title">Architectural Documentation</h3>
+              <p class="service-desc">
+                Full-day and multi-day spatial documentation timed around solar elevation and weather windows. Ideal for architects, interior studios, and hospitality spaces seeking publication-grade monographs.
+              </p>
+              <ul class="deliverables-list">
+                <li>Perspective-corrected 150MP technical camera plates</li>
+                <li>16-bit color-graded TIFF master archive &amp; press JPEGs</li>
+                <li>Multi-party licensing option for architects &amp; builders</li>
+              </ul>
+            </div>
+            <div class="service-footer mono">
+              <span style="color: var(--text-muted);">TYPICAL TURNAROUND: 10 DAYS</span>
+              <a href="#inquire" style="color: var(--accent);">INQUIRE &rarr;</a>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <span class="service-num mono">SCOPE 02 // CAMPAIGN</span>
+              <h3 class="service-title">Editorial &amp; Brand Campaigns</h3>
+              <p class="service-desc">
+                Hybrid analog and digital production for fashion lookbooks, design objects, and founder profiles. On-location or studio direction with full crew, casting, and color-managed film processing.
+              </p>
+              <ul class="deliverables-list">
+                <li>Medium-format 120 film &amp; digital simultaneous capture</li>
+                <li>High-resolution drum scans &amp; custom print LUTs</li>
+                <li>Global print, digital, and out-of-home usage packages</li>
+              </ul>
+            </div>
+            <div class="service-footer mono">
+              <span style="color: var(--text-muted);">FULL PRODUCTION SUPPORT</span>
+              <a href="#inquire" style="color: var(--accent);">INQUIRE &rarr;</a>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <span class="service-num mono">SCOPE 03 // COLLECTORS</span>
+              <h3 class="service-title">Archival Fine Art Editions</h3>
+              <p class="service-desc">
+                Signed, numbered limited-edition prints produced on museum-grade Hahnemühle Baryta or hand-processed silver gelatin fiber paper. Accompanied by a certificate of authenticity.
+              </p>
+              <ul class="deliverables-list">
+                <li>Editions of 10 + 2 Artist Proofs per plate</li>
+                <li>Custom walnut or blackened steel framing via Copenhagen</li>
+                <li>Worldwide crated art courier shipping</li>
+              </ul>
+            </div>
+            <div class="service-footer mono">
+              <span style="color: var(--text-muted);">FROM &euro;1,400 UNFRAMED</span>
+              <a href="#inquire" style="color: var(--accent);">ACQUIRE &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 / INQUIRE & BOOKING -->
+    <section class="section-pad" id="inquire" style="border-bottom: none;">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info-block">
+            <div>
+              <span class="section-index mono">05 // DISPATCH &amp; BOOKING</span>
+              <h2 class="section-title">Initiate a Commission</h2>
+              <p class="contact-lead">
+                For assignment availability, fee estimates, portfolio PDF requests, or fine art print acquisitions, use the project dispatch form or reach out directly to the studio or agency desk.
+              </p>
+            </div>
+
+            <div class="rep-details">
+              <div class="rep-item">
+                <h5 class="mono">COPENHAGEN STUDIO &amp; DARKROOM</h5>
+                <p>Flæsketorvet 68, 1711 København V, Denmark</p>
+                <a href="mailto:studio@sorenlindqvist.dk" class="mono" style="color: var(--accent);">STUDIO@SORENLINDQVIST.DK</a>
+              </div>
+
+              <div class="rep-item">
+                <h5 class="mono">COMMERCIAL SYNDICATION &amp; EU REPRESENTATION</h5>
+                <p>Atelier Vane &mdash; Camille Laurent</p>
+                <a href="mailto:camille@ateliervane.paris" class="mono">CAMILLE@ATELIERVANE.PARIS &bull; +33 1 42 68 55 10</a>
+              </div>
+
+              <div class="rep-item">
+                <h5 class="mono">UPCOMING TRAVEL SCHEDULE (NO TRAVEL FEE WINDOW)</h5>
+                <p class="mono" style="color: var(--text-secondary);">
+                  DEC 04&ndash;14: ZURICH &amp; MILAN<br>
+                  JAN 12&ndash;26: PARIS &amp; ANTWERP<br>
+                  FEB 08&ndash;22: NEW YORK &amp; KYOTO
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="inquiry-form">
+            <form id="commissionForm">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label class="form-label" for="clientName">Your Name *</label>
+                  <input class="form-input" type="text" id="clientName" name="clientName" placeholder="Astrid Vermeulen" required>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="clientEmail">Email Address *</label>
+                  <input class="form-input" type="email" id="clientEmail" name="clientEmail" placeholder="astrid@studiovermeulen.be" required>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="projectType">Commission Type</label>
+                  <select class="form-select" id="projectType" name="projectType">
+                    <option value="Architecture & Interior">Architecture &amp; Spatial Monograph</option>
+                    <option value="Editorial & Portrait">Editorial Feature / Portraiture</option>
+                    <option value="Brand Campaign">Brand Campaign / Lookbook (Film + Digital)</option>
+                    <option value="Fine Art Print">Fine Art Print Acquisition</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="projectTimeline">Target Shoot Window &amp; Location</label>
+                  <input class="form-input" type="text" id="projectTimeline" name="projectTimeline" placeholder="e.g., January 2027 — Antwerp">
+                </div>
+
+                <div class="form-field full">
+                  <label class="form-label" for="projectBrief">Project Brief, Usage &amp; Deliverables *</label>
+                  <textarea class="form-textarea" id="projectBrief" name="projectBrief" placeholder="Share details about the architectural project, publication deadline, number of shoot days, or desired plate edition..." required></textarea>
+                </div>
+              </div>
+
+              <div class="form-submit-row">
+                <span class="mono" style="color: var(--text-muted);">RESPONSE WITHIN 24 BUSINESS HOURS</span>
+                <button type="submit" class="btn-primary">
+                  <span>Transmit Commission Brief</span>
+                  <span>&rarr;</span>
+                </button>
+              </div>
+
+              <div class="form-feedback mono" id="formFeedback" role="status"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner mono">
+      <div>&copy; 2016&ndash;2026 SØREN LINDQVIST STUDIO. ALL RIGHTS RESERVED.</div>
+      <div class="footer-links">
+        <a href="#works">ARCHIVE</a>
+        <a href="#monographs">MONOGRAPHS</a>
+        <a href="#practice">PRACTICE</a>
+        <a href="#inquire">PRESS KIT PDF</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX LOUPE MODAL -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Full frame plate inspection">
+    <div class="lightbox-top">
+      <div class="mono" id="lbCounter">PLATE 01 / 11</div>
+      <div class="mono" style="color: #A6A39B;">USE [&larr;] [&rarr;] KEYS TO NAVIGATE &bull; [ESC] TO CLOSE</div>
+      <button class="lightbox-close" id="lbClose">Close Loupe [ESC]</button>
+    </div>
+
+    <div class="lightbox-stage">
+      <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous plate">&larr;</button>
+      <img class="lightbox-img" id="lbImg" src="" alt="">
+      <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next plate">&rarr;</button>
+    </div>
+
+    <div class="lightbox-bottom">
+      <div>
+        <h3 class="lb-title" id="lbTitle">Plate Title</h3>
+        <p class="lb-story" id="lbStory">Plate narrative and lighting context.</p>
+      </div>
+      <div class="lb-exif-specs">
+        <div class="lb-spec">
+          <span class="lb-spec-label">CAMERA &amp; MEDIUM</span>
+          <span class="lb-spec-value" id="lbCamera">—</span>
+        </div>
+        <div class="lb-spec">
+          <span class="lb-spec-label">OPTICS &amp; EXPOSURE</span>
+          <span class="lb-spec-value" id="lbExposure">—</span>
+        </div>
+        <div class="lb-spec">
+          <span class="lb-spec-label">LOCATION &amp; YEAR</span>
+          <span class="lb-spec-value" id="lbLocation">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Complete Plate Catalog for Lightbox Loupe Inspection
+    const PLATES = [
+      {
+        id: "00",
+        title: "Kunsthal Aarhus Study",
+        story: "Low winter sunlight raking across board-formed concrete walls during a quiet morning installation.",
+        camera: "Hasselblad 500C/M • Kodak Tri-X 400",
+        exposure: "80mm Planar f/2.8 • 1/60s at f/5.6",
+        location: "Aarhus, Denmark • 2026",
+        src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=90"
+      },
+      {
+        id: "01",
+        title: "Pavilion in North Zealand",
+        story: "Commissioned monograph for Norm Architects capturing the transition between raw cast concrete and coastal pines at blue hour.",
+        camera: "Phase One XF IQ4 150MP",
+        exposure: "35mm LS • f/8 • 1/60s • ISO 64",
+        location: "Tisvildeleje, Denmark • 2026",
+        src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90"
+      },
+      {
+        id: "02",
+        title: "Freja Holm for Ark Journal",
+        story: "Unguarded north-facing skylight portrait in Freja's Bornholm stoneware workshop after kiln unloading.",
+        camera: "Leica SL2-S",
+        exposure: "90mm APO-Summicron • f/2.8 • 1/250s • ISO 160",
+        location: "Bornholm, Denmark • 2025",
+        src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&q=90"
+      },
+      {
+        id: "03",
+        title: "Basalt & Sea Fog, Streymoy",
+        story: "Hand-processed silver gelatin negative made during a ten-day residency documenting North Atlantic topography.",
+        camera: "Mamiya 7II • Ilford HP5 Plus 400",
+        exposure: "65mm f/4 • 1/125s at f/5.6",
+        location: "Faroe Islands • 2025",
+        src: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1600&q=90"
+      },
+      {
+        id: "04",
+        title: "Kunsthaus Passage Study",
+        story: "Architectural geometry and travertine shadow lines documented on a technical view camera with vertical shift.",
+        camera: "Cambo WRS • Phase One IQ4 150MP",
+        exposure: "Rodenstock 40mm HR • f/11 • 1/4s • ISO 50",
+        location: "Zurich, Switzerland • 2025",
+        src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=90"
+      },
+      {
+        id: "05",
+        title: "First Light over Glen Etive (Panoramic Contact)",
+        story: "Dual-frame 35mm panoramic exposure captured on Kodak Portra 400 just as mist lifted off the valley floor.",
+        camera: "Hasselblad XPan • Kodak Portra 400",
+        exposure: "45mm f/4 • 1/60s at f/8",
+        location: "Scottish Highlands • 2024",
+        src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2000&q=90"
+      },
+      {
+        id: "06",
+        title: "Henrik Lind, Funkhaus Berlin",
+        story: "Album sleeve and editorial press portrait captured inside Studio 2 acoustic wood paneling.",
+        camera: "Hasselblad 500C/M • Kodak Tri-X 400",
+        exposure: "150mm Sonnar f/4 • 1/125s at f/4",
+        location: "Berlin, Germany • 2025",
+        src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1500&q=90"
+      },
+      {
+        id: "07",
+        title: "Cedar & Rainwater, Kyoto",
+        story: "Quiet afternoon rainfall illuminating charred cedar joinery in a restored machiya courtyard residence.",
+        camera: "Leica SL2-S",
+        exposure: "35mm APO-Summicron • f/5.6 • 1/30s • ISO 100",
+        location: "Kyoto, Japan • 2024",
+        src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=90"
+      },
+      {
+        id: "08",
+        title: "Autumn Silhouette for Lemaire",
+        story: "Outdoor campaign study exploring heavy unbleached wool and overcast Parisian morning light.",
+        camera: "Pentax 67II • Kodak Portra 160",
+        exposure: "105mm f/2.4 • 1/500s at f/2.8",
+        location: "Paris, France • 2025",
+        src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1500&q=90"
+      },
+      {
+        id: "09",
+        title: "Harbor Granary Grid, Antwerp",
+        story: "Repetitive industrial concrete modules photographed under flat coastal cloud cover for absolute tonal neutrality.",
+        camera: "Phase One XF IQ4 150MP",
+        exposure: "90mm HR • f/11 • 1/125s • ISO 50",
+        location: "Antwerp, Belgium • 2024",
+        src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=90"
+      },
+      {
+        id: "10",
+        title: "Rue de Turenne After Rain",
+        story: "Handheld twilight frame balancing tungsten cafe reflections against deep cobalt wet cobblestones.",
+        camera: "Leica M6 TTL • CineStill 800T",
+        exposure: "35mm Summilux-M • f/2 • 1/30s",
+        location: "Paris, France • 2025",
+        src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1800&q=90"
+      }
+    ];
+
+    // Header scroll state
+    const siteHeader = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        siteHeader.classList.add('scrolled');
+      } else {
+        siteHeader.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // Darkroom / Daylight Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    let isLightMode = false;
+
+    themeToggle.addEventListener('click', () => {
+      isLightMode = !isLightMode;
+      if (isLightMode) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeLabel.textContent = 'Darkroom Mode';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeLabel.textContent = 'Daylight Loupe';
+      }
+    });
+
+    // Category Filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const photoCards = document.querySelectorAll('.photo-card');
+    const activeFilterStatus = document.getElementById('activeFilterStatus');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+        let visibleCount = 0;
+
+        photoCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        // Total includes Hero Plate when viewing All
+        const displayCount = filter === 'all' ? 11 : visibleCount;
+        activeFilterStatus.textContent = `SHOWING ${String(displayCount).padStart(2, '0')} OF 11 ARCHIVAL PLATES`;
+      });
+    });
+
+    // Lightbox Inspection Modal Logic
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbStory = document.getElementById('lbStory');
+    const lbCamera = document.getElementById('lbCamera');
+    const lbExposure = document.getElementById('lbExposure');
+    const lbLocation = document.getElementById('lbLocation');
+    const lbCounter = document.getElementById('lbCounter');
+    const lbClose = document.getElementById('lbClose');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+
+    let currentPlateIndex = 0;
+
+    function openLightbox(index) {
+      currentPlateIndex = index;
+      updateLightboxContent();
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxContent() {
+      const plate = PLATES[currentPlateIndex];
+      lbImg.style.opacity = '0.35';
+      setTimeout(() => {
+        lbImg.src = plate.src;
+        lbImg.alt = plate.title;
+        lbTitle.textContent = plate.title;
+        lbStory.textContent = plate.story;
+        lbCamera.textContent = plate.camera;
+        lbExposure.textContent = plate.exposure;
+        lbLocation.textContent = plate.location;
+        lbCounter.textContent = `PLATE ${String(currentPlateIndex + 1).padStart(2, '0')} / ${PLATES.length}`;
+        lbImg.style.opacity = '1';
+      }, 110);
+    }
+
+    function stepLightbox(direction) {
+      currentPlateIndex = (currentPlateIndex + direction + PLATES.length) % PLATES.length;
+      updateLightboxContent();
+    }
+
+    // Bind gallery cards, hero plate, and monograph rows
+    document.querySelectorAll('.photo-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.getAttribute('data-index'), 10);
+        openLightbox(idx);
+      });
+    });
+
+    document.querySelectorAll('[data-open-index]').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.getAttribute('data-open-index'), 10);
+        openLightbox(idx);
+      });
+    });
+
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', () => stepLightbox(-1));
+    lbNext.addEventListener('click', () => stepLightbox(1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-stage')) {
+        closeLightbox();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') stepLightbox(1);
+      if (e.key === 'ArrowLeft') stepLightbox(-1);
+    });
+
+    // Commission Dispatch Form Handling
+    const commissionForm = document.getElementById('commissionForm');
+    const formFeedback = document.getElementById('formFeedback');
+
+    commissionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('clientName').value.trim();
+      const type = document.getElementById('projectType').value;
+      formFeedback.textContent = `DISPATCH RECEIVED — Thank you, ${name}. Your ${type} brief has been logged with Søren's Copenhagen desk. Expect a response with tearsheets and availability within 24 hours.`;
+      formFeedback.classList.add('visible');
+      commissionForm.reset();
+    });
+  </script>
+</body>
+</html>

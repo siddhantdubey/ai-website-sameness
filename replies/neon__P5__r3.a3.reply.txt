@@ -1,0 +1,3154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trestle — Project tracking laid out in plain sight</title>
+  <meta name="description" content="Trestle keeps scopes, schedules, and product decisions in one calm, local-first workspace for small and mid-sized teams." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #F4F1EA;
+      --paper-deep: #EBE6DA;
+      --sheet: #FCFBF7;
+      --sheet-hover: #F7F4EC;
+      --ink: #191815;
+      --ink-2: #4A463E;
+      --ink-3: #7A7368;
+      --rule: #D6CFC1;
+      --rule-strong: #B9B0A0;
+
+      --vermilion: #C64720;
+      --vermilion-hover: #A43716;
+      --vermilion-soft: rgba(198, 71, 32, 0.09);
+
+      --green: #296548;
+      --green-soft: rgba(41, 101, 72, 0.11);
+      --ochre: #A36B10;
+      --ochre-soft: rgba(163, 107, 16, 0.12);
+      --red: #B23228;
+      --red-soft: rgba(178, 50, 40, 0.10);
+      --slate: #2C5675;
+      --slate-soft: rgba(44, 86, 117, 0.11);
+
+      --charcoal: #1A1916;
+      --charcoal-surface: #23211D;
+      --charcoal-surface-2: #2B2823;
+      --charcoal-rule: #35322C;
+      --charcoal-ink: #F2EEE6;
+      --charcoal-muted: #A49D91;
+
+      --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+      --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+      --max-w: 1180px;
+      --radius-xs: 2px;
+      --radius-sm: 4px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    /* Subtle tactile paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--vermilion);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+    }
+
+    /* ---------------- HEADER ---------------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(244, 241, 234, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-inner {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.015em;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .brand-ver {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--ink-3);
+      padding-left: 8px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--ink-2);
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 9px 16px;
+      border-radius: var(--radius-xs);
+      border: 1px solid transparent;
+      transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--sheet);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: #2E2C26;
+      border-color: #2E2C26;
+    }
+
+    .btn-accent {
+      background: var(--vermilion);
+      color: #FFFDF9;
+      border-color: var(--vermilion);
+    }
+
+    .btn-accent:hover {
+      background: var(--vermilion-hover);
+      border-color: var(--vermilion-hover);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+
+    .btn-outline:hover {
+      background: var(--sheet);
+      border-color: var(--ink);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+      padding: 8px 10px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-xs);
+      padding: 6px 9px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+    }
+
+    /* ---------------- HERO ---------------- */
+    .hero {
+      padding: 22px 0 72px;
+    }
+
+    .meta-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      margin-bottom: 44px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-strip-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--vermilion);
+      margin-right: 8px;
+      vertical-align: middle;
+      transform: translateY(-1px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 52px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(42px, 5.4vw, 68px);
+      line-height: 1.03;
+      letter-spacing: -0.025em;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--vermilion);
+    }
+
+    .hero-aside {
+      padding-bottom: 6px;
+    }
+
+    .hero-lead {
+      font-size: 16px;
+      line-height: 1.62;
+      color: var(--ink-2);
+      margin: 0 0 24px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .hero-footnote {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      margin: 0;
+    }
+
+    /* ---------------- INTERACTIVE WORKSPACE STAGE ---------------- */
+    .stage-caption-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-2);
+      background: var(--sheet);
+      border: 1px solid var(--rule-strong);
+      border-bottom-width: 2px;
+      border-radius: 3px;
+    }
+
+    .workspace-shell {
+      background: var(--sheet);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 1px 0 var(--rule), 0 22px 44px -26px rgba(25, 24, 21, 0.22);
+      overflow: hidden;
+    }
+
+    .ws-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 48px;
+      background: var(--paper-deep);
+      border-bottom: 1px solid var(--rule);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ws-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .ws-project-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--ink);
+      color: var(--sheet);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      border-radius: 2px;
+    }
+
+    .ws-cycle-dates {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-left: 6px;
+      padding: 2px 7px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      border-radius: 2px;
+    }
+
+    .ws-tabs {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      gap: 4px;
+    }
+
+    .ws-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+      transition: color 0.14s ease, border-color 0.14s ease;
+    }
+
+    .ws-tab:hover {
+      color: var(--ink);
+    }
+
+    .ws-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--vermilion);
+    }
+
+    .ws-tab-num {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-3);
+    }
+
+    .ws-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-2);
+    }
+
+    .ws-progress-bar {
+      width: 74px;
+      height: 6px;
+      background: var(--rule);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .ws-progress-fill {
+      height: 100%;
+      background: var(--green);
+      transition: width 0.25s ease;
+    }
+
+    .ws-subbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--sheet);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ws-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--ink-2);
+      transition: all 0.12s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--rule-strong);
+      color: var(--ink);
+    }
+
+    .filter-pill.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--sheet);
+    }
+
+    .ws-hint {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .ws-body {
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      min-height: 410px;
+    }
+
+    .ws-main {
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Cycle Table */
+    .task-table-head {
+      display: grid;
+      grid-template-columns: 76px 1fr 118px 116px 76px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+    }
+
+    .task-list {
+      flex: 1;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 76px 1fr 118px 116px 76px;
+      align-items: center;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 0.1s ease;
+      font-size: 13.5px;
+    }
+
+    .task-row:hover {
+      background: var(--sheet-hover);
+    }
+
+    .task-row.selected {
+      background: #F4EFE3;
+      box-shadow: inset 3px 0 0 var(--vermilion);
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .task-title-cell {
+      padding-right: 14px;
+      min-width: 0;
+    }
+
+    .task-title-text {
+      font-weight: 500;
+      color: var(--ink);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-row.is-done .task-title-text {
+      color: var(--ink-3);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule-strong);
+    }
+
+    .task-meta-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-3);
+    }
+
+    .note-indicator {
+      color: var(--slate);
+    }
+
+    .task-owner {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .owner-monogram {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: left;
+      transition: filter 0.12s ease;
+    }
+
+    .status-chip:hover {
+      filter: brightness(0.95);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-done {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: rgba(41, 101, 72, 0.22);
+    }
+    .status-done .status-dot { background: var(--green); }
+
+    .status-progress {
+      background: var(--slate-soft);
+      color: var(--slate);
+      border-color: rgba(44, 86, 117, 0.24);
+    }
+    .status-progress .status-dot { background: var(--slate); }
+
+    .status-review {
+      background: var(--ochre-soft);
+      color: var(--ochre);
+      border-color: rgba(163, 107, 16, 0.25);
+    }
+    .status-review .status-dot { background: var(--ochre); }
+
+    .status-blocked {
+      background: var(--red-soft);
+      color: var(--red);
+      border-color: rgba(178, 50, 40, 0.25);
+    }
+    .status-blocked .status-dot { background: var(--red); }
+
+    .status-queued {
+      background: var(--paper-deep);
+      color: var(--ink-2);
+      border-color: var(--rule);
+    }
+    .status-queued .status-dot { background: var(--ink-3); }
+
+    .task-due {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      text-align: right;
+    }
+
+    .task-due.overdue {
+      color: var(--red);
+      font-weight: 500;
+    }
+
+    .quick-add-form {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+      gap: 10px;
+      background: var(--paper);
+      border-top: 1px solid var(--rule);
+    }
+
+    .quick-add-prefix {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--vermilion);
+      font-weight: 500;
+    }
+
+    .quick-add-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 13.5px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .quick-add-input::placeholder {
+      color: var(--ink-3);
+    }
+
+    .quick-add-btn {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 5px 10px;
+      border: 1px solid var(--rule-strong);
+      background: var(--sheet);
+      border-radius: 2px;
+      color: var(--ink);
+    }
+
+    .quick-add-btn:hover {
+      border-color: var(--ink);
+    }
+
+    /* Timeline View */
+    .timeline-wrap {
+      padding: 18px 16px;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .timeline-grid {
+      min-width: 580px;
+      position: relative;
+    }
+
+    .tl-header {
+      display: grid;
+      grid-template-columns: 205px repeat(4, 1fr);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .tl-col-head {
+      padding-left: 8px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .tl-rows {
+      position: relative;
+    }
+
+    .tl-today-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(205px + (100% - 205px) * 0.42);
+      width: 1px;
+      background: var(--vermilion);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .tl-today-tag {
+      position: absolute;
+      top: -22px;
+      left: -24px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      background: var(--vermilion);
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .tl-row {
+      display: grid;
+      grid-template-columns: 205px 1fr;
+      align-items: center;
+      height: 44px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+    }
+
+    .tl-row:hover {
+      background: var(--sheet-hover);
+    }
+
+    .tl-row.selected {
+      background: #F4EFE3;
+    }
+
+    .tl-label {
+      padding-right: 12px;
+      font-size: 12.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tl-label span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-right: 6px;
+    }
+
+    .tl-track {
+      position: relative;
+      height: 100%;
+      background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px);
+      background-size: 25% 100%;
+    }
+
+    .tl-bar {
+      position: absolute;
+      top: 10px;
+      height: 24px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid transparent;
+    }
+
+    .tl-bar.status-done { background: var(--green-soft); color: var(--green); border-color: rgba(41,101,72,0.3); }
+    .tl-bar.status-progress { background: var(--slate-soft); color: var(--slate); border-color: rgba(44,86,117,0.35); }
+    .tl-bar.status-review { background: var(--ochre-soft); color: var(--ochre); border-color: rgba(163,107,16,0.35); }
+    .tl-bar.status-blocked { background: var(--red-soft); color: var(--red); border-color: rgba(178,50,40,0.4); }
+    .tl-bar.status-queued { background: var(--paper-deep); color: var(--ink-2); border-color: var(--rule-strong); }
+
+    /* Field Notes View */
+    .notes-wrap {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .note-card {
+      padding: 16px 18px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper);
+    }
+
+    .note-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .note-card h4 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 19px;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+
+    .note-card p {
+      margin: 0 0 12px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .note-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .note-task-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border: 1px solid var(--rule-strong);
+      background: var(--sheet);
+      border-radius: 2px;
+      color: var(--ink);
+    }
+
+    .note-task-link:hover {
+      border-color: var(--vermilion);
+      color: var(--vermilion);
+    }
+
+    /* Right Inspector Pane */
+    .ws-inspector {
+      padding: 18px 20px;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .insp-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .insp-title {
+      font-family: var(--font-serif);
+      font-size: 21px;
+      line-height: 1.2;
+      font-weight: 500;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .insp-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .insp-field-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 3px;
+    }
+
+    .insp-field-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .insp-status-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .insp-status-btn {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 4px 7px;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      background: var(--sheet);
+      color: var(--ink-2);
+    }
+
+    .insp-status-btn.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--sheet);
+    }
+
+    .insp-note-box {
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--vermilion);
+      padding: 11px 12px;
+      border-radius: 2px;
+    }
+
+    .insp-note-box-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--vermilion);
+      margin-bottom: 5px;
+    }
+
+    .insp-note-box p {
+      margin: 0;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--ink-2);
+    }
+
+    .insp-dep-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .insp-dep-btn {
+      text-align: left;
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      padding: 7px 10px;
+      border-radius: 2px;
+      font-size: 12px;
+      color: var(--ink-2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .insp-dep-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    /* ---------------- PRINCIPLES / CONTRAST ---------------- */
+    .section-ruled {
+      border-top: 1px solid var(--rule);
+      padding: 84px 0;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin: 0 0 14px;
+    }
+
+    .principles-layout {
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .principles-sticky {
+      position: sticky;
+      top: 88px;
+    }
+
+    .principles-sticky h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 3.4vw, 44px);
+      line-height: 1.09;
+      letter-spacing: -0.02em;
+      margin: 0 0 18px;
+    }
+
+    .principles-sticky p {
+      color: var(--ink-2);
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .principle-list {
+      border-top: 1px solid var(--rule-strong);
+    }
+
+    .principle-item {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 16px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .principle-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--vermilion);
+      padding-top: 5px;
+    }
+
+    .principle-body h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 24px;
+      margin: 0 0 8px;
+      letter-spacing: -0.015em;
+    }
+
+    .principle-body p {
+      margin: 0 0 18px;
+      color: var(--ink-2);
+      max-width: 560px;
+    }
+
+    .micro-diagram {
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 14px 16px;
+      max-width: 560px;
+    }
+
+    .scope-meter-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      margin-bottom: 8px;
+    }
+
+    .scope-bar-track {
+      height: 10px;
+      background: var(--paper-deep);
+      display: flex;
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .scope-seg-orig { width: 72%; background: var(--ink); }
+    .scope-seg-added { width: 20%; background: var(--vermilion); }
+
+    .scope-legend {
+      display: flex;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      flex-wrap: wrap;
+    }
+
+    .decision-snippet {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .decision-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+      color: var(--ink);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .decision-copy {
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    .decision-copy strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .shortcut-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .shortcut-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* ---------------- DARK RHYTHM SECTION ---------------- */
+    .rhythm-section {
+      background: var(--charcoal);
+      color: var(--charcoal-ink);
+      padding: 88px 0;
+      border-top: 1px solid var(--charcoal-rule);
+      border-bottom: 1px solid var(--charcoal-rule);
+    }
+
+    .rhythm-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 42px;
+      flex-wrap: wrap;
+    }
+
+    .rhythm-header h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 3.8vw, 48px);
+      line-height: 1.08;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .rhythm-header p {
+      color: var(--charcoal-muted);
+      max-width: 400px;
+      margin: 0;
+      font-size: 14.5px;
+    }
+
+    .rhythm-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 32px;
+      align-items: stretch;
+    }
+
+    .day-tabs {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--charcoal-rule);
+    }
+
+    .day-tab {
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--charcoal-rule);
+      padding: 20px 16px;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 12px;
+      color: var(--charcoal-muted);
+      transition: background-color 0.14s ease, color 0.14s ease;
+    }
+
+    .day-tab:hover {
+      background: var(--charcoal-surface);
+      color: var(--charcoal-ink);
+    }
+
+    .day-tab.active {
+      background: var(--charcoal-surface);
+      color: var(--charcoal-ink);
+      box-shadow: inset 3px 0 0 var(--vermilion);
+    }
+
+    .day-code {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.05em;
+      padding-top: 3px;
+      color: var(--vermilion);
+    }
+
+    .day-tab:not(.active) .day-code {
+      color: var(--charcoal-muted);
+    }
+
+    .day-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .day-desc {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--charcoal-muted);
+      display: block;
+    }
+
+    .rhythm-panel {
+      background: var(--charcoal-surface);
+      border: 1px solid var(--charcoal-rule);
+      border-radius: 3px;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .rp-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--charcoal-rule);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--charcoal-muted);
+    }
+
+    .rp-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .rp-card {
+      background: var(--charcoal);
+      border: 1px solid var(--charcoal-rule);
+      border-radius: 2px;
+      padding: 16px;
+    }
+
+    .rp-action-btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 7px 12px;
+      background: var(--charcoal-surface-2);
+      border: 1px solid #4A463E;
+      color: var(--charcoal-ink);
+      border-radius: 2px;
+      transition: border-color 0.14s ease, background-color 0.14s ease;
+    }
+
+    .rp-action-btn:hover {
+      border-color: var(--vermilion);
+      background: #312D27;
+    }
+
+    .rp-action-btn.applied {
+      border-color: #3E8E68;
+      color: #82C9A5;
+    }
+
+    .cap-bar {
+      height: 14px;
+      background: #2E2B25;
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 10px 0 8px;
+      position: relative;
+    }
+
+    .cap-fill {
+      height: 100%;
+      background: #4E9A74;
+      transition: width 0.25s ease, background-color 0.25s ease;
+    }
+
+    .cap-fill.over {
+      background: var(--vermilion);
+    }
+
+    .md-preview {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: #D8D2C7;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    .md-preview .md-h { color: #F2EEE6; font-weight: 500; }
+    .md-preview .md-ok { color: #7CC5A0; }
+    .md-preview .md-warn { color: #E29B56; }
+
+    /* ---------------- FIELD REPORTS / PROOF ---------------- */
+    .proof-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .proof-header h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(30px, 3.4vw, 42px);
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+    }
+
+    .proof-col {
+      padding: 28px 26px 28px 0;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .proof-col:not(:first-child) {
+      padding-left: 26px;
+    }
+
+    .proof-col:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .proof-quote {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.42;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .proof-author {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .proof-role {
+      font-size: 13px;
+      color: var(--ink-2);
+      margin-top: 2px;
+    }
+
+    .proof-meta {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ---------------- PRICING ---------------- */
+    .pricing-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .pricing-top h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 3.6vw, 44px);
+      line-height: 1.08;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper-deep);
+      padding: 3px;
+    }
+
+    .billing-opt {
+      border: none;
+      background: transparent;
+      padding: 6px 13px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    .billing-opt.active {
+      background: var(--sheet);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(25,24,21,0.08);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.85fr;
+      border: 1px solid var(--rule-strong);
+      background: var(--sheet);
+      border-radius: 2px;
+    }
+
+    .plan-col {
+      padding: 30px 28px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .plan-col:last-child {
+      border-right: none;
+      background: var(--paper);
+    }
+
+    .plan-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+    }
+
+    .plan-name {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 500;
+      margin: 0 0 10px;
+    }
+
+    .plan-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .plan-price {
+      font-family: var(--font-mono);
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+    }
+
+    .plan-unit {
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .plan-desc {
+      font-size: 14px;
+      color: var(--ink-2);
+      margin: 0 0 22px;
+      line-height: 1.55;
+    }
+
+    .plan-list {
+      list-style: none;
+      padding: 18px 0 26px;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+
+    .plan-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+    }
+
+    .plan-list li::before {
+      content: "—";
+      font-family: var(--font-mono);
+      color: var(--vermilion);
+      flex-shrink: 0;
+    }
+
+    .fair-billing-title {
+      font-family: var(--font-serif);
+      font-size: 21px;
+      font-weight: 500;
+      margin: 0 0 12px;
+      line-height: 1.25;
+    }
+
+    .fair-billing-copy {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.6;
+      margin: 0 0 18px;
+    }
+
+    .fair-billing-meta {
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      line-height: 1.65;
+    }
+
+    /* ---------------- CHANGELOG ---------------- */
+    .changelog-section {
+      padding: 56px 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .changelog-wrap {
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .changelog-wrap h3 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 400;
+      margin: 0 0 8px;
+    }
+
+    .changelog-wrap p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .cl-list {
+      border-top: 1px solid var(--rule);
+    }
+
+    .cl-row {
+      display: grid;
+      grid-template-columns: 96px 1fr 90px;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+      font-size: 14px;
+    }
+
+    .cl-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .cl-ver {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      text-align: right;
+    }
+
+    /* ---------------- FINAL CTA ---------------- */
+    .cta-section {
+      border-top: 1px solid var(--rule-strong);
+      background: var(--paper-deep);
+      padding: 76px 0;
+    }
+
+    .cta-box {
+      display: grid;
+      grid-template-columns: 6fr 6fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .cta-box h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 3.6vw, 46px);
+      line-height: 1.08;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-box p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .ws-create-card {
+      background: var(--sheet);
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      padding: 22px;
+    }
+
+    .ws-create-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .ws-url-input-group {
+      display: flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .ws-url-input-group:focus-within {
+      border-color: var(--ink);
+    }
+
+    .ws-url-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      min-width: 0;
+    }
+
+    .ws-url-suffix {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background: var(--paper-deep);
+      border-left: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .ws-create-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ws-email-input {
+      flex: 1;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--sheet);
+      padding: 9px 12px;
+      font-size: 14px;
+      min-width: 0;
+    }
+
+    .ws-email-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .ws-create-feedback {
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      display: none;
+    }
+
+    .ws-create-feedback.visible {
+      display: block;
+    }
+
+    /* ---------------- FOOTER ---------------- */
+    .site-footer {
+      border-top: 1px solid var(--rule);
+      padding: 40px 0 48px;
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .footer-grid {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .footer-colophon {
+      max-width: 360px;
+    }
+
+    .footer-colophon p {
+      margin: 10px 0 0;
+      line-height: 1.55;
+    }
+
+    .footer-links-wrap {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      margin: 0 0 10px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    .status-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-2);
+    }
+
+    .status-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 980px) {
+      .hero-grid,
+      .principles-layout,
+      .rhythm-grid,
+      .changelog-wrap,
+      .cta-box {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .principles-sticky {
+        position: static;
+      }
+
+      .ws-body {
+        grid-template-columns: 1fr;
+      }
+
+      .ws-main {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-col,
+      .proof-col:not(:first-child) {
+        padding: 24px 0;
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .proof-col:last-child {
+        border-bottom: none;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-col {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .plan-col:last-child {
+        border-bottom: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        padding: 0 18px;
+      }
+
+      .nav-links,
+      .header-actions .btn-ghost {
+        display: none;
+      }
+
+      .nav-links.mobile-open {
+        display: flex;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        background: var(--paper);
+        padding: 16px 20px 20px;
+        border-bottom: 1px solid var(--rule-strong);
+        gap: 14px;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .task-table-head,
+      .task-row {
+        grid-template-columns: 62px 1fr 104px;
+      }
+
+      .task-table-head > :nth-child(3),
+      .task-table-head > :nth-child(5),
+      .task-row > :nth-child(3),
+      .task-row > :nth-child(5) {
+        display: none;
+      }
+
+      .ws-topbar {
+        height: auto;
+        padding: 10px 14px;
+      }
+
+      .ws-tabs {
+        order: 3;
+        width: 100%;
+        border-top: 1px solid var(--rule);
+        padding-top: 6px;
+      }
+
+      .ws-tab {
+        padding: 6px 10px;
+      }
+
+      .ws-create-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .cl-row {
+        grid-template-columns: 82px 1fr;
+      }
+
+      .cl-ver {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Trestle home">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+          <line x1="2" y1="6" x2="22" y2="6" />
+          <line x1="6" y1="6" x2="3.5" y2="20" />
+          <line x1="18" y1="6" x2="20.5" y2="20" />
+          <line x1="5" y1="13" x2="19" y2="13" stroke="#C64720" />
+        </svg>
+        <span>Trestle</span>
+        <span class="brand-ver">v2.4</span>
+      </a>
+
+      <nav class="nav-links" id="mainNav" aria-label="Primary">
+        <a href="#workspace-demo">Product</a>
+        <a href="#principles">Philosophy</a>
+        <a href="#rhythm">Weekly rhythm</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#start" class="btn btn-ghost">Sign in</a>
+        <a href="#start" class="btn btn-primary">Start a workspace</a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-expanded="false" aria-controls="mainNav">MENU</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="meta-strip">
+          <span><span class="meta-strip-dot"></span>BUILD 2.4 — LOCAL-FIRST SYNC ENGINE</span>
+          <span>MADE FOR TEAMS OF 4 TO 80</span>
+        </div>
+
+        <div class="hero-grid">
+          <h1>Project tracking that respects the people <em>doing</em> the work.</h1>
+
+          <div class="hero-aside">
+            <p class="hero-lead">
+              Trestle keeps scopes, schedules, and engineering decisions on one calm surface. No story-point theater, no burndown guilt, and no five-click forms just to log a broken build.
+            </p>
+            <div class="hero-cta-row">
+              <a href="#start" class="btn btn-accent">Open a workspace — 30 days free</a>
+              <a href="#principles" class="btn btn-outline">Read how it works</a>
+            </div>
+            <p class="hero-footnote">No credit card required. Full Markdown &amp; CSV export anytime.</p>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE PRODUCT DEMO -->
+        <div id="workspace-demo" aria-label="Interactive Trestle workspace preview">
+          <div class="stage-caption-bar">
+            <span>LIVE SANDBOX — CLICK ANY STATUS, ROW, OR TAB. TRY ADDING A DELIVERABLE BELOW.</span>
+            <span>SWITCH VIEWS: <span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span></span>
+          </div>
+
+          <div class="workspace-shell">
+            <div class="ws-topbar">
+              <div class="ws-breadcrumb">
+                <span class="ws-project-badge">KH</span>
+                <span>Kilo Hardware</span>
+                <span style="color:var(--ink-3)">/</span>
+                <span>Q4 Enclosure &amp; Firmware</span>
+                <span class="ws-cycle-dates">NOV 11 – DEC 06</span>
+              </div>
+
+              <div class="ws-tabs" role="tablist" aria-label="Workspace views">
+                <button class="ws-tab active" data-view="cycle" role="tab" aria-selected="true" type="button">
+                  <span class="ws-tab-num">01</span> Cycle
+                </button>
+                <button class="ws-tab" data-view="timeline" role="tab" aria-selected="false" type="button">
+                  <span class="ws-tab-num">02</span> Timeline
+                </button>
+                <button class="ws-tab" data-view="notes" role="tab" aria-selected="false" type="button">
+                  <span class="ws-tab-num">03</span> Field Notes
+                </button>
+              </div>
+
+              <div class="ws-progress-wrap">
+                <span id="wsProgressLabel">2 / 6 done</span>
+                <div class="ws-progress-bar" aria-hidden="true">
+                  <div class="ws-progress-fill" id="wsProgressFill" style="width: 33%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ws-subbar" id="wsSubbar">
+              <div class="ws-filters" id="wsFilters" role="group" aria-label="Filter deliverables by status">
+                <button class="filter-pill active" data-filter="all" type="button">All</button>
+                <button class="filter-pill" data-filter="progress" type="button">In progress</button>
+                <button class="filter-pill" data-filter="blocked" type="button">Blocked</button>
+                <button class="filter-pill" data-filter="review" type="button">In review</button>
+                <button class="filter-pill" data-filter="done" type="button">Done</button>
+              </div>
+              <span class="ws-hint">Click a status badge to cycle it</span>
+            </div>
+
+            <div class="ws-body">
+              <div class="ws-main" id="wsMain">
+                <!-- Rendered dynamically by JS -->
+              </div>
+
+              <aside class="ws-inspector" id="wsInspector" aria-label="Selected deliverable details">
+                <!-- Rendered dynamically by JS -->
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPLES / WHY TRESTLE -->
+    <section class="section-ruled" id="principles">
+      <div class="container principles-layout">
+        <div class="principles-sticky">
+          <p class="section-eyebrow">01 / Philosophy</p>
+          <h2>Most trackers were built for status reporting, not shipping.</h2>
+          <p>
+            When a project tool demands fifteen required fields and weekly velocity audits, teams quietly stop telling it the truth. Trestle strips the tracker back to three load-bearing parts: honest scope, linked decisions, and local-first speed.
+          </p>
+        </div>
+
+        <div class="principle-list">
+          <article class="principle-item">
+            <div class="principle-num">01</div>
+            <div class="principle-body">
+              <h3>Scope visibility instead of story-point math</h3>
+              <p>
+                Real schedules don’t slip because someone misestimated a Fibonacci number. They slip because four “quick requests” landed mid-cycle without anything coming off the table. Trestle marks mid-cycle additions in plain sight so trade-offs happen on Tuesday, not launch eve.
+              </p>
+              <div class="micro-diagram">
+                <div class="scope-meter-row">
+                  <span>CYCLE 14 SCOPE LINE</span>
+                  <span style="color:var(--vermilion)">+3 ADDED AFTER KICKOFF</span>
+                </div>
+                <div class="scope-bar-track" aria-hidden="true">
+                  <div class="scope-seg-orig"></div>
+                  <div class="scope-seg-added"></div>
+                </div>
+                <div class="scope-legend">
+                  <span>■ 11 committed (Nov 11)</span>
+                  <span style="color:var(--vermilion)">■ 3 added mid-cycle</span>
+                  <span>□ 2d buffer remaining</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="principle-item">
+            <div class="principle-num">02</div>
+            <div class="principle-body">
+              <h3>Decisions pinned right onto the deliverable</h3>
+              <p>
+                Chat threads scroll into oblivion after forty-eight hours. Every deliverable in Trestle can hold a short Field Note explaining <em>why</em> a call was made—so six months later, a new hire doesn’t waste an afternoon reversing a hard-won constraint.
+              </p>
+              <div class="micro-diagram">
+                <div class="decision-snippet">
+                  <span class="decision-tag">FN-18 · TR-212</span>
+                  <div class="decision-copy">
+                    <strong>Switched from powder coat to bead-blasted anodizing.</strong>
+                    Powder coat added 0.14mm wall thickness and jammed the USB-C bezel. Tooling shop confirmed anodizing holds tolerance and cuts 11 days off pilot delivery.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="principle-item">
+            <div class="principle-num">03</div>
+            <div class="principle-body">
+              <h3>Sub-50ms local-first interaction</h3>
+              <p>
+                Your workspace syncs into a local SQLite cache in the browser. Switching views, filtering 4,000 archived issues, or editing a schedule on a train happens immediately—without spinners, optimistic-UI flicker, or lost drafts.
+              </p>
+              <div class="micro-diagram">
+                <div class="shortcut-strip">
+                  <span class="shortcut-item"><span class="kbd">C</span> New deliverable</span>
+                  <span class="shortcut-item"><span class="kbd">S</span> Cycle status</span>
+                  <span class="shortcut-item"><span class="kbd">N</span> Attach field note</span>
+                  <span class="shortcut-item"><span class="kbd">G</span> <span class="kbd">T</span> Open timeline</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DARK INTERACTIVE WEEKLY RHYTHM -->
+    <section class="rhythm-section" id="rhythm">
+      <div class="container">
+        <div class="rhythm-header">
+          <div>
+            <p class="section-eyebrow" style="color:var(--charcoal-muted)">02 / Weekly Rhythm</p>
+            <h2>One honest week in Trestle.</h2>
+          </div>
+          <p>Click through how a twelve-person product team runs a cycle without a single status spreadsheet.</p>
+        </div>
+
+        <div class="rhythm-grid">
+          <div class="day-tabs" role="tablist" aria-label="Days of the week in Trestle">
+            <button class="day-tab active" data-day="mon" role="tab" aria-selected="true" type="button">
+              <span class="day-code">MON</span>
+              <span>
+                <span class="day-title">Set the table</span>
+                <span class="day-desc">Check capacity in real engineer-days before committing. Spot overload before work begins.</span>
+              </span>
+            </button>
+            <button class="day-tab" data-day="wed" role="tab" aria-selected="false" type="button">
+              <span class="day-code">WED</span>
+              <span>
+                <span class="day-title">Catch the slip early</span>
+                <span class="day-desc">When a blocking task drifts past its due date, Trestle flags the downstream milestone automatically.</span>
+              </span>
+            </button>
+            <button class="day-tab" data-day="thu" role="tab" aria-selected="false" type="button">
+              <span class="day-code">THU</span>
+              <span>
+                <span class="day-title">Record the call</span>
+                <span class="day-desc">Turn a 10-minute design critique into a crisp Field Note attached to the deliverables it affects.</span>
+              </span>
+            </button>
+            <button class="day-tab" data-day="fri" role="tab" aria-selected="false" type="button">
+              <span class="day-code">FRI</span>
+              <span>
+                <span class="day-title">Close without slide decks</span>
+                <span class="day-desc">Generate a clean Markdown summary of what shipped, what slipped, and why—straight from live state.</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="rhythm-panel" id="rhythmPanel" aria-live="polite">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIELD REPORTS / SOCIAL PROOF -->
+    <section class="section-ruled">
+      <div class="container">
+        <div class="proof-header">
+          <div>
+            <p class="section-eyebrow">03 / Teams on Trestle</p>
+            <h2>Used by teams that ship physical and digital things.</h2>
+          </div>
+          <span class="mono" style="font-size:12px;color:var(--ink-3)">340+ INDEPENDENT STUDIOS &amp; ENGINEERING GROUPS</span>
+        </div>
+
+        <div class="proof-grid">
+          <div class="proof-col">
+            <blockquote class="proof-quote">
+              “We build marine autopilot hardware. Jira made our mechanical engineers refuse to open the browser. Everyone actually updates Trestle before Monday standup because it gets out of the way.”
+            </blockquote>
+            <div>
+              <div class="proof-author">Henrik Lindholm</div>
+              <div class="proof-role">Lead Firmware Engineer, Northstar Marine</div>
+              <div class="proof-meta">
+                <span>GOTHENBURG, SE</span>
+                <span>18 SEATS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proof-col">
+            <blockquote class="proof-quote">
+              “Pinning field notes directly onto deliverables killed our quarterly ‘wait, why did we cut that feature?’ archaeological digs in Slack. It paid for itself in the first month.”
+            </blockquote>
+            <div>
+              <div class="proof-author">Maren Okafor</div>
+              <div class="proof-role">Principal, Kilo Industrial Design</div>
+              <div class="proof-meta">
+                <span>PORTLAND, US</span>
+                <span>11 SEATS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proof-col">
+            <blockquote class="proof-quote">
+              “Zero workflow-admin tax. We imported four hundred tickets over lunch on a Tuesday, trimmed the dead backlog, and shipped our v3 telemetry release on Friday.”
+            </blockquote>
+            <div>
+              <div class="proof-author">Devon Patel</div>
+              <div class="proof-role">Co-founder, Cartograph Labs</div>
+              <div class="proof-meta">
+                <span>TORONTO, CA</span>
+                <span>26 SEATS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section-ruled" id="pricing">
+      <div class="container">
+        <div class="pricing-top">
+          <div>
+            <p class="section-eyebrow">04 / Pricing</p>
+            <h2>Plain pricing. No enterprise gatekeeping.</h2>
+          </div>
+
+          <div class="billing-toggle" role="group" aria-label="Billing period">
+            <button class="billing-opt active" data-billing="annual" type="button">Annual (save 18%)</button>
+            <button class="billing-opt" data-billing="monthly" type="button">Monthly</button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="plan-col">
+            <div>
+              <div class="plan-tag">Up to 4 people</div>
+              <h3 class="plan-name">Small Bench</h3>
+              <div class="plan-price-row">
+                <span class="plan-price">$0</span>
+                <span class="plan-unit">forever</span>
+              </div>
+              <p class="plan-desc">
+                For founders, independent studios, and open-source maintainers. Every core feature included with no artificial seat nags.
+              </p>
+              <ul class="plan-list">
+                <li>Unlimited cycles, timelines, and field notes</li>
+                <li>GitHub &amp; GitLab PR status sync</li>
+                <li>Full offline local-first desktop &amp; web app</li>
+                <li>One-click Markdown, CSV, and JSON export</li>
+              </ul>
+            </div>
+            <a href="#start" class="btn btn-outline" style="width:100%">Start free workspace</a>
+          </div>
+
+          <div class="plan-col">
+            <div>
+              <div class="plan-tag">Growing teams</div>
+              <h3 class="plan-name">Standard</h3>
+              <div class="plan-price-row">
+                <span class="plan-price" id="standardPrice">$9</span>
+                <span class="plan-unit" id="standardUnit">per active seat / mo, billed annually</span>
+              </div>
+              <p class="plan-desc">
+                One tier with everything unlocked—SAML SSO, client read-only views, API webhooks, and priority engineering support.
+              </p>
+              <ul class="plan-list">
+                <li>Everything in Small Bench, unlimited seats</li>
+                <li>Read-only guest links for clients &amp; vendors</li>
+                <li>SAML SSO, audit log, and granular permissions</li>
+                <li>Linear, Jira, and GitHub Issues importer</li>
+              </ul>
+            </div>
+            <a href="#start" class="btn btn-primary" style="width:100%">Start 30-day free trial</a>
+          </div>
+
+          <div class="plan-col">
+            <div>
+              <div class="plan-tag">Policy</div>
+              <h3 class="fair-billing-title">Idle seats are credited automatically.</h3>
+              <p class="fair-billing-copy">
+                If a contractor or teammate doesn’t open Trestle during a billing month, we automatically credit their seat back to your next invoice. You shouldn’t have to babysit a license dashboard just to avoid paying for ghost accounts.
+              </p>
+            </div>
+            <div class="fair-billing-meta">
+              DATA RESIDENCY: US / EU<br />
+              SOC 2 TYPE II REPORT AVAILABLE<br />
+              CANCEL OR EXPORT IN 2 CLICKS
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHANGELOG -->
+    <section class="changelog-section" id="changelog">
+      <div class="container changelog-wrap">
+        <div>
+          <p class="section-eyebrow">05 / Recent Ships</p>
+          <h3>Maintained by nine people who use it every day.</h3>
+          <p>We ship small, boringly reliable improvements every two weeks.</p>
+        </div>
+        <div class="cl-list">
+          <div class="cl-row">
+            <span class="cl-date">2026-11-19</span>
+            <span>Deterministic offline conflict resolver for simultaneous timeline edits</span>
+            <span class="cl-ver">v2.4.2</span>
+          </div>
+          <div class="cl-row">
+            <span class="cl-date">2026-11-04</span>
+            <span>Keyboard span-nudging (<span class="mono">[</span> and <span class="mono">]</span>) directly on the Timeline view</span>
+            <span class="cl-ver">v2.4.0</span>
+          </div>
+          <div class="cl-row">
+            <span class="cl-date">2026-10-21</span>
+            <span>One-pass Linear &amp; GitHub Issues importer with preserved decision comments</span>
+            <span class="cl-ver">v2.3.8</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="cta-section" id="start">
+      <div class="container cta-box">
+        <div>
+          <p class="section-eyebrow">06 / Begin</p>
+          <h2>Set the table for your next cycle.</h2>
+          <p>Create a workspace in thirty seconds. Invite nobody until you’ve tried laying out a real week of work.</p>
+        </div>
+
+        <form class="ws-create-card" id="createWorkspaceForm" novalidate>
+          <label class="ws-create-label" for="wsSlug">Workspace address</label>
+          <div class="ws-url-input-group">
+            <input
+              type="text"
+              id="wsSlug"
+              class="ws-url-input"
+              value="kilo-studio"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Workspace subdomain"
+            />
+            <span class="ws-url-suffix">.trestle.app</span>
+          </div>
+
+          <div class="ws-create-row">
+            <input
+              type="email"
+              id="wsEmail"
+              class="ws-email-input"
+              placeholder="you@company.com"
+              required
+              aria-label="Work email address"
+            />
+            <button type="submit" class="btn btn-accent">Create workspace</button>
+          </div>
+          <div class="ws-create-feedback" id="wsCreateFeedback" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-colophon">
+          <a href="#" class="brand">
+            <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+              <line x1="2" y1="6" x2="22" y2="6" />
+              <line x1="6" y1="6" x2="3.5" y2="20" />
+              <line x1="18" y1="6" x2="20.5" y2="20" />
+              <line x1="5" y1="13" x2="19" y2="13" stroke="#C64720" />
+            </svg>
+            <span>Trestle</span>
+          </a>
+          <p>
+            Calm project tracking for hardware, software, and design teams. Independently owned and bootstrapped in Portland &amp; Copenhagen.
+          </p>
+        </div>
+
+        <div class="footer-links-wrap">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="#workspace-demo">Cycles</a></li>
+              <li><a href="#workspace-demo">Timeline</a></li>
+              <li><a href="#workspace-demo">Field Notes</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Documentation</h4>
+            <ul>
+              <li><a href="#principles">The Trestle Manual</a></li>
+              <li><a href="#changelog">Changelog</a></li>
+              <li><a href="#start">REST &amp; Sync API</a></li>
+              <li><a href="#pricing">Security &amp; SOC 2</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#principles">About us</a></li>
+              <li><a href="#start">Contact engineering</a></li>
+              <li><a href="#pricing">Fair billing pledge</a></li>
+              <li><a href="#start">Privacy &amp; terms</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="status-live">
+          <span class="status-live-dot" aria-hidden="true"></span>
+          All sync regions operational · 14ms median write
+        </span>
+        <span>© 2026 Trestle Software Co.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      /* ---------------- MOBILE NAV ---------------- */
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mainNav = document.getElementById('mainNav');
+      if (mobileBtn && mainNav) {
+        mobileBtn.addEventListener('click', () => {
+          const open = mainNav.classList.toggle('mobile-open');
+          mobileBtn.setAttribute('aria-expanded', String(open));
+          mobileBtn.textContent = open ? 'CLOSE' : 'MENU';
+        });
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('mobile-open');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+            mobileBtn.textContent = 'MENU';
+          });
+        });
+      }
+
+      /* ---------------- WORKSPACE SANDBOX DATA ---------------- */
+      const STATUS_ORDER = ['queued', 'progress', 'review', 'done'];
+      const STATUS_META = {
+        done:     { label: 'Done',        cls: 'status-done' },
+        progress: { label: 'In progress', cls: 'status-progress' },
+        review:   { label: 'In review',   cls: 'status-review' },
+        blocked:  { label: 'Blocked',     cls: 'status-blocked' },
+        queued:   { label: 'Queued',      cls: 'status-queued' }
+      };
+
+      const tasks = [
+        {
+          id: 'TR-204',
+          title: 'Calibrate rotary encoder debounce under cold soak',
+          owner: 'Nora Lind',
+          initials: 'NL',
+          status: 'done',
+          due: 'Nov 19',
+          overdue: false,
+          effort: '2d',
+          milestone: 'EVT-2 Signoff',
+          startPct: 6,
+          widthPct: 24,
+          noteId: 'FN-16',
+          note: 'Settled on 4ms hardware RC filter plus 2ms firmware latch. Eliminates phantom detents down to -10°C without adding perceptible lag.',
+          deps: []
+        },
+        {
+          id: 'TR-209',
+          title: 'Thermal soak test @ 45°C continuous charge',
+          owner: 'Tariq Hassan',
+          initials: 'TH',
+          status: 'blocked',
+          due: 'Nov 23',
+          overdue: true,
+          effort: '3d',
+          milestone: 'EVT-2 Signoff',
+          startPct: 22,
+          widthPct: 30,
+          noteId: 'FN-17',
+          note: 'Waiting on revised thermistor harness from Shenzhen lab (DHL tracking clears customs Nov 25). Chamber slot already reserved.',
+          deps: ['TR-212']
+        },
+        {
+          id: 'TR-212',
+          title: 'Finalize bead-blasted anodized enclosure drawing',
+          owner: 'Maren Okafor',
+          initials: 'MO',
+          status: 'review',
+          due: 'Nov 26',
+          overdue: false,
+          effort: '2d',
+          milestone: 'Tooling Freeze',
+          startPct: 32,
+          widthPct: 26,
+          noteId: 'FN-18',
+          note: 'Switched from matte powder coat to bead-blasted anodizing so the USB-C chamfer holds 0.05mm clearance. Saves 11 days on tooling lead time.',
+          deps: ['TR-204']
+        },
+        {
+          id: 'TR-215',
+          title: 'Update USB-C PD 3.1 negotiation fallback table',
+          owner: 'Nora Lind',
+          initials: 'NL',
+          status: 'progress',
+          due: 'Nov 29',
+          overdue: false,
+          effort: '1.5d',
+          milestone: 'Firmware RC1',
+          startPct: 40,
+          widthPct: 28,
+          noteId: null,
+          note: 'Added graceful 15W fallback for older 2021 laptop hubs that advertise malformed PDO headers.',
+          deps: ['TR-204']
+        },
+        {
+          id: 'TR-218',
+          title: 'Write field-service teardown sheet for pilot units',
+          owner: 'Samir Rao',
+          initials: 'SR',
+          status: 'progress',
+          due: 'Dec 03',
+          overdue: false,
+          effort: '2d',
+          milestone: 'Pilot Dispatch',
+          startPct: 58,
+          widthPct: 27,
+          noteId: null,
+          note: 'Two-page black-and-white print sheet with torque callouts for the four M2 Torx fasteners.',
+          deps: ['TR-212']
+        },
+        {
+          id: 'TR-219',
+          title: 'Sign off packaging foam insert drop test (1.2m)',
+          owner: 'Maren Okafor',
+          initials: 'MO',
+          status: 'done',
+          due: 'Nov 21',
+          overdue: false,
+          effort: '1d',
+          milestone: 'Pilot Dispatch',
+          startPct: 14,
+          widthPct: 20,
+          noteId: null,
+          note: 'Passed all six faces and corner drops with zero cosmetic scuffing on the anodized bezel.',
+          deps: []
+        }
+      ];
+
+      const fieldNotes = [
+        {
+          id: 'FN-18',
+          date: 'Nov 22 · Maren Okafor',
+          title: 'Bead-blasted anodizing over matte powder coat',
+          body: 'Powder coat added 0.14mm along the USB-C port lip and forced a manual reaming step. Bead-blasted Type II anodizing hits the same tactile glare-free finish, holds 0.05mm tolerance straight off CNC, and pulls tooling delivery forward by 11 days.',
+          linked: ['TR-212', 'TR-218']
+        },
+        {
+          id: 'FN-17',
+          date: 'Nov 20 · Tariq Hassan',
+          title: 'Hold EVT-2 thermal run until calibrated harness arrives',
+          body: 'Running the 45°C soak with our bench prototype probes gave ±3.5°C drift, which isn’t tight enough for battery cutoff certification. Pausing TR-209 for 48 hours until the calibrated harness clears customs avoids repeating an 18-hour chamber run.',
+          linked: ['TR-209']
+        },
+        {
+          id: 'FN-16',
+          date: 'Nov 17 · Nora Lind',
+          title: '4ms RC hardware debounce + 2ms firmware latch',
+          body: 'Pure software debouncing missed rapid turns during cold-soak testing at -10°C. Pairing a passive 4ms RC filter with a 2ms interrupt latch keeps tactile feel crisp while dropping false detents to zero across 10,000 test rotations.',
+          linked: ['TR-204', 'TR-215']
+        }
+      ];
+
+      let currentView = 'cycle';
+      let currentFilter = 'all';
+      let selectedTaskId = 'TR-212';
+      let nextTaskNum = 220;
+
+      const wsMain = document.getElementById('wsMain');
+      const wsInspector = document.getElementById('wsInspector');
+      const wsSubbar = document.getElementById('wsSubbar');
+      const wsProgressLabel = document.getElementById('wsProgressLabel');
+      const wsProgressFill = document.getElementById('wsProgressFill');
+
+      function updateProgress() {
+        const doneCount = tasks.filter(t => t.status === 'done').length;
+        const pct = Math.round((doneCount / tasks.length) * 100);
+        wsProgressLabel.textContent = `${doneCount} / ${tasks.length} done`;
+        wsProgressFill.style.width = `${pct}%`;
+      }
+
+      function cycleStatus(task) {
+        if (task.status === 'blocked') {
+          task.status = 'progress';
+          task.overdue = false;
+        } else {
+          const idx = STATUS_ORDER.indexOf(task.status);
+          task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+        }
+        renderWorkspace();
+      }
+
+      function renderInspector() {
+        const task = tasks.find(t => t.id === selectedTaskId) || tasks[0];
+        if (!task) return;
+        const meta = STATUS_META[task.status];
+
+        const statusButtonsHtml = Object.keys(STATUS_META).map(key => {
+          const active = task.status === key ? 'active' : '';
+          return `<button type="button" class="insp-status-btn ${active}" data-set-status="${key}">${STATUS_META[key].label}</button>`;
+        }).join('');
+
+        const depsHtml = task.deps.length
+          ? task.deps.map(depId => {
+              const dt = tasks.find(x => x.id === depId);
+              if (!dt) return '';
+              return `<button type="button" class="insp-dep-btn" data-jump-task="${dt.id}">
+                <span><strong class="mono">${dt.id}</strong> ${dt.title}</span>
+                <span class="mono" style="font-size:10.5px;color:var(--ink-3)">↗</span>
+              </button>`;
+            }).join('')
+          : `<div class="mono" style="font-size:11.5px;color:var(--ink-3)">No upstream blockers</div>`;
+
+        wsInspector.innerHTML = `
+          <div class="insp-top">
+            <span>${task.id} · ${task.milestone}</span>
+            <span class="status-chip ${meta.cls}"><span class="status-dot"></span>${meta.label}</span>
+          </div>
+          <h3 class="insp-title">${task.title}</h3>
+          <div class="insp-meta-grid">
+            <div>
+              <div class="insp-field-label">Owner</div>
+              <div class="insp-field-val">${task.owner}</div>
+            </div>
+            <div>
+              <div class="insp-field-label">Target / Effort</div>
+              <div class="insp-field-val mono" style="font-size:12.5px">${task.due} · ${task.effort}</div>
+            </div>
+          </div>
+          <div>
+            <div class="insp-field-label" style="margin-bottom:6px">Update status</div>
+            <div class="insp-status-picker">${statusButtonsHtml}</div>
+          </div>
+          <div class="insp-note-box">
+            <div class="insp-note-box-label">${task.noteId ? 'Linked Field Note · ' + task.noteId : 'Context note'}</div>
+            <p>${task.note}</p>
+          </div>
+          <div>
+            <div class="insp-field-label" style="margin-bottom:6px">Dependencies</div>
+            <div class="insp-dep-list">${depsHtml}</div>
+          </div>
+        `;
+
+        wsInspector.querySelectorAll('[data-set-status]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            task.status = btn.dataset.setStatus;
+            if (task.status !== 'blocked') task.overdue = false;
+            renderWorkspace();
+          });
+        });
+
+        wsInspector.querySelectorAll('[data-jump-task]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectedTaskId = btn.dataset.jumpTask;
+            renderWorkspace();
+          });
+        });
+      }
+
+      function renderCycleView() {
+        const visibleTasks = currentFilter === 'all'
+          ? tasks
+          : tasks.filter(t => t.status === currentFilter);
+
+        const rowsHtml = visibleTasks.length
+          ? visibleTasks.map(t => {
+              const meta = STATUS_META[t.status];
+              const sel = t.id === selectedTaskId ? 'selected' : '';
+              const doneCls = t.status === 'done' ? 'is-done' : '';
+              return `
+                <div class="task-row ${sel} ${doneCls}" data-task-id="${t.id}">
+                  <span class="task-id">${t.id}</span>
+                  <div class="task-title-cell">
+                    <span class="task-title-text">${t.title}</span>
+                    <span class="task-meta-inline">
+                      <span>${t.milestone}</span>
+                      ${t.noteId ? `<span class="note-indicator">· ${t.noteId}</span>` : ''}
+                    </span>
+                  </div>
+                  <span class="task-owner">
+                    <span class="owner-monogram">${t.initials}</span>
+                    <span>${t.owner.split(' ')[0]}</span>
+                  </span>
+                  <span>
+                    <button type="button" class="status-chip ${meta.cls}" data-cycle-status="${t.id}" title="Click to change status">
+                      <span class="status-dot"></span>${meta.label}
+                    </button>
+                  </span>
+                  <span class="task-due ${t.overdue ? 'overdue' : ''}">${t.due}</span>
+                </div>
+              `;
+            }).join('')
+          : `<div style="padding:36px 20px;text-align:center;color:var(--ink-3);font-family:var(--font-mono);font-size:12px;">No deliverables match this filter.</div>`;
+
+        wsMain.innerHTML = `
+          <div class="task-table-head">
+            <span>ID</span>
+            <span>Deliverable</span>
+            <span>Owner</span>
+            <span>Status</span>
+            <span style="text-align:right">Due</span>
+          </div>
+          <div class="task-list">${rowsHtml}</div>
+          <form class="quick-add-form" id="quickAddForm">
+            <span class="quick-add-prefix">+ TR-${nextTaskNum}</span>
+            <input
+              type="text"
+              class="quick-add-input"
+              id="quickAddInput"
+              placeholder="Add a deliverable to this cycle and press Enter…"
+              autocomplete="off"
+              aria-label="New deliverable title"
+            />
+            <button type="submit" class="quick-add-btn">Add</button>
+          </form>
+        `;
+
+        wsMain.querySelectorAll('.task-row').forEach(row => {
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('[data-cycle-status]')) return;
+            selectedTaskId = row.dataset.taskId;
+            renderWorkspace();
+          });
+        });
+
+        wsMain.querySelectorAll('[data-cycle-status]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const task = tasks.find(t => t.id === btn.dataset.cycleStatus);
+            if (task) {
+              selectedTaskId = task.id;
+              cycleStatus(task);
+            }
+          });
+        });
+
+        const form = document.getElementById('quickAddForm');
+        const input = document.getElementById('quickAddInput');
+        if (form && input) {
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = input.value.trim();
+            if (!title) return;
+            const newId = `TR-${nextTaskNum++}`;
+            tasks.push({
+              id: newId,
+              title: title,
+              owner: 'You',
+              initials: 'YO',
+              status: 'queued',
+              due: 'Dec 05',
+              overdue: false,
+              effort: '1d',
+              milestone: 'Mid-cycle addition',
+              startPct: 68,
+              widthPct: 24,
+              noteId: null,
+              note: 'Added mid-cycle from the live sandbox. Marked automatically on the cycle scope line.',
+              deps: []
+            });
+            currentFilter = 'all';
+            syncFilterPills();
+            selectedTaskId = newId;
+            renderWorkspace();
+          });
+        }
+      }
+
+      function renderTimelineView() {
+        const rowsHtml = tasks.map(t => {
+          const meta = STATUS_META[t.status];
+          const sel = t.id === selectedTaskId ? 'selected' : '';
+          return `
+            <div class="tl-row ${sel}" data-tl-id="${t.id}">
+              <div class="tl-label"><span>${t.id}</span>${t.title}</div>
+              <div class="tl-track">
+                <div class="tl-bar ${meta.cls}" style="left:${t.startPct}%;width:${t.widthPct}%;">
+                  ${meta.label} · ${t.effort}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        wsMain.innerHTML = `
+          <div class="timeline-wrap">
+            <div class="timeline-grid">
+              <div class="tl-header">
+                <span>DELIVERABLE</span>
+                <span class="tl-col-head">NOV 11</span>
+                <span class="tl-col-head">NOV 18</span>
+                <span class="tl-col-head">NOV 25</span>
+                <span class="tl-col-head">DEC 02</span>
+              </div>
+              <div class="tl-rows">
+                <div class="tl-today-line" aria-hidden="true">
+                  <span class="tl-today-tag">NOV 24</span>
+                </div>
+                ${rowsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+
+        wsMain.querySelectorAll('.tl-row').forEach(row => {
+          row.addEventListener('click', () => {
+            selectedTaskId = row.dataset.tlId;
+            renderWorkspace();
+          });
+        });
+      }
+
+      function renderNotesView() {
+        const cardsHtml = fieldNotes.map(n => `
+          <article class="note-card">
+            <div class="note-card-head">
+              <span>${n.id}</span>
+              <span>${n.date}</span>
+            </div>
+            <h4>${n.title}</h4>
+            <p>${n.body}</p>
+            <div class="note-links">
+              <span class="mono" style="font-size:10.5px;color:var(--ink-3)">AFFECTS:</span>
+              ${n.linked.map(tid => `<button type="button" class="note-task-link" data-open-task="${tid}">${tid} ↗</button>`).join('')}
+            </div>
+          </article>
+        `).join('');
+
+        wsMain.innerHTML = `<div class="notes-wrap">${cardsHtml}</div>`;
+
+        wsMain.querySelectorAll('[data-open-task]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectedTaskId = btn.dataset.openTask;
+            setView('cycle');
+          });
+        });
+      }
+
+      function syncFilterPills() {
+        document.querySelectorAll('.filter-pill').forEach(p => {
+          p.classList.toggle('active', p.dataset.filter === currentFilter);
+        });
+      }
+
+      function setView(view) {
+        currentView = view;
+        document.querySelectorAll('.ws-tab').forEach(tab => {
+          const isActive = tab.dataset.view === view;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', String(isActive));
+        });
+        wsSubbar.style.display = view === 'cycle' ? 'flex' : 'none';
+        renderWorkspace();
+      }
+
+      function renderWorkspace() {
+        updateProgress();
+        if (currentView === 'cycle') renderCycleView();
+        else if (currentView === 'timeline') renderTimelineView();
+        else renderNotesView();
+        renderInspector();
+      }
+
+      document.querySelectorAll('.ws-tab').forEach(tab => {
+        tab.addEventListener('click', () => setView(tab.dataset.view));
+      });
+
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          currentFilter = pill.dataset.filter;
+          syncFilterPills();
+          renderWorkspace();
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === '1') setView('cycle');
+        if (e.key === '2') setView('timeline');
+        if (e.key === '3') setView('notes');
+      });
+
+      renderWorkspace();
+
+      /* ---------------- WEEKLY RHYTHM INTERACTIVE PANEL ---------------- */
+      const rhythmPanel = document.getElementById('rhythmPanel');
+      let stretchAdded = false;
+      let slipResolved = false;
+
+      function renderRhythm(day) {
+        if (day === 'mon') {
+          const used = stretchAdded ? 22 : 18;
+          const pct = Math.min(100, Math.round((used / 20) * 100));
+          rhythmPanel.innerHTML = `
+            <div class="rp-head">
+              <span>MONDAY · 09:30 CYCLE KICKOFF</span>
+              <span>CAPACITY CHECK</span>
+            </div>
+            <div class="rp-body">
+              <div class="rp-card">
+                <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;">
+                  <span>COMMITTED EFFORT</span>
+                  <span style="color:${stretchAdded ? '#E07A5F' : '#82C9A5'}">${used} / 20 ENGINEER-DAYS</span>
+                </div>
+                <div class="cap-bar">
+                  <div class="cap-fill ${stretchAdded ? 'over' : ''}" style="width:${pct}%"></div>
+                </div>
+                <div style="font-size:13px;color:var(--charcoal-muted);">
+                  ${stretchAdded
+                    ? 'Overcommitted by 2 days. Drop an existing item or defer Bluetooth diagnostics to Cycle 15.'
+                    : '2 days of unallocated buffer held for bug fixes and vendor follow-ups.'}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:13.5px;color:var(--charcoal-muted);">Test adding a 4-day stretch item to see how Trestle warns before kickoff:</span>
+                <button type="button" class="rp-action-btn ${stretchAdded ? 'applied' : ''}" id="toggleStretchBtn">
+                  ${stretchAdded ? 'Remove stretch item (-4d)' : '+ Add stretch item (+4d)'}
+                </button>
+              </div>
+            </div>
+          `;
+          document.getElementById('toggleStretchBtn').addEventListener('click', () => {
+            stretchAdded = !stretchAdded;
+            renderRhythm('mon');
+          });
+        } else if (day === 'wed') {
+          rhythmPanel.innerHTML = `
+            <div class="rp-head">
+              <span>WEDNESDAY · 14:10 DEPENDENCY MONITOR</span>
+              <span style="color:${slipResolved ? '#82C9A5' : '#E07A5F'}">${slipResolved ? 'CASCADE CLEARED' : '1 MILESTONE AT RISK'}</span>
+            </div>
+            <div class="rp-body">
+              <div class="rp-card">
+                <div class="mono" style="font-size:11px;color:${slipResolved ? '#82C9A5' : '#E07A5F'};margin-bottom:6px;">
+                  ${slipResolved ? 'RESOLVED · MOVED TO CYCLE 15' : 'SLIPPAGE DETECTED · +3 DAYS'}
+                </div>
+                <div style="font-size:15px;font-weight:500;margin-bottom:6px;">
+                  TR-209 Thermal soak test @ 45°C
+                </div>
+                <div style="font-size:13px;color:var(--charcoal-muted);line-height:1.55;">
+                  ${slipResolved
+                    ? 'Pilot Dispatch milestone stays on Dec 06 with provisional thermal cert. Full 45°C soak scheduled cleanly for Dec 09.'
+                    : 'Blocked by customs delay on thermistor harness. Downstream milestone “Pilot Dispatch (Dec 06)” will slip unless decoupled.'}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:13.5px;color:var(--charcoal-muted);">Try resolving the dependency cascade directly from the alert:</span>
+                <button type="button" class="rp-action-btn ${slipResolved ? 'applied' : ''}" id="toggleSlipBtn">
+                  ${slipResolved ? 'Reset scenario' : 'Decouple & defer to Cycle 15'}
+                </button>
+              </div>
+            </div>
+          `;
+          document.getElementById('toggleSlipBtn').addEventListener('click', () => {
+            slipResolved = !slipResolved;
+            renderRhythm('wed');
+          });
+        } else if (day === 'thu') {
+          rhythmPanel.innerHTML = `
+            <div class="rp-head">
+              <span>THURSDAY · 16:05 FIELD NOTE CAPTURE</span>
+              <span>PERMANENT RECORD</span>
+            </div>
+            <div class="rp-body">
+              <div class="rp-card">
+                <div class="mono" style="font-size:11px;color:var(--charcoal-muted);margin-bottom:8px;">FN-18 · PINNED TO TR-212, TR-218</div>
+                <div style="font-family:var(--font-serif);font-size:21px;margin-bottom:8px;">Bead-blasted anodizing over powder coat</div>
+                <p style="margin:0 0 12px;font-size:13.5px;color:var(--charcoal-muted);line-height:1.6;">
+                  Instead of burying the finish change in #hardware-general, Maren logged a 3-sentence Field Note. Both the CAD drawing and field teardown sheet automatically show the rationale in their sidebar.
+                </p>
+                <div class="mono" style="font-size:11px;color:#82C9A5;">✓ Searchable offline · Exported with cycle archive</div>
+              </div>
+            </div>
+          `;
+        } else {
+          rhythmPanel.innerHTML = `
+            <div class="rp-head">
+              <span>FRIDAY · 17:00 AUTO-DIGEST</span>
+              <span>PLAIN MARKDOWN</span>
+            </div>
+            <div class="rp-body">
+              <div class="rp-card">
+<pre class="md-preview"><span class="md-h">## Cycle 14 — Weekly Ledger (Nov 24)</span>
+
+<span class="md-ok">Shipped (4)</span>
+- TR-204 Rotary encoder debounce calibrated (-10°C pass)
+- TR-219 Packaging 1.2m drop test signed off
+- TR-201 Bootloader checksum verification merged
+- TR-206 CNC fixture revision B approved
+
+<span class="md-warn">Carrying / Blocked (1)</span>
+- TR-209 Thermal soak paused for customs (FN-17)
+
+Decisions recorded: 3 Field Notes · Scope added: +1 item</pre>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.day-tab').forEach(t => {
+            const active = t === tab;
+            t.classList.toggle('active', active);
+            t.setAttribute('aria-selected', String(active));
+          });
+          renderRhythm(tab.dataset.day);
+        });
+      });
+
+      renderRhythm('mon');
+
+      /* ---------------- PRICING TOGGLE ---------------- */
+      const standardPrice = document.getElementById('standardPrice');
+      const standardUnit = document.getElementById('standardUnit');
+      document.querySelectorAll('.billing-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.billing-opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (btn.dataset.billing === 'annual') {
+            standardPrice.textContent = '$9';
+            standardUnit.textContent = 'per active seat / mo, billed annually';
+          } else {
+            standardPrice.textContent = '$11';
+            standardUnit.textContent = 'per active seat / mo, billed monthly';
+          }
+        });
+      });
+
+      /* ---------------- WORKSPACE CREATION FORM ---------------- */
+      const wsForm = document.getElementById('createWorkspaceForm');
+      const wsSlug = document.getElementById('wsSlug');
+      const wsEmail = document.getElementById('wsEmail');
+      const wsFeedback = document.getElementById('wsCreateFeedback');
+
+      wsSlug.addEventListener('input', () => {
+        wsSlug.value = wsSlug.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      });
+
+      wsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const slug = (wsSlug.value || 'my-team').replace(/^-+|-+$/g, '') || 'my-team';
+        const email = wsEmail.value.trim();
+        if (!email || !email.includes('@')) {
+          wsFeedback.style.color = 'var(--red)';
+          wsFeedback.textContent = 'Enter a valid email address to receive your sign-in link.';
+          wsFeedback.classList.add('visible');
+          wsEmail.focus();
+          return;
+        }
+        wsFeedback.style.color = 'var(--green)';
+        wsFeedback.textContent = `Reserved ${slug}.trestle.app — sign-in link queued for ${email}.`;
+        wsFeedback.classList.add('visible');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+Save this as `index.html`. It works offline and uses sample restaurant details, hours, prices, and contact information.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7efdf">
+  <meta name="description" content="Casa Oliva is a neighborhood Italian restaurant serving handmade pasta, seasonal plates, and Italian wine in Carroll Gardens, Brooklyn.">
+  <title>Casa Oliva | Neighborhood Italian in Carroll Gardens</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #f7efdf;
+      --ink: #28291d;
+      --green: #333c26;
+      --red: #9d3429;
+      --line: #c9baa3;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cream); color: var(--ink); font: 1rem/1.55 var(--sans); }
+    a { color: inherit; text-underline-offset: .24em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    h1, h2, h3, p, figure, dd { margin: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    .wrap { width: min(100% - 3rem, 74rem); margin-inline: auto; }
+    .eyebrow { font-size: .71rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+    .skip { position: absolute; top: .5rem; left: .5rem; z-index: 2; padding: .65rem 1rem; background: var(--cream); transform: translateY(-160%); }
+    .skip:focus { transform: translateY(0); }
+
+    header { border-bottom: 1px solid var(--line); }
+    .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1rem; }
+    .wordmark { color: var(--red); font: 700 clamp(1.4rem, 4vw, 2.05rem)/1 var(--serif); text-decoration: none; white-space: nowrap; letter-spacing: -.055em; }
+    nav ul { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .6rem clamp(.85rem, 3vw, 2rem); list-style: none; padding: 0; margin: 0; }
+    nav a { font-size: .85rem; font-weight: 650; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    .nav-reserve { color: var(--red); }
+
+    .hero { display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: clamp(2rem, 6vw, 6rem); padding-block: clamp(2.75rem, 7vw, 6rem); }
+    .hero .eyebrow, .menu .eyebrow { color: var(--red); }
+    h1 { font-size: clamp(3.4rem, 7.7vw, 7.2rem); line-height: .9; letter-spacing: -.078em; margin-block: .26em .28em; }
+    h1 em { color: var(--red); font-weight: 400; }
+    .intro { max-width: 31ch; font-size: clamp(1rem, 1.8vw, 1.17rem); }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.4rem; margin-top: 1.6rem; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.85rem; padding: .65rem 1.12rem; background: var(--red); color: #fff8ec; font-weight: 700; font-size: .85rem; text-decoration: none; }
+    .button:hover { background: #76271f; }
+    .text-link { font-size: .85rem; font-weight: 700; }
+
+    .art {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      position: relative;
+      aspect-ratio: 1.09;
+      margin: 0;
+      border: 1px solid #944336;
+      background-color: #ad5142;
+      background-image:
+        repeating-linear-gradient(90deg, transparent 0 23px, #f3ad8a50 23px 46px),
+        repeating-linear-gradient(0deg, transparent 0 23px, #f3ad8a50 23px 46px);
+    }
+    .plate {
+      position: relative;
+      width: 77%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid #fff1cd;
+      background: radial-gradient(circle, #fff2d9 0 57%, #d9ba90 57.6%, #fbebcb 59%, #f6e5c3 68%, #42624d 68.4% 69%, #fcebc9 69.5%);
+      box-shadow: .8rem 1.2rem 2.5rem #4c1e16a6, inset 0 0 1.1rem #ba946b7a;
+    }
+    .pasta {
+      position: absolute;
+      inset: 21% 20% 22%;
+      border-radius: 44% 56% 45% 55%;
+      transform: rotate(-13deg);
+      background: radial-gradient(ellipse, #bb4520 25%, #9e371b 56%, transparent 73%);
+    }
+    .noodle {
+      position: absolute;
+      border-style: solid;
+      border-color: #ffc267 #e68638 #db742d #ffda82;
+      border-radius: 50%;
+      box-shadow: 0 2px 2px #81351685, inset 0 1px 1px #8f39156e;
+    }
+    .leaf {
+      position: absolute;
+      z-index: 1;
+      width: 24%;
+      height: 15%;
+      border-radius: 92% 12% 92% 12%;
+      background: linear-gradient(155deg, #879351, #425b34 52%, #a0a365 53%, #2e4628 56%);
+      box-shadow: 0 2px 3px #47271070;
+    }
+    .leaf:nth-of-type(1) { top: 37%; left: 43%; transform: rotate(31deg); }
+    .leaf:nth-of-type(2) { top: 48%; left: 42%; transform: rotate(122deg) scale(.84); }
+    .leaf:nth-of-type(3) { top: 44%; left: 55%; transform: rotate(-28deg) scale(.62); }
+
+    .menu { border-top: 1px solid var(--line); padding-block: clamp(2.5rem, 6vw, 5rem); }
+    .section-title { font-size: clamp(2.25rem, 5vw, 4.15rem); line-height: 1; letter-spacing: -.055em; margin-top: .3rem; }
+    .dishes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; list-style: none; padding: 0; margin: 1.5rem 0 0; }
+    .dishes li { border-top: 1px solid var(--line); padding-top: .9rem; }
+    .dish-title { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+    .dish-title h3 { font-size: 1.35rem; line-height: 1.15; }
+    .price { font-size: .85rem; font-weight: 750; color: var(--red); }
+    .dishes p { font-size: .9rem; margin-top: .4rem; }
+
+    .visit { background: var(--green); color: var(--cream); padding-block: clamp(2.5rem, 6vw, 5rem); }
+    .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 4rem; align-items: start; }
+    .visit .eyebrow { color: #f2c694; }
+    .visit p { margin-top: .9rem; }
+    .visit .button { background: var(--cream); color: var(--green); margin-top: 1.25rem; }
+    .visit .button:hover { background: #ead8bc; }
+    .details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin: .15rem 0 0; }
+    dt { font-weight: 750; margin-bottom: .4rem; }
+    dd, address { font-size: .9rem; font-style: normal; }
+    address a { display: inline-block; margin-top: .55rem; }
+    footer { padding-block: 1rem; font-size: .8rem; }
+    .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; }
+    .foot a { font-weight: 650; }
+
+    @media (max-width: 800px) {
+      .hero { gap: 2rem; }
+      .visit-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: calc(100% - 2rem); }
+      .hero, .dishes { grid-template-columns: 1fr; }
+      .art { aspect-ratio: 1.25; }
+      .plate { width: 68%; }
+      .dishes { gap: 1rem; }
+    }
+    @media (max-width: 350px) {
+      .bar { align-items: flex-start; }
+      nav ul { gap: .25rem .65rem; }
+      .details { grid-template-columns: 1fr; }
+      h1 { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="wrap bar">
+      <a class="wordmark" href="#top" aria-label="Casa Oliva home">Casa Oliva</a>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#visit">Visit</a></li>
+          <li><a class="nav-reserve" href="#reservations">Reservations</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Neighborhood Italian · Carroll Gardens</p>
+        <h1 id="hero-title">Come hungry.<br><em>Stay awhile.</em></h1>
+        <p class="intro">Handmade pasta, seasonal plates, and a good bottle of wine on a Brooklyn corner.</p>
+        <div class="actions">
+          <a class="button" href="#reservations">Book a table</a>
+          <a class="text-link" href="#menu">Explore the menu</a>
+        </div>
+      </div>
+      <figure class="art" role="img" aria-label="Illustration of tomato pasta with fresh basil on a green-rimmed plate and a red checked tablecloth">
+        <div class="plate" aria-hidden="true">
+          <div class="pasta">
+            <i class="leaf"></i><i class="leaf"></i><i class="leaf"></i>
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <section class="wrap menu" id="menu" aria-labelledby="menu-title">
+      <p class="eyebrow">From the kitchen</p>
+      <h2 class="section-title" id="menu-title">A few house favorites</h2>
+      <ul class="dishes">
+        <li>
+          <div class="dish-title"><h3>Burrata</h3><span class="price">$16</span></div>
+          <p>Roasted cherry tomatoes, basil, grilled sourdough</p>
+        </li>
+        <li>
+          <div class="dish-title"><h3>Tagliatelle al Ragù</h3><span class="price">$27</span></div>
+          <p>Hand-cut pasta, slow-braised beef, Parmigiano Reggiano</p>
+        </li>
+        <li>
+          <div class="dish-title"><h3>Tiramisù</h3><span class="price">$11</span></div>
+          <p>Espresso-soaked ladyfingers, mascarpone, dark cocoa</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <div class="wrap visit-grid">
+        <div id="reservations">
+          <p class="eyebrow">Plan your visit</p>
+          <h2 class="section-title" id="visit-title">Join us for dinner</h2>
+          <p>Call to reserve a table. Walk-ins are welcome at the bar.</p>
+          <a class="button" href="tel:+17185550142">Call (718) 555-0142</a>
+        </div>
+        <dl class="details">
+          <div>
+            <dt>Find us</dt>
+            <dd>
+              <address>
+                214 Court Street<br>
+                Brooklyn, NY 11201<br>
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=214+Court+Street+Brooklyn+NY+11201">Get directions <span aria-hidden="true">↗</span></a>
+              </address>
+            </dd>
+          </div>
+          <div>
+            <dt>Dinner hours</dt>
+            <dd>Tue–Thu · 5–9 pm<br>Fri–Sat · 5–10 pm<br>Sun · 5–9 pm<br>Mon · Closed</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Casa Oliva · Brooklyn, NY</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const pasta = document.querySelector('.pasta');
+    const noodles = document.createDocumentFragment();
+
+    for (let index = 0; index < 40; index += 1) {
+      const angle = index * 2.39996;
+      const radius = Math.sqrt((index + 0.5) / 40);
+      const noodle = document.createElement('span');
+
+      noodle.className = 'noodle';
+      Object.assign(noodle.style, {
+        left: `${50 + Math.cos(angle) * radius * 36}%`,
+        top: `${50 + Math.sin(angle) * radius * 33}%`,
+        width: `${29 + (index % 5) * 3}%`,
+        height: `${13 + (index % 4) * 4}%`,
+        borderWidth: 'clamp(2px, .55vw, 7px)',
+        transform: `translate(-50%, -50%) rotate(${index * 47}deg)`
+      });
+
+      noodles.append(noodle);
+    }
+
+    pasta.append(noodles);
+  </script>
+</body>
+</html>
+```

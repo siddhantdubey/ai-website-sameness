@@ -1,0 +1,2920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docket — Project management without the ticket factory</title>
+  <meta name="description" content="Docket replaces sprawling backlogs, story points, and status meetings with six-week scopes, plain-text specs, and a timeline that tells the truth." />
+  <style>
+    :root {
+      --paper: #f5f2eb;
+      --paper-alt: #ece7dc;
+      --surface: #fdfcfa;
+      --surface-hover: #f8f5ee;
+      --ink: #1a1917;
+      --ink-2: #524e47;
+      --ink-3: #847e73;
+      --line: #d6d0c3;
+      --line-strong: #b9b1a0;
+      --accent: #c53d28;
+      --accent-hover: #a7301e;
+      --accent-tint: #f8e8e4;
+      --green: #275d42;
+      --green-tint: #e3efe8;
+      --amber: #9f5b17;
+      --amber-tint: #f6ebd9;
+      --blue: #264a70;
+      --blue-tint: #e3ebf3;
+
+      --font-serif: ui-serif, "Charter", "Iowan Old Style", "Palatino Linotype", Georgia, "Liberation Serif", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Liberation Sans", Arial, sans-serif;
+      --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, "Liberation Mono", Consolas, monospace;
+
+      --radius: 3px;
+      --max-w: 1140px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      color: var(--ink);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tnum {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------------- Header ---------------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(245, 242, 235, 0.94);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-mark {
+      width: 20px;
+      height: 20px;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .nav-links a {
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 120ms ease, border-color 120ms ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-link {
+      background: none;
+      border: 0;
+      padding: 6px 8px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .btn-link:hover {
+      color: var(--ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--ink);
+      color: var(--surface);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background-color: #2f2d29;
+      border-color: #2f2d29;
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-accent:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--surface);
+      border-color: var(--ink);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    /* ---------------- Hero ---------------- */
+    .hero {
+      padding: 56px 0 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.75fr);
+      gap: 48px;
+      align-items: end;
+    }
+
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin: 0 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kicker-rule {
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(2.3rem, 4.4vw, 3.55rem);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin: 0 0 22px;
+      max-width: 17ch;
+      color: var(--ink);
+    }
+
+    .hero-lead {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin: 0 0 28px;
+      max-width: 54ch;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-footnote {
+      margin: 14px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .spec-sheet {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .spec-sheet-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin: 0 0 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 9px 0;
+      border-top: 1px solid var(--line);
+      font-size: 13.5px;
+    }
+
+    .spec-row dt {
+      color: var(--ink-2);
+    }
+
+    .spec-row dd {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .spec-sheet-note {
+      margin: 10px 0 12px;
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.45;
+    }
+
+    kbd {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1;
+      padding: 3px 5px;
+      border: 1px solid var(--line-strong);
+      border-bottom-width: 2px;
+      border-radius: 2px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* ---------------- Interactive Workspace Plate ---------------- */
+    .plate-section {
+      padding: 8px 0 72px;
+    }
+
+    .app-frame {
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      box-shadow: 0 1px 0 rgba(26, 25, 23, 0.05), 0 14px 36px -24px rgba(26, 25, 23, 0.25);
+      overflow: hidden;
+    }
+
+    .app-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      background: var(--paper-alt);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .app-crumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .app-workspace-tag {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .app-sep {
+      color: var(--ink-3);
+    }
+
+    .app-cycle-name {
+      color: var(--ink-2);
+    }
+
+    .cycle-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+
+    .app-tabs {
+      display: inline-flex;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--paper);
+      overflow: hidden;
+    }
+
+    .app-tab {
+      background: transparent;
+      border: 0;
+      border-right: 1px solid var(--line);
+      padding: 5px 12px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .app-tab:last-child {
+      border-right: 0;
+    }
+
+    .app-tab:hover {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .app-tab[aria-selected="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .tab-key {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-3);
+    }
+
+    .app-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      padding: 4px 9px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .filter-btn:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .filter-btn.active {
+      background: var(--paper-alt);
+      border-color: var(--line-strong);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .progress-summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+
+    .progress-track {
+      width: 110px;
+      height: 6px;
+      background: var(--paper-alt);
+      border: 1px solid var(--line);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--green);
+      transition: width 180ms ease;
+    }
+
+    /* Cycle List + Detail split */
+    .cycle-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.85fr);
+      min-height: 410px;
+    }
+
+    .task-pane {
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scope-group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: #f9f7f2;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--ink-2);
+    }
+
+    .scope-group-meta {
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 24px 66px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      border-bottom: 1px solid #ece7dc;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: background-color 90ms ease;
+    }
+
+    .task-row:hover {
+      background: var(--surface-hover);
+    }
+
+    .task-row.selected {
+      background: #f3efe6;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .status-toggle {
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+    }
+
+    .status-toggle:hover {
+      background: var(--paper-alt);
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .task-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--ink);
+    }
+
+    .task-row.is-done .task-title {
+      color: var(--ink-3);
+      text-decoration: line-through;
+      text-decoration-color: var(--line-strong);
+    }
+
+    .status-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .st-todo { background: var(--paper-alt); color: var(--ink-2); }
+    .st-progress { background: var(--amber-tint); color: var(--amber); }
+    .st-review { background: var(--blue-tint); color: var(--blue); }
+    .st-done { background: var(--green-tint); color: var(--green); }
+
+    .owner-chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    .quick-add-form {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--line);
+      background: #faf8f3;
+    }
+
+    .quick-add-input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 2px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .quick-add-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .quick-add-select {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 2px;
+      padding: 6px 8px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    /* Right detail drawer */
+    .detail-pane {
+      padding: 18px 20px;
+      background: #fbf9f5;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .detail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      row-gap: 7px;
+      column-gap: 10px;
+      font-size: 12.5px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .detail-meta-grid dt {
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding-top: 2px;
+    }
+
+    .detail-meta-grid dd {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .detail-note-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin: 0 0 6px;
+    }
+
+    .detail-note {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin: 0;
+    }
+
+    .detail-pr {
+      margin-top: auto;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-2);
+    }
+
+    .detail-pr strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .status-cycle-controls {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mini-state-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 7px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 2px;
+      color: var(--ink-2);
+    }
+
+    .mini-state-btn.current {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    /* Timeline View */
+    .timeline-view {
+      padding: 18px 20px 22px;
+      min-height: 410px;
+    }
+
+    .timeline-header-note {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .gantt-wrap {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      overflow-x: auto;
+    }
+
+    .gantt-grid {
+      min-width: 720px;
+      position: relative;
+    }
+
+    .gantt-head {
+      display: grid;
+      grid-template-columns: 210px repeat(6, 1fr);
+      border-bottom: 1px solid var(--line);
+      background: #f9f7f2;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .gantt-head > div {
+      padding: 8px 10px;
+      border-right: 1px solid var(--line);
+    }
+
+    .gantt-head > div:last-child {
+      border-right: 0;
+    }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      border-bottom: 1px solid #ece7dc;
+      align-items: center;
+      min-height: 54px;
+    }
+
+    .gantt-row:last-child {
+      border-bottom: 0;
+    }
+
+    .gantt-label {
+      padding: 10px 12px;
+      border-right: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .gantt-label strong {
+      display: block;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .gantt-label span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .gantt-track {
+      position: relative;
+      height: 54px;
+      background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+      background-size: calc(100% / 6) 100%;
+    }
+
+    .today-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 56%;
+      width: 1.5px;
+      background: var(--accent);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .today-badge {
+      position: absolute;
+      top: -1px;
+      left: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      background: var(--surface);
+      padding: 0 3px;
+      white-space: nowrap;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      top: 13px;
+      height: 28px;
+      border-radius: 2px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper-alt);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 9px;
+      font-size: 12px;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .gantt-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(39, 93, 66, 0.16);
+      border-right: 1px solid rgba(39, 93, 66, 0.35);
+      pointer-events: none;
+    }
+
+    .gantt-bar.at-risk {
+      border-color: #cc9d67;
+      background: var(--amber-tint);
+    }
+
+    .gantt-bar.at-risk .gantt-bar-fill {
+      background: rgba(159, 91, 23, 0.15);
+      border-right-color: rgba(159, 91, 23, 0.4);
+    }
+
+    .gantt-bar-text {
+      position: relative;
+      z-index: 1;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gantt-bar-pct {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      margin-left: 8px;
+    }
+
+    /* Digest View */
+    .digest-view {
+      padding: 24px 26px;
+      min-height: 410px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+      gap: 28px;
+    }
+
+    .digest-paper {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 22px 24px;
+    }
+
+    .digest-date {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin: 0 0 6px;
+    }
+
+    .digest-heading {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 500;
+      margin: 0 0 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .digest-entry {
+      padding: 12px 0;
+      border-bottom: 1px solid #ece7dc;
+    }
+
+    .digest-entry:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .digest-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 5px;
+      font-size: 13.5px;
+    }
+
+    .digest-entry p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .digest-sidebar h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin: 0 0 10px;
+    }
+
+    .digest-stat-list {
+      border-top: 1px solid var(--line);
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .digest-stat-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .plate-caption {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* ---------------- Sections ---------------- */
+    .section {
+      padding: 72px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-alt {
+      background: var(--paper-alt);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 32px;
+      margin-bottom: 44px;
+      align-items: baseline;
+    }
+
+    .section-index {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px;
+      max-width: 24ch;
+    }
+
+    .section-intro {
+      font-size: 16px;
+      color: var(--ink-2);
+      margin: 0;
+      max-width: 58ch;
+    }
+
+    /* Principles Ledger */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principle-cell {
+      padding: 26px 26px 30px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .principle-cell:not(:first-child) {
+      padding-left: 26px;
+    }
+
+    .principle-cell:last-child {
+      border-right: 0;
+      padding-right: 0;
+    }
+
+    .principle-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .principle-cell h3 {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .principle-cell p {
+      margin: 0;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--ink-2);
+    }
+
+    /* Comparison Table */
+    .comparison-wrap {
+      margin-top: 44px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .comparison-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      padding: 12px 18px;
+      background: #f8f5ee;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .comparison-table td {
+      padding: 13px 18px;
+      border-bottom: 1px solid #ece7dc;
+      vertical-align: top;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .comparison-table td:first-child {
+      font-weight: 600;
+      width: 24%;
+      color: var(--ink);
+    }
+
+    .comparison-table td:nth-child(2) {
+      color: var(--ink-3);
+      width: 38%;
+    }
+
+    .comparison-table td:nth-child(3) {
+      color: var(--ink);
+      width: 38%;
+    }
+
+    /* Craft details (2x2 editorial grid with live micro-diagrams) */
+    .craft-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line-strong);
+      border-left: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .craft-card {
+      padding: 28px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .craft-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .craft-card p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .micro-specimen {
+      margin-top: auto;
+      padding: 14px 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      font-size: 12.5px;
+    }
+
+    .scope-meter-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      margin-bottom: 8px;
+    }
+
+    .scope-bar {
+      height: 10px;
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      overflow: hidden;
+    }
+
+    .scope-bar-orig {
+      width: 72%;
+      background: var(--green);
+    }
+
+    .scope-bar-rem {
+      width: 14%;
+      background: var(--paper-alt);
+    }
+
+    .scope-bar-creep {
+      width: 14%;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--accent),
+        var(--accent) 4px,
+        #e17b6b 4px,
+        #e17b6b 8px
+      );
+    }
+
+    .scope-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 9px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+
+    .git-log-line {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--ink-2);
+    }
+
+    .git-log-line .hash { color: var(--ink-3); }
+    .git-log-line .ok { color: var(--green); font-weight: 600; }
+    .git-log-line .tag {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 0 5px;
+      color: var(--ink);
+    }
+
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 16px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .sync-readout {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+    }
+
+    .sync-big {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    /* Editorial Quotes */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    .quote-card {
+      margin: 0;
+      padding-top: 18px;
+      border-top: 1px solid var(--line-strong);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 17.5px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .quote-card figcaption {
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .quote-card figcaption strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .quote-card figcaption span {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+    }
+
+    .price-col {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .price-col:first-child {
+      border-right: 1px solid var(--line);
+      background: #faf8f3;
+    }
+
+    .price-label {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+    }
+
+    .price-amount {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .price-unit {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--ink-2);
+      margin-left: 4px;
+    }
+
+    .price-list {
+      list-style: none;
+      margin: 4px 0 0;
+      padding: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .price-list li {
+      padding: 9px 0;
+      border-bottom: 1px solid #ece7dc;
+      font-size: 14px;
+      color: var(--ink-2);
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .price-list li::before {
+      content: "—";
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+    }
+
+    .calc-box {
+      padding: 16px 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+    }
+
+    .calc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .billing-toggle button {
+      border: 0;
+      background: transparent;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+
+    .billing-toggle button.active {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .seat-slider {
+      width: 100%;
+      accent-color: var(--accent);
+      margin: 6px 0 12px;
+    }
+
+    .calc-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      font-size: 13.5px;
+    }
+
+    .calc-total {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .pricing-footnote {
+      margin-top: 16px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Changelog */
+    .changelog-list {
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .changelog-row {
+      display: grid;
+      grid-template-columns: 140px 100px minmax(0, 1fr);
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .changelog-date {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--ink-3);
+    }
+
+    .changelog-ver {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .changelog-desc {
+      font-size: 14.5px;
+      color: var(--ink-2);
+      margin: 0;
+    }
+
+    .changelog-desc strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Closing Signup */
+    .closing-band {
+      padding: 64px 0;
+      border-top: 1px solid var(--line);
+      background: var(--paper-alt);
+    }
+
+    .closing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .closing-grid h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(1.65rem, 2.8vw, 2.2rem);
+      line-height: 1.18;
+      margin: 0 0 10px;
+    }
+
+    .closing-grid p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+      max-width: 48ch;
+    }
+
+    .signup-form {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      padding: 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+    }
+
+    .signup-form input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      padding: 8px 10px;
+      font-size: 14.5px;
+    }
+
+    .signup-form input:focus {
+      outline: none;
+    }
+
+    .signup-feedback {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      min-height: 18px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 40px;
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links a:hover {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 25, 23, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      padding: 26px;
+      box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.35);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .modal-head h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      width: 28px;
+      height: 28px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .modal-close:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .field-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin: 14px 0 6px;
+    }
+
+    .field-input {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 2px;
+      padding: 9px 11px;
+      font-size: 14.5px;
+      background: var(--paper);
+    }
+
+    .field-input:focus {
+      outline: none;
+      background: var(--surface);
+      border-color: var(--ink);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ---------------- Responsive ---------------- */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .cycle-layout,
+      .digest-view,
+      .section-header,
+      .pricing-grid,
+      .closing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .task-pane {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .principles-grid,
+      .quotes-grid,
+      .craft-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .principle-cell {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 22px 0 !important;
+      }
+
+      .principle-cell:last-child {
+        border-bottom: 0;
+      }
+
+      .price-col:first-child {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .task-row {
+        grid-template-columns: 22px 58px minmax(0, 1fr) auto;
+      }
+
+      .task-row .owner-chip {
+        display: none;
+      }
+
+      .changelog-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .comparison-table thead {
+        display: none;
+      }
+
+      .comparison-table tr {
+        display: block;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 0;
+      }
+
+      .comparison-table td {
+        display: block;
+        width: 100% !important;
+        border-bottom: 0;
+        padding: 4px 16px;
+      }
+
+      .signup-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Docket home">
+        <svg class="brand-mark" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="17" height="17" rx="1.5" stroke="#1a1917" stroke-width="1.5"/>
+          <line x1="6.5" y1="1.5" x2="6.5" y2="18.5" stroke="#1a1917" stroke-width="1.5"/>
+          <line x1="9.5" y1="6.5" x2="15.5" y2="6.5" stroke="#c53d28" stroke-width="1.75"/>
+          <line x1="9.5" y1="10.25" x2="14.5" y2="10.25" stroke="#1a1917" stroke-width="1.5"/>
+          <line x1="9.5" y1="14" x2="13" y2="14" stroke="#1a1917" stroke-width="1.5"/>
+        </svg>
+        <span>Docket</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#sandbox">Live sandbox</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#craft">Details</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn-link" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary btn-sm" data-open-modal="signup">Start a workspace</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="kicker"><span class="kicker-rule" aria-hidden="true"></span>Release 2.4 &middot; Web, macOS &amp; CLI</p>
+          <h1>Project management for teams that would rather build the thing.</h1>
+          <p class="hero-lead">
+            Docket replaces 900-ticket backlogs, story points, and Monday status calls with six-week scopes, plain-text specs, and a timeline that tells the truth. Made for product teams of 5 to 40.
+          </p>
+          <div class="hero-cta-row">
+            <button type="button" class="btn btn-accent" data-open-modal="signup">Create a free workspace</button>
+            <a href="#philosophy" class="btn btn-outline">Read why we built it</a>
+          </div>
+          <p class="hero-footnote">Free forever for up to 5 people. No card required. Imports from Linear &amp; Jira CSV.</p>
+        </div>
+
+        <aside class="spec-sheet" aria-label="Product specification summary">
+          <p class="spec-sheet-title">
+            <span>Specification</span>
+            <span>docket.work</span>
+          </p>
+          <dl style="margin:0;">
+            <div class="spec-row">
+              <dt>Cycle length</dt>
+              <dd>4 or 6 weeks</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Task states</dt>
+              <dd>4 (fixed on purpose)</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Story points</dt>
+              <dd>0</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Local write latency</dt>
+              <dd>&lt; 16 ms</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Pricing</dt>
+              <dd>$8 / person, flat</dd>
+            </div>
+          </dl>
+          <p class="spec-sheet-note">
+            Sandbox below is live. Press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> to switch views, or <kbd>c</kbd> to add a task.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Interactive Product Plate -->
+    <section id="sandbox" class="plate-section" aria-label="Interactive Docket workspace demo">
+      <div class="container">
+        <div class="app-frame">
+          <div class="app-topbar">
+            <div class="app-crumb">
+              <span class="app-workspace-tag">Kettler Web</span>
+              <span class="app-sep">/</span>
+              <span class="app-cycle-name">Cycle 14: Billing &amp; Seat Proration</span>
+              <span class="cycle-pill">Week 4 of 6 &middot; Ends Dec 11</span>
+            </div>
+
+            <div class="app-tabs" role="tablist" aria-label="Workspace views">
+              <button type="button" class="app-tab" role="tab" id="tab-cycle" aria-selected="true" data-view="cycle">
+                Scopes <span class="tab-key">1</span>
+              </button>
+              <button type="button" class="app-tab" role="tab" id="tab-timeline" aria-selected="false" data-view="timeline">
+                Timeline <span class="tab-key">2</span>
+              </button>
+              <button type="button" class="app-tab" role="tab" id="tab-digest" aria-selected="false" data-view="digest">
+                Friday Digest <span class="tab-key">3</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- View 1: Scopes -->
+          <div id="view-cycle">
+            <div class="app-toolbar">
+              <div class="filter-group" role="group" aria-label="Filter tasks by status">
+                <button type="button" class="filter-btn active" data-filter="all">All (<span id="count-all">8</span>)</button>
+                <button type="button" class="filter-btn" data-filter="active">Open (<span id="count-open">5</span>)</button>
+                <button type="button" class="filter-btn" data-filter="review">In Review (<span id="count-review">2</span>)</button>
+                <button type="button" class="filter-btn" data-filter="done">Done (<span id="count-done">3</span>)</button>
+              </div>
+
+              <div class="progress-summary">
+                <span id="progress-label">3 of 8 shipped (38%)</span>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-fill" id="progress-fill" style="width: 38%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cycle-layout">
+              <div class="task-pane">
+                <div id="task-groups-container"></div>
+
+                <form class="quick-add-form" id="quick-add-form">
+                  <label for="quick-add-input" class="hidden">New task title</label>
+                  <input
+                    type="text"
+                    id="quick-add-input"
+                    class="quick-add-input"
+                    placeholder="Add a concrete task to Cycle 14 and press Enter..."
+                    autocomplete="off"
+                  />
+                  <label for="quick-add-scope" class="hidden">Scope</label>
+                  <select id="quick-add-scope" class="quick-add-select" aria-label="Scope">
+                    <option value="Checkout API">Checkout API</option>
+                    <option value="Invoice PDFs">Invoice PDFs</option>
+                    <option value="Data Cutover">Data Cutover</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                </form>
+              </div>
+
+              <aside class="detail-pane" id="detail-pane" aria-live="polite">
+                <!-- Populated by JS -->
+              </aside>
+            </div>
+          </div>
+
+          <!-- View 2: Timeline -->
+          <div id="view-timeline" class="timeline-view hidden">
+            <div class="timeline-header-note">
+              <span><strong>Cycle 14 Schedule</strong> &mdash; Nov 2 to Dec 11, 2026. Bars reflect live task completion from the Scopes view.</span>
+              <span class="mono" style="font-size: 11.5px; color: var(--ink-3);">Vertical red rule = Today (Nov 24)</span>
+            </div>
+
+            <div class="gantt-wrap">
+              <div class="gantt-grid">
+                <div class="gantt-head">
+                  <div>Scope / Owner</div>
+                  <div>Wk 1 &middot; Nov 2</div>
+                  <div>Wk 2 &middot; Nov 9</div>
+                  <div>Wk 3 &middot; Nov 16</div>
+                  <div>Wk 4 &middot; Nov 23</div>
+                  <div>Wk 5 &middot; Nov 30</div>
+                  <div>Wk 6 &middot; Dec 7</div>
+                </div>
+
+                <div id="gantt-rows">
+                  <!-- Rendered from live state -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- View 3: Friday Digest -->
+          <div id="view-digest" class="digest-view hidden">
+            <article class="digest-paper">
+              <p class="digest-date">Auto-compiled &middot; Friday, Nov 20, 2026 &middot; 15:00 CET</p>
+              <h3 class="digest-heading">Cycle 14, Week 3 — What actually moved</h3>
+
+              <div class="digest-entry">
+                <div class="digest-entry-head">
+                  <strong>Checkout API</strong>
+                  <span class="status-tag st-done">On track</span>
+                </div>
+                <p>
+                  Proration math now matches Stripe's invoice preview to the cent across annual and monthly plans. Remaining edge case is mid-month seat removals with active coupons; Mira has a draft PR open for Monday review.
+                </p>
+              </div>
+
+              <div class="digest-entry">
+                <div class="digest-entry-head">
+                  <strong>Invoice PDFs</strong>
+                  <span class="status-tag st-progress">1 day behind</span>
+                </div>
+                <p>
+                  Fixed line-wrapping for German and Dutch VAT numbers. Swapped the headless browser step for direct Typst generation — average render dropped from 1.9s to 44ms. Still need finance sign-off on the credit-note footer.
+                </p>
+              </div>
+
+              <div class="digest-entry">
+                <div class="digest-entry-head">
+                  <strong>Data Cutover</strong>
+                  <span class="status-tag st-review">Waiting on staging</span>
+                </div>
+                <p>
+                  Backfill script processed 48,200 legacy accounts on staging with 14 malformed tax IDs flagged for manual cleanup. Dry-run cutover scheduled for Wednesday afternoon.
+                </p>
+              </div>
+            </article>
+
+            <aside class="digest-sidebar">
+              <h4>Week 3 Ledger</h4>
+              <ul class="digest-stat-list">
+                <li><span>Tasks completed</span><strong class="mono">9</strong></li>
+                <li><span>Scope added mid-cycle</span><strong class="mono" style="color:var(--accent);">+2 tasks</strong></li>
+                <li><span>Merged pull requests</span><strong class="mono">11</strong></li>
+                <li><span>Standups held</span><strong class="mono">0</strong></li>
+              </ul>
+
+              <h4>How digests work</h4>
+              <p style="font-size:13.5px; color:var(--ink-2); margin:0; line-height:1.55;">
+                Every Friday at 3 PM local time, Docket pulls shipped items and prompts each scope owner for two sentences of honest context. Everyone reads it Monday morning over coffee.
+              </p>
+            </aside>
+          </div>
+        </div>
+
+        <div class="plate-caption">
+          <span>FIG 01. INTERACTIVE SANDBOX &mdash; CLICK ANY STATUS CHECKBOX, SELECT A ROW TO READ ITS SPEC, OR ADD A TASK.</span>
+          <span id="sandbox-hint">CHANGES PERSIST IN THIS TAB</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section id="philosophy" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">01 / Philosophy</div>
+          <div>
+            <h2 class="section-title">Most project trackers turn shipping software into data entry.</h2>
+            <p class="section-intro">
+              When a tool encourages 12 custom workflow columns, sub-sub-tasks, and an unbounded backlog, teams spend Tuesday mornings arguing about ticket hygiene instead of finishing the work. Docket leaves those knobs out on purpose.
+            </p>
+          </div>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-cell">
+            <span class="principle-num">01</span>
+            <h3>Six-week cycles, not bottomless backlogs</h3>
+            <p>
+              Work either belongs in this cycle or it stays in a quiet Reading Pile. Anything that sits unscheduled for two cycles archives itself automatically. If an idea truly matters, someone will bring it back up.
+            </p>
+          </div>
+
+          <div class="principle-cell">
+            <span class="principle-num">02</span>
+            <h3>The spec lives right beside the work</h3>
+            <p>
+              Every scope starts as a plain markdown page explaining what we are building and what we are explicitly cutting. No hunting across three wikis and a Slack thread to figure out why a task exists.
+            </p>
+          </div>
+
+          <div class="principle-cell">
+            <span class="principle-num">03</span>
+            <h3>Honest timelines over fake velocity</h3>
+            <p>
+              Story points measure how good a team is at inventing numbers. Docket tracks completed work against remaining scopes and calls out mid-cycle scope creep in plain sight before a deadline slips.
+            </p>
+          </div>
+        </div>
+
+        <div class="comparison-wrap">
+          <table class="comparison-table" aria-label="Comparison between conventional issue trackers and Docket">
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Typical ticket factory</th>
+                <th>How Docket handles it</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Backlog size</td>
+                <td>600–2,000 stale issues nobody trusts enough to close.</td>
+                <td>Zero backlog. Active cycle + a small, auto-expiring Reading Pile.</td>
+              </tr>
+              <tr>
+                <td>Workflow states</td>
+                <td>11 configurable statuses ("Ready for QA Staging Review").</td>
+                <td>Four fixed states: Todo, In Progress, In Review, Done.</td>
+              </tr>
+              <tr>
+                <td>Status updates</td>
+                <td>30-minute daily standups plus a Friday slide deck.</td>
+                <td>One calm Friday Digest compiled from shipped work and owner notes.</td>
+              </tr>
+              <tr>
+                <td>Client / exec visibility</td>
+                <td>Exporting screenshots because the board is unreadable.</td>
+                <td>Read-only share link for any cycle with clean progress and notes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Details / Craft -->
+    <section id="craft" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">02 / Details</div>
+          <div>
+            <h2 class="section-title">Small decisions that keep the tool out of your way.</h2>
+            <p class="section-intro">
+              Built as a fast, local-first web and macOS application with a first-class CLI. No loading spinners between views, no modal traps, and no noisy bot spam in your pull requests.
+            </p>
+          </div>
+        </div>
+
+        <div class="craft-grid">
+          <div class="craft-card">
+            <div>
+              <h3>Scope creep shown in plain daylight</h3>
+              <p>
+                Most progress bars lie by stretching quietly when new tasks get slipped into a sprint. Docket hatches mid-cycle additions separately so the team sees when a scope is growing.
+              </p>
+            </div>
+            <div class="micro-specimen">
+              <div class="scope-meter-row">
+                <span>Checkout API</span>
+                <span>10 of 14 done &middot; <strong style="color:var(--accent);">+2 added</strong></span>
+              </div>
+              <div class="scope-bar" aria-label="Scope progress with creep hatched">
+                <div class="scope-bar-orig" title="Completed original scope"></div>
+                <div class="scope-bar-rem" title="Remaining original scope"></div>
+                <div class="scope-bar-creep" title="Added after cycle start"></div>
+              </div>
+              <div class="scope-legend">
+                <span>&#9632; Original done (10)</span>
+                <span>&#9633; Remaining (2)</span>
+                <span style="color:var(--accent);">&#9636; Added mid-cycle (2)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div>
+              <h3>Quiet GitHub &amp; GitLab integration</h3>
+              <p>
+                Mention a task ID in a branch name or PR title and Docket moves it to <em>In Review</em> when opened and <em>Done</em> on merge—without posting six boilerplate bot comments on your PR.
+              </p>
+            </div>
+            <div class="micro-specimen">
+              <div class="git-log-line">
+                <div><span class="hash">PR #418</span> fix/proration-coupon-rounding</div>
+                <div>&rarr; linked to <span class="tag">DKT-104</span> &middot; status <span class="ok">In Review</span></div>
+                <div style="margin-top:4px;"><span class="hash">merge 8a4f2c1</span> into main (2m ago)</div>
+                <div>&rarr; closed <span class="tag">DKT-104</span> &middot; added to Friday Digest</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div>
+              <h3>Keyboard-driven, mouse-friendly</h3>
+              <p>
+                Everything works cleanly with a pointer, and power users get a handful of obvious single-key shortcuts modeled after email clients and text editors—never three-finger chords.
+              </p>
+            </div>
+            <div class="micro-specimen">
+              <div class="shortcut-grid">
+                <div class="shortcut-item"><span>Create task</span><kbd>c</kbd></div>
+                <div class="shortcut-item"><span>Move selection</span><span><kbd>j</kbd> <kbd>k</kbd></span></div>
+                <div class="shortcut-item"><span>Advance status</span><kbd>x</kbd></div>
+                <div class="shortcut-item"><span>Filter list</span><kbd>/</kbd></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div>
+              <h3>Local-first engine, offline on flights</h3>
+              <p>
+                Your active cycle syncs into an indexed local store. Editing specs, checking off tasks, and searching past cycles happen in memory first, then reconcile quietly when you reconnect.
+              </p>
+            </div>
+            <div class="micro-specimen">
+              <div class="sync-readout">
+                <div>
+                  <div class="sync-big">11 ms</div>
+                  <div style="font-size:11.5px; color:var(--ink-3);">p95 view switch &amp; local commit</div>
+                </div>
+                <div style="text-align:right; font-size:11.5px; color:var(--green);">
+                  SQLite / OPFS cache<br/>
+                  <span style="color:var(--ink-3);">Full-text search offline</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">03 / In Practice</div>
+          <div>
+            <h2 class="section-title">Used by small, opinionated product teams.</h2>
+            <p class="section-intro">
+              No logo wall of enterprises that use one seat in a corner office. Just teams who moved their entire product cycle over and stuck with it.
+            </p>
+          </div>
+        </div>
+
+        <div class="quotes-grid">
+          <figure class="quote-card">
+            <blockquote>
+              “We deleted 1,400 stale Jira tickets the afternoon we switched to Docket. It’s been nine months and nobody has asked about a single one of them.”
+            </blockquote>
+            <figcaption>
+              <strong>Henrik Lindholm</strong>
+              <span>Engineering Lead, Kettler Instruments &middot; 14 people, Gothenburg</span>
+            </figcaption>
+          </figure>
+
+          <figure class="quote-card">
+            <blockquote>
+              “Clients actually open our shared cycle link now. Before, sending them a board link was basically handing them homework.”
+            </blockquote>
+            <figcaption>
+              <strong>Nadia Okafor</strong>
+              <span>Partner, North &amp; Pine Studio &middot; 9 people, Toronto</span>
+            </figcaption>
+          </figure>
+
+          <figure class="quote-card">
+            <blockquote>
+              “The Friday Digest killed our Monday morning status meeting on week two. It feels like software written by people who respect Tuesday mornings.”
+            </blockquote>
+            <figcaption>
+              <strong>Tom&aacute;s Herrera</strong>
+              <span>Co-founder, Brampton Rail Systems &middot; 26 people, Austin</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">04 / Pricing</div>
+          <div>
+            <h2 class="section-title">One price. No enterprise gatekeeping.</h2>
+            <p class="section-intro">
+              We do not lock SAML SSO, API access, or CSV export behind a mystery "Contact Sales" tier. Small teams use the whole product free; larger teams pay a flat rate per seat.
+            </p>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="price-col">
+            <div>
+              <div class="price-label">Small Teams &middot; Up to 5 seats</div>
+              <div style="margin-top:10px;">
+                <span class="price-amount">$0</span>
+                <span class="price-unit">forever</span>
+              </div>
+              <p style="font-size:14.5px; color:var(--ink-2); margin:12px 0 0;">
+                Everything in Docket, with no artificial project caps or 14-day countdown timers.
+              </p>
+            </div>
+
+            <ul class="price-list">
+              <li>Unlimited cycles, scopes, and plain-text specs</li>
+              <li>GitHub, GitLab, and CLI access included</li>
+              <li>Read-only guest links for clients or advisors</li>
+              <li>Full Markdown &amp; JSON workspace export anytime</li>
+            </ul>
+
+            <div style="margin-top:auto; padding-top:10px;">
+              <button type="button" class="btn btn-outline" style="width:100%;" data-open-modal="signup">Start free workspace</button>
+            </div>
+          </div>
+
+          <div class="price-col">
+            <div>
+              <div class="price-label">Growing Teams &middot; 6+ seats</div>
+              <div style="margin-top:10px;">
+                <span class="price-amount" id="seat-rate-display">$8</span>
+                <span class="price-unit" id="seat-rate-unit">per active seat / month</span>
+              </div>
+              <p style="font-size:14.5px; color:var(--ink-2); margin:12px 0 0;">
+                Includes SAML SSO, audit log, priority email support directly from engineers, and automatic prorated billing when people join or leave.
+              </p>
+            </div>
+
+            <div class="calc-box">
+              <div class="calc-top">
+                <label for="seat-slider" style="font-size:13px; font-weight:600;">
+                  Team size: <span class="mono" id="seat-count-label">14 people</span>
+                </label>
+                <div class="billing-toggle" role="group" aria-label="Billing interval">
+                  <button type="button" class="active" data-billing="monthly">Monthly ($8)</button>
+                  <button type="button" data-billing="annual">Annual ($7)</button>
+                </div>
+              </div>
+
+              <input
+                type="range"
+                id="seat-slider"
+                class="seat-slider"
+                min="6"
+                max="60"
+                step="1"
+                value="14"
+              />
+
+              <div class="calc-result">
+                <span style="color:var(--ink-2);" id="calc-breakdown">14 seats &times; $8 / month</span>
+                <span class="calc-total" id="calc-total">$112 / mo</span>
+              </div>
+            </div>
+
+            <div style="margin-top:auto; padding-top:10px;">
+              <button type="button" class="btn btn-primary" style="width:100%;" data-open-modal="signup">Start 30-day team trial</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pricing-footnote">
+          <span><strong>Zero lock-in guarantee:</strong> Export every cycle, comment, and spec as clean Markdown files in one click.</span>
+          <span class="mono" style="font-size:12px; color:var(--ink-3);">Non-profits &amp; open-source maintainers: 50% off.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Changelog -->
+    <section id="changelog" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">05 / Changelog</div>
+          <div>
+            <h2 class="section-title">Shipped recently.</h2>
+            <p class="section-intro">
+              We publish small, concrete releases every two weeks. No rebrands, no surprise layout overhauls.
+            </p>
+          </div>
+        </div>
+
+        <div class="changelog-list">
+          <div class="changelog-row">
+            <span class="changelog-date">2026-11-18</span>
+            <span class="changelog-ver">v2.4.0</span>
+            <p class="changelog-desc">
+              <strong>Mid-cycle scope delta bar.</strong> Cycle headers and timeline rows now distinguish tasks added after kickoff from original scope so teams spot drift early.
+            </p>
+          </div>
+          <div class="changelog-row">
+            <span class="changelog-date">2026-11-04</span>
+            <span class="changelog-ver">v2.3.4</span>
+            <p class="changelog-desc">
+              <strong>CLI v1.8 &amp; terminal digest.</strong> Run <code class="mono">docket my</code> to view your assigned items or <code class="mono">docket done DKT-104</code> without leaving your editor.
+            </p>
+          </div>
+          <div class="changelog-row">
+            <span class="changelog-date">2026-10-21</span>
+            <span class="changelog-ver">v2.3.0</span>
+            <p class="changelog-desc">
+              <strong>Guided Linear &amp; Jira CSV importer.</strong> Map active projects straight into a clean Cycle 1 while placing older issues into an archived reference export.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing Band -->
+    <section class="closing-band">
+      <div class="container closing-grid">
+        <div>
+          <h2>Try Docket on your next six-week cycle.</h2>
+          <p>
+            Set up a workspace in under five minutes. Bring one real project, skip the backlog import, and see how Friday feels.
+          </p>
+        </div>
+
+        <div>
+          <form class="signup-form" id="footer-signup-form">
+            <label for="footer-email" class="hidden">Work email</label>
+            <input
+              type="email"
+              id="footer-email"
+              required
+              placeholder="you@company.com"
+              autocomplete="email"
+            />
+            <button type="submit" class="btn btn-accent">Create workspace</button>
+          </form>
+          <div class="signup-feedback" id="footer-signup-feedback" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong style="color:var(--ink);">Docket Software Inc.</strong> &middot; Portland &amp; Amsterdam &middot; Zero third-party trackers.
+      </div>
+      <div class="footer-links">
+        <a href="#sandbox">Sandbox</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#changelog">Changelog</a>
+        <a href="#" data-open-modal="signin">Sign in</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Clean Modal for Sign In / Workspace Creation -->
+  <div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modal-title">Create your workspace</h3>
+        <button type="button" class="modal-close" id="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <p id="modal-subtitle" style="margin:0 0 12px; font-size:14px; color:var(--ink-2);">
+        Free for teams up to 5. We’ll send a one-time sign-in link to your inbox—no password to remember.
+      </p>
+      <form id="modal-form">
+        <label class="field-label" for="modal-email">Work email</label>
+        <input class="field-input" type="email" id="modal-email" required placeholder="name@team.com" />
+
+        <div id="modal-workspace-field">
+          <label class="field-label" for="modal-team">Team or company name</label>
+          <input class="field-input" type="text" id="modal-team" placeholder="e.g. Kettler Instruments" />
+        </div>
+
+        <button type="submit" class="btn btn-accent" style="width:100%; margin-top:18px;" id="modal-submit-btn">
+          Send sign-in link
+        </button>
+      </form>
+      <div id="modal-feedback" class="signup-feedback" style="margin-top:12px;" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STATUS_ORDER = ["todo", "progress", "review", "done"];
+      const STATUS_META = {
+        todo: { label: "Todo", cls: "st-todo" },
+        progress: { label: "In Progress", cls: "st-progress" },
+        review: { label: "In Review", cls: "st-review" },
+        done: { label: "Done", cls: "st-done" }
+      };
+
+      const SCOPE_SCHEDULE = {
+        "Checkout API": { owner: "Mira K.", startPct: 0, widthPct: 72, risk: false },
+        "Invoice PDFs": { owner: "Samir P.", startPct: 16, widthPct: 58, risk: true },
+        "Data Cutover": { owner: "Henrik L.", startPct: 33, widthPct: 62, risk: false }
+      };
+
+      let nextId = 113;
+      let tasks = [
+        {
+          id: "DKT-104",
+          scope: "Checkout API",
+          title: "Handle prorated seat reductions with active coupons",
+          status: "review",
+          owner: "MK",
+          ownerFull: "Mira Kowalski",
+          due: "Nov 26",
+          note: "When a customer drops seats mid-cycle while a percentage discount is active, compute the credit against the discounted unit amount rather than list price. Verified against Stripe preview API.",
+          pr: "PR #418 · fix/proration-coupon-rounding (checks passing)"
+        },
+        {
+          id: "DKT-105",
+          scope: "Checkout API",
+          title: "Idempotency keys on plan upgrade webhook retries",
+          status: "done",
+          owner: "MK",
+          ownerFull: "Mira Kowalski",
+          due: "Nov 19",
+          note: "Store event_id in billing_events with a unique constraint so duplicate webhook deliveries return 200 without re-issuing seat adjustments.",
+          pr: "PR #409 · merged Nov 18 into main"
+        },
+        {
+          id: "DKT-106",
+          scope: "Checkout API",
+          title: "Expose next-invoice estimate on /settings/billing",
+          status: "progress",
+          owner: "AL",
+          ownerFull: "Anders Lind",
+          due: "Nov 29",
+          note: "Show a single plain table of current seats, prorated credits, and next charge date before the admin clicks Confirm.",
+          pr: "Branch al/billing-preview-table (2 commits ahead)"
+        },
+        {
+          id: "DKT-107",
+          scope: "Invoice PDFs",
+          title: "Stop PDF layout from clipping 14-char EU VAT numbers",
+          status: "done",
+          owner: "SP",
+          ownerFull: "Samir Patel",
+          due: "Nov 15",
+          note: "Widened the right-hand customer address block by 18mm and allowed monospaced tax IDs to break cleanly onto a second line.",
+          pr: "PR #402 · merged Nov 14 into main"
+        },
+        {
+          id: "DKT-108",
+          scope: "Invoice PDFs",
+          title: "Replace headless Chrome PDF job with Typst template",
+          status: "done",
+          owner: "SP",
+          ownerFull: "Samir Patel",
+          due: "Nov 20",
+          note: "Cut worker memory usage by 680MB and brought median invoice generation down from 1.9s to 44ms.",
+          pr: "PR #414 · merged Nov 20 into main"
+        },
+        {
+          id: "DKT-109",
+          scope: "Invoice PDFs",
+          title: "Add localized credit-note footer approved by finance",
+          status: "todo",
+          owner: "SP",
+          ownerFull: "Samir Patel",
+          due: "Dec 2",
+          note: "Waiting on final German and French legal wording from Klara before updating the Typst partial.",
+          pr: "No pull request linked yet"
+        },
+        {
+          id: "DKT-110",
+          scope: "Data Cutover",
+          title: "Backfill legacy Stripe customer IDs on staging",
+          status: "review",
+          owner: "HL",
+          ownerFull: "Henrik Lindholm",
+          due: "Nov 25",
+          note: "Processed 48,200 rows in 3m 12s. Script prints a clean CSV of the 14 accounts with malformed tax IDs so support can fix them ahead of cutover.",
+          pr: "PR #416 · chore/backfill-customer-ids (1 approval)"
+        },
+        {
+          id: "DKT-112",
+          scope: "Data Cutover",
+          title: "Write rollback checklist for Dec 4 production cutover",
+          status: "todo",
+          owner: "HL",
+          ownerFull: "Henrik Lindholm",
+          due: "Dec 1",
+          note: "Keep legacy webhook endpoint warm for 48 hours behind a feature flag. Document exact SQL check to verify zero orphaned invoices.",
+          pr: "No pull request linked yet"
+        }
+      ];
+
+      let activeView = "cycle";
+      let activeFilter = "all";
+      let selectedTaskId = "DKT-104";
+
+      const groupsContainer = document.getElementById("task-groups-container");
+      const detailPane = document.getElementById("detail-pane");
+      const ganttRows = document.getElementById("gantt-rows");
+      const quickAddForm = document.getElementById("quick-add-form");
+      const quickAddInput = document.getElementById("quick-add-input");
+      const quickAddScope = document.getElementById("quick-add-scope");
+
+      function statusIconSvg(status) {
+        if (status === "done") {
+          return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" fill="#275d42" stroke="#275d42" stroke-width="1.4"/><path d="M4.5 8.2L7 10.6L11.6 5.5" stroke="#fdfcfa" stroke-width="1.6" stroke-linecap="square"/></svg>';
+        }
+        if (status === "review") {
+          return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="#264a70" stroke-width="1.4"/><rect x="4.5" y="4.5" width="7" height="7" fill="#264a70"/></svg>';
+        }
+        if (status === "progress") {
+          return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="#9f5b17" stroke-width="1.4"/><path d="M1.5 1.5H8V14.5H1.5V1.5Z" fill="#9f5b17" opacity="0.28"/><line x1="8" y1="1.5" x2="8" y2="14.5" stroke="#9f5b17" stroke-width="1.2"/></svg>';
+        }
+        return '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="#847e73" stroke-width="1.4"/></svg>';
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function getFilteredTasks() {
+        if (activeFilter === "active") return tasks.filter(t => t.status !== "done");
+        if (activeFilter === "review") return tasks.filter(t => t.status === "review");
+        if (activeFilter === "done") return tasks.filter(t => t.status === "done");
+        return tasks;
+      }
+
+      function updateCounts() {
+        const total = tasks.length;
+        const done = tasks.filter(t => t.status === "done").length;
+        const review = tasks.filter(t => t.status === "review").length;
+        const open = total - done;
+        const pct = total ? Math.round((done / total) * 100) : 0;
+
+        document.getElementById("count-all").textContent = total;
+        document.getElementById("count-open").textContent = open;
+        document.getElementById("count-review").textContent = review;
+        document.getElementById("count-done").textContent = done;
+        document.getElementById("progress-label").textContent = `${done} of ${total} shipped (${pct}%)`;
+        document.getElementById("progress-fill").style.width = `${pct}%`;
+      }
+
+      function renderTaskList() {
+        const visible = getFilteredTasks();
+        const scopes = Object.keys(SCOPE_SCHEDULE);
+
+        if (visible.length === 0) {
+          groupsContainer.innerHTML = '<div style="padding:36px 20px; text-align:center; color:var(--ink-3); font-size:13.5px;">No tasks match this filter.</div>';
+          return;
+        }
+
+        let html = "";
+        scopes.forEach(scopeName => {
+          const items = visible.filter(t => t.scope === scopeName);
+          if (!items.length) return;
+          const scopeAll = tasks.filter(t => t.scope === scopeName);
+          const scopeDone = scopeAll.filter(t => t.status === "done").length;
+
+          html += `
+            <div class="scope-group">
+              <div class="scope-group-head">
+                <span>${escapeHtml(scopeName)}</span>
+                <span class="scope-group-meta">${scopeDone}/${scopeAll.length} done</span>
+              </div>
+              <ul class="task-list">
+                ${items.map(t => {
+                  const meta = STATUS_META[t.status];
+                  const isSelected = t.id === selectedTaskId;
+                  return `
+                    <li class="task-row ${isSelected ? "selected" : ""} ${t.status === "done" ? "is-done" : ""}" data-task-id="${t.id}">
+                      <button type="button" class="status-toggle" data-cycle-status="${t.id}" title="Advance status (${meta.label})" aria-label="Change status for ${escapeHtml(t.title)}">
+                        ${statusIconSvg(t.status)}
+                      </button>
+                      <span class="task-id">${t.id}</span>
+                      <span class="task-title">${escapeHtml(t.title)}</span>
+                      <span class="status-tag ${meta.cls}">${meta.label}</span>
+                      <span class="owner-chip" title="${escapeHtml(t.ownerFull)}">${escapeHtml(t.owner)}</span>
+                    </li>
+                  `;
+                }).join("")}
+              </ul>
+            </div>
+          `;
+        });
+
+        groupsContainer.innerHTML = html;
+      }
+
+      function renderDetailPane() {
+        const task = tasks.find(t => t.id === selectedTaskId) || tasks[0];
+        if (!task) return;
+        selectedTaskId = task.id;
+        const meta = STATUS_META[task.status];
+
+        detailPane.innerHTML = `
+          <div class="detail-head">
+            <span class="mono" style="font-size:12px; color:var(--ink-3);">${task.id} &middot; ${escapeHtml(task.scope)}</span>
+            <span class="status-tag ${meta.cls}">${meta.label}</span>
+          </div>
+
+          <h4 class="detail-title">${escapeHtml(task.title)}</h4>
+
+          <div>
+            <p class="detail-note-label">Set status</p>
+            <div class="status-cycle-controls">
+              ${STATUS_ORDER.map(st => `
+                <button type="button" class="mini-state-btn ${task.status === st ? "current" : ""}" data-set-status="${st}">
+                  ${STATUS_META[st].label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <dl class="detail-meta-grid">
+            <dt>Owner</dt>
+            <dd>${escapeHtml(task.ownerFull)}</dd>
+            <dt>Target</dt>
+            <dd class="mono">${escapeHtml(task.due)}, 2026</dd>
+            <dt>Scope</dt>
+            <dd>${escapeHtml(task.scope)}</dd>
+          </dl>
+
+          <div>
+            <p class="detail-note-label">Spec note</p>
+            <p class="detail-note">${escapeHtml(task.note)}</p>
+          </div>
+
+          <div class="detail-pr">
+            <strong>Git link:</strong> ${escapeHtml(task.pr)}
+          </div>
+        `;
+      }
+
+      function renderTimeline() {
+        const scopes = Object.keys(SCOPE_SCHEDULE);
+        ganttRows.innerHTML = scopes.map(scopeName => {
+          const cfg = SCOPE_SCHEDULE[scopeName];
+          const scopeTasks = tasks.filter(t => t.scope === scopeName);
+          const doneCount = scopeTasks.filter(t => t.status === "done").length;
+          const pct = scopeTasks.length ? Math.round((doneCount / scopeTasks.length) * 100) : 0;
+
+          return `
+            <div class="gantt-row">
+              <div class="gantt-label">
+                <strong>${escapeHtml(scopeName)}</strong>
+                <span>${escapeHtml(cfg.owner)} &middot; ${doneCount}/${scopeTasks.length} tasks</span>
+              </div>
+              <div class="gantt-track">
+                <div class="today-line">${scopeName === "Checkout API" ? '<span class="today-badge">TODAY</span>' : ""}</div>
+                <div class="gantt-bar ${cfg.risk && pct < 75 ? "at-risk" : ""}" style="left:${cfg.startPct}%; width:${cfg.widthPct}%;">
+                  <div class="gantt-bar-fill" style="width:${pct}%;"></div>
+                  <span class="gantt-bar-text">${escapeHtml(scopeName)}</span>
+                  <span class="gantt-bar-pct">${pct}%</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderAll() {
+        updateCounts();
+        renderTaskList();
+        renderDetailPane();
+        renderTimeline();
+      }
+
+      function setView(viewName) {
+        activeView = viewName;
+        document.querySelectorAll(".app-tab").forEach(btn => {
+          btn.setAttribute("aria-selected", btn.dataset.view === viewName ? "true" : "false");
+        });
+        document.getElementById("view-cycle").classList.toggle("hidden", viewName !== "cycle");
+        document.getElementById("view-timeline").classList.toggle("hidden", viewName !== "timeline");
+        document.getElementById("view-digest").classList.toggle("hidden", viewName !== "digest");
+      }
+
+      // Event delegation for task rows and status clicks
+      groupsContainer.addEventListener("click", function (e) {
+        const toggleBtn = e.target.closest("[data-cycle-status]");
+        if (toggleBtn) {
+          e.stopPropagation();
+          const id = toggleBtn.dataset.cycleStatus;
+          const task = tasks.find(t => t.id === id);
+          if (task) {
+            const idx = STATUS_ORDER.indexOf(task.status);
+            task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+            selectedTaskId = id;
+            renderAll();
+          }
+          return;
+        }
+
+        const row = e.target.closest(".task-row");
+        if (row) {
+          selectedTaskId = row.dataset.taskId;
+          renderTaskList();
+          renderDetailPane();
+        }
+      });
+
+      detailPane.addEventListener("click", function (e) {
+        const stateBtn = e.target.closest("[data-set-status]");
+        if (!stateBtn) return;
+        const task = tasks.find(t => t.id === selectedTaskId);
+        if (task) {
+          task.status = stateBtn.dataset.setStatus;
+          renderAll();
+        }
+      });
+
+      document.querySelectorAll(".app-tab").forEach(btn => {
+        btn.addEventListener("click", () => setView(btn.dataset.view));
+      });
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeFilter = btn.dataset.filter;
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderTaskList();
+        });
+      });
+
+      quickAddForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const title = quickAddInput.value.trim();
+        if (!title) return;
+
+        const id = "DKT-" + nextId++;
+        const scope = quickAddScope.value;
+        tasks.unshift({
+          id,
+          scope,
+          title,
+          status: "todo",
+          owner: "YOU",
+          ownerFull: "You (Sandbox)",
+          due: "Dec 5",
+          note: "Added during Cycle 14. Click any status button above or check the box on the left to move this item through the cycle.",
+          pr: "No pull request linked yet"
+        });
+
+        quickAddInput.value = "";
+        activeFilter = "all";
+        document.querySelectorAll(".filter-btn").forEach(b => {
+          b.classList.toggle("active", b.dataset.filter === "all");
+        });
+        selectedTaskId = id;
+        renderAll();
+      });
+
+      // Subtle keyboard shortcuts (only when not typing in an input/select/textarea)
+      document.addEventListener("keydown", function (e) {
+        const tag = (e.target && e.target.tagName) || "";
+        const isTyping = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+        if (e.key === "Escape") {
+          closeModal();
+          return;
+        }
+        if (isTyping || e.metaKey || e.ctrlKey || e.altKey) return;
+
+        if (e.key === "1") setView("cycle");
+        else if (e.key === "2") setView("timeline");
+        else if (e.key === "3") setView("digest");
+        else if (e.key === "c") {
+          e.preventDefault();
+          setView("cycle");
+          quickAddInput.focus();
+        } else if (e.key === "x" && activeView === "cycle") {
+          const task = tasks.find(t => t.id === selectedTaskId);
+          if (task) {
+            const idx = STATUS_ORDER.indexOf(task.status);
+            task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+            renderAll();
+          }
+        }
+      });
+
+      // Pricing calculator
+      const seatSlider = document.getElementById("seat-slider");
+      const seatCountLabel = document.getElementById("seat-count-label");
+      const calcBreakdown = document.getElementById("calc-breakdown");
+      const calcTotal = document.getElementById("calc-total");
+      const seatRateDisplay = document.getElementById("seat-rate-display");
+      const seatRateUnit = document.getElementById("seat-rate-unit");
+      let billingInterval = "monthly";
+
+      function updatePricing() {
+        const seats = parseInt(seatSlider.value, 10);
+        const rate = billingInterval === "annual" ? 7 : 8;
+        const monthlyTotal = seats * rate;
+
+        seatCountLabel.textContent = `${seats} people`;
+        seatRateDisplay.textContent = `$${rate}`;
+        seatRateUnit.textContent = billingInterval === "annual"
+          ? "per active seat / month, billed yearly"
+          : "per active seat / month";
+
+        if (billingInterval === "annual") {
+          const annualTotal = monthlyTotal * 12;
+          calcBreakdown.textContent = `${seats} seats × $7/mo ($${annualTotal.toLocaleString()} / yr)`;
+          calcTotal.textContent = `$${monthlyTotal.toLocaleString()} / mo`;
+        } else {
+          calcBreakdown.textContent = `${seats} seats × $8 / month`;
+          calcTotal.textContent = `$${monthlyTotal.toLocaleString()} / mo`;
+        }
+      }
+
+      seatSlider.addEventListener("input", updatePricing);
+      document.querySelectorAll(".billing-toggle button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          billingInterval = btn.dataset.billing;
+          document.querySelectorAll(".billing-toggle button").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          updatePricing();
+        });
+      });
+
+      // Footer inline signup
+      const footerForm = document.getElementById("footer-signup-form");
+      const footerFeedback = document.getElementById("footer-signup-feedback");
+      footerForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("footer-email").value.trim();
+        if (!email) return;
+        footerFeedback.textContent = `Sign-in link queued for ${email}. Check your inbox in ~10 seconds.`;
+        footerForm.reset();
+      });
+
+      // Auth Modal
+      const modal = document.getElementById("auth-modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalSubtitle = document.getElementById("modal-subtitle");
+      const modalWorkspaceField = document.getElementById("modal-workspace-field");
+      const modalSubmitBtn = document.getElementById("modal-submit-btn");
+      const modalForm = document.getElementById("modal-form");
+      const modalFeedback = document.getElementById("modal-feedback");
+      const modalEmail = document.getElementById("modal-email");
+
+      function openModal(mode) {
+        modalFeedback.textContent = "";
+        modalForm.reset();
+        if (mode === "signin") {
+          modalTitle.textContent = "Sign in to Docket";
+          modalSubtitle.textContent = "Enter your work email and we’ll send a one-time login link.";
+          modalWorkspaceField.classList.add("hidden");
+          modalSubmitBtn.textContent = "Email me a sign-in link";
+        } else {
+          modalTitle.textContent = "Create your workspace";
+          modalSubtitle.textContent = "Free forever for up to 5 people. No credit card required.";
+          modalWorkspaceField.classList.remove("hidden");
+          modalSubmitBtn.textContent = "Create workspace";
+        }
+        modal.classList.add("open");
+        setTimeout(() => modalEmail.focus(), 20);
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+      }
+
+      document.querySelectorAll("[data-open-modal]").forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          openModal(el.dataset.openModal);
+        });
+      });
+
+      document.getElementById("modal-close-btn").addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      modalForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = modalEmail.value.trim();
+        const team = document.getElementById("modal-team").value.trim();
+        if (!email) return;
+        const label = team ? ` for ${team}` : "";
+        modalFeedback.textContent = `Done — one-time link sent to ${email}${label}.`;
+        modalForm.reset();
+      });
+
+      // Initialize
+      renderAll();
+      updatePricing();
+    })();
+  </script>
+</body>
+</html>

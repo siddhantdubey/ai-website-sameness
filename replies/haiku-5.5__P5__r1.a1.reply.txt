@@ -1,0 +1,614 @@
+I've written the page as a single HTML file with no external assets, fonts, or scripts. Save it as `index.html` and open it in a browser. The product is a placeholder called Stillwork.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stillwork — project management for small teams</title>
+<meta name="description" content="Stillwork is a plain project tracker for small teams. Boards, due dates, and a weekly summary that doesn't need a meeting.">
+<style>
+  :root {
+    --paper: #f5f2ea;
+    --paper-deep: #ebe6da;
+    --ink: #1f1d1a;
+    --ink-soft: #5d5950;
+    --rule: #d6d0c1;
+    --accent: #a4472a;
+    --card: #fbfaf6;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    width: min(1080px, calc(100% - 48px));
+    margin: 0 auto;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  .wordmark span { color: var(--accent); }
+  .topnav {
+    display: flex;
+    gap: 28px;
+    font-size: 15px;
+  }
+  .topnav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .topnav a:hover { color: var(--ink); }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: end;
+    padding: 88px 0 72px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(40px, 5.4vw, 66px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 26px;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 34em;
+    margin: 0 0 34px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    align-items: center;
+  }
+  .btn {
+    display: inline-block;
+    padding: 13px 20px;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 2px;
+  }
+  .btn:hover { background: #000; }
+  .btn-quiet {
+    font-size: 16px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .fineprint {
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  /* Hero side note */
+  .aside {
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 22px;
+    font-size: 15.5px;
+    color: var(--ink-soft);
+  }
+  .aside strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .aside dl {
+    margin: 22px 0 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+  }
+  .aside dt {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .aside dd { margin: 0; }
+
+  /* Board mockup */
+  .board-section { padding: 0 0 96px; }
+  .board {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px;
+  }
+  .board-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 6px 16px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .board-top b { color: var(--ink); font-weight: 600; }
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .col h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 12px 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 12px 13px;
+    margin-bottom: 10px;
+    font-size: 14.5px;
+    line-height: 1.4;
+  }
+  .card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .late { color: var(--accent); }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 1px 6px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  /* Sections */
+  section.block {
+    padding: 80px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    margin-bottom: 44px;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(28px, 3.2vw, 38px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .section-head p {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 36em;
+  }
+
+  /* Numbered list */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    border-top: 1px solid var(--rule);
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    gap: 32px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .steps .n {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    padding-top: 4px;
+  }
+  .steps h4 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.25;
+  }
+  .steps p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  /* Two-column notes */
+  .notes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .notes h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 12px;
+  }
+  .notes p {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+  }
+  .notes ul {
+    margin: 0;
+    padding: 0 0 0 18px;
+    color: var(--ink-soft);
+  }
+  .notes li { margin-bottom: 6px; }
+
+  /* Pricing */
+  .plans {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+  .plans th,
+  .plans td {
+    text-align: left;
+    padding: 18px 16px 18px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .plans th {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink);
+  }
+  .plans td.price {
+    font-family: var(--serif);
+    font-size: 26px;
+    white-space: nowrap;
+  }
+  .plans td.price small {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .plans td.desc { color: var(--ink-soft); }
+  .plans tr td:last-child { padding-right: 0; }
+
+  /* Quote */
+  .quote {
+    margin: 0;
+    max-width: 780px;
+  }
+  .quote p {
+    font-family: var(--serif);
+    font-size: clamp(24px, 2.8vw, 32px);
+    line-height: 1.3;
+    margin: 0 0 22px;
+    letter-spacing: -0.01em;
+  }
+  .quote footer {
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  /* Closing CTA */
+  .close {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 72px 0;
+  }
+  .close .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .close h2 { color: var(--paper); max-width: 16em; }
+  .close .btn {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+  .close .btn:hover { background: #fff; }
+
+  /* Footer */
+  footer.site {
+    padding: 32px 0 44px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  footer.site .wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer.site a { text-decoration: none; margin-left: 20px; }
+  footer.site a:hover { color: var(--ink); }
+
+  /* Responsive */
+  @media (max-width: 880px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; padding: 56px 0; }
+    .columns { grid-template-columns: repeat(2, 1fr); }
+    .section-head { grid-template-columns: 1fr; gap: 14px; }
+    .steps li { grid-template-columns: 50px 1fr; }
+    .steps li p { grid-column: 2; }
+    .steps li h4 { grid-column: 2; }
+    .notes { grid-template-columns: 1fr; gap: 36px; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .topnav a:not(.topnav-cta) { display: none; }
+    .columns { grid-template-columns: 1fr; }
+    .plans thead { display: none; }
+    .plans, .plans tbody, .plans tr, .plans td { display: block; width: 100%; }
+    .plans tr { border-bottom: 1px solid var(--rule); padding: 16px 0; }
+    .plans td { border: 0; padding: 4px 0; }
+    .plans td.price { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <a class="wordmark" href="#">Still<span>work</span></a>
+    <nav class="topnav">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#notes">Notes</a>
+      <a href="#login">Log in</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Project tracking for teams of two to forty</p>
+        <h1>Know what's late before your standup does.</h1>
+        <p class="lede">Stillwork is a plain board with due dates that actually mean something. It flags slipping work on its own, sends one summary a week, and leaves the rest of your day alone.</p>
+        <div class="actions">
+          <a class="btn" href="#start">Start a free board</a>
+          <a class="btn-quiet" href="#how">See how it works</a>
+        </div>
+        <p class="fineprint">Free for up to five people. No card required. Imports from Trello and Linear.</p>
+      </div>
+
+      <aside class="aside">
+        <strong>Built for the people doing the work.</strong>
+        Stillwork doesn't score anyone, track keystrokes, or ask for daily status updates. It shows where things stand and gets out of the way.
+        <dl>
+          <dt>Sat</dt><dd>Summary sent Friday at 4pm, one email.</dd>
+          <dt>Mon</dt><dd>Anything due this week that hasn't moved.</dd>
+          <dt>Any</dt><dd>Boards load in under a second on a slow connection.</dd>
+        </dl>
+      </aside>
+    </div>
+
+    <div class="board-section">
+      <div class="board" role="img" aria-label="Example Stillwork board with four columns: Backlog, In progress, Review, and Shipped">
+        <div class="board-top">
+          <span><b>Website relaunch</b> &nbsp;·&nbsp; Q4 &nbsp;·&nbsp; 14 open</span>
+          <span>Updated 12 min ago</span>
+        </div>
+        <div class="columns">
+          <div class="col">
+            <h3><span>Backlog</span><span>3</span></h3>
+            <div class="card"><span class="tag">copy</span><br>Rewrite pricing FAQ for annual plans<div class="meta"><span>Dec 02</span><span class="avatar">JM</span></div></div>
+            <div class="card"><span class="tag">design</span><br>Mobile nav with fewer than six links<div class="meta"><span>Dec 05</span><span class="avatar">AK</span></div></div>
+            <div class="card">Audit broken redirects from 2023 migration<div class="meta"><span>no date</span><span class="avatar">SD</span></div></div>
+          </div>
+          <div class="col">
+            <h3><span>In progress</span><span>4</span></h3>
+            <div class="card"><span class="tag">eng</span><br>Move blog to static build<div class="meta"><span class="late">Nov 22 · late</span><span class="avatar">SD</span></div></div>
+            <div class="card"><span class="tag">design</span><br>Case study layouts for three clients<div class="meta"><span>Nov 28</span><span class="avatar">AK</span></div></div>
+            <div class="card">Replace hero video with still frames<div class="meta"><span>Nov 26</span><span class="avatar">JM</span></div></div>
+            <div class="card"><span class="tag">eng</span><br>Form validation on signup<div class="meta"><span>Dec 01</span><span class="avatar">SD</span></div></div>
+          </div>
+          <div class="col">
+            <h3><span>Review</span><span>2</span></h3>
+            <div class="card"><span class="tag">copy</span><br>Homepage headline options<div class="meta"><span>Nov 25</span><span class="avatar">JM</span></div></div>
+            <div class="card"><span class="tag">eng</span><br>Lighthouse fixes for product pages<div class="meta"><span>Nov 24</span><span class="avatar">SD</span></div></div>
+          </div>
+          <div class="col">
+            <h3><span>Shipped</span><span>5</span></h3>
+            <div class="card">Favicon and social preview images<div class="meta"><span>Nov 18</span><span class="avatar">AK</span></div></div>
+            <div class="card">Cookie banner copy approved by legal<div class="meta"><span>Nov 19</span><span class="avatar">JM</span></div></div>
+            <div class="card">Contact form routed to support inbox<div class="meta"><span>Nov 20</span><span class="avatar">SD</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="block" id="how">
+      <div class="section-head">
+        <h2>Three habits, no training required.</h2>
+        <p>Most project tools ask you to learn a system before they help. Stillwork has one board, one list of dates, and one weekly email. You can be useful on the first afternoon.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="n">01</span>
+          <h4>Put the work on the board</h4>
+          <p>Cards are a title, an owner, and a date. Add labels if you want them. Nothing else is required before a card can move.</p>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <h4>Let late work announce itself</h4>
+          <p>When a date passes without a move, the card turns red and shows up at the top of the board. Nobody has to ask for a status update.</p>
+        </li>
+        <li>
+          <span class="n">03</span>
+          <h4>Read one summary a week</h4>
+          <p>Friday afternoon you get a single message: what shipped, what slipped, and what's coming up. Reply to it or ignore it.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="block" id="notes">
+      <div class="section-head">
+        <h2>What we decided not to build.</h2>
+        <p>Every feature in a project tool is a tax on the people using it. These are the ones we kept out on purpose.</p>
+      </div>
+      <div class="notes">
+        <div>
+          <h3>No time tracking</h3>
+          <p>If you need hours billed, use a tool built for invoices. Stillwork measures whether work is finished, not how long it took to look busy.</p>
+          <h3>No daily check-ins</h3>
+          <p>The board is the check-in. Asking for a paragraph every morning tends to produce paragraphs, not progress.</p>
+        </div>
+        <div>
+          <h3>Fewer notifications</h3>
+          <ul>
+            <li>One weekly summary by default</li>
+            <li>Mentions and assignments only</li>
+            <li>Quiet hours that actually stay quiet</li>
+          </ul>
+          <h3 style="margin-top:28px">Export everything</h3>
+          <p>Boards export to CSV and JSON at any time, including history. Your data is yours to take with you.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="pricing">
+      <div class="section-head">
+        <h2>Priced by the room, not the seat.</h2>
+        <p>Free covers most small teams. Paid plans add retention, admin controls, and integrations. No plan charges extra for guests or clients.</p>
+      </div>
+      <table class="plans">
+        <thead>
+          <tr><th>Plan</th><th>Price</th><th>Who it's for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Free</td>
+            <td class="price">$0</td>
+            <td class="desc">Up to five people and three boards. Full board features, weekly summary included.</td>
+          </tr>
+          <tr>
+            <td>Team</td>
+            <td class="price">$8 <small>per person / mo</small></td>
+            <td class="desc">Unlimited boards, SSO, audit log, Slack and GitHub integrations, 2-year history.</td>
+          </tr>
+          <tr>
+            <td>Company</td>
+            <td class="price">Talk to us</td>
+            <td class="desc">Dedicated support, custom data retention, and a signed DPA. We reply within one working day.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <figure class="quote" style="margin:0">
+        <p>&ldquo;We stopped having the status meeting. Nobody missed it. The Friday email is the only thing I read about the project, and it's usually enough.&rdquo;</p>
+        <footer>Operations lead, a 12-person design studio</footer>
+      </figure>
+    </section>
+  </main>
+</div>
+
+<section class="close" id="start">
+  <div class="wrap">
+    <h2>Make a board before the next standup.</h2>
+    <a class="btn" href="#start">Start a free board</a>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <span>&copy; 2026 Stillwork. Made in small rooms.</span>
+    <span>
+      <a href="#">Changelog</a>
+      <a href="#">Security</a>
+      <a href="#">Privacy</a>
+      <a href="#">Contact</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
+```
+
+A few choices you may want to change:
+- **Name and copy:** "Stillwork" and all claims (pricing, the Friday summary, Trello/Linear import, the testimonial) are placeholders. Replace them with real details before publishing, and remove the testimonial if you don't have one.
+- **Look:** warm paper background, a serif headline, a single rust accent, and a board mockup built from HTML and CSS instead of a stock screenshot. There are no gradients, icon grids, or emoji.
+- **Responsiveness:** the layout collapses to one column below 880px and 560px. I haven't tested it in a browser, so check it on a phone before shipping.

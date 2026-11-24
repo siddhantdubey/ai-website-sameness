@@ -1,0 +1,352 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f0e9">
+<title>Alex Morgan — Independent Photographer</title>
+<style>
+  :root{--paper:#f3f0e9;--ink:#242820;--muted:#73766c;--line:#d3d4c8;--accent:#d7e75b}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:90px}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;cursor:pointer}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:5px}
+  ::selection{background:var(--accent)}
+  .wrap{max-width:1600px;margin:auto;padding:0 5%}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  header{height:90px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  .logo{font-size:18px;font-weight:700;letter-spacing:-.7px}
+  .logo span{font-weight:400}
+  nav{display:flex;align-items:center;gap:35px;font-size:12px}
+  .availability{display:flex;align-items:center;gap:8px;font-size:11px}
+  .dot{width:6px;height:6px;background:#758342;border-radius:50%}
+  .hero{padding-top:65px}
+  .hero-top{display:flex;justify-content:space-between;align-items:center}
+  .hero-top p{margin:0;color:var(--muted)}
+  h1{font-size:clamp(64px,9.2vw,150px);font-weight:400;letter-spacing:-.075em;line-height:.98;margin:35px 0 34px}
+  h1 em{font-family:Georgia,serif;font-weight:400}
+  .hero-bottom{display:flex;justify-content:space-between;align-items:end;margin-bottom:35px}
+  .hero-bottom p{max-width:310px;font-size:14px;line-height:1.65;margin:0}
+  .round-link{display:flex;gap:18px;align-items:center;font-size:12px}
+  .circle{display:grid;place-items:center;border:1px solid var(--ink);border-radius:50%;width:43px;height:43px;font-size:20px;transition:background .2s}
+  .round-link:hover .circle{background:var(--accent)}
+  .hero-image{position:relative;aspect-ratio:2.12;overflow:hidden;background:#718582}
+  .hero-image svg{width:100%;height:100%;display:block}
+  .image-label{position:absolute;bottom:24px;left:26px;color:white;font-size:11px;display:flex;gap:30px;letter-spacing:.03em}
+  .image-label span:first-child{opacity:.65}
+  .hero-caption{display:flex;justify-content:space-between;padding:13px 0;font-size:10px;color:var(--muted)}
+  .section-head{display:flex;justify-content:space-between;align-items:end;margin:100px 0 30px}
+  h2{font-size:clamp(36px,4.3vw,64px);font-weight:400;letter-spacing:-.055em;margin:12px 0 0}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filter{border:1px solid var(--line);padding:9px 15px;border-radius:30px;background:transparent;font-size:11px}
+  .filter.active,.filter:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:45px 24px}
+  .project{margin:0}
+  .project[hidden]{display:none}
+  .photo{display:block;width:100%;padding:0;border:0;overflow:hidden;background:#d8d8ce;text-align:left;position:relative}
+  .photo svg{width:100%;height:100%;display:block;transition:transform .7s}
+  .photo:hover svg{transform:scale(1.035)}
+  .photo::after{content:"View series ↗";position:absolute;right:16px;bottom:16px;background:var(--paper);padding:11px 14px;font-size:11px;opacity:0;transform:translateY(6px);transition:.2s}
+  .photo:hover::after,.photo:focus-visible::after{opacity:1;transform:translateY(0)}
+  .landscape{aspect-ratio:1.36}
+  .portrait{aspect-ratio:.86}
+  .project:nth-child(2){padding-top:95px}
+  .project:nth-child(3){margin-top:-75px}
+  figcaption{display:flex;justify-content:space-between;gap:12px;margin-top:15px;align-items:start}
+  figcaption h3{margin:0;font-size:16px;font-weight:400;letter-spacing:-.02em}
+  figcaption p{font-size:10px;color:var(--muted);margin:6px 0 0}
+  figcaption>span{font-size:11px;color:var(--muted)}
+  .about{border-top:1px solid var(--line);margin-top:100px;padding:55px 0 70px;display:grid;grid-template-columns:1fr 2fr;gap:30px}
+  .about-copy>p{font-family:Georgia,serif;font-size:clamp(25px,3vw,43px);line-height:1.27;letter-spacing:-.035em;margin:0 0 30px;max-width:800px}
+  .about-detail{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .about-detail p{font-size:13px;line-height:1.8;max-width:330px;color:var(--muted);margin:0}
+  .about-detail ul{list-style:none;padding:0;margin:0;font-size:12px;line-height:2}
+  .contact{background:var(--ink);color:var(--paper);padding:65px 5% 35px}
+  .contact-inner{max-width:1440px;margin:auto}
+  .contact-top{display:flex;justify-content:space-between;gap:30px;align-items:center}
+  .contact h2{font-size:clamp(45px,7vw,104px);margin:25px 0 30px;line-height:1.04}
+  .contact h2 em{font-family:Georgia,serif;font-weight:400}
+  .contact .circle{border-color:var(--paper);width:80px;height:80px;font-size:35px}
+  .contact a:hover .circle{background:var(--accent);color:var(--ink)}
+  .email{font-size:14px;border-bottom:1px solid #777b6b;padding-bottom:6px}
+  footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #515548;margin-top:65px;padding-top:24px;font-size:10px;color:#bec1b4}
+  footer div{display:flex;gap:25px}
+  dialog{padding:0;border:0;background:var(--paper);color:var(--ink);width:min(1000px,92vw);max-height:92vh}
+  dialog::backdrop{background:#10170ee8}
+  .modal-art{height:min(65vh,650px);background:#bbb}
+  .modal-art svg{height:100%;width:100%;display:block}
+  .modal-footer{display:flex;justify-content:space-between;align-items:center;padding:20px}
+  .modal-footer h3{font-size:20px;font-weight:400;margin:0 0 5px}
+  .modal-footer p{font-size:12px;color:var(--muted);margin:0}
+  .close{background:transparent;border:1px solid var(--line);border-radius:50%;width:38px;height:38px;font-size:22px}
+  .art-library{position:absolute;width:0;height:0;overflow:hidden}
+  @media(min-width:1600px){.contact{padding-left:80px;padding-right:80px}}
+  @media(max-width:700px){
+    .wrap{padding:0 6%}header{height:74px}nav{gap:18px}.availability{display:none}
+    .hero{padding-top:35px}.hero-top{align-items:start;gap:25px}.hero-top p{font-size:9px}
+    h1{font-size:clamp(55px,12vw,84px);margin:35px 0;letter-spacing:-.065em}
+    .hero-bottom{gap:20px;align-items:center}.hero-bottom p{font-size:12px;max-width:230px}
+    .round-link .link-text{display:none}.hero-image{aspect-ratio:1.1}.image-label{left:18px;bottom:18px;font-size:10px}
+    .section-head{margin-top:65px;align-items:start;gap:20px;flex-direction:column}
+    .grid{gap:30px 16px}.project:nth-child(2){padding-top:45px}.project:nth-child(3){margin-top:-30px}
+    figcaption h3{font-size:13px}figcaption>span{display:none}figcaption p{font-size:9px}
+    .about{margin-top:65px;grid-template-columns:1fr;padding-top:30px;gap:25px}
+    .about-detail{gap:25px}.about-detail p,.about-detail ul{font-size:11px}
+    .contact{padding:45px 6% 25px}.contact .circle{width:52px;height:52px;font-size:25px}
+    footer{margin-top:45px;flex-wrap:wrap;line-height:1.7}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Original, embedded artwork keeps this page completely self-contained. -->
+<svg class="art-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs>
+  <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#9faeab"/><stop offset="1" stop-color="#d6d6c4"/></linearGradient>
+  <linearGradient id="sea" x2=".2" y2="1"><stop stop-color="#829791"/><stop offset="1" stop-color="#526c66"/></linearGradient>
+  <linearGradient id="sand" x2=".8" y2="1"><stop stop-color="#c9c3a8"/><stop offset="1" stop-color="#8b957c"/></linearGradient>
+  <linearGradient id="wall" x2="1" y2=".6"><stop stop-color="#d9bc96"/><stop offset="1" stop-color="#a78361"/></linearGradient>
+  <linearGradient id="portrait-bg" x2="1" y2="1"><stop stop-color="#9da499"/><stop offset="1" stop-color="#434e43"/></linearGradient>
+  <radialGradient id="light"><stop stop-color="#f2dec1" stop-opacity=".6"/><stop offset="1" stop-color="#e0c29f" stop-opacity="0"/></radialGradient>
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".14"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+  <symbol id="coast" viewBox="0 0 1400 700">
+    <g filter="url(#grain)">
+      <path fill="url(#sky)" d="M0 0h1400v700H0z"/>
+      <path fill="#b4beb0" opacity=".6" d="M0 230Q250 195 470 228T950 215T1400 235V310H0z"/>
+      <path fill="url(#sea)" d="M0 278Q600 260 1400 280v420H0z"/>
+      <path fill="#d4d5be" opacity=".5" d="M0 355Q300 337 660 365T1400 350v3Q900 380 600 370T0 360z"/>
+      <path fill="#c3c9b4" opacity=".45" d="M0 440Q260 406 600 435T1400 420v5Q950 456 600 442T0 448z"/>
+      <path fill="#747e68" d="M1400 151L1300 178 1220 207 1160 269 1088 292 1050 328 970 359 930 406 850 433 840 477 770 511 730 590 650 700h750z"/>
+      <path fill="url(#sand)" d="M1400 205l-115 16-70 58-63 25-57 53-96 38-39 63-93 32-36 61-64 28-44 72-43 49h720z"/>
+      <path fill="#58644e" d="M1400 270l-90 13-50 43-89 25-16 49-88 30-44 65-77 21-12 43-89 43-55 98h710z"/>
+      <path fill="#a7ad8c" d="M1400 312l-105 26-49 44-65 20-40 52-52 21-42 62-72 36-36 53-48 74h609z"/>
+      <path fill="#424f3d" d="M1400 410l-90-14-44 42-64 17-34 59-51 17-35 49-70 32-18 46-40 42h546z"/>
+      <path fill="#c1c0a2" d="M1400 498l-76-32-61 37-20 43-77 33-24 51-66 37-25 33h349z"/>
+      <path fill="#e5e0c5" opacity=".65" d="M1390 220l-103 15-70 57-64 27-55 52-92 40-42 62-89 34-37 58-68 32-53 78 44-82 63-37 37-61 94-38 41-60 95-43 55-54 68-28 68-55z"/>
+      <path fill="#e5e0c5" opacity=".4" d="M0 550Q230 520 450 552T830 540l-5 5Q620 590 440 560T0 560z"/>
+    </g>
+  </symbol>
+  <symbol id="desert" viewBox="0 0 800 600">
+    <g filter="url(#grain)">
+      <path fill="#d1c8b7" d="M0 0h800v600H0z"/>
+      <circle cx="610" cy="110" r="125" fill="url(#light)"/>
+      <path fill="#bab29b" d="M0 310Q180 180 360 310T800 265v335H0z"/>
+      <path fill="#a79779" d="M0 390Q180 220 420 365T800 330v270H0z"/>
+      <path fill="#d0b997" d="M0 510Q290 260 590 390L800 485v115H0z"/>
+      <path fill="#796d54" d="M320 600Q490 405 800 485v115z"/>
+      <path fill="#e0ccb0" d="M0 510Q290 260 590 390Q310 305 37 540L0 555z"/>
+      <path stroke="#b9a485" stroke-width="2" opacity=".5" fill="none" d="M0 570q300-220 520-120M0 588q280-210 495-130M80 600q240-180 400-130"/>
+      <path fill="#383c30" d="M436 387h4v14h-4zm-2 14h3l-2 14h-2zm5 0h3l3 14h-2z"/>
+      <circle cx="438" cy="383" r="3" fill="#383c30"/>
+    </g>
+  </symbol>
+  <symbol id="portrait" viewBox="0 0 700 850">
+    <g filter="url(#grain)">
+      <path fill="url(#portrait-bg)" d="M0 0h700v850H0z"/>
+      <ellipse cx="180" cy="210" rx="290" ry="370" fill="url(#light)" opacity=".4"/>
+      <path fill="#343e34" d="M90 850q18-230 170-278h174q145 38 197 278z"/>
+      <path fill="#b2a38a" d="M280 450l-13 139q80 65 159-9l-26-135z"/>
+      <path fill="#8d816c" d="M281 482l119-21 13 80q-74 35-137-22z"/>
+      <path fill="#c3b399" d="M239 278q3-127 116-125 120 0 121 143l-23 128q-36 93-106 97-72-15-101-107z"/>
+      <path fill="#a79980" d="M365 175q101 25 101 130l-17 119q-32 81-100 97 47-83 40-173z"/>
+      <path fill="#30362d" d="M228 345q-57-181 78-218 123-37 175 77 30 61-8 143l-12-99q-39 20-91-40-33 77-126 81z"/>
+      <path fill="#30362d" d="M253 276q-38 133 7 213-62-28-62-106z"/>
+      <path d="M277 333q20-12 40-2m66-2q22-13 40 1" stroke="#625c4e" stroke-width="5" fill="none"/>
+      <path d="M351 336l-12 61 21 5m-44 37q29 13 55-1" stroke="#8d7a66" stroke-width="3" fill="none"/>
+      <path fill="#d1c6af" d="M266 574l77 64-61 64-56-105zm158-4l-81 68 65 65 53-103z"/>
+      <path fill="#4c5747" d="M226 597l56 105 61-64 65 65 53-103 40 23-26 227H201z"/>
+      <path stroke="#727b65" stroke-width="2" d="M343 640v210"/>
+    </g>
+  </symbol>
+  <symbol id="architecture" viewBox="0 0 700 850">
+    <g filter="url(#grain)">
+      <path fill="#b4c0bd" d="M0 0h700v850H0z"/>
+      <path fill="url(#wall)" d="M0 90l570-90v850H0z"/>
+      <path fill="#e1c9a8" d="M570 0h130v850H570z"/>
+      <path fill="#665949" d="M158 850V390a135 135 0 0 1 270 0v460z"/>
+      <path fill="#363e36" d="M197 850V400a96 96 0 0 1 192 0v450z"/>
+      <path fill="#a78d6d" d="M197 850V400q0-66 57-89v539z"/>
+      <path fill="#b6b7a3" d="M254 850V425a67 67 0 0 1 134 0v425z"/>
+      <path fill="#4d5b4a" d="M280 850V434a42 42 0 0 1 84 0v416z"/>
+      <path fill="#d8bc93" d="M0 720l158-92v222H0z"/>
+      <path fill="#c0a27a" d="M428 630l142 88v132H428z"/>
+      <path fill="#8c8066" d="M158 850l96-140h110l64 140z"/>
+      <path fill="#3d493a" d="M573 590q-80-180 4-239 81 102 19 242z"/>
+      <path stroke="#5f694d" stroke-width="8" d="M580 450v340"/>
+      <path fill="#b48f69" d="M530 730h106l-16 100h-73z"/>
+      <path fill="#7c654b" opacity=".35" d="M0 0h103v850H0z"/>
+    </g>
+  </symbol>
+  <symbol id="water" viewBox="0 0 800 600">
+    <g filter="url(#grain)">
+      <path fill="#c4c7b9" d="M0 0h800v600H0z"/>
+      <path fill="#89998a" d="M0 217L130 110l82 51 94-93 122 122 98-70 122 100 86-66 66 73v373H0z"/>
+      <path fill="#617764" d="M0 280l115-102 95 98 142-133 107 131 92-69 102 99 147-109v405H0z"/>
+      <path fill="#a4b5aa" d="M0 336q400-34 800-7v271H0z"/>
+      <path fill="#47614f" d="M0 353l115-40 50 18 74-61 44 70 113-17 58 24 88-39 78 31 80-48 100 51v22H0z"/>
+      <path fill="#6c8976" opacity=".6" d="M0 369l115 40 50-18 74 61 44-70 113 17 58-24 88 39 78-31 80 48 100-51v220H0z"/>
+      <path fill="none" stroke="#c3cfc1" opacity=".6" d="M85 449h270m100-37h230M204 510h411M0 560h360m195-35h245"/>
+      <path fill="#263e31" d="M0 0h36v600H0zm43 0h14v460H43z"/>
+      <path stroke="#263e31" stroke-width="12" fill="none" d="M25 40l130 114M28 100L170 42M24 180l94 101"/>
+      <path fill="#2c4032" d="M0 548q81-19 142 8l49 44H0z"/>
+    </g>
+  </symbol>
+</defs>
+</svg>
+
+<div class="wrap">
+  <header>
+    <a class="logo" href="#" aria-label="Alex Morgan home">alex morgan<span>®</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact ↗</a>
+    </nav>
+    <div class="availability"><span class="dot"></span>Available for commissions</div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-top">
+        <p class="eyebrow">Independent photographer & visual storyteller</p>
+        <p class="eyebrow">Portland, OR · Working everywhere</p>
+      </div>
+      <h1 id="hero-title">A feeling.<br>A place. <em>A moment.</em></h1>
+      <div class="hero-bottom">
+        <p>Photographs for the things we feel,<br>but don’t always have the words for.</p>
+        <a href="#work" class="round-link"><span class="link-text">Explore selected work</span><span class="circle" aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-image">
+        <svg viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An atmospheric coastal landscape with pale surf and rugged green cliffs"><use href="#coast"/></svg>
+        <div class="image-label"><span>01 / FIELD NOTES</span><span>Where the land meets the sea</span></div>
+      </div>
+      <div class="hero-caption"><span>THE PACIFIC COAST, OREGON</span><span>45° 45′ N &nbsp; 123° 58′ W</span></div>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <div class="section-head">
+        <div><span class="eyebrow">A few things I’ve seen</span><h2 id="work-title">Selected work <sup style="font:12px Arial;vertical-align:top;position:relative;top:8px;letter-spacing:0">(04)</sup></h2></div>
+        <div class="filters" role="group" aria-label="Filter projects">
+          <button class="filter active" data-filter="all" aria-pressed="true">All work</button>
+          <button class="filter" data-filter="landscape" aria-pressed="false">Landscape</button>
+          <button class="filter" data-filter="portrait" aria-pressed="false">Portrait</button>
+          <button class="filter" data-filter="places" aria-pressed="false">Places</button>
+        </div>
+      </div>
+      <div class="grid">
+        <figure class="project" data-category="landscape">
+          <button class="photo landscape" data-art="desert" data-title="The quiet between" data-description="Landscape · Death Valley, California · 2025" aria-label="Open The quiet between">
+            <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Layered desert dunes with a solitary distant figure"><use href="#desert"/></svg>
+          </button>
+          <figcaption><div><h3>The quiet between</h3><p>LANDSCAPE · DEATH VALLEY, CA</p></div><span>01 ↗</span></figcaption>
+        </figure>
+        <figure class="project" data-category="portrait">
+          <button class="photo portrait" data-art="portrait" data-title="In good company" data-description="Portrait · Portland, Oregon · 2025" aria-label="Open In good company">
+            <svg viewBox="0 0 700 850" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A softly lit portrait in muted olive and warm earth tones"><use href="#portrait"/></svg>
+          </button>
+          <figcaption><div><h3>In good company</h3><p>PORTRAIT · PORTLAND, OR</p></div><span>02 ↗</span></figcaption>
+        </figure>
+        <figure class="project" data-category="places">
+          <button class="photo portrait" data-art="architecture" data-title="A slower kind of day" data-description="Places · Marrakech, Morocco · 2024" aria-label="Open A slower kind of day">
+            <svg viewBox="0 0 700 850" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sunlit ochre architecture with a sequence of arched doorways"><use href="#architecture"/></svg>
+          </button>
+          <figcaption><div><h3>A slower kind of day</h3><p>PLACES · MARRAKECH, MOROCCO</p></div><span>03 ↗</span></figcaption>
+        </figure>
+        <figure class="project" data-category="landscape">
+          <button class="photo landscape" data-art="water" data-title="Still, for a moment" data-description="Landscape · Olympic National Park, Washington · 2025" aria-label="Open Still, for a moment">
+            <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Quiet mountain lake reflecting forested slopes"><use href="#water"/></svg>
+          </button>
+          <figcaption><div><h3>Still, for a moment</h3><p>LANDSCAPE · OLYMPIC NATIONAL PARK, WA</p></div><span>04 ↗</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 id="about-title" class="eyebrow" style="font-size:11px;letter-spacing:.14em;margin:5px 0">A little about me</h2>
+      <div class="about-copy">
+        <p>I’m Alex. A photographer drawn to ordinary things, unfamiliar roads, and the way light changes everything.</p>
+        <div class="about-detail">
+          <p>Based in the Pacific Northwest, I make images with a sense of place and a human connection. My practice moves between personal explorations and thoughtful collaborations with people and brands.</p>
+          <div>
+            <span class="eyebrow" style="color:var(--muted);display:block;margin-bottom:9px">Available for</span>
+            <ul><li>Editorial & brand storytelling</li><li>Portraits & people</li><li>Travel & hospitality</li><li>Fine art print inquiries</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <div class="contact-inner">
+    <span class="eyebrow">Good things start with a conversation</span>
+    <a class="contact-top" href="mailto:hello@alexmorgan.example">
+      <h2 id="contact-title">Let’s make<br><em>something matter.</em></h2>
+      <span class="circle" aria-hidden="true">↗</span>
+    </a>
+    <a class="email" href="mailto:hello@alexmorgan.example">hello@alexmorgan.example</a>
+    <footer>
+      <span>© <span id="year">2026</span> Alex Morgan</span>
+      <span>Made with intention. Always looking closer.</span>
+      <div><a href="mailto:hello@alexmorgan.example">Get in touch ↗</a><a href="#">Back to top ↑</a></div>
+    </footer>
+  </div>
+</section>
+
+<dialog aria-labelledby="modal-title">
+  <div class="modal-art"></div>
+  <div class="modal-footer">
+    <div><h3 id="modal-title"></h3><p id="modal-description"></p></div>
+    <button class="close" aria-label="Close image">×</button>
+  </div>
+</dialog>
+
+<script>
+  const filters = document.querySelectorAll('.filter');
+  const projects = document.querySelectorAll('.project');
+  filters.forEach(button => {
+    button.addEventListener('click', () => {
+      filters.forEach(item => {
+        const selected = item === button;
+        item.classList.toggle('active', selected);
+        item.setAttribute('aria-pressed', String(selected));
+      });
+      const category = button.dataset.filter;
+      projects.forEach(project => {
+        project.hidden = category !== 'all' && project.dataset.category !== category;
+        project.style.paddingTop = category === 'all' ? '' : '0';
+        project.style.marginTop = category === 'all' ? '' : '0';
+      });
+    });
+  });
+
+  const modal = document.querySelector('dialog');
+  document.querySelectorAll('.photo').forEach(button => {
+    button.addEventListener('click', () => {
+      const art = button.querySelector('svg').cloneNode(true);
+      art.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      document.querySelector('.modal-art').replaceChildren(art);
+      document.querySelector('#modal-title').textContent = button.dataset.title;
+      document.querySelector('#modal-description').textContent = button.dataset.description;
+      modal.showModal();
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  document.querySelector('.close').addEventListener('click', () => modal.close());
+  modal.addEventListener('click', event => {
+    if (event.target === modal) {
+      const bounds = modal.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom) modal.close();
+    }
+  });
+  modal.addEventListener('close', () => { document.body.style.overflow = ''; });
+  document.querySelector('#year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
+```

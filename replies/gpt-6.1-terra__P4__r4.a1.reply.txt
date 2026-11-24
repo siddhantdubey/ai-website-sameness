@@ -1,0 +1,596 @@
+Save this as `index.html` and open it in a browser. The firm name and contact details are placeholders you can replace.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#18342f">
+  <meta
+    name="description"
+    content="Thoughtful legal counsel for individuals, families, and businesses. Meet the team at Hartwell & Vale."
+  >
+  <title>Hartwell & Vale | Counsel for what matters</title>
+  <style>
+    :root {
+      --ink: #18342f;
+      --ink-deep: #102721;
+      --cream: #f5f3ec;
+      --paper: #fffefa;
+      --sage: #dce5d9;
+      --gold: #b08c55;
+      --muted: #5c6a63;
+      --line: #cbd2c8;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+      --width: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+    .wrap {
+      width: min(calc(100% - 64px), var(--width));
+      margin-inline: auto;
+    }
+    .eyebrow {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+    .section-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 1.06;
+    }
+    .button {
+      display: inline-flex;
+      min-height: 54px;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      background: var(--ink);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .button:hover { background: #315249; }
+    .button-light {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .button-light:hover { background: var(--sage); }
+    .arrow { font-size: 18px; font-weight: 400; }
+
+    .topbar {
+      background: var(--ink-deep);
+      color: #e4e9e0;
+      font-size: 11px;
+      letter-spacing: .06em;
+    }
+    .topbar .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-block: 11px;
+    }
+    .topbar a { text-decoration: none; }
+
+    header { background: var(--paper); }
+    .nav {
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .brand { text-decoration: none; white-space: nowrap; }
+    .brand-name {
+      display: block;
+      font-family: var(--serif);
+      font-size: 25px;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .brand-sub {
+      display: block;
+      margin-top: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .nav-links a:hover { color: #738b79; }
+    .nav-links .nav-contact {
+      padding: 14px 18px;
+      border: 1px solid var(--ink);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .hero-grid {
+      display: grid;
+      min-height: 610px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 85px 64px 90px 0;
+    }
+    .hero .eyebrow { color: #c6d2c3; }
+    .hero h1 {
+      max-width: 620px;
+      margin: 26px 0;
+      font-family: var(--serif);
+      font-size: clamp(52px, 6vw, 82px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .98;
+    }
+    .hero h1 em { color: #c9d8c5; font-weight: 400; }
+    .hero-copy > p:not(.eyebrow) {
+      max-width: 440px;
+      margin: 0 0 34px;
+      color: #d3ddd4;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .hero-art {
+      position: relative;
+      min-height: 100%;
+      margin-right: calc((min(100vw - 64px, 1240px) - 100vw) / 2);
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(24,52,47,.35), transparent 40%),
+        linear-gradient(140deg, #a1ad9e 0%, #728678 47%, #435e50 100%);
+    }
+    .hero-art::before {
+      content: "";
+      position: absolute;
+      inset: 8% 12% 0 16%;
+      border: 1px solid rgba(241, 242, 225, .36);
+      border-bottom: 0;
+      border-radius: 48% 48% 0 0;
+      background:
+        linear-gradient(90deg, transparent 49.8%, rgba(235,239,224,.35) 50%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(235,239,224,.35) 50%, transparent 50.2%),
+        linear-gradient(145deg, rgba(244,244,229,.16), rgba(18,49,39,.24));
+      box-shadow: 0 0 0 18px rgba(234,239,224,.08), 0 0 0 19px rgba(234,239,224,.2);
+    }
+    .hero-art::after {
+      content: "";
+      position: absolute;
+      right: -12%;
+      bottom: -30%;
+      width: 100%;
+      height: 75%;
+      border-radius: 50%;
+      background: rgba(29, 57, 43, .44);
+      filter: blur(45px);
+    }
+    .hero-caption {
+      position: absolute;
+      right: 34px;
+      bottom: 30px;
+      z-index: 1;
+      color: #edf1e8;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: .75fr 1.25fr;
+      gap: 70px;
+      padding-block: 105px 110px;
+    }
+    .intro .eyebrow { padding-top: 9px; color: #687b6c; }
+    .intro-copy h2 {
+      max-width: 750px;
+      margin: 0 0 24px;
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 49px);
+      font-weight: 400;
+      letter-spacing: -.035em;
+      line-height: 1.2;
+    }
+    .intro-copy p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .practice { padding: 105px 0 115px; background: #e4eae0; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    .section-head .eyebrow { margin-bottom: 16px; color: #64796a; }
+    .section-head > p {
+      max-width: 340px;
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid #b9c6b8;
+      border-bottom: 1px solid #b9c6b8;
+    }
+    .card {
+      display: flex;
+      min-height: 275px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 34px 38px 35px 0;
+    }
+    .card + .card {
+      padding-left: 38px;
+      border-left: 1px solid #b9c6b8;
+    }
+    .card-number {
+      color: #788d7a;
+      font-family: var(--serif);
+      font-size: 15px;
+    }
+    .card h3 {
+      margin: 35px 0 13px;
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .card p {
+      max-width: 290px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .card a {
+      margin-top: auto;
+      padding-top: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .card a:hover { text-decoration: underline; }
+
+    .approach {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 510px;
+      background: var(--paper);
+    }
+    .approach-art {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 90%, rgba(28,55,43,.2), transparent 55%),
+        linear-gradient(135deg, #d9d5c6, #b4bba8);
+    }
+    .approach-art::before {
+      content: "";
+      position: absolute;
+      left: 20%;
+      right: 20%;
+      top: 15%;
+      bottom: 0;
+      border: 15px solid rgba(245,244,231,.55);
+      border-bottom: 0;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(145deg, #aab9a7, #718a77);
+      box-shadow: 0 10px 40px rgba(38,54,42,.12);
+    }
+    .approach-art::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 17%;
+      bottom: 0;
+      width: 10px;
+      background: rgba(245,244,231,.55);
+    }
+    .approach-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px clamp(40px, 8vw, 130px);
+    }
+    .approach-copy .eyebrow { margin-bottom: 20px; color: #6d806e; }
+    .approach-copy p:not(.eyebrow) {
+      max-width: 440px;
+      margin: 25px 0 30px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .text-link {
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .contact {
+      padding: 100px 0;
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .contact-grid {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 45px;
+    }
+    .contact .eyebrow { margin-bottom: 18px; color: #bccdbb; }
+    .contact h2 { max-width: 700px; }
+    .contact p:not(.eyebrow) {
+      margin: 20px 0 0;
+      color: #d3ddd4;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    footer { padding: 55px 0 25px; background: var(--ink-deep); color: #dce5dc; }
+    .footer-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      padding-bottom: 55px;
+    }
+    .footer-details {
+      display: flex;
+      gap: 85px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .footer-details p { margin: 0; }
+    .footer-details a { text-decoration: none; }
+    .footer-details a:hover { text-decoration: underline; }
+    .footer-label {
+      display: block;
+      margin-bottom: 9px;
+      color: #a8bca9;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(220,229,220,.2);
+      color: #aabbb0;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 800px) {
+      .wrap { width: min(calc(100% - 40px), var(--width)); }
+      .nav { min-height: 78px; }
+      .nav-links { gap: 18px; }
+      .nav-links a:not(.nav-contact) { display: none; }
+      .hero-grid { min-height: 0; grid-template-columns: 1fr; }
+      .hero-copy { padding: 80px 0 70px; }
+      .hero-art {
+        min-height: 310px;
+        margin-inline: -20px;
+      }
+      .intro { grid-template-columns: 1fr; gap: 24px; padding-block: 75px; }
+      .practice { padding-block: 75px; }
+      .section-head { align-items: start; flex-direction: column; }
+      .cards { grid-template-columns: 1fr; }
+      .card { min-height: 0; padding: 28px 0; }
+      .card + .card { padding: 28px 0; border-left: 0; border-top: 1px solid #b9c6b8; }
+      .card h3 { margin-top: 22px; }
+      .approach { grid-template-columns: 1fr; }
+      .approach-art { min-height: 350px; }
+      .approach-copy { padding: 75px 20px; }
+      .contact { padding-block: 75px; }
+      .contact-grid, .footer-main { align-items: flex-start; flex-direction: column; }
+      .footer-details { gap: 45px; }
+    }
+    @media (max-width: 480px) {
+      .topbar .wrap { justify-content: center; }
+      .topbar .location { display: none; }
+      .brand-name { font-size: 22px; }
+      .nav-links .nav-contact { padding: 12px; }
+      .hero h1 { font-size: 52px; }
+      .footer-details { flex-direction: column; gap: 25px; }
+      .footer-bottom { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <span class="location">Thoughtful counsel. Personal attention.</span>
+      <a href="tel:+15550142100">Call us: (555) 014-2100</a>
+    </div>
+  </div>
+
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Hartwell and Vale, home">
+        <span class="brand-name">Hartwell &amp; Vale</span>
+        <span class="brand-sub">Attorneys at law</span>
+      </a>
+      <div class="nav-links">
+        <a href="#practice">Our practice</a>
+        <a href="#approach">Our approach</a>
+        <a class="nav-contact" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">Here for the moments that matter</p>
+          <h1 id="hero-title">Good counsel.<br><em>Clear direction.</em></h1>
+          <p>When the path ahead feels uncertain, we’re here to help you move forward with confidence.</p>
+          <a class="button button-light" href="#contact">
+            Start a conversation <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-caption">Guidance for the road ahead</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro wrap" aria-labelledby="intro-title">
+      <p class="eyebrow">A more personal practice</p>
+      <div class="intro-copy">
+        <h2 id="intro-title">Legal guidance should feel human.</h2>
+        <p>At Hartwell &amp; Vale, we take the time to understand your situation, explain your options in plain language, and build a thoughtful plan around what matters to you. You’ll work with a team that listens closely and stays by your side.</p>
+      </div>
+    </section>
+
+    <section class="practice" id="practice" aria-labelledby="practice-title">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">How we can help</p>
+            <h2 class="section-title" id="practice-title">Our areas of practice</h2>
+          </div>
+          <p>Practical advice for the decisions, transitions, and challenges that shape your life and business.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <span class="card-number">01 /</span>
+            <h3>Estate planning</h3>
+            <p>Protect the people and priorities that matter with a plan made for your life.</p>
+            <a href="#contact">Talk with us <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="card">
+            <span class="card-number">02 /</span>
+            <h3>Business counsel</h3>
+            <p>Clear, practical guidance for building, running, and growing your business.</p>
+            <a href="#contact">Talk with us <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="card">
+            <span class="card-number">03 /</span>
+            <h3>Real estate</h3>
+            <p>Steady counsel for property transactions and the questions that come with them.</p>
+            <a href="#contact">Talk with us <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="approach" id="approach" aria-labelledby="approach-title">
+      <div class="approach-art" aria-hidden="true"></div>
+      <div class="approach-copy">
+        <p class="eyebrow">The way we work</p>
+        <h2 class="section-title" id="approach-title">A relationship built on trust.</h2>
+        <p>Every matter starts with a conversation. We listen to your concerns, give you an honest assessment, and make sure you understand what comes next. Our goal is simple: to be the people you can turn to when it matters.</p>
+        <a class="text-link" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap contact-grid">
+        <div>
+          <p class="eyebrow">We’re here to listen</p>
+          <h2 class="section-title" id="contact-title">Let’s find a way forward, together.</h2>
+          <p>Tell us a little about what’s on your mind. We’ll take it from there.</p>
+        </div>
+        <a class="button button-light" href="mailto:hello@hartwellvale.example">
+          Email our team <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-main">
+        <a class="brand" href="#home">
+          <span class="brand-name">Hartwell &amp; Vale</span>
+          <span class="brand-sub">Attorneys at law</span>
+        </a>
+        <div class="footer-details">
+          <div>
+            <span class="footer-label">Get in touch</span>
+            <p><a href="tel:+15550142100">(555) 014-2100</a><br>
+            <a href="mailto:hello@hartwellvale.example">hello@hartwellvale.example</a></p>
+          </div>
+          <div>
+            <span class="footer-label">Office hours</span>
+            <p>Monday–Friday<br>9:00 am–5:00 pm</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Hartwell &amp; Vale. All rights reserved.</span>
+        <span>Information on this site is not legal advice.</span>
+      </div>
+    </div>
+  </footer>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+```

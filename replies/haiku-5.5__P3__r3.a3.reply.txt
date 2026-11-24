@@ -1,0 +1,594 @@
+
+<tool;name=Write>
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/haiku-5.5__P3__r3.a3.poxieuva/portfolio.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Freelance photography portfolio — portraits, weddings, editorial and landscape work.">
+<title>Alex Morgan — Photography</title>
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --bg-alt: #161616;
+    --fg: #f2efe9;
+    --muted: #8a8680;
+    --accent: #c9a875;
+    --line: #2a2a2a;
+    --serif: "Georgia", "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+
+  /* ---------- Navigation ---------- */
+  header.site-nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+    background: linear-gradient(to bottom, rgba(14,14,14,.85), rgba(14,14,14,0));
+    transition: background .3s, padding .3s;
+  }
+  header.site-nav.scrolled { background: rgba(14,14,14,.95); padding-block: .9rem; border-bottom: 1px solid var(--line); }
+  .logo { font-family: var(--serif); font-size: 1.25rem; letter-spacing: .02em; text-decoration: none; }
+  .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+  .menu-toggle { display: none; background: none; border: 0; cursor: pointer; width: 32px; height: 24px; position: relative; }
+  .menu-toggle span { position: absolute; left: 0; right: 0; height: 1px; background: var(--fg); transition: transform .3s, opacity .3s; }
+  .menu-toggle span:nth-child(1) { top: 6px; }
+  .menu-toggle span:nth-child(2) { bottom: 6px; }
+  @media (max-width: 760px) {
+    .menu-toggle { display: block; }
+    .nav-links {
+      position: fixed; inset: 0; flex-direction: column; justify-content: center; align-items: center;
+      background: var(--bg); gap: 2rem; transform: translateX(100%); transition: transform .35s ease;
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-links a { font-size: 1rem; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; height: 100vh; min-height: 560px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    background:
+      radial-gradient(ellipse at 30% 20%, #3a2f25 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, #1f2a33 0%, transparent 55%),
+      linear-gradient(160deg, #1a1a1a, #0b0b0b);
+    overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 55%, var(--bg));
+  }
+  .hero-content { position: relative; z-index: 1; padding: 0 1.5rem; animation: fadeUp 1.2s ease both; }
+  .hero-eyebrow { font-size: .78rem; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 8vw, 6.5rem); line-height: 1.05; letter-spacing: -.01em; }
+  .hero p { margin: 1.5rem auto 0; max-width: 34rem; color: var(--muted); font-size: 1.05rem; }
+  .btn {
+    display: inline-block; margin-top: 2.25rem; padding: .9rem 2rem;
+    border: 1px solid var(--fg); text-decoration: none; text-transform: uppercase;
+    font-size: .8rem; letter-spacing: .18em; transition: background .25s, color .25s;
+    background: transparent; cursor: pointer;
+  }
+  .btn:hover { background: var(--fg); color: var(--bg); }
+  .btn.solid { background: var(--accent); border-color: var(--accent); color: #111; }
+  .btn.solid:hover { background: transparent; color: var(--accent); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: clamp(4rem, 10vw, 7rem) clamp(1.25rem, 5vw, 4rem); }
+  .section-head { max-width: 1200px; margin: 0 auto 3rem; }
+  .section-label { font-size: .75rem; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: .75rem; }
+  .section-title { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4.5vw, 3rem); }
+
+  /* ---------- Gallery ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+  .filter-btn {
+    background: none; border: 1px solid var(--line); padding: .45rem 1rem; cursor: pointer;
+    font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    transition: all .2s;
+  }
+  .filter-btn:hover { color: var(--fg); border-color: var(--muted); }
+  .filter-btn.active { color: var(--bg); background: var(--fg); border-color: var(--fg); }
+  .gallery {
+    max-width: 1400px; margin: 0 auto;
+    columns: 3 280px; column-gap: 1rem;
+  }
+  .gallery-item {
+    break-inside: avoid; margin-bottom: 1rem; position: relative; cursor: zoom-in;
+    overflow: hidden; border-radius: 2px; background: var(--bg-alt);
+  }
+  .gallery-item .tile {
+    width: 100%; height: var(--h, 360px);
+    background: var(--bg);
+    transition: transform .6s ease, filter .6s ease;
+  }
+  .gallery-item:hover .tile { transform: scale(1.04); filter: brightness(1.08); }
+  .gallery-item .caption {
+    position: absolute; inset: auto 0 0 0; padding: 2.5rem 1rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
+    opacity: 0; transform: translateY(8px); transition: all .35s ease;
+  }
+  .gallery-item:hover .caption, .gallery-item:focus-visible .caption { opacity: 1; transform: none; }
+  .gallery-item .caption h3 { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; }
+  .gallery-item .caption span { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .gallery-item.hidden { display: none; }
+  .gallery-item:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+
+  /* Placeholder artwork: replace .tile backgrounds with <img> tags when you have real photos */
+  .t1 { --h: 480px; background: linear-gradient(135deg, #4a3b2c, #1c1510 70%); }
+  .t2 { --h: 320px; background: linear-gradient(200deg, #2b3a47, #0d1218); }
+  .t3 { --h: 400px; background: radial-gradient(circle at 60% 30%, #8c6d4a, #1a1410 70%); }
+  .t4 { --h: 300px; background: linear-gradient(to bottom, #3d4f3a, #101510); }
+  .t5 { --h: 460px; background: linear-gradient(160deg, #5a3a3a, #180f0f); }
+  .t6 { --h: 340px; background: radial-gradient(circle at 30% 70%, #6b7f8c, #0c1014 75%); }
+  .t7 { --h: 420px; background: linear-gradient(120deg, #7a6244, #201a12); }
+  .t8 { --h: 300px; background: linear-gradient(to top, #2e2e3a, #0a0a10); }
+  .t9 { --h: 500px; background: radial-gradient(circle at 70% 20%, #a58a5e, #221a10 70%); }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,.94);
+  }
+  .lightbox.open { display: flex; animation: fadeIn .3s ease; }
+  .lightbox-frame { max-width: min(90vw, 1100px); max-height: 80vh; width: 100%; text-align: center; }
+  .lightbox-tile { width: 100%; height: min(70vh, 720px); border-radius: 2px; }
+  .lightbox-caption { margin-top: 1rem; font-family: var(--serif); font-size: 1.1rem; }
+  .lightbox-caption small { display: block; font-family: var(--sans); color: var(--muted); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; margin-top: .25rem; }
+  .lb-btn {
+    position: absolute; background: none; border: 0; cursor: pointer;
+    color: var(--fg); font-size: 2.2rem; line-height: 1; padding: .75rem; opacity: .7; transition: opacity .2s;
+  }
+  .lb-btn:hover { opacity: 1; }
+  .lb-close { top: .5rem; right: .75rem; font-size: 2rem; }
+  .lb-prev { left: .5rem; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: .5rem; top: 50%; transform: translateY(-50%); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @media (max-width: 600px) { .lb-prev, .lb-next { top: auto; bottom: 1rem; transform: none; } }
+
+  /* ---------- About ---------- */
+  .about { background: var(--bg-alt); }
+  .about-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 6vw, 5rem); align-items: center;
+  }
+  .portrait { aspect-ratio: 4 / 5; background: linear-gradient(160deg, #6d5a48, #201913 80%); border-radius: 2px; }
+  .about-text p { color: #cfcac2; margin-bottom: 1.1rem; font-size: 1.02rem; }
+  .about-text .signature { font-family: var(--serif); font-style: italic; font-size: 1.5rem; color: var(--accent); margin-top: 1.5rem; }
+  .stats { display: flex; gap: 2.5rem; margin-top: 2rem; flex-wrap: wrap; }
+  .stats div strong { display: block; font-family: var(--serif); font-size: 2.2rem; font-weight: 400; }
+  .stats div span { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } .portrait { max-width: 420px; } }
+
+  /* ---------- Services ---------- */
+  .services-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;
+  }
+  .card {
+    border: 1px solid var(--line); padding: 2.25rem 2rem; display: flex; flex-direction: column;
+    transition: border-color .3s, transform .3s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; }
+  .card .price { font-size: .85rem; color: var(--accent); letter-spacing: .08em; margin: .5rem 0 1.25rem; }
+  .card ul { list-style: none; color: var(--muted); font-size: .95rem; flex: 1; }
+  .card li { padding: .35rem 0; border-top: 1px solid var(--line); }
+  .card li:first-child { border-top: 0; }
+  .card .btn { align-self: flex-start; margin-top: 1.5rem; font-size: .72rem; }
+
+  /* ---------- Contact ---------- */
+  .contact { background: var(--bg-alt); text-align: center; }
+  .contact-form {
+    max-width: 640px; margin: 0 auto; display: grid; gap: 1.25rem; text-align: left;
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+  .field label { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+    padding: .6rem 0; outline: none; transition: border-color .25s; border-radius: 0;
+  }
+  .field select option { background: var(--bg); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-bottom-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 120px; }
+  .contact-form .btn { justify-self: center; cursor: pointer; }
+  .form-status { min-height: 1.5em; font-size: .9rem; color: var(--accent); text-align: center; }
+  .contact-info { margin-top: 3rem; color: var(--muted); font-size: .95rem; }
+  .contact-info a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .contact-info a:hover { border-color: var(--accent); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 2.5rem clamp(1.25rem, 5vw, 4rem); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem;
+  }
+  footer .social { display: flex; gap: 1.25rem; }
+  footer .social a { text-decoration: none; text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
+  footer .social a:hover { color: var(--fg); }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav" id="siteNav">
+  <a href="#top" class="logo">Alex Morgan</a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#work" class="nav-link">Work</a></li>
+    <li><a href="#about" class="nav-link">About</a></li>
+    <li><a href="#services" class="nav-link">Services</a></li>
+    <li><a href="#contact" class="nav-link">Contact</a></li>
+  </ul>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Photographer &middot; Based in Portland</p>
+      <h1>Quiet light,<br>honest moments.</h1>
+      <p>Portraits, weddings, editorial and landscape photography for people who value substance over spectacle.</p>
+      <a href="#work" class="btn">View the work</a>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <section id="work">
+    <div class="section-head reveal">
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Portfolio</h2>
+      <div class="filters" role="group" aria-label="Filter gallery">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="portrait">Portraits</button>
+        <button class="filter-btn" data-filter="wedding">Weddings</button>
+        <button class="filter-btn" data-filter="editorial">Editorial</button>
+        <button class="filter-btn" data-filter="landscape">Landscape</button>
+      </div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <!-- Replace the .tile background with <img src="..." alt="..."> for real photos -->
+      <figure class="gallery-item reveal" data-category="portrait" tabindex="0" data-title="Golden Hour" data-meta="Portrait · 2025">
+        <div class="tile t1"></div>
+        <figcaption class="caption"><h3>Golden Hour</h3><span>Portrait</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="landscape" tabindex="0" data-title="Coastline, Dusk" data-meta="Landscape · 2025">
+        <div class="tile t2"></div>
+        <figcaption class="caption"><h3>Coastline, Dusk</h3><span>Landscape</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="wedding" tabindex="0" data-title="The Vows" data-meta="Wedding · 2025">
+        <div class="tile t3"></div>
+        <figcaption class="caption"><h3>The Vows</h3><span>Wedding</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="editorial" tabindex="0" data-title="Studio Study No. 4" data-meta="Editorial · 2024">
+        <div class="tile t4"></div>
+        <figcaption class="caption"><h3>Studio Study No. 4</h3><span>Editorial</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="portrait" tabindex="0" data-title="Quiet Stillness" data-meta="Portrait · 2024">
+        <div class="tile t5"></div>
+        <figcaption class="caption"><h3>Quiet Stillness</h3><span>Portrait</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="landscape" tabindex="0" data-title="Morning Fog" data-meta="Landscape · 2024">
+        <div class="tile t6"></div>
+        <figcaption class="caption"><h3>Morning Fog</h3><span>Landscape</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="wedding" tabindex="0" data-title="First Dance" data-meta="Wedding · 2024">
+        <div class="tile t7"></div>
+        <figcaption class="caption"><h3>First Dance</h3><span>Wedding</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="editorial" tabindex="0" data-title="Texture of Time" data-meta="Editorial · 2023">
+        <div class="tile t8"></div>
+        <figcaption class="caption"><h3>Texture of Time</h3><span>Editorial</span></figcaption>
+      </figure>
+      <figure class="gallery-item reveal" data-category="portrait" tabindex="0" data-title="Hands, Unscripted" data-meta="Portrait · 2023">
+        <div class="tile t9"></div>
+        <figcaption class="caption"><h3>Hands, Unscripted</h3><span>Portrait</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about">
+    <div class="about-grid">
+      <div class="portrait reveal" role="img" aria-label="Portrait of the photographer"></div>
+      <div class="about-text reveal">
+        <p class="section-label">About</p>
+        <h2 class="section-title" style="margin-bottom:1.5rem">A decade behind the lens</h2>
+        <p>I'm a freelance photographer working between studio and street. My approach is patient and unhurried: I'd rather wait for the right light than force a pose.</p>
+        <p>Over the last ten years I've photographed families, couples, small brands and independent publications, always aiming for images that feel like they were lived in, not staged.</p>
+        <p>When I'm not shooting you'll find me hiking with a film camera I don't really need, or reorganizing my archive for the third time.</p>
+        <div class="stats">
+          <div><strong>10+</strong><span>Years</span></div>
+          <div><strong>180</strong><span>Weddings</span></div>
+          <div><strong>40+</strong><span>Publications</span></div>
+        </div>
+        <p class="signature">— Alex</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="section-head reveal">
+      <p class="section-label">Services</p>
+      <h2 class="section-title">How we can work together</h2>
+    </div>
+    <div class="services-grid">
+      <article class="card reveal">
+        <h3>Portrait Sessions</h3>
+        <p class="price">FROM $350</p>
+        <ul>
+          <li>60-minute studio or location session</li>
+          <li>25 edited high-resolution images</li>
+          <li>Online gallery &amp; print rights</li>
+        </ul>
+        <a href="#contact" class="btn">Book a session</a>
+      </article>
+      <article class="card reveal">
+        <h3>Weddings</h3>
+        <p class="price">FROM $2,400</p>
+        <ul>
+          <li>Full day coverage (up to 10 hours)</li>
+          <li>Second shooter available</li>
+          <li>Curated gallery of 300+ images</li>
+        </ul>
+        <a href="#contact" class="btn">Check availability</a>
+      </article>
+      <article class="card reveal">
+        <h3>Editorial &amp; Commercial</h3>
+        <p class="price">QUOTE ON REQUEST</p>
+        <ul>
+          <li>Magazine, brand and campaign work</li>
+          <li>Concept development &amp; art direction</li>
+          <li>Licensing tailored to your usage</li>
+        </ul>
+        <a href="#contact" class="btn">Start a project</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="section-head reveal">
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">Let's make something</h2>
+    </div>
+    <form class="contact-form reveal" id="contactForm" novalidate>
+      <div class="row">
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="service">Service</label>
+        <select id="service" name="service">
+          <option>Portrait Session</option>
+          <option>Wedding</option>
+          <option>Editorial &amp; Commercial</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="date">Preferred date</label>
+        <input id="date" name="date" type="date">
+      </div>
+      <div class="field">
+        <label for="message">Tell me about your project</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="btn solid">Send inquiry</button>
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+    </form>
+    <div class="contact-info reveal">
+      <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+      <p style="margin-top:.5rem">Portland, OR &middot; Available worldwide</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>&copy; <span id="year"></span> Alex Morgan Photography. All rights reserved.</span>
+  <nav class="social" aria-label="Social">
+    <a href="#" rel="noopener">Instagram</a>
+    <a href="#" rel="noopener">Behance</a>
+    <a href="#" rel="noopener">Email</a>
+  </nav>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous image">&#8249;</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next image">&#8250;</button>
+  <div class="lightbox-frame">
+    <div class="lightbox-tile" id="lbTile"></div>
+    <div class="lightbox-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- Header scroll state & mobile menu ----------
+  const nav = document.getElementById('siteNav');
+  const toggle = document.getElementById('menuToggle');
+  const links = document.getElementById('navLinks');
+
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    links.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }));
+
+  // Highlight active section in nav
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-link');
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(s => spy.observe(s));
+
+  // ---------- Reveal on scroll ----------
+  const reveal = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => reveal.observe(el));
+
+  // ---------- Gallery filtering ----------
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const items = Array.from(document.querySelectorAll('.gallery-item'));
+  filterBtns.forEach(btn => btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.toggle('active', b === btn));
+    const f = btn.dataset.filter;
+    items.forEach(item => {
+      item.classList.toggle('hidden', f !== 'all' && item.dataset.category !== f);
+    });
+  }));
+
+  // ---------- Lightbox ----------
+  const lb = document.getElementById('lightbox');
+  const lbTile = document.getElementById('lbTile');
+  const lbCaption = document.getElementById('lbCaption');
+  let current = -1;
+  let visible = [];
+
+  function visibleItems() {
+    return items.filter(i => !i.classList.contains('hidden'));
+  }
+
+  function show(index) {
+    visible = visibleItems();
+    if (!visible.length) return;
+    current = (index + visible.length) % visible.length;
+    const item = visible[current];
+    const tile = item.querySelector('.tile');
+    lbTile.className = 'lightbox-tile ' + [...tile.classList].find(c => /^t\d$/.test(c));
+    lbCaption.innerHTML = '';
+    const h = document.createElement('div');
+    h.textContent = item.dataset.title;
+    const small = document.createElement('small');
+    small.textContent = item.dataset.meta + ' · ' + (current + 1) + ' / ' + visible.length;
+    lbCaption.append(h, small);
+  }
+
+  function open(index) {
+    show(index);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lbClose').focus();
+  }
+
+  function close() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  items.forEach(item => {
+    const handler = () => open(visibleItems().indexOf(item));
+    item.addEventListener('click', handler);
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }
+    });
+  });
+
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbPrev').addEventListener('click', () => show(current - 1));
+  document.getElementById('lbNext').addEventListener('click', () => show(current + 1));
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+
+  // Simple swipe support on touch devices
+  let touchX = null;
+  lb.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+
+  // ---------- Contact form ----------
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !message) {
+      status.textContent = 'Please fill in your name, a valid email, and a message.';
+      return;
+    }
+    // Replace with your form backend (Formspree, Netlify Forms, etc.) or a mailto: fallback.
+    status.textContent = 'Thank you — I\'ll reply within two business days.';
+    form.reset();
+  });
+
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+==========
+
+Wait — I made an error in that tool call: the parameter wrapper was malformed, and I need to be clear about what happened. The file content above was written to the path, but I should verify it exists rather than assume.
+
+
+<tool;name=Bash>
+<parameter name="command">ls -la /data/scratch/ai-sameness/main/work/haiku-5.5__P3__r3.a3.poxieuva/portfolio.html && wc -l /data/scratch/ai-sameness/main/work/haiku-5.5__P3__r3.a3.poxieuva/portfolio.html && head -c 200 /data/scratch/ai-sameness/main/work/haiku-5.5__P3__r3.a3.poxieuva/portfolio.html</parameter>
+</invoke>
+==========

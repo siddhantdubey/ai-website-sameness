@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docket — Project management without the theater</title>
+  <meta name="description" content="A calm, fast project ledger for engineering and product teams. Clear ownership, weekly cycles, zero sprint bloat." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F4F1EA;
+      --surface: #FAF8F4;
+      --surface-muted: #EBE7DE;
+      --surface-hover: #F0ECE3;
+      --ink: #161615;
+      --ink-2: #4A4843;
+      --ink-3: #78746C;
+      --rule: #D6D1C6;
+      --rule-dark: #161615;
+      --accent: #C73E1D;
+      --accent-hover: #A83216;
+      --accent-soft: #F5E3DD;
+      --ok: #21573E;
+      --ok-soft: #DFECE5;
+      --warn: #8F5B0F;
+      --warn-soft: #F3EAD6;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --radius: 2px;
+      --max-w: 1180px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Utility Strip */
+    .topbar {
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--ink);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: "";
+      width: 8px;
+      height: 2px;
+      background: var(--accent);
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .version-tag {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      border: 1px solid var(--rule);
+      padding: 3px 8px;
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 80ms ease;
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--surface);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--rule);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12.5px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 40px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 5vw, 4.1rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--ink-2);
+    }
+
+    .hero-copy {
+      padding-bottom: 6px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 24px;
+      color: var(--ink-2);
+      font-size: 15.5px;
+      line-height: 1.6;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-meta {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Live Interactive Ledger Workbench */
+    .workbench-section {
+      padding: 40px 0 72px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .workbench-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .workbench-caption-left {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ok);
+      display: inline-block;
+    }
+
+    .shortcut-hint {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    kbd {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 1px 5px;
+      border: 1px solid var(--rule);
+      border-bottom-width: 2px;
+      border-radius: 2px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .app-frame {
+      background: var(--surface);
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px -18px rgba(22, 22, 21, 0.22);
+      overflow: hidden;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface-muted);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .app-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cycle-name {
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: -0.01em;
+    }
+
+    .cycle-dates {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .cycle-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-2);
+    }
+
+    .progress-bar {
+      width: 88px;
+      height: 6px;
+      background: var(--rule);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--ok);
+      transition: width 220ms ease;
+    }
+
+    .app-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--rule);
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--surface);
+    }
+
+    .tab-group, .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      font-size: 12.5px;
+      padding: 4px 10px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink-2);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .pill-btn:hover {
+      color: var(--ink);
+      background: var(--surface-hover);
+    }
+
+    .pill-btn.active {
+      color: var(--ink);
+      background: var(--surface-muted);
+      border-color: var(--rule);
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      min-height: 360px;
+    }
+
+    .app-main {
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quick-add-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--rule);
+      background: #FCFBF8;
+    }
+
+    .quick-add-bar input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 13.5px;
+      min-width: 140px;
+    }
+
+    .quick-add-bar input::placeholder {
+      color: var(--ink-3);
+    }
+
+    .quick-add-bar select {
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: var(--radius);
+      color: var(--ink-2);
+    }
+
+    /* Task Sheet Table */
+    .task-list {
+      width: 100%;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 28px 78px 1fr 110px 96px;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 90ms ease;
+    }
+
+    .task-row:last-child {
+      border-bottom: none;
+    }
+
+    .task-row:hover {
+      background: var(--surface-hover);
+    }
+
+    .task-row.selected {
+      background: #EFEBE1;
+    }
+
+    .status-check {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--ink-3);
+      border-radius: var(--radius);
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 100ms ease;
+    }
+
+    .status-check[data-status="motion"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .status-check[data-status="motion"]::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .status-check[data-status="shipped"] {
+      border-color: var(--ok);
+      background: var(--ok);
+    }
+
+    .status-check[data-status="shipped"]::after {
+      content: "";
+      width: 8px;
+      height: 4px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translate(0.5px, -0.5px);
+    }
+
+    .task-id {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .task-title {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-row.is-shipped .task-title {
+      color: var(--ink-3);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule);
+    }
+
+    .task-owner {
+      font-size: 12px;
+      color: var(--ink-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: var(--radius);
+      text-align: center;
+      justify-self: end;
+      border: 1px solid transparent;
+    }
+
+    .badge-queued {
+      background: var(--surface-muted);
+      color: var(--ink-2);
+      border-color: var(--rule);
+    }
+
+    .badge-motion {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: rgba(199, 62, 29, 0.25);
+    }
+
+    .badge-shipped {
+      background: var(--ok-soft);
+      color: var(--ok);
+      border-color: rgba(33, 87, 62, 0.25);
+    }
+
+    /* Kanban Columns View */
+    .board-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      flex: 1;
+    }
+
+    .board-col {
+      border-right: 1px solid var(--rule);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #F9F7F2;
+    }
+
+    .board-col:last-child {
+      border-right: none;
+    }
+
+    .col-head {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .board-card {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 100ms ease;
+    }
+
+    .board-card:hover, .board-card.selected {
+      border-color: var(--ink);
+    }
+
+    .board-card-top {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+
+    .board-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .board-card-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--ink-2);
+    }
+
+    /* Changelog View */
+    .changelog-view {
+      padding: 18px 22px;
+    }
+
+    .changelog-entry {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .changelog-entry:last-child {
+      border-bottom: none;
+    }
+
+    .changelog-time {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Inspector Sidebar */
+    .app-inspector {
+      padding: 18px;
+      background: #F6F3EC;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .inspector-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .inspector-fields {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 10px 12px;
+      font-size: 12.5px;
+      align-items: center;
+    }
+
+    .field-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .inspector-select {
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      width: 100%;
+    }
+
+    .inspector-notes {
+      border-top: 1px solid var(--rule);
+      padding-top: 14px;
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .inspector-notes-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Section Headers */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .section-index {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+      padding-top: 6px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.9rem, 3.2vw, 2.65rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    .section-lead {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 16px;
+      max-width: 60ch;
+    }
+
+    /* Anatomy Comparison Section */
+    .anatomy-controls {
+      display: inline-flex;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: var(--surface);
+    }
+
+    .anatomy-toggle {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--ink-2);
+    }
+
+    .anatomy-toggle.active {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .anatomy-box {
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      padding: 28px;
+      border-radius: var(--radius);
+    }
+
+    .bloat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 12px;
+    }
+
+    .bloat-field {
+      border: 1px dashed var(--rule);
+      padding: 10px 12px;
+      background: var(--bg);
+    }
+
+    .bloat-field-label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bloat-field-val {
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .clean-card {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .clean-card-main h3 {
+      margin: 8px 0 10px;
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .clean-card-main p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+
+    .clean-card-meta {
+      border-left: 1px solid var(--rule);
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .clean-meta-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 8px;
+    }
+
+    .clean-meta-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Four Rules Grid */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px 48px;
+    }
+
+    .rule-item {
+      border-top: 2px solid var(--ink);
+      padding-top: 18px;
+    }
+
+    .rule-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .rule-item h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .rule-item p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+
+    /* Testimonials */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .quote-card {
+      border-left: 1px solid var(--rule);
+      padding-left: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    .quote-author {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .quote-role {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--ink);
+      background: var(--surface);
+    }
+
+    .price-tier {
+      padding: 28px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .price-tier:last-child {
+      border-right: none;
+    }
+
+    .tier-name {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-2);
+      margin-bottom: 10px;
+    }
+
+    .tier-price {
+      font-family: var(--serif);
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .tier-unit {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .tier-desc {
+      font-size: 14px;
+      color: var(--ink-2);
+      margin: 14px 0 18px;
+    }
+
+    .tier-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+      border-top: 1px solid var(--rule);
+      padding-top: 16px;
+    }
+
+    .tier-list li::before {
+      content: "— ";
+      color: var(--ink-3);
+    }
+
+    /* Footer */
+    footer {
+      padding: 48px 0 56px;
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 32px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .footer-col h4 {
+      margin: 0 0 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .footer-bottom {
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Modal */
+    dialog {
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0;
+      width: min(460px, calc(100vw - 32px));
+      box-shadow: 0 24px 60px rgba(22, 22, 21, 0.28);
+    }
+
+    dialog::backdrop {
+      background: rgba(22, 22, 21, 0.45);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface-muted);
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--ink-2);
+      padding: 2px 6px;
+    }
+
+    .modal-body {
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-2);
+    }
+
+    .form-group input {
+      border: 1px solid var(--rule);
+      background: var(--bg);
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--ink);
+      background: var(--surface);
+    }
+
+    .slug-preview {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+      .app-main {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .section-header {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+      .clean-card {
+        grid-template-columns: 1fr;
+      }
+      .clean-card-meta {
+        border-left: none;
+        border-top: 1px solid var(--rule);
+        padding-left: 0;
+        padding-top: 18px;
+      }
+      .quotes-grid, .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+      .price-tier {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .price-tier:last-child {
+        border-bottom: none;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-links, .version-tag, .shortcut-hint {
+        display: none;
+      }
+      .task-row {
+        grid-template-columns: 24px 1fr 84px;
+      }
+      .task-id, .task-owner {
+        display: none;
+      }
+      .board-columns {
+        grid-template-columns: 1fr;
+      }
+      .board-col {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Docket</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#workbench">Live Sheet</a>
+        <a href="#anatomy">Anatomy</a>
+        <a href="#principles">Principles</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="version-tag">v2.4 &middot; Autumn</span>
+        <button class="btn btn-primary btn-sm" data-open-modal>Start a workspace</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Ledger-grade project tracking</div>
+          <h1>Stop managing the board.<br /><em>Ship the work.</em></h1>
+        </div>
+        <div class="hero-copy">
+          <p>
+            Docket is a calm, keyboard-first project ledger for engineering and product teams. No story points, no velocity theater, and no 18-field forms. Just clear ownership and weekly cycles that finish.
+          </p>
+          <div class="hero-cta-row">
+            <button class="btn btn-primary" data-open-modal>Create a workspace</button>
+            <a href="#workbench" class="btn btn-secondary">Try the live sheet below</a>
+          </div>
+          <div class="hero-meta">Free for teams up to 6 &middot; No credit card &middot; Export to Markdown anytime</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workbench" class="workbench-section">
+      <div class="container">
+        <div class="workbench-caption">
+          <div class="workbench-caption-left">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span>Interactive preview — click checkboxes, switch views, or add a line item</span>
+          </div>
+          <div class="shortcut-hint">
+            <span><kbd>1</kbd> Sheet</span>
+            <span><kbd>2</kbd> Columns</span>
+            <span><kbd>3</kbd> Changelog</span>
+            <span><kbd>C</kbd> New item</span>
+          </div>
+        </div>
+
+        <div class="app-frame" role="region" aria-label="Docket interactive workspace preview">
+          <div class="app-header">
+            <div class="app-title-group">
+              <span class="cycle-name">Cycle 42 &mdash; Core Reliability</span>
+              <span class="cycle-dates">Nov 24 &ndash; Nov 30</span>
+            </div>
+            <div class="cycle-progress-wrap">
+              <span id="progress-label">2 / 6 shipped</span>
+              <div class="progress-bar" aria-hidden="true">
+                <div class="progress-fill" id="progress-fill" style="width: 33%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-toolbar">
+            <div class="tab-group" role="tablist" aria-label="Workspace views">
+              <button class="pill-btn active" data-view="sheet" role="tab" aria-selected="true">Active Sheet</button>
+              <button class="pill-btn" data-view="board" role="tab" aria-selected="false">Columns</button>
+              <button class="pill-btn" data-view="changelog" role="tab" aria-selected="false">Changelog</button>
+            </div>
+            <div class="filter-group" aria-label="Team filter">
+              <button class="pill-btn active" data-filter="All">All</button>
+              <button class="pill-btn" data-filter="Firmware">Firmware</button>
+              <button class="pill-btn" data-filter="Backend">Backend</button>
+              <button class="pill-btn" data-filter="Design">Design</button>
+            </div>
+          </div>
+
+          <div class="app-body">
+            <div class="app-main">
+              <form class="quick-add-bar" id="quick-add-form">
+                <input
+                  type="text"
+                  id="quick-add-input"
+                  placeholder="+ Add deliverable to Cycle 42 (press Enter)..."
+                  aria-label="New deliverable title"
+                  maxlength="90"
+                />
+                <select id="quick-add-area" aria-label="Area">
+                  <option value="Backend">Backend</option>
+                  <option value="Firmware">Firmware</option>
+                  <option value="Design">Design</option>
+                </select>
+                <button type="submit" class="btn btn-secondary btn-sm">Add</button>
+              </form>
+
+              <div id="view-sheet" class="task-list" role="list"></div>
+              <div id="view-board" class="board-columns hidden"></div>
+              <div id="view-changelog" class="changelog-view hidden"></div>
+            </div>
+
+            <aside class="app-inspector" aria-label="Selected item details">
+              <div class="inspector-head">
+                <span id="insp-id">DKT-418</span>
+                <span id="insp-area">Backend</span>
+              </div>
+              <h3 class="inspector-title" id="insp-title">Select an item</h3>
+
+              <div class="inspector-fields">
+                <span class="field-label">Status</span>
+                <select id="insp-status" class="inspector-select" aria-label="Item status">
+                  <option value="queued">Queued</option>
+                  <option value="motion">In Motion</option>
+                  <option value="shipped">Shipped</option>
+                </select>
+
+                <span class="field-label">Owner</span>
+                <select id="insp-owner" class="inspector-select" aria-label="Item owner">
+                  <option value="M. Sato">M. Sato</option>
+                  <option value="H. Lindqvist">H. Lindqvist</option>
+                  <option value="D. Park">D. Park</option>
+                  <option value="R. Okafor">R. Okafor</option>
+                </select>
+
+                <span class="field-label">Due</span>
+                <span id="insp-due" style="font-family: var(--mono); font-size: 12px;">Thu, Nov 27</span>
+              </div>
+
+              <div class="inspector-notes">
+                <span class="inspector-notes-label">Working Notes</span>
+                <p id="insp-notes" style="margin: 0;"></p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="anatomy" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">01 / ANATOMY</div>
+          <div>
+            <h2>Less form. More context.</h2>
+            <p class="section-lead">
+              Most trackers turn a ten-minute fix into twenty minutes of taxonomy. Docket strips every entry down to three concrete facts and plain writing.
+            </p>
+          </div>
+        </div>
+
+        <div class="anatomy-controls" role="group" aria-label="Compare ticket formats">
+          <button class="anatomy-toggle active" data-anatomy="docket">Docket Entry (3 fields)</button>
+          <button class="anatomy-toggle" data-anatomy="typical">Typical Tracker (14 fields)</button>
+        </div>
+
+        <div class="anatomy-box" id="anatomy-docket">
+          <div class="clean-card">
+            <div class="clean-card-main">
+              <span class="task-id">DKT-419 &middot; Backend</span>
+              <h3>Idempotency keys on webhook retries</h3>
+              <p>
+                Payment webhooks double-fired twice during Tuesday's gateway blip. Add an idempotency check backed by our existing Redis keyspace with a 24h TTL, then add a regression test for duplicate delivery.
+              </p>
+            </div>
+            <div class="clean-card-meta">
+              <div class="clean-meta-item">
+                <span class="field-label">Owner</span>
+                <span>M. Sato</span>
+              </div>
+              <div class="clean-meta-item">
+                <span class="field-label">Cycle</span>
+                <span style="font-family: var(--mono); font-size: 12px;">Cycle 42</span>
+              </div>
+              <div class="clean-meta-item">
+                <span class="field-label">Status</span>
+                <span class="status-badge badge-motion">In Motion</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="anatomy-box hidden" id="anatomy-typical">
+          <div class="bloat-grid">
+            <div class="bloat-field"><div class="bloat-field-label">Issue Type</div><div class="bloat-field-val">Technical Debt Sub-Task</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Epic Link</div><div class="bloat-field-val">Q4-Platform-Hardening-v2</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Story Points</div><div class="bloat-field-val">3 (Fibonacci)</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">T-Shirt Size</div><div class="bloat-field-val">Medium-Small</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Priority</div><div class="bloat-field-val">P1 - High (Needs Triage)</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Severity</div><div class="bloat-field-val">S2 - Major</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Sprint</div><div class="bloat-field-val">2026.11_Sprint_42b</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Fix Version</div><div class="bloat-field-val">2.14.0-rc3</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Component</div><div class="bloat-field-val">Billing / Ingress / Hooks</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">QA Assignee</div><div class="bloat-field-val">Unassigned</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Reviewer Group</div><div class="bloat-field-val">Core-Infra-Approvers</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Original Estimate</div><div class="bloat-field-val">6h 30m</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Business Value</div><div class="bloat-field-val">75 / 100</div></div>
+            <div class="bloat-field"><div class="bloat-field-label">Labels</div><div class="bloat-field-val">backend, redis, needs-rfc</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="principles" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">02 / PRINCIPLES</div>
+          <div>
+            <h2>Built around how real teams actually finish things.</h2>
+            <p class="section-lead">
+              We removed every mechanism designed for middle-management reporting and kept the tools that help builders stay aligned.
+            </p>
+          </div>
+        </div>
+
+        <div class="rules-grid">
+          <article class="rule-item">
+            <span class="rule-num">RULE 01</span>
+            <h3>Cycles close on Friday. Unfinished work doesn't auto-roll.</h3>
+            <p>
+              Automatic carry-over hides scope creep. At the end of a weekly cycle, anything left open goes back to the bench for a deliberate decision: finish it Monday, or drop it honestly.
+            </p>
+          </article>
+
+          <article class="rule-item">
+            <span class="rule-num">RULE 02</span>
+            <h3>One owner per line item. Never a committee.</h3>
+            <p>
+              Multiple assignees mean nobody feels accountable when a deadline slips. Multiple people can comment and commit code, but one name sits next to the deliverable.
+            </p>
+          </article>
+
+          <article class="rule-item">
+            <span class="rule-num">RULE 03</span>
+            <h3>Speed is not polish—it is the product.</h3>
+            <p>
+              Every navigation, filter, and status change runs optimistically in under 30ms with local cache sync. When opening a tool feels instant, people actually keep it accurate.
+            </p>
+          </article>
+
+          <article class="rule-item">
+            <span class="rule-num">RULE 04</span>
+            <h3>Your data belongs in plain files, not a hostage database.</h3>
+            <p>
+              One-click export dumps your entire workspace as clean, human-readable Markdown folders and a single SQLite archive. Leave anytime without a migration script.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">03 / FIELD NOTES</div>
+          <div>
+            <h2>Teams that switched.</h2>
+          </div>
+        </div>
+
+        <div class="quotes-grid">
+          <div class="quote-card">
+            <blockquote>
+              “We deleted 1,400 stale Jira tickets the afternoon we moved to Docket. For the first time in three years, our Friday check-in takes twelve minutes.”
+            </blockquote>
+            <div>
+              <div class="quote-author">Hannah Lindqvist</div>
+              <div class="quote-role">VP Engineering &middot; Kestrel Robotics</div>
+            </div>
+          </div>
+
+          <div class="quote-card">
+            <blockquote>
+              “It feels like a drafting table instead of an enterprise control panel. Our industrial designers and firmware engineers both use it without complaining.”
+            </blockquote>
+            <div>
+              <div class="quote-author">Tom&aacute;s Vega</div>
+              <div class="quote-role">Partner &middot; Studio Monograph</div>
+            </div>
+          </div>
+
+          <div class="quote-card">
+            <blockquote>
+              “Keyboard navigation actually works everywhere, and the Markdown export means our release notes write themselves at the end of every cycle.”
+            </blockquote>
+            <div>
+              <div class="quote-author">Devon Park</div>
+              <div class="quote-role">Staff Systems Engineer &middot; Relay</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section" style="border-bottom: none;">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-index">04 / PRICING</div>
+          <div>
+            <h2>Straightforward rates. No seat traps.</h2>
+            <p class="section-lead">
+              You only pay for people who actively edit work. Clients, stakeholders, and read-only observers are always free.
+            </p>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="price-tier">
+            <div>
+              <div class="tier-name">Studio</div>
+              <div class="tier-price">$0</div>
+              <div class="tier-unit">Forever &middot; Up to 6 active members</div>
+              <p class="tier-desc">Everything in Docket, with zero feature gating for small product and hardware teams.</p>
+              <ul class="tier-list">
+                <li>Unlimited cycles and archives</li>
+                <li>GitHub &amp; GitLab commit links</li>
+                <li>Full Markdown &amp; SQLite export</li>
+                <li>Unlimited read-only guests</li>
+              </ul>
+            </div>
+            <button class="btn btn-secondary" data-open-modal>Start free workspace</button>
+          </div>
+
+          <div class="price-tier" style="background: #F6F3EC;">
+            <div>
+              <div class="tier-name" style="color: var(--accent);">Company</div>
+              <div class="tier-price">$12</div>
+              <div class="tier-unit">Per active seat / month</div>
+              <p class="tier-desc">For growing engineering orgs that need cross-team cycles, SSO, and audit logs.</p>
+              <ul class="tier-list">
+                <li>Everything in Studio</li>
+                <li>Multiple teams &amp; shared cycles</li>
+                <li>SAML SSO &amp; role permissions</li>
+                <li>Automatic prorating if seats go idle</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" data-open-modal>Start 14-day trial</button>
+          </div>
+
+          <div class="price-tier">
+            <div>
+              <div class="tier-name">Self-Hosted</div>
+              <div class="tier-price">$2,400</div>
+              <div class="tier-unit">Per year &middot; Unlimited seats</div>
+              <p class="tier-desc">Run Docket on your own infrastructure as a single container binary with your Postgres.</p>
+              <ul class="tier-list">
+                <li>Air-gapped &amp; VPC deployment</li>
+                <li>Zero external telemetry</li>
+                <li>Direct engineering support channel</li>
+                <li>Source-available license</li>
+              </ul>
+            </div>
+            <button class="btn btn-secondary" data-open-modal>Request license key</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top: 1px solid var(--rule);">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" style="margin-bottom: 12px;">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>Docket</span>
+          </a>
+          <p style="margin: 0; max-width: 34ch; color: var(--ink-2); line-height: 1.55;">
+            Calm project software built in Portland &amp; Zurich. Fast enough to stay out of your way.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#workbench">Live Sheet</a></li>
+            <li><a href="#anatomy">Ticket Anatomy</a></li>
+            <li><a href="#principles">Manifesto</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="#workbench">Keyboard Shortcuts</a></li>
+            <li><a href="#pricing">Self-Hosting Guide</a></li>
+            <li><a href="#principles">Markdown Schema</a></li>
+            <li><a href="#principles">API Reference</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Status</h4>
+          <ul>
+            <li><span style="color: var(--ok);">● All systems operational</span></li>
+            <li>99.98% 90-day uptime</li>
+            <li>Median sync: 24ms</li>
+            <li>hello@docket.work</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Docket Instruments Inc.</span>
+        <span>No tracking cookies &middot; Zero third-party ad pixels</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Workspace Creation Modal -->
+  <dialog id="workspace-modal" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <h3 id="modal-title">Create a Docket workspace</h3>
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">&times;</button>
+    </div>
+    <form class="modal-body" id="workspace-form">
+      <div id="modal-form-fields" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="form-group">
+          <label for="ws-name">Team or company name</label>
+          <input type="text" id="ws-name" placeholder="Kestrel Robotics" required />
+          <div class="slug-preview" id="slug-preview">docket.work/your-team</div>
+        </div>
+        <div class="form-group">
+          <label for="ws-email">Work email</label>
+          <input type="email" id="ws-email" placeholder="you@company.com" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 4px;">
+          Open workspace &rarr;
+        </button>
+      </div>
+      <div id="modal-success" class="hidden" style="padding: 8px 0;">
+        <div style="font-family: var(--mono); font-size: 11.5px; color: var(--ok); margin-bottom: 8px;">WORKSPACE RESERVED</div>
+        <p style="margin: 0 0 16px; font-size: 14.5px; line-height: 1.55;">
+          We sent a one-click sign-in link for <strong id="confirm-slug"></strong> to <strong id="confirm-email"></strong>. Your Cycle 1 sheet is ready.
+        </p>
+        <button type="button" class="btn btn-secondary btn-sm" id="modal-done-btn">Back to page</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    (function () {
+      const initialTasks = [
+        {
+          id: "DKT-414",
+          title: "Debounce motor controller fault telemetry over CAN bus",
+          area: "Firmware",
+          owner: "H. Lindqvist",
+          status: "shipped",
+          due: "Tue, Nov 25",
+          notes: "Filtered transient voltage drops under 12ms. Tested across 4 bench rigs overnight without false positives."
+        },
+        {
+          id: "DKT-416",
+          title: "Print-ready invoice PDF export with VAT breakdown",
+          area: "Design",
+          owner: "D. Park",
+          status: "shipped",
+          due: "Wed, Nov 26",
+          notes: "Switched to monospace tabular numerals for line totals and fixed page break on 20+ row invoices."
+        },
+        {
+          id: "DKT-418",
+          title: "Idempotency keys on webhook retries",
+          area: "Backend",
+          owner: "M. Sato",
+          status: "motion",
+          due: "Thu, Nov 27",
+          notes: "Payment webhooks double-fired twice during Tuesday's gateway blip. Backing dedup checks with existing Redis keyspace (24h TTL)."
+        },
+        {
+          id: "DKT-419",
+          title: "Zero-downtime index backfill on events_archive",
+          area: "Backend",
+          owner: "R. Okafor",
+          status: "motion",
+          due: "Thu, Nov 27",
+          notes: "Running batched 5,000-row chunks during off-peak hours. Currently at 64% completion with <2% CPU overhead."
+        },
+        {
+          id: "DKT-420",
+          title: "Keyboard focus ring audit on ledger row drawer",
+          area: "Design",
+          owner: "D. Park",
+          status: "queued",
+          due: "Fri, Nov 28",
+          notes: "Ensure Tab and J/K navigation stay synchronized when switching from Sheet to Columns view."
+        },
+        {
+          id: "DKT-421",
+          title: "Verify bootloader fallback on Rev-C board",
+          area: "Firmware",
+          owner: "H. Lindqvist",
+          status: "queued",
+          due: "Fri, Nov 28",
+          notes: "Need to pull two Rev-C prototypes from assembly tray before Friday afternoon sign-off."
+        }
+      ];
+
+      let tasks = initialTasks.map(t => ({ ...t }));
+      let selectedId = "DKT-418";
+      let currentView = "sheet";
+      let currentFilter = "All";
+      let nextNum = 422;
+
+      const sheetEl = document.getElementById("view-sheet");
+      const boardEl = document.getElementById("view-board");
+      const changelogEl = document.getElementById("view-changelog");
+      const progressLabel = document.getElementById("progress-label");
+      const progressFill = document.getElementById("progress-fill");
+
+      const inspId = document.getElementById("insp-id");
+      const inspArea = document.getElementById("insp-area");
+      const inspTitle = document.getElementById("insp-title");
+      const inspStatus = document.getElementById("insp-status");
+      const inspOwner = document.getElementById("insp-owner");
+      const inspDue = document.getElementById("insp-due");
+      const inspNotes = document.getElementById("insp-notes");
+
+      const statusLabels = {
+        queued: "Queued",
+        motion: "In Motion",
+        shipped: "Shipped"
+      };
+
+      const nextStatusMap = {
+        queued: "motion",
+        motion: "shipped",
+        shipped: "queued"
+      };
+
+      function getFilteredTasks() {
+        if (currentFilter === "All") return tasks;
+        return tasks.filter(t => t.area === currentFilter);
+      }
+
+      function updateProgress() {
+        const total = tasks.length;
+        const shipped = tasks.filter(t => t.status === "shipped").length;
+        const pct = total ? Math.round((shipped / total) * 100) : 0;
+        progressLabel.textContent = `${shipped} / ${total} shipped`;
+        progressFill.style.width = `${pct}%`;
+      }
+
+      function renderInspector() {
+        const item = tasks.find(t => t.id === selectedId) || tasks[0];
+        if (!item) return;
+        selectedId = item.id;
+        inspId.textContent = item.id;
+        inspArea.textContent = item.area;
+        inspTitle.textContent = item.title;
+        inspStatus.value = item.status;
+        inspOwner.value = item.owner;
+        inspDue.textContent = item.due;
+        inspNotes.textContent = item.notes;
+      }
+
+      function renderSheet() {
+        const list = getFilteredTasks();
+        sheetEl.innerHTML = "";
+        if (!list.length) {
+          sheetEl.innerHTML = `<div style="padding: 28px 18px; color: var(--ink-3); font-size: 13.5px;">No items in ${currentFilter} for Cycle 42.</div>`;
+          return;
+        }
+        list.forEach(task => {
+          const row = document.createElement("div");
+          row.className = `task-row${task.id === selectedId ? " selected" : ""}${task.status === "shipped" ? " is-shipped" : ""}`;
+          row.setAttribute("role", "listitem");
+
+          const check = document.createElement("button");
+          check.type = "button";
+          check.className = "status-check";
+          check.dataset.status = task.status;
+          check.setAttribute("aria-label", `Cycle status for ${task.id}`);
+          check.addEventListener("click", e => {
+            e.stopPropagation();
+            task.status = nextStatusMap[task.status];
+            selectedId = task.id;
+            renderAll();
+          });
+
+          const idSpan = document.createElement("span");
+          idSpan.className = "task-id";
+          idSpan.textContent = task.id;
+
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "task-title";
+          titleSpan.textContent = task.title;
+
+          const ownerSpan = document.createElement("span");
+          ownerSpan.className = "task-owner";
+          ownerSpan.textContent = task.owner;
+
+          const badge = document.createElement("span");
+          badge.className = `status-badge badge-${task.status}`;
+          badge.textContent = statusLabels[task.status];
+
+          row.append(check, idSpan, titleSpan, ownerSpan, badge);
+          row.addEventListener("click", () => {
+            selectedId = task.id;
+            renderAll();
+          });
+          sheetEl.appendChild(row);
+        });
+      }
+
+      function renderBoard() {
+        const list = getFilteredTasks();
+        const cols = [
+          { key: "queued", label: "Queued" },
+          { key: "motion", label: "In Motion" },
+          { key: "shipped", label: "Shipped" }
+        ];
+        boardEl.innerHTML = "";
+        cols.forEach(col => {
+          const colTasks = list.filter(t => t.status === col.key);
+          const colEl = document.createElement("div");
+          colEl.className = "board-col";
+          colEl.innerHTML = `<div class="col-head"><span>${col.label}</span><span>${colTasks.length}</span></div>`;
+          colTasks.forEach(task => {
+            const card = document.createElement("div");
+            card.className = `board-card${task.id === selectedId ? " selected" : ""}`;
+            card.innerHTML = `
+              <div class="board-card-top"><span>${task.id}</span><span>${task.area}</span></div>
+              <div class="board-card-title"></div>
+              <div class="board-card-foot"><span>${task.owner}</span><span style="font-family:var(--mono);font-size:11px;">${task.due}</span></div>
+            `;
+            card.querySelector(".board-card-title").textContent = task.title;
+            card.addEventListener("click", () => {
+              selectedId = task.id;
+              renderAll();
+            });
+            colEl.appendChild(card);
+          });
+          boardEl.appendChild(colEl);
+        });
+      }
+
+      function renderChangelog() {
+        const shipped = getFilteredTasks().filter(t => t.status === "shipped");
+        changelogEl.innerHTML = "";
+        if (!shipped.length) {
+          changelogEl.innerHTML = `<div style="color: var(--ink-3); font-size: 13.5px;">No shipped items yet for this filter. Mark a task as Shipped to see it appear here.</div>`;
+          return;
+        }
+        shipped.forEach(task => {
+          const entry = document.createElement("div");
+          entry.className = "changelog-entry";
+          entry.innerHTML = `
+            <div class="changelog-time">${task.due}</div>
+            <div>
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;"></div>
+              <div style="font-size: 13px; color: var(--ink-2);"></div>
+              <div style="font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 6px;">${task.id} &middot; ${task.owner} &middot; ${task.area}</div>
+            </div>
+          `;
+          entry.children[1].children[0].textContent = task.title;
+          entry.children[1].children[1].textContent = task.notes;
+          changelogEl.appendChild(entry);
+        });
+      }
+
+      function renderAll() {
+        updateProgress();
+        renderInspector();
+        sheetEl.classList.toggle("hidden", currentView !== "sheet");
+        boardEl.classList.toggle("hidden", currentView !== "board");
+        changelogEl.classList.toggle("hidden", currentView !== "changelog");
+
+        if (currentView === "sheet") renderSheet();
+        if (currentView === "board") renderBoard();
+        if (currentView === "changelog") renderChangelog();
+      }
+
+      // View tabs
+      document.querySelectorAll("[data-view]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentView = btn.dataset.view;
+          document.querySelectorAll("[data-view]").forEach(b => {
+            b.classList.toggle("active", b === btn);
+            b.setAttribute("aria-selected", String(b === btn));
+          });
+          renderAll();
+        });
+      });
+
+      // Area filters
+      document.querySelectorAll("[data-filter]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentFilter = btn.dataset.filter;
+          document.querySelectorAll("[data-filter]").forEach(b => b.classList.toggle("active", b === btn));
+          renderAll();
+        });
+      });
+
+      // Quick add form
+      const quickForm = document.getElementById("quick-add-form");
+      const quickInput = document.getElementById("quick-add-input");
+      const quickArea = document.getElementById("quick-add-area");
+
+      quickForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const title = quickInput.value.trim();
+        if (!title) return;
+        const newId = `DKT-${nextNum++}`;
+        const newTask = {
+          id: newId,
+          title,
+          area: quickArea.value,
+          owner: "M. Sato",
+          status: "queued",
+          due: "Fri, Nov 28",
+          notes: "Added directly to Cycle 42 from the live sheet."
+        };
+        tasks.unshift(newTask);
+        selectedId = newId;
+        quickInput.value = "";
+        if (currentFilter !== "All" && currentFilter !== newTask.area) {
+          currentFilter = "All";
+          document.querySelectorAll("[data-filter]").forEach(b => b.classList.toggle("active", b.dataset.filter === "All"));
+        }
+        renderAll();
+      });
+
+      // Inspector updates
+      inspStatus.addEventListener("change", () => {
+        const item = tasks.find(t => t.id === selectedId);
+        if (item) {
+          item.status = inspStatus.value;
+          renderAll();
+        }
+      });
+
+      inspOwner.addEventListener("change", () => {
+        const item = tasks.find(t => t.id === selectedId);
+        if (item) {
+          item.owner = inspOwner.value;
+          renderAll();
+        }
+      });
+
+      // Keyboard shortcuts (1, 2, 3, C) when not typing
+      document.addEventListener("keydown", e => {
+        const tag = document.activeElement.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+        if (e.key === "1") document.querySelector('[data-view="sheet"]').click();
+        if (e.key === "2") document.querySelector('[data-view="board"]').click();
+        if (e.key === "3") document.querySelector('[data-view="changelog"]').click();
+        if (e.key.toLowerCase() === "c") {
+          e.preventDefault();
+          quickInput.focus();
+        }
+      });
+
+      // Anatomy comparison toggle
+      const docketBox = document.getElementById("anatomy-docket");
+      const typicalBox = document.getElementById("anatomy-typical");
+      document.querySelectorAll("[data-anatomy]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.dataset.anatomy;
+          document.querySelectorAll("[data-anatomy]").forEach(b => b.classList.toggle("active", b === btn));
+          docketBox.classList.toggle("hidden", mode !== "docket");
+          typicalBox.classList.toggle("hidden", mode !== "typical");
+        });
+      });
+
+      // Workspace Modal
+      const modal = document.getElementById("workspace-modal");
+      const wsName = document.getElementById("ws-name");
+      const wsEmail = document.getElementById("ws-email");
+      const slugPreview = document.getElementById("slug-preview");
+      const modalFields = document.getElementById("modal-form-fields");
+      const modalSuccess = document.getElementById("modal-success");
+
+      document.querySelectorAll("[data-open-modal]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          modalFields.classList.remove("hidden");
+          modalSuccess.classList.add("hidden");
+          modal.showModal();
+          wsName.focus();
+        });
+      });
+
+      document.getElementById("modal-close-btn").addEventListener("click", () => modal.close());
+      document.getElementById("modal-done-btn").addEventListener("click", () => modal.close());
+      modal.addEventListener("click", e => {
+        if (e.target === modal) modal.close();
+      });
+
+      function slugify(val) {
+        return val.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "your-team";
+      }
+
+      wsName.addEventListener("input", () => {
+        slugPreview.textContent = `docket.work/${slugify(wsName.value)}`;
+      });
+
+      document.getElementById("workspace-form").addEventListener("submit", e => {
+        e.preventDefault();
+        document.getElementById("confirm-slug").textContent = `docket.work/${slugify(wsName.value)}`;
+        document.getElementById("confirm-email").textContent = wsEmail.value.trim();
+        modalFields.classList.add("hidden");
+        modalSuccess.classList.remove("hidden");
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>

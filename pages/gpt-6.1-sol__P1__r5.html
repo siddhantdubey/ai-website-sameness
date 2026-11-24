@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f2">
+  <title>Forma — Make room for great work.</title>
+  <style>
+    :root {
+      --paper: #f7f7f2;
+      --ink: #26392e;
+      --muted: #728076;
+      --green: #284c39;
+      --lime: #d9ed9a;
+      --line: #dfe3d9;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #8ca852; outline-offset: 5px; }
+    .container { width: min(1200px, calc(100% - 64px)); margin: auto; }
+    nav { height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 750; letter-spacing: -1.4px; }
+    .mark { width: 29px; height: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; transform: rotate(-8deg); }
+    .mark i { background: var(--green); border-radius: 2px 9px 2px 2px; }
+    .mark i:nth-child(2) { background: #9dbb69; }
+    .mark i:nth-child(3) { grid-column: span 2; width: 13px; }
+    .nav-links, .nav-actions { display: flex; align-items: center; gap: 31px; font-size: 13px; font-weight: 600; }
+    .nav-links a:hover, footer a:hover { color: #759446; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 22px; padding: 16px 22px; background: var(--green); color: white; border: 1px solid var(--green); border-radius: 7px; font-size: 13px; font-weight: 600; transition: transform .2s, background .2s; }
+    .button:hover { background: #386349; transform: translateY(-2px); }
+    .button.light { color: var(--ink); background: transparent; border-color: #cdd5c9; }
+    .button.light:hover { background: #ebeee5; }
+    .nav-actions .button { padding: 12px 17px; }
+    .menu-toggle { display: none; border: 0; background: transparent; font-size: 24px; color: var(--ink); }
+    .hero { text-align: center; padding-top: 65px; position: relative; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; text-transform: uppercase; letter-spacing: 1.6px; font-size: 10px; font-weight: 700; }
+    .announcement { border: 1px solid #dce3ce; border-radius: 30px; padding: 8px 12px; background: #eff3e5; }
+    .announcement span:first-child { padding: 3px 6px; background: #dce9bd; border-radius: 3px; font-size: 9px; }
+    h1 { font-size: clamp(48px, 6.1vw, 80px); line-height: 1.07; letter-spacing: -4.5px; font-weight: 500; margin: 26px 0 21px; }
+    h1 em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: #7d9567; }
+    .hero-copy { font-size: 16px; line-height: 1.8; color: #737c72; margin: 0 auto; max-width: 480px; }
+    .hero-actions { margin-top: 27px; display: flex; justify-content: center; gap: 12px; }
+    .microcopy { color: #899084; font-size: 10px; margin-top: 15px; }
+    .microcopy span { margin: 0 8px; }
+    .workspace-wrap { position: relative; margin-top: 58px; padding: 0 34px; }
+    .workspace-wrap::before { content: ""; position: absolute; inset: 55px -35px -22px; background: #e6eadc; border-radius: 50% 50% 0 0; z-index: -1; }
+    .workspace { display: flex; height: 435px; text-align: left; border: 1px solid #d9dfd5; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 20px 55px #31482b13; }
+    .sidebar { width: 184px; flex-shrink: 0; background: #f8faf5; border-right: 1px solid #e8ece3; padding: 22px 16px; font-size: 10px; }
+    .team { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 24px; }
+    .team-icon { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 6px; background: #dce8cc; }
+    .side-item { padding: 9px 10px; color: #7f887c; display: flex; gap: 10px; border-radius: 5px; margin: 2px 0; }
+    .side-item.active { color: #3f5d33; background: #e8efdc; font-weight: 600; }
+    .side-label { font-size: 8px; letter-spacing: 1px; color: #9bA393; margin: 27px 10px 11px; }
+    .project-dot { display: inline-block; width: 6px; height: 6px; background: #a7bd8b; border-radius: 2px; margin-top: 2px; }
+    .side-bottom { margin: 54px 8px 0; display: flex; gap: 7px; align-items: center; }
+    .avatar { width: 24px; height: 24px; display: inline-grid; place-items: center; border-radius: 50%; font-size: 8px; font-weight: 600; background: #f0d8c1; color: #83573a; border: 2px solid white; }
+    .avatar.blue { background: #d8e5ec; color: #527387; }
+    .avatar.pink { background: #ecd8df; color: #9c6579; }
+    .avatar.green { background: #e1e7c6; color: #6d7845; }
+    .main-panel { flex: 1; min-width: 0; padding: 23px 25px; }
+    .app-top { display: flex; justify-content: space-between; align-items: center; color: #96a08f; font-size: 9px; border-bottom: 1px solid #eef0eb; padding-bottom: 16px; }
+    .app-top b { color: #5c6954; font-weight: 500; }
+    .project-heading { display: flex; align-items: center; justify-content: space-between; margin-top: 23px; }
+    .project-heading h3 { font-size: 22px; letter-spacing: -.7px; font-weight: 500; margin: 0; }
+    .project-heading p { color: #98a18f; font-size: 10px; margin: 8px 0 0; }
+    .avatar-stack { display: flex; align-items: center; }
+    .avatar-stack .avatar { margin-left: -6px; }
+    .add-task { border: 0; background: var(--green); color: white; padding: 9px 12px; border-radius: 5px; margin-left: 13px; font-size: 9px; }
+    .board-nav { display: flex; gap: 23px; border-bottom: 1px solid #e9ede5; font-size: 9px; color: #929b8b; margin-top: 24px; }
+    .board-tab { padding: 0 0 11px; border: 0; background: none; color: inherit; font-size: inherit; }
+    .board-tab.selected { border-bottom: 2px solid #54764a; color: #395932; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding-top: 16px; }
+    .column { background: #f7f9f4; border-radius: 6px; padding: 10px; }
+    .column-title { display: flex; align-items: center; justify-content: space-between; font-size: 9px; margin: 0 1px 11px; }
+    .column-title span { color: #a3ac9b; margin-left: 5px; }
+    .task { background: white; border: 1px solid #e7ebe2; border-radius: 6px; padding: 12px; margin-bottom: 9px; }
+    .tag { display: inline-block; font-size: 7px; padding: 4px 6px; border-radius: 3px; background: #e9e2f3; color: #88759d; }
+    .tag.orange { background: #faeada; color: #b38b5b; }
+    .tag.sage { background: #e4edd8; color: #789253; }
+    .task h4 { font-size: 10px; font-weight: 500; margin: 10px 0; line-height: 1.5; }
+    .task p { font-size: 8px; color: #9ba393; line-height: 1.5; margin: 0 0 12px; }
+    .task-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 8px; color: #9da593; }
+    .floating-note { position: absolute; right: -8px; top: 117px; background: #fff; border: 1px solid #e4e8dc; border-radius: 9px; padding: 14px 18px; box-shadow: 0 8px 30px #3b4f2510; text-align: left; transform: rotate(5deg); font-size: 10px; }
+    .floating-note b { display: block; margin-bottom: 6px; font-size: 12px; }
+    .floating-note span { color: #8e9786; }
+    .spark { color: #79974e; position: absolute; top: 45px; left: 2px; font-size: 47px; transform: rotate(-12deg); }
+    .trust { padding: 66px 0 53px; text-align: center; border-bottom: 1px solid var(--line); }
+    .trust p { font-size: 11px; color: #939b8c; margin: 0 0 28px; }
+    .logos { display: flex; justify-content: space-around; align-items: center; gap: 25px; color: #778170; font-size: 23px; font-weight: 700; letter-spacing: -1px; }
+    .logos span:nth-child(2) { font-family: Georgia, serif; font-style: italic; }
+    .logos span:nth-child(4) { font-weight: 400; letter-spacing: -1.5px; }
+    .features { padding: 82px 0; }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 35px; margin-bottom: 36px; }
+    h2 { font-weight: 500; font-size: clamp(30px, 3.5vw, 43px); line-height: 1.15; letter-spacing: -1.8px; margin: 15px 0 0; }
+    .section-heading > p { max-width: 300px; font-size: 13px; color: var(--muted); line-height: 1.8; margin: 0 0 3px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 21px; }
+    .feature-card { border: 1px solid var(--line); border-radius: 10px; padding: 27px; }
+    .feature-icon { width: 37px; height: 37px; border: 1px solid #dce2d2; border-radius: 8px; display: grid; place-items: center; font-size: 19px; background: #eef2e6; }
+    .feature-card h3 { font-size: 17px; letter-spacing: -.4px; margin: 24px 0 11px; font-weight: 500; }
+    .feature-card p { color: var(--muted); font-size: 12px; line-height: 1.9; margin: 0; }
+    .quote { display: grid; grid-template-columns: 150px 1fr; gap: 45px; align-items: center; padding: 40px 60px; background: #ecf0e3; border-radius: 10px; }
+    .quote-art { height: 134px; border-radius: 70px 70px 12px 12px; background: #d6e2be; position: relative; overflow: hidden; display: grid; place-items: center; font-family: Georgia, serif; color: #70894f; font-size: 140px; padding-top: 46px; }
+    blockquote { font-size: 23px; line-height: 1.5; letter-spacing: -.6px; margin: 0 0 18px; }
+    .quote cite { font-style: normal; font-size: 11px; color: #79846e; }
+    .quote cite b { color: #415338; }
+    .cta { margin-top: 80px; padding: 62px 30px; background: var(--green); color: white; border-radius: 12px; text-align: center; }
+    .cta h2 { margin: 0; }
+    .cta p { color: #bdcbb9; font-size: 13px; line-height: 1.8; margin: 17px 0 25px; }
+    .cta .button { color: #31452b; background: var(--lime); border-color: var(--lime); }
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 34px 0; }
+    footer .logo { font-size: 23px; }
+    footer .mark { transform: scale(.8) rotate(-8deg); }
+    .footer-links { display: flex; gap: 24px; font-size: 11px; color: #808a77; }
+    .copyright { font-size: 10px; color: #939b8c; }
+    dialog { border: 1px solid var(--line); border-radius: 16px; padding: 36px; max-width: 420px; width: calc(100% - 32px); background: var(--paper); color: var(--ink); }
+    dialog::backdrop { background: #20332680; backdrop-filter: blur(5px); }
+    dialog h2 { font-size: 30px; margin-top: 0; }
+    dialog p { font-size: 13px; line-height: 1.7; color: var(--muted); }
+    dialog label { display: block; font-size: 12px; margin: 24px 0 8px; }
+    dialog input { width: 100%; padding: 13px; border: 1px solid #cbd4c1; border-radius: 6px; background: white; }
+    dialog .button { width: 100%; margin-top: 15px; }
+    .close { position: absolute; top: 10px; right: 14px; border: 0; background: none; color: var(--muted); font-size: 24px; }
+    @media (min-width: 1500px) { .hero { padding-top: 85px; } }
+    @media (max-width: 900px) {
+      .nav-links { gap: 19px; }
+      .nav-actions > a:first-child { display: none; }
+      .workspace-wrap { padding: 0; }
+      .sidebar { width: 145px; padding: 20px 10px; }
+      .main-panel { padding: 22px 17px; }
+      .floating-note { right: -15px; }
+      .board { gap: 8px; }
+      .column { padding: 7px; }
+      .task { padding: 9px; }
+      .feature-card { padding: 23px; }
+      .quote { padding: 35px; gap: 30px; }
+    }
+    @media (max-width: 640px) {
+      .container { width: calc(100% - 36px); }
+      nav { height: 78px; position: relative; }
+      .logo { font-size: 25px; }
+      .nav-actions { margin-left: auto; }
+      .nav-actions .button { font-size: 11px; padding: 11px 13px; }
+      .menu-toggle { display: block; }
+      .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--paper); padding: 22px; border: 1px solid var(--line); border-radius: 8px; z-index: 5; box-shadow: 0 12px 20px #26392e10; }
+      .nav-links.open { display: flex; flex-direction: column; align-items: flex-start; }
+      .hero { padding-top: 38px; }
+      .announcement { font-size: 8px; letter-spacing: .7px; }
+      h1 { font-size: 53px; letter-spacing: -3px; margin-top: 25px; }
+      .hero-copy { font-size: 14px; max-width: 330px; }
+      .hero-actions .button { padding: 14px 17px; gap: 13px; font-size: 12px; }
+      .workspace-wrap { margin-top: 42px; }
+      .workspace-wrap::before { inset: 45px -18px -15px; }
+      .workspace { height: 350px; }
+      .sidebar, .floating-note, .spark { display: none; }
+      .main-panel { padding: 17px 12px; }
+      .project-heading h3 { font-size: 19px; }
+      .project-heading { margin-top: 18px; }
+      .project-heading p { font-size: 9px; }
+      .avatar-stack > .avatar { display: none; }
+      .add-task { padding: 8px; margin-left: 5px; }
+      .board-nav { margin-top: 20px; }
+      .board { gap: 6px; }
+      .column { padding: 6px; }
+      .column-title { font-size: 8px; }
+      .task { padding: 7px; }
+      .task h4 { font-size: 9px; }
+      .task p { display: none; }
+      .task-bottom { font-size: 7px; }
+      .tag { font-size: 6px; padding: 3px; }
+      .trust { padding: 46px 0 35px; }
+      .logos { gap: 20px; flex-wrap: wrap; font-size: 20px; }
+      .logos span:last-child { display: none; }
+      .features { padding: 53px 0; }
+      .section-heading { display: block; }
+      .section-heading > p { margin-top: 19px; max-width: 100%; }
+      .feature-grid { grid-template-columns: 1fr; gap: 12px; }
+      .feature-card { padding: 24px; }
+      .feature-card h3 { margin-top: 18px; }
+      .quote { grid-template-columns: 1fr; padding: 28px; gap: 20px; }
+      .quote-art { display: none; }
+      blockquote { font-size: 21px; }
+      .cta { margin-top: 50px; padding: 43px 22px; }
+      footer { flex-wrap: wrap; padding-top: 29px; }
+      .copyright { width: 100%; margin: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <nav aria-label="Main navigation">
+      <a href="#" class="logo" aria-label="Forma home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>forma</a>
+      <div class="nav-links" id="navigation">
+        <a href="#product">Product</a>
+        <a href="#features">Why Forma</a>
+        <a href="#customers">Customers</a>
+      </div>
+      <div class="nav-actions"><a href="#get-started" data-signup>Join the waitlist</a><a class="button" href="#get-started" data-signup>Get early access <span aria-hidden="true">↗</span></a></div>
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navigation">☰</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <a class="eyebrow announcement" href="#features"><span>MEET FORMA</span> A little less busy. A lot more done. <span aria-hidden="true">↗</span></a>
+      <h1>Great work.<br>Less <em>busywork.</em></h1>
+      <p class="hero-copy">Bring your projects, people, and plans together.<br>One calm place to move work forward.</p>
+      <div class="hero-actions">
+        <a href="#get-started" class="button" data-signup>Get early access <span aria-hidden="true">↗</span></a>
+        <a href="#product" class="button light"><span aria-hidden="true">▷</span> Explore the workspace</a>
+      </div>
+      <p class="microcopy">Built for teams of every size <span>·</span> More clarity, less chaos</p>
+
+      <div class="workspace-wrap" id="product">
+        <span class="spark" aria-hidden="true">✳</span>
+        <div class="workspace" aria-label="Example Forma project workspace">
+          <aside class="sidebar">
+            <div class="team"><span class="team-icon">s.</span> Studio workspace <span style="margin-left:auto;color:#9aa58f">⌄</span></div>
+            <div class="side-item">⌂ <span>Overview</span></div>
+            <div class="side-item">☑ <span>My tasks</span></div>
+            <div class="side-item">▣ <span>Inbox</span><span style="margin-left:auto">3</span></div>
+            <div class="side-label">WORKSPACE</div>
+            <div class="side-item active">▦ <span>Projects</span></div>
+            <div class="side-item">◷ <span>Team calendar</span></div>
+            <div class="side-item">♧ <span>People</span></div>
+            <div class="side-label">YOUR PROJECTS <span style="float:right">+</span></div>
+            <div class="side-item"><span class="project-dot"></span>Website refresh</div>
+            <div class="side-item"><span class="project-dot" style="background:#d8b6a0"></span>Brand foundations</div>
+            <div class="side-bottom"><span class="avatar">JL</span><span>Jamie Lee</span></div>
+          </aside>
+          <div class="main-panel">
+            <div class="app-top"><span>Projects <span style="margin:0 9px">/</span> <b>Website refresh</b></span><span>⌕ &nbsp; ···</span></div>
+            <div class="project-heading">
+              <div><h3>Website refresh <span style="font-size:15px;color:#b6c29f">☆</span></h3><p>A fresh start for our little corner of the internet.</p></div>
+              <div class="avatar-stack"><span class="avatar pink">AK</span><span class="avatar blue">MC</span><span class="avatar green">JL</span><button class="add-task" data-signup>＋ Add task</button></div>
+            </div>
+            <div class="board-nav" aria-label="Workspace preview">
+              <span class="board-tab selected">▦ &nbsp; Board</span>
+              <span class="board-tab">☷ &nbsp; List</span>
+              <span class="board-tab">▣ &nbsp; Calendar</span>
+              <span style="margin-left:auto">⚙ &nbsp; Filter</span>
+            </div>
+            <div class="board">
+              <div class="column">
+                <div class="column-title"><div>○ &nbsp; To do <span>3</span></div><span>＋</span></div>
+                <article class="task"><span class="tag">Design</span><h4>Explore homepage concepts</h4><p>A little inspiration goes a long way.</p><div class="task-bottom"><span class="avatar pink">AK</span><span>◷ Jun 24</span></div></article>
+                <article class="task"><span class="tag orange">Content</span><h4>Find our brand voice</h4><div class="task-bottom"><span class="avatar blue">MC</span><span>☷ 0/3</span></div></article>
+              </div>
+              <div class="column">
+                <div class="column-title"><div>◐ &nbsp; In progress <span>2</span></div><span>＋</span></div>
+                <article class="task"><span class="tag orange">Content</span><h4>Write the story behind us</h4><p>Make it sound like us.</p><div class="task-bottom"><span class="avatar blue">MC</span><span>◷ Jun 22</span></div></article>
+                <article class="task"><span class="tag">Design</span><h4>Build the component library</h4><div class="task-bottom"><span class="avatar green">JL</span><span>☷ 4/6</span></div></article>
+              </div>
+              <div class="column">
+                <div class="column-title"><div style="color:#6e8953">● &nbsp; Done <span>5</span></div><span>＋</span></div>
+                <article class="task"><span class="tag sage">Strategy</span><h4>Kick things off together</h4><p>Good people. A clear direction.</p><div class="task-bottom"><span class="avatar green">JL</span><span style="color:#809961">✓ Jun 18</span></div></article>
+                <article class="task"><span class="tag">Design</span><h4>Gather the good stuff</h4><div class="task-bottom"><span class="avatar pink">AK</span><span style="color:#809961">✓ Jun 19</span></div></article>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating-note" aria-hidden="true"><b>✦ &nbsp; A little more in sync.</b><span>And a lot less “any updates?”</span></div>
+      </div>
+    </section>
+
+    <section class="trust container" aria-label="Designed for modern teams">
+      <p>For the teams making good things happen.</p>
+      <div class="logos" aria-label="Creative studios, product teams, startups, and agencies">
+        <span>✳ studios</span><span>good people.</span><span>↗ startups</span><span>product teams</span><span>◒ agencies</span>
+      </div>
+    </section>
+
+    <section class="features container" id="features">
+      <div class="section-heading">
+        <div><span class="eyebrow">LESS FRICTION. MORE FLOW.</span><h2>Everything in its place.<br>Everyone on the same page.</h2></div>
+        <p>Enough structure to keep things moving. Enough space to do things your way.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-icon" aria-hidden="true">▦</div><h3>See the bigger picture.</h3><p>Turn big ideas into clear, manageable steps. Keep every task, deadline, and detail in view.</p></article>
+        <article class="feature-card"><div class="feature-icon" aria-hidden="true">↗</div><h3>Find your team's rhythm.</h3><p>From the first spark to the final handoff, build a workflow that fits the way your team works.</p></article>
+        <article class="feature-card"><div class="feature-icon" aria-hidden="true">◎</div><h3>Make space for focus.</h3><p>Know what matters, who's on it, and what's next. Spend less time checking in and more time creating.</p></article>
+      </div>
+    </section>
+
+    <section class="container" id="customers">
+      <div class="quote">
+        <div class="quote-art" aria-hidden="true">“</div>
+        <div><span class="eyebrow" style="margin-bottom:15px">OUR PHILOSOPHY</span><blockquote>Work feels better when everyone has a clear path forward. A little clarity makes a lot possible.</blockquote><cite><b>The Forma team</b> &nbsp;·&nbsp; Built around better days at work</cite></div>
+      </div>
+    </section>
+
+    <section class="container" id="get-started">
+      <div class="cta"><span class="eyebrow" style="color:#c4d6aa;margin-bottom:18px">A FRESH WAY FORWARD</span><h2>Your next great project<br>starts with a little clarity.</h2><p>Get a first look at a calmer way to work together.</p><button class="button" data-signup>Join the early access list <span aria-hidden="true">↗</span></button></div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <a class="logo" href="#" aria-label="Forma home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>forma</a>
+    <div class="footer-links"><a href="#product">Product</a><a href="#features">Why Forma</a><a href="mailto:hello@forma.example">Say hello ↗</a></div>
+    <p class="copyright">© <span id="year">2026</span> Forma. Room for great work.</p>
+  </footer>
+
+  <dialog id="signup" aria-labelledby="signup-title">
+    <button class="close" aria-label="Close dialog">×</button>
+    <h2 id="signup-title">Make room for<br>what's next.</h2>
+    <p>This demo gives you a preview of Forma. Enter your email to try the signup experience.</p>
+    <form id="signup-form">
+      <label for="email">Work email</label>
+      <input id="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+      <button class="button" type="submit">Try the signup <span aria-hidden="true">↗</span></button>
+    </form>
+    <p id="signup-status" role="status" hidden></p>
+    <p style="font-size:10px">Demo only. Your email stays in this page and is not submitted or stored.</p>
+  </dialog>
+
+  <script>
+    const menu = document.querySelector('.menu-toggle');
+    const navigation = document.querySelector('#navigation');
+    menu.addEventListener('click', () => {
+      const open = menu.getAttribute('aria-expanded') !== 'true';
+      menu.setAttribute('aria-expanded', String(open));
+      navigation.classList.toggle('open', open);
+    });
+    navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navigation.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+    }));
+    const dialog = document.querySelector('#signup');
+    document.querySelectorAll('[data-signup]').forEach(trigger => {
+      trigger.addEventListener('click', event => {
+        event.preventDefault();
+        dialog.showModal();
+      });
+    });
+    dialog.querySelector('.close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => {
+      const bounds = dialog.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+    });
+    document.querySelector('#signup-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const status = document.querySelector('#signup-status');
+      status.hidden = false;
+      status.textContent = 'You’re all set for this preview. In the live app, this is where we’d confirm your place on the list.';
+      event.currentTarget.reset();
+    });
+    document.querySelector('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

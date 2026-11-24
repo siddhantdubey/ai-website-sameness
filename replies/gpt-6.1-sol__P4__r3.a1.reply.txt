@@ -1,0 +1,307 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#302e28">
+  <meta name="description" content="Vale & Rowan is an independent law firm offering thoughtful counsel for businesses, families, and the moments that matter.">
+  <title>Vale & Rowan — Counsel with perspective.</title>
+  <style>
+    :root {
+      --paper: #f6f3ec;
+      --ink: #302e28;
+      --muted: #716f65;
+      --line: #d9d5ca;
+      --green: #344b40;
+      --lime: #dce4b5;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #9d743e; outline-offset: 6px; }
+    ::selection { background: var(--lime); color: var(--ink); }
+    .wrap { width: min(1280px, calc(100% - 112px)); margin: auto; }
+    .skip { position: absolute; top: -100px; left: 20px; padding: 14px; background: white; z-index: 10; }
+    .skip:focus { top: 15px; }
+    header { border-bottom: 1px solid var(--line); }
+    .nav { min-height: 104px; display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .brand { font-family: var(--serif); font-size: 29px; letter-spacing: -1.1px; white-space: nowrap; }
+    .brand small { display: block; font-family: Arial, sans-serif; font-size: 9px; letter-spacing: 3.6px; margin-top: 7px; text-transform: uppercase; }
+    nav { display: flex; gap: 34px; align-items: center; font-size: 12px; }
+    nav a:not(.button) { padding: 8px 0; border-bottom: 1px solid transparent; }
+    nav a:not(.button):hover { border-color: var(--ink); }
+    .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 34px; padding: 19px 23px; background: var(--green); color: white; font-size: 12px; transition: background .2s, transform .2s; }
+    .button:hover { background: #22392e; transform: translateY(-2px); }
+    .button.light { background: var(--lime); color: var(--ink); }
+    .button.light:hover { background: #eaf0cf; }
+    .arrow { font-size: 20px; line-height: .8; }
+    .menu-toggle { display: none; border: 1px solid var(--line); padding: 10px 14px; background: transparent; }
+    .eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+    .hero { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 690px; padding-top: 54px; padding-bottom: 54px; gap: 60px; align-items: center; }
+    .hero-copy { padding: 28px 0; }
+    .hero .eyebrow { display: flex; align-items: center; gap: 12px; }
+    .hero .eyebrow::before { content: ""; height: 6px; width: 6px; border-radius: 50%; background: var(--green); }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font: normal clamp(58px, 5.9vw, 86px)/1.04 var(--serif); letter-spacing: -3.6px; margin: 29px 0; }
+    h1 em { font-weight: normal; color: var(--green); }
+    .intro { color: var(--muted); font-size: 15px; line-height: 1.85; max-width: 370px; margin-bottom: 31px; }
+    .hero-note { margin-top: 40px; display: flex; gap: 11px; align-items: center; color: var(--muted); font-size: 10px; }
+    .hero-note span:first-child { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--line); border-radius: 50%; color: var(--green); font-size: 12px; }
+    .art { height: 565px; position: relative; overflow: hidden; background: #c3b79f; }
+    .art svg { display: block; width: 100%; height: 100%; }
+    .art-label { position: absolute; bottom: 24px; left: 25px; right: 25px; color: white; display: flex; justify-content: space-between; align-items: end; font-size: 9px; letter-spacing: 1.5px; line-height: 1.6; text-transform: uppercase; }
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); padding: 28px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .principle { padding: 0 32px; display: flex; align-items: center; gap: 17px; border-right: 1px solid var(--line); }
+    .principle:first-child { padding-left: 0; }
+    .principle:last-child { border: 0; }
+    .principle span { font: italic 25px var(--serif); color: #8e927a; }
+    .principle p { font-size: 12px; line-height: 1.6; }
+    .section { padding: 96px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 43px; }
+    h2 { font: normal clamp(35px, 3.5vw, 49px)/1.15 var(--serif); letter-spacing: -1.6px; }
+    .section-head h2 { margin-top: 18px; }
+    .section-head > p { max-width: 310px; font-size: 13px; line-height: 1.8; color: var(--muted); }
+    .services { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .service { padding: 31px 29px 33px; border-right: 1px solid var(--line); }
+    .service:first-child { padding-left: 0; }
+    .service:last-child { border: 0; }
+    .service-top { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; margin-bottom: 44px; }
+    .service-icon { width: 32px; height: 32px; color: var(--green); }
+    h3 { font: normal 27px var(--serif); letter-spacing: -.6px; margin-bottom: 15px; }
+    .service p { font-size: 13px; color: var(--muted); line-height: 1.85; max-width: 290px; }
+    .service ul { padding: 0; list-style: none; margin: 24px 0 0; font-size: 10px; letter-spacing: .4px; line-height: 2.1; }
+    .approach { background: #eae8df; }
+    .approach-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; }
+    .approach h2 { margin-top: 24px; }
+    .approach-copy > p { font: normal 24px/1.5 var(--serif); letter-spacing: -.3px; }
+    .steps { margin-top: 30px; }
+    .step { display: grid; grid-template-columns: 28px 1fr; gap: 15px; padding: 19px 0; border-top: 1px solid #cecec1; }
+    .step > span { font-size: 10px; padding-top: 3px; color: var(--muted); }
+    .step h3 { font-family: Arial, sans-serif; font-size: 12px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0; }
+    .step p { font-size: 12px; line-height: 1.7; color: var(--muted); }
+    .contact { background: var(--green); color: var(--paper); padding: 76px 0; }
+    .contact-grid { display: flex; justify-content: space-between; align-items: center; gap: 50px; }
+    .contact h2 { margin: 21px 0 17px; font-size: clamp(40px, 4vw, 58px); }
+    .contact p { color: #c6cec5; font-size: 13px; line-height: 1.8; max-width: 430px; }
+    .contact-action { min-width: 240px; }
+    .contact-action .button { width: 100%; }
+    .contact-action > a:last-child { display: block; margin-top: 19px; text-align: center; color: #d1d8cf; font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+    footer { padding: 39px 0 25px; }
+    .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 32px; }
+    .footer-top p { color: var(--muted); font: italic 17px var(--serif); }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 25px; border-top: 1px solid var(--line); padding-top: 20px; font-size: 9px; color: var(--muted); line-height: 1.7; }
+    .footer-bottom p:last-child { max-width: 470px; text-align: right; }
+    @media (min-width: 1450px) { .hero { gap: 90px; } }
+    @media (max-width: 1000px) {
+      .wrap { width: calc(100% - 64px); }
+      nav { gap: 20px; }
+      .hero { gap: 35px; min-height: 620px; }
+      h1 { font-size: 62px; }
+      .art { height: 500px; }
+      .principle { padding: 0 20px; }
+      .approach-grid { gap: 50px; }
+    }
+    @media (max-width: 700px) {
+      .wrap { width: calc(100% - 40px); }
+      .nav { min-height: 85px; flex-wrap: wrap; gap: 0; padding: 17px 0; }
+      .brand { font-size: 25px; }
+      .brand small { font-size: 8px; }
+      .menu-toggle { display: block; }
+      nav { display: none; width: 100%; flex-direction: column; align-items: stretch; padding: 25px 0 5px; gap: 18px; }
+      nav.open { display: flex; }
+      .hero { grid-template-columns: 1fr; padding: 38px 0 32px; gap: 35px; }
+      .hero-copy { padding: 0; }
+      h1 { font-size: clamp(55px, 13vw, 75px); letter-spacing: -2.8px; margin: 25px 0; }
+      .intro { max-width: 400px; }
+      .hero-note { margin-top: 25px; }
+      .art { height: 390px; }
+      .principles { grid-template-columns: 1fr; padding: 9px 0; }
+      .principle, .principle:first-child { border-right: 0; padding: 16px 0; }
+      .principle + .principle { border-top: 1px solid var(--line); }
+      .section { padding: 62px 0; }
+      .section-head { display: block; margin-bottom: 30px; }
+      .section-head > p { margin-top: 20px; }
+      .services { grid-template-columns: 1fr; }
+      .service, .service:first-child { padding: 28px 0; border-right: 0; }
+      .service + .service { border-top: 1px solid var(--line); }
+      .service-top { margin-bottom: 22px; }
+      .service p { max-width: 100%; }
+      .service ul { margin-top: 15px; }
+      .approach-grid { grid-template-columns: 1fr; gap: 30px; }
+      .approach-copy > p { font-size: 23px; }
+      .contact { padding: 58px 0; }
+      .contact-grid { display: block; }
+      .contact-action { margin-top: 30px; max-width: 340px; }
+      .footer-top, .footer-bottom { align-items: start; flex-direction: column; gap: 20px; }
+      .footer-bottom p:last-child { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+      .button:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to content</a>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#" aria-label="Vale and Rowan home">Vale & Rowan<small>Attorneys at law</small></a>
+      <button class="menu-toggle" aria-controls="navigation" aria-expanded="false">Menu</button>
+      <nav id="navigation" aria-label="Main navigation">
+        <a href="#practice">Our expertise</a>
+        <a href="#approach">Our approach</a>
+        <a class="button" href="#contact">Let’s talk <span class="arrow" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">An independent law firm</div>
+        <h1 id="hero-title">Clear counsel.<br>Steady hands.<br><em>Your next chapter.</em></h1>
+        <p class="intro">Life moves forward. We help you move with confidence, bringing clarity and personal attention to the legal matters that shape your future.</p>
+        <a href="#contact" class="button">Start a conversation <span class="arrow" aria-hidden="true">↗</span></a>
+        <div class="hero-note"><span aria-hidden="true">✓</span><span>Thoughtful advice. A relationship built around you.</span></div>
+      </div>
+      <div class="art">
+        <svg viewBox="0 0 500 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="art-title">
+          <title id="art-title">Architectural illustration of sunlit stone arches and a quiet olive tree</title>
+          <defs>
+            <linearGradient id="wall" x2="1" y2="1"><stop stop-color="#dcd4c3"/><stop offset="1" stop-color="#b2a58e"/></linearGradient>
+            <linearGradient id="inside" x2="1" y2=".3"><stop stop-color="#6a6655"/><stop offset="1" stop-color="#99917b"/></linearGradient>
+            <linearGradient id="floor" x2=".3" y2="1"><stop stop-color="#c3b79f"/><stop offset="1" stop-color="#8b8975"/></linearGradient>
+            <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".075"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+          </defs>
+          <g filter="url(#grain)">
+            <path fill="url(#wall)" d="M0 0h500v620H0z"/>
+            <path fill="#b6aa94" d="M0 0h72v480H0z"/>
+            <path fill="#e2d9c7" d="M73 0h13v480H73z"/>
+            <path fill="url(#inside)" d="M137 474V217a130 130 0 0 1 260 0v257z"/>
+            <path fill="#dfd6c4" fill-rule="evenodd" d="M108 480V217a159 159 0 0 1 318 0v263h-29V217a130 130 0 0 0-260 0v263z"/>
+            <path fill="#a99c84" d="M137 474V217a130 130 0 0 1 130-130v19a111 111 0 0 0-111 111v257z"/>
+            <path fill="#b8ad95" d="M259 474V267a67 67 0 0 1 134 0v207z"/>
+            <path fill="#d9cfb9" d="M276 474V267a50 50 0 0 1 100 0v207z"/>
+            <path fill="#7e816d" d="M287 474V269a39 39 0 0 1 78 0v205z"/>
+            <path fill="url(#floor)" d="M0 474h500v146H0z"/>
+            <path fill="#e1d6bc" opacity=".65" d="m276 474-70 146h150l20-146z"/>
+            <path fill="#5b6050" opacity=".23" d="m137 474-137 97v49h134l131-146z"/>
+            <path d="m0 511 500 5M0 574l500 12M90 474 29 620m182-146-17 146m188-146 62 146" fill="none" stroke="#766f5e" stroke-width="1" opacity=".25"/>
+            <path d="M75 484c3-89 5-129 17-194m-13 98-26-48m29 19 33-41m-25 5-13-44" fill="none" stroke="#555844" stroke-width="4"/>
+            <g fill="#656d50">
+              <ellipse cx="55" cy="332" rx="12" ry="28" transform="rotate(-35 55 332)"/>
+              <ellipse cx="101" cy="309" rx="12" ry="27" transform="rotate(38 101 309)"/>
+              <ellipse cx="77" cy="284" rx="12" ry="26" transform="rotate(-21 77 284)"/>
+              <ellipse cx="94" cy="269" rx="11" ry="24" transform="rotate(20 94 269)"/>
+              <ellipse cx="43" cy="364" rx="11" ry="25" transform="rotate(-48 43 364)"/>
+              <ellipse cx="107" cy="357" rx="12" ry="27" transform="rotate(48 107 357)"/>
+              <ellipse cx="66" cy="385" rx="11" ry="26" transform="rotate(-27 66 385)"/>
+            </g>
+            <path fill="#8d8069" d="M46 453h61l-9 55H56z"/>
+            <path fill="#b1a28a" d="M44 451h65v9H44z"/>
+          </g>
+        </svg>
+        <div class="art-label"><span>A considered approach.<br>A clearer path forward.</span><span aria-hidden="true">01 /</span></div>
+      </div>
+    </section>
+
+    <div class="wrap principles" aria-label="Our commitments">
+      <div class="principle"><span aria-hidden="true">01</span><p>Direct access to your attorney</p></div>
+      <div class="principle"><span aria-hidden="true">02</span><p>Practical advice, in plain language</p></div>
+      <div class="principle"><span aria-hidden="true">03</span><p>Your priorities at the center</p></div>
+    </div>
+
+    <section id="practice" class="wrap section" aria-labelledby="practice-title">
+      <div class="section-head">
+        <div><div class="eyebrow">Where we can help</div><h2 id="practice-title">For what matters most.</h2></div>
+        <p>Focused expertise for your business, your family, and the plans you’re making for tomorrow.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <div class="service-top"><span>01 / BUSINESS</span><svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M5 12h22v15H5zM11 12V6h10v6M5 18h22M14 17h4v4h-4z"/></svg></div>
+          <h3>Build with confidence.</h3>
+          <p>Practical legal guidance for the decisions, agreements, and relationships that keep your business moving.</p>
+          <ul><li>Business formation & governance</li><li>Contracts & commercial agreements</li><li>Ongoing business counsel</li></ul>
+        </article>
+        <article class="service">
+          <div class="service-top"><span>02 / ESTATE PLANNING</span><svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M9 4h14v24H9zM12 10h8m-8 5h8m-8 5h5M5 8v20h4"/></svg></div>
+          <h3>Plan for the people you love.</h3>
+          <p>Make your wishes clear and give your family a thoughtful plan for whatever the future may hold.</p>
+          <ul><li>Wills & trusts</li><li>Powers of attorney</li><li>Estate administration</li></ul>
+        </article>
+        <article class="service">
+          <div class="service-top"><span>03 / REAL ESTATE</span><svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m3 15 13-11 13 11M7 12v16h18V12M13 28V18h6v10"/></svg></div>
+          <h3>A sound foundation.</h3>
+          <p>Careful attention to the details of buying, selling, and leasing, so you can take your next step with clarity.</p>
+          <ul><li>Residential & commercial transactions</li><li>Lease review & negotiation</li><li>Property agreements</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="approach" class="approach section" aria-labelledby="approach-title">
+      <div class="wrap approach-grid">
+        <div><div class="eyebrow">The way we work</div><h2 id="approach-title">Good counsel starts<br>with listening.</h2></div>
+        <div class="approach-copy">
+          <p>Behind every legal matter is a person with a bigger picture. We take the time to understand yours.</p>
+          <div class="steps">
+            <div class="step"><span>01</span><div><h3>A conversation first.</h3><p>We listen to what brought you here, what matters to you, and what you want to achieve.</p></div></div>
+            <div class="step"><span>02</span><div><h3>A clear path forward.</h3><p>We explain your options, discuss scope and fees, and agree on the right next steps.</p></div></div>
+            <div class="step"><span>03</span><div><h3>A partner along the way.</h3><p>You work directly with your attorney, with thoughtful guidance and updates as your matter moves forward.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap contact-grid">
+        <div><div class="eyebrow">Your next step</div><h2 id="contact-title">Let’s find a way forward.</h2><p>Tell us a little about what you need. We’ll be in touch to discuss how we may be able to help.</p></div>
+        <div class="contact-action">
+          <a class="button light" href="mailto:hello@valeandrowan.example?subject=Consultation%20inquiry">Request a consultation <span class="arrow" aria-hidden="true">↗</span></a>
+          <a href="mailto:hello@valeandrowan.example">hello@valeandrowan.example</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="footer-top">
+      <a class="brand" href="#">Vale & Rowan<small>Attorneys at law</small></a>
+      <p>Perspective for the road ahead.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="year">2026</span> Vale & Rowan. All rights reserved.<br>Illustrative firm website. Replace sample contact details before publishing.</p>
+      <p>This website provides general information, not legal advice. Contacting the firm does not establish an attorney-client relationship. Please do not send confidential information before an engagement is agreed.</p>
+    </div>
+  </footer>
+  <script>
+    const toggle = document.querySelector(".menu-toggle");
+    const navigation = document.getElementById("navigation");
+    toggle.addEventListener("click", () => {
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Close" : "Menu";
+      navigation.classList.toggle("open", open);
+    });
+    navigation.addEventListener("click", event => {
+      if (event.target.closest("a")) {
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.textContent = "Menu";
+        navigation.classList.remove("open");
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && navigation.classList.contains("open")) {
+        toggle.click();
+        toggle.focus();
+      }
+    });
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+```

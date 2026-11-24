@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Casa Oliva is a neighborhood Italian trattoria in Brooklyn serving handmade pasta, seasonal plates, and Italian wine.">
+  <title>Casa Oliva · Neighborhood Italian Trattoria</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f1e5;
+      --ink: #242b20;
+      --olive: #343e29;
+      --red: #a13c2d;
+      --line: #d5cbb8;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans); }
+    a { color: inherit; text-underline-offset: .22em; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    h1, h2, h3, p, figure, dl, dd { margin: 0; }
+    .wrap { width: min(100% - 3rem, 76rem); margin-inline: auto; }
+    .eyebrow { font-size: .73rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .button {
+      display: inline-block;
+      padding: .7rem 1.2rem;
+      border: 1px solid transparent;
+      background: var(--red);
+      color: white;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .button:hover { background: #843023; }
+    .skip { position: absolute; top: .5rem; left: .5rem; z-index: 1; transform: translateY(-150%); }
+    .skip:focus { transform: none; }
+
+    header { border-bottom: 1px solid var(--line); }
+    .topbar { min-height: 5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .wordmark { color: var(--red); font: 700 1.65rem/1 var(--serif); text-decoration: none; }
+    nav { display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2rem); }
+    nav a { font-size: .88rem; font-weight: 650; text-decoration: none; }
+    nav a:not(.button):hover { text-decoration: underline; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: clamp(2rem, 6vw, 6rem);
+      padding-block: clamp(2.5rem, 7vw, 6rem);
+    }
+    .hero .eyebrow, .section-title .eyebrow { color: var(--red); }
+    h1 { margin-block: .8rem 1.25rem; font: 400 clamp(3.25rem, 7.4vw, 7rem)/.94 var(--serif); letter-spacing: -.065em; }
+    h1 em { color: var(--red); font-weight: 400; }
+    .hero p:not(.eyebrow) { max-width: 32ch; font-size: 1.08rem; }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 1.8rem; }
+    .text-link { font-size: .9rem; font-weight: 700; }
+
+    .art {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1;
+      overflow: hidden;
+      container-type: inline-size;
+      background-color: #e8d6ba;
+      background-image:
+        repeating-linear-gradient(90deg, #a33c3033 0 16px, transparent 16px 32px),
+        repeating-linear-gradient(0deg, #a33c3033 0 16px, transparent 16px 32px);
+    }
+    .plate {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 75%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, #efe3cb 0 57%, #ded0b7 58%, #fff8e9 61% 74%, #c4b38f 75%);
+      border: .28rem solid #fdf4e3;
+      box-shadow: .8rem 1.15rem 1.8rem #4a261b65, inset 0 0 0 2px #7c823f;
+    }
+    .pasta {
+      position: relative;
+      width: 68%;
+      aspect-ratio: 1;
+      border-radius: 46% 54% 48% 52%;
+      transform: rotate(-19deg);
+      background: repeating-radial-gradient(ellipse at 48% 49%, #a34321 0 1cqw, #e5a245 1.2cqw 2.1cqw, #ffd07a 2.2cqw 2.6cqw, #be6128 2.7cqw 3.4cqw);
+      box-shadow: inset 0 0 1.15rem #803b24, .2rem .5rem .85rem #6d3b2655;
+    }
+    .pasta::before, .pasta::after {
+      content: "";
+      position: absolute;
+      border-radius: 50% 8% 50% 8%;
+      background: linear-gradient(145deg, #708248, #314921 70%);
+      box-shadow: .15rem .2rem .25rem #50351c66;
+    }
+    .pasta::before { width: 30%; height: 19%; top: 39%; left: 33%; transform: rotate(24deg); }
+    .pasta::after { width: 25%; height: 15%; top: 51%; left: 48%; transform: rotate(106deg); }
+
+    .menu { border-top: 1px solid var(--line); padding-block: clamp(3rem, 7vw, 5rem); }
+    .section-title { margin-bottom: 1.7rem; }
+    h2 { margin-top: .35rem; font: 400 clamp(2.4rem, 5vw, 4.3rem)/1 var(--serif); letter-spacing: -.045em; }
+    .dishes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .dish { border-top: 1px solid var(--line); padding-top: 1rem; }
+    .dish-heading { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; }
+    .dish h3 { font: 400 1.4rem/1.2 var(--serif); }
+    .price { color: var(--red); font-size: .9rem; font-weight: 700; }
+    .dish p { margin-top: .45rem; }
+
+    .visit { background: var(--olive); color: #fff8e9; padding-block: clamp(3rem, 7vw, 5.5rem); }
+    .visit-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 2rem; align-items: start; }
+    .visit h2 { margin-bottom: 1rem; }
+    .visit h3 { margin-bottom: .65rem; }
+    .visit address { font-style: normal; }
+    .visit .text-link { display: inline-block; margin-top: .65rem; }
+    .hours div { display: flex; flex-wrap: wrap; column-gap: .8rem; justify-content: space-between; }
+    .hours dd { white-space: nowrap; }
+    footer { padding-block: 1rem; font-size: .85rem; }
+
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; }
+      .art { aspect-ratio: 6 / 5; }
+      .plate { width: 65%; }
+      .dishes, .visit-grid { grid-template-columns: 1fr; }
+      .hours { max-width: 19rem; }
+    }
+    @media (max-width: 420px) {
+      .wrap { width: calc(100% - 2rem); }
+      .topbar { flex-wrap: wrap; padding-block: .9rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="button skip" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap topbar">
+      <a class="wordmark" href="#main">Casa Oliva</a>
+      <nav aria-label="Main navigation">
+        <a href="#menu">Menu</a>
+        <a href="#visit">Visit</a>
+        <a class="button" href="tel:+17185550146">Book a table</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Italian trattoria · Brooklyn</p>
+        <h1 id="hero-title">Come hungry.<br><em>Stay awhile.</em></h1>
+        <p>Handmade pasta, Italian wine by the glass, and a seat at the bar for whoever drops by.</p>
+        <div class="actions">
+          <a class="button" href="tel:+17185550146">Call to reserve</a>
+          <a class="text-link" href="#menu">See what’s cooking ↓</a>
+        </div>
+      </div>
+      <figure class="art" aria-hidden="true">
+        <div class="plate"><div class="pasta"></div></div>
+      </figure>
+    </section>
+
+    <section class="menu" id="menu" aria-labelledby="menu-title">
+      <div class="wrap">
+        <div class="section-title">
+          <p class="eyebrow">From the kitchen</p>
+          <h2 id="menu-title">Dinner favorites</h2>
+        </div>
+        <div class="dishes">
+          <article class="dish">
+            <div class="dish-heading">
+              <h3>Burrata &amp; roasted peppers</h3>
+              <span class="price">$16</span>
+            </div>
+            <p>Basil, aged balsamic, and grilled sourdough.</p>
+          </article>
+          <article class="dish">
+            <div class="dish-heading">
+              <h3>Tagliatelle al ragù</h3>
+              <span class="price">$26</span>
+            </div>
+            <p>Hand-cut pasta with slow-cooked beef and pork ragù and Parmigiano Reggiano.</p>
+          </article>
+          <article class="dish">
+            <div class="dish-heading">
+              <h3>Olive oil cake</h3>
+              <span class="price">$11</span>
+            </div>
+            <p>Orange zest, whipped mascarpone, and a pinch of sea salt.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <div class="wrap visit-grid">
+        <div>
+          <h2 id="visit-title">Come on over</h2>
+          <p>Walk-ins are welcome. Call ahead to reserve a table.</p>
+        </div>
+        <div>
+          <h3 class="eyebrow">Find us</h3>
+          <address>18 Olive Lane<br>Brooklyn, NY 11231</address>
+          <a class="text-link" href="tel:+17185550146">(718) 555-0146</a>
+        </div>
+        <div>
+          <h3 class="eyebrow">Dinner hours</h3>
+          <dl class="hours">
+            <div><dt>Mon</dt><dd>Closed</dd></div>
+            <div><dt>Tue–Thu</dt><dd>5–9:30 pm</dd></div>
+            <div><dt>Fri–Sat</dt><dd>5–10:30 pm</dd></div>
+            <div><dt>Sun</dt><dd>4–9 pm</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Casa Oliva · Brooklyn, NY</div>
+  </footer>
+</body>
+</html>

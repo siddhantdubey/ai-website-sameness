@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f8f5" />
+  <title>Orbit — Make space for your best work</title>
+  <meta
+    name="description"
+    content="Bring projects, people, and progress together in one calmer place."
+  />
+  <style>
+    :root {
+      --ink: #20251f;
+      --muted: #737a70;
+      --line: #e4e8df;
+      --paper: #f8f8f5;
+      --green: #d4f367;
+      --green-dark: #3f5728;
+      --white: #fff;
+      --shadow: 0 24px 80px rgba(42, 55, 35, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: min(1280px, calc(100% - 64px)); margin: 0 auto; }
+
+    .header {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      border-bottom: 1px solid rgba(35, 45, 30, 0.07);
+    }
+    .logo { display: inline-flex; align-items: center; gap: 9px; font-size: 23px; font-weight: 760; letter-spacing: -1.3px; }
+    .logo-mark { width: 29px; height: 29px; position: relative; display: inline-block; }
+    .logo-mark::before, .logo-mark::after {
+      content: ""; position: absolute; border: 3px solid var(--ink); border-radius: 50%;
+      width: 21px; height: 12px; top: 6px; left: 1px;
+    }
+    .logo-mark::before { transform: rotate(50deg); }
+    .logo-mark::after { transform: rotate(-50deg); }
+    .nav { display: flex; gap: 35px; align-items: center; color: #555d53; font-size: 14px; font-weight: 550; }
+    .nav a:hover, .footer a:hover { color: #6c8b33; }
+    .header-actions { display: flex; align-items: center; gap: 24px; font-size: 14px; font-weight: 650; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+      min-height: 50px; padding: 0 22px; border: 1px solid transparent; border-radius: 8px;
+      background: var(--ink); color: white; font-size: 14px; font-weight: 650;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { background: #3b4d31; transform: translateY(-2px); }
+    .button.light { background: white; color: var(--ink); border-color: #e3e7de; }
+    .button.light:hover { background: #f1f4ec; }
+    .arrow { font-size: 18px; line-height: 1; }
+
+    .hero { text-align: center; padding: 100px 0 0; overflow: hidden; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px;
+      border: 1px solid #dfe6d8; border-radius: 100px; background: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: .04em; color: #4d5a48;
+    }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #a6d447; }
+    h1 { max-width: 850px; margin: 25px auto 20px; font-size: clamp(48px, 6.3vw, 82px); line-height: 1.03; letter-spacing: -.065em; font-weight: 670; }
+    h1 span { color: #819b63; }
+    .hero-copy { max-width: 520px; margin: 0 auto; color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .hero-actions { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+    .hero-note { margin-top: 15px; color: #92998f; font-size: 12px; }
+
+    .product-stage {
+      position: relative; margin: 65px auto 0; padding: 30px 38px 0;
+      max-width: 1120px; border-radius: 22px 22px 0 0;
+      background: #e6edda;
+      background-image: radial-gradient(circle at 15% 20%, #f4f7ea 0, transparent 36%),
+        radial-gradient(circle at 85% 85%, #cfdfbd 0, transparent 38%);
+    }
+    .app {
+      display: grid; grid-template-columns: 190px 1fr; min-height: 475px;
+      text-align: left; background: #fff; border: 1px solid #dfe5d8;
+      border-radius: 11px 11px 0 0; box-shadow: 0 20px 55px rgba(58, 75, 48, .13); overflow: hidden;
+    }
+    .sidebar { padding: 22px 15px; border-right: 1px solid #eef0eb; background: #fbfcf9; }
+    .app-brand { font-size: 15px; font-weight: 750; letter-spacing: -.06em; padding: 0 8px 24px; }
+    .app-brand .mini-mark { color: #91bd42; font-size: 18px; margin-right: 5px; }
+    .workspace { display: flex; align-items: center; gap: 8px; padding: 10px 8px; border: 1px solid #edf0e9; border-radius: 6px; font-size: 10px; font-weight: 700; background: #fff; }
+    .workspace-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 5px; background: #e2edcc; color: #526b35; }
+    .workspace .chev { margin-left: auto; color: #a1a99e; }
+    .side-label { margin: 25px 8px 10px; color: #adb4a9; font-size: 9px; font-weight: 750; letter-spacing: .08em; }
+    .side-link { display: flex; align-items: center; gap: 10px; padding: 9px; border-radius: 5px; color: #858d82; font-size: 10px; }
+    .side-link.active { color: #374631; background: #edf3e6; font-weight: 700; }
+    .side-icon { width: 14px; text-align: center; font-size: 13px; }
+    .side-dot { width: 7px; height: 7px; margin: 0 3px; border-radius: 50%; background: #c4d99b; }
+
+    .app-main { padding: 21px 26px; overflow: hidden; }
+    .app-top { display: flex; justify-content: space-between; align-items: center; color: #a3aaa0; font-size: 10px; }
+    .app-top strong { color: #687266; font-weight: 600; }
+    .avatar-stack { display: flex; align-items: center; }
+    .avatar { display: grid; place-items: center; width: 25px; height: 25px; border: 2px solid white; border-radius: 50%; margin-left: -5px; font-size: 8px; font-weight: 750; color: #43543a; background: #d5e2c1; }
+    .avatar:nth-child(2) { background: #e8d4c8; color: #79594a; }
+    .avatar:nth-child(3) { background: #d7ddec; color: #58677e; }
+    .avatar.more { background: #f0f2ed; color: #788074; }
+    .app-title-row { display: flex; justify-content: space-between; align-items: end; margin-top: 33px; }
+    .app-kicker { margin-bottom: 7px; font-size: 9px; color: #a1a89e; }
+    .app-title { margin: 0; font-size: 23px; letter-spacing: -.05em; }
+    .app-subtitle { margin: 7px 0 0; color: #a3aaa0; font-size: 10px; }
+    .app-button { padding: 9px 12px; background: #273625; border-radius: 5px; color: white; font-size: 9px; font-weight: 650; white-space: nowrap; }
+    .tabs { display: flex; gap: 24px; margin-top: 28px; border-bottom: 1px solid #edf0eb; color: #a2a99f; font-size: 10px; }
+    .tabs span { padding: 0 0 12px; }
+    .tabs .selected { color: #34462f; border-bottom: 2px solid #739e4e; font-weight: 700; }
+    .board-toolbar { display: flex; justify-content: space-between; align-items: center; margin: 19px 0; color: #8e978a; font-size: 9px; }
+    .toolbar-pill { display: inline-block; padding: 6px 9px; border: 1px solid #edf0eb; border-radius: 5px; margin-right: 4px; }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .column { padding: 10px; border-radius: 7px; background: #f7f9f5; }
+    .column-heading { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; color: #576254; font-size: 9px; font-weight: 700; }
+    .column-heading .count { color: #a9b0a5; font-weight: 500; }
+    .column-heading .plus { margin-left: auto; color: #aab2a6; font-size: 14px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #b7c0b2; }
+    .status-dot.progress { background: #e5bb68; }
+    .status-dot.done { background: #91bd73; }
+    .card { margin-bottom: 8px; padding: 12px 10px; border: 1px solid #edf0e9; border-radius: 6px; background: #fff; box-shadow: 0 2px 4px rgba(50, 65, 45, .02); }
+    .tag { display: inline-block; padding: 4px 6px; border-radius: 3px; background: #edf2e5; color: #718a58; font-size: 8px; font-weight: 700; }
+    .tag.purple { background: #f0edf7; color: #8e80aa; }
+    .tag.orange { background: #fbf1e3; color: #b99360; }
+    .card-title { margin: 10px 0 14px; font-size: 10px; font-weight: 700; line-height: 1.4; color: #3d473a; }
+    .card-bottom { display: flex; align-items: center; justify-content: space-between; color: #adb4a9; font-size: 8px; }
+    .card-avatar { display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%; background: #e6d6c9; color: #8b6c5c; font-size: 7px; font-weight: 700; }
+
+    .trust { padding: 50px 0 75px; text-align: center; }
+    .trust p { color: #9aa197; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .logos { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 25px 70px; margin-top: 28px; color: #a2aaa0; font-size: 20px; font-weight: 750; letter-spacing: -.05em; }
+    .logos span:nth-child(2) { font-family: Georgia, serif; font-style: italic; }
+    .logos span:nth-child(3) { letter-spacing: .02em; font-size: 16px; }
+    .logos span:nth-child(4) { font-weight: 500; }
+
+    .features { background: #fff; padding: 100px 0 110px; }
+    .section-top { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 48px; }
+    .section-kicker { color: #849c69; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h2 { margin: 14px 0 0; max-width: 600px; font-size: clamp(34px, 4vw, 52px); line-height: 1.1; letter-spacing: -.055em; font-weight: 650; }
+    .section-copy { max-width: 330px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature-card { min-height: 250px; padding: 29px; border: 1px solid #edf0e9; border-radius: 12px; background: #fbfcf9; }
+    .feature-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; background: #e9f1df; color: #5d7c44; font-size: 21px; }
+    .feature-card h3 { margin: 28px 0 10px; font-size: 18px; letter-spacing: -.03em; }
+    .feature-card p { margin: 0; max-width: 280px; color: #858d81; font-size: 14px; line-height: 1.7; }
+
+    .cta { padding: 90px 0; }
+    .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 55px 60px; border-radius: 16px; background: #e7efdc; }
+    .cta h2 { margin-top: 0; font-size: clamp(32px, 3.5vw, 46px); }
+    .cta p { margin: 14px 0 0; color: #6d7d65; font-size: 15px; }
+    .footer { padding: 0 0 32px; display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #969e92; font-size: 12px; }
+    .footer-links { display: flex; gap: 25px; }
+    :focus-visible { outline: 3px solid #8bb84b; outline-offset: 4px; }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 36px, 1280px); }
+      .header { height: 72px; }
+      .nav, .login { display: none; }
+      .header-actions .button { min-height: 42px; padding: 0 14px; }
+      .hero { padding-top: 72px; }
+      h1 { font-size: clamp(45px, 10vw, 65px); }
+      .hero-copy { font-size: 15px; }
+      .product-stage { margin-top: 48px; padding: 18px 15px 0; }
+      .app { grid-template-columns: 1fr; min-height: 360px; }
+      .sidebar { display: none; }
+      .app-main { padding: 17px; }
+      .app-title-row { margin-top: 25px; }
+      .app-title { font-size: 20px; }
+      .board { gap: 7px; }
+      .column { padding: 6px; }
+      .card { padding: 8px 6px; }
+      .card-title { font-size: 9px; }
+      .trust { padding: 42px 0 60px; }
+      .logos { gap: 20px 30px; font-size: 17px; }
+      .features { padding: 70px 0; }
+      .section-top { display: block; }
+      .section-copy { margin-top: 20px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: 0; }
+      .cta { padding: 65px 0; }
+      .cta-inner { display: block; padding: 38px 28px; }
+      .cta-inner .button { margin-top: 25px; }
+      .footer { flex-wrap: wrap; }
+    }
+    @media (max-width: 400px) {
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .board .column:last-child { display: none; }
+      .board { grid-template-columns: repeat(2, 1fr); }
+      .tabs { gap: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <a class="logo" href="#" aria-label="Orbit home"><span class="logo-mark" aria-hidden="true"></span>orbit</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#features">Product</a>
+        <a href="#features">Solutions</a>
+        <a href="#about">About</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login" href="mailto:hello@example.com?subject=Orbit%20inquiry">Contact us</a>
+        <a class="button" href="mailto:hello@example.com?subject=Get%20started%20with%20Orbit">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> A LITTLE MORE SPACE TO DO GREAT WORK</div>
+        <h1>Big ideas move better <span>together.</span></h1>
+        <p class="hero-copy">Bring your projects, people, and progress into one calm space. Less chasing updates, more making things happen.</p>
+        <div class="hero-actions">
+          <a class="button" href="mailto:hello@example.com?subject=Get%20started%20with%20Orbit">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button light" href="#features">Explore Orbit <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <p class="hero-note">A clearer way to get from idea to done.</p>
+
+        <div class="product-stage" aria-label="Preview of the Orbit project board">
+          <div class="app">
+            <aside class="sidebar" aria-hidden="true">
+              <div class="app-brand"><span class="mini-mark">✳</span> orbit</div>
+              <div class="workspace"><span class="workspace-icon">S</span> Studio workspace <span class="chev">⌄</span></div>
+              <div class="side-label">WORKSPACE</div>
+              <div class="side-link"><span class="side-icon">⌂</span> Home</div>
+              <div class="side-link"><span class="side-icon">▣</span> My tasks</div>
+              <div class="side-link active"><span class="side-icon">▦</span> Projects</div>
+              <div class="side-link"><span class="side-icon">◷</span> Calendar</div>
+              <div class="side-label">YOUR PROJECTS</div>
+              <div class="side-link"><span class="side-dot"></span> Brand refresh</div>
+              <div class="side-link"><span class="side-dot" style="background:#e8c992"></span> Website launch</div>
+              <div class="side-link"><span class="side-dot" style="background:#c9b8df"></span> Content studio</div>
+            </aside>
+            <div class="app-main" aria-hidden="true">
+              <div class="app-top">
+                <span>Workspace &nbsp; / &nbsp; <strong>Brand refresh</strong></span>
+                <div class="avatar-stack"><span class="avatar">AM</span><span class="avatar">JL</span><span class="avatar">SK</span><span class="avatar more">+2</span></div>
+              </div>
+              <div class="app-title-row">
+                <div><div class="app-kicker">✳ &nbsp; PROJECT</div><h2 class="app-title">Brand refresh</h2><p class="app-subtitle">A fresh look for our next chapter ✨</p></div>
+                <span class="app-button">+ &nbsp; Add task</span>
+              </div>
+              <div class="tabs"><span>Overview</span><span class="selected">Board</span><span>List</span><span>Timeline</span><span>Files</span></div>
+              <div class="board-toolbar"><div><span class="toolbar-pill">☷ &nbsp; Filter</span><span class="toolbar-pill">⇅ &nbsp; Sort</span></div><span>•••</span></div>
+              <div class="board">
+                <div class="column">
+                  <div class="column-heading"><span class="status-dot"></span> To do <span class="count">3</span><span class="plus">+</span></div>
+                  <div class="card"><span class="tag purple">Research</span><div class="card-title">Gather inspiration &amp; references</div><div class="card-bottom"><span>◷ &nbsp; Jun 12</span><span class="card-avatar">AM</span></div></div>
+                  <div class="card"><span class="tag">Strategy</span><div class="card-title">Define brand voice</div><div class="card-bottom"><span>◷ &nbsp; Jun 15</span><span class="card-avatar">JL</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-heading"><span class="status-dot progress"></span> In progress <span class="count">2</span><span class="plus">+</span></div>
+                  <div class="card"><span class="tag orange">Design</span><div class="card-title">Explore visual directions</div><div class="card-bottom"><span>◷ &nbsp; Jun 10</span><span class="card-avatar">SK</span></div></div>
+                  <div class="card"><span class="tag">Strategy</span><div class="card-title">Workshop with the team</div><div class="card-bottom"><span>◷ &nbsp; Jun 14</span><span class="card-avatar">AM</span></div></div>
+                </div>
+                <div class="column">
+                  <div class="column-heading"><span class="status-dot done"></span> Done <span class="count">4</span><span class="plus">+</span></div>
+                  <div class="card"><span class="tag purple">Research</span><div class="card-title">Kickoff &amp; project brief</div><div class="card-bottom"><span>✓ &nbsp; Jun 02</span><span class="card-avatar">JL</span></div></div>
+                  <div class="card"><span class="tag orange">Design</span><div class="card-title">Audit current assets</div><div class="card-bottom"><span>✓ &nbsp; Jun 05</span><span class="card-avatar">SK</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust" aria-label="Designed for modern teams">
+      <div class="wrap">
+        <p>Made for teams doing meaningful work</p>
+        <div class="logos" aria-hidden="true"><span>✳ northstar</span><span>Wavelength</span><span>◈ FORM &amp; FIELD</span><span>layers.</span><span>◉ goodspace</span></div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="wrap">
+        <div class="section-top">
+          <div><div class="section-kicker">A little less chaos</div><h2>Everything in its right place.</h2></div>
+          <p class="section-copy">From the first spark to the final detail, give your team a clearer way to move work forward.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">▦</div>
+            <h3>See the whole picture</h3>
+            <p>Organize projects your way and see what’s moving, what’s next, and where things need a hand.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">✳</div>
+            <h3>Make teamwork feel easy</h3>
+            <p>Keep conversations, files, and decisions close to the work so everyone stays in the loop.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">◷</div>
+            <h3>Find your flow</h3>
+            <p>Turn big ideas into manageable steps, set clear priorities, and make room for focused work.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="about">
+      <div class="wrap">
+        <div class="cta-inner">
+          <div><h2>Good work starts here.</h2><p>Give your ideas the space they deserve.</p></div>
+          <a class="button" href="mailto:hello@example.com?subject=Get%20started%20with%20Orbit">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <a class="logo" href="#" aria-label="Orbit home"><span class="logo-mark" aria-hidden="true"></span>orbit</a>
+    <span>© 2026 Orbit. Made for better work.</span>
+    <div class="footer-links"><a href="#features">Product</a><a href="mailto:hello@example.com">Contact</a></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetix — Project Management for High-Velocity Engineering Teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #090A0F;
+      --bg-surface: #11131C;
+      --bg-surface-elevated: #171A26;
+      --bg-surface-hover: #1E2232;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-medium: rgba(255, 255, 255, 0.14);
+      --border-accent: rgba(99, 102, 241, 0.45);
+      --text-primary: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      --text-muted: #6B7280;
+      --accent-primary: #6366F1;
+      --accent-secondary: #8B5CF6;
+      --accent-cyan: #06B6D4;
+      --accent-emerald: #10B981;
+      --accent-amber: #F59E0B;
+      --accent-rose: #F43F5E;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-glow: 0 0 60px -15px rgba(99, 102, 241, 0.35);
+      --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+    }
+
+    /* Subtle grid overlay */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--border-accent);
+      color: #C7D2FE;
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(9, 10, 15, 0.78);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.04em;
+    }
+
+    .logo-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan));
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 25px rgba(99, 102, 241, 0.55);
+    }
+
+    .btn-lg {
+      padding: 13px 24px;
+      font-size: 0.95rem;
+    }
+
+    .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-secondary);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 72px 0 60px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+      line-height: 1.08;
+      max-width: 900px;
+      margin: 0 auto 22px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #A5B4FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: clamp(1.05rem, 2vw, 1.225rem);
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    /* Interactive App Workspace Preview */
+    .workspace-shell {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-glow), var(--shadow-card);
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .workspace-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #0D0F17;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .window-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot-r { background: #EF4444; }
+    .dot-y { background: #F59E0B; }
+    .dot-g { background: #10B981; }
+
+    .workspace-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      margin-left: 12px;
+    }
+
+    .workspace-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-base);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+    }
+
+    .tab-btn.active {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .workspace-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-pill {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pill.active, .filter-pill:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .workspace-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 460px;
+    }
+
+    .workspace-sidebar {
+      background: #0C0E15;
+      border-right: 1px solid var(--border-subtle);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .side-nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .side-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 8px 10px 4px;
+      font-weight: 600;
+    }
+
+    .side-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .side-item.active {
+      background: rgba(99, 102, 241, 0.12);
+      color: #C7D2FE;
+      font-weight: 500;
+    }
+
+    .sprint-progress-box {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 0.78rem;
+    }
+
+    .progress-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    /* Kanban View */
+    .workspace-content {
+      padding: 20px;
+      background: var(--bg-surface);
+      overflow-x: auto;
+    }
+
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .kanban-col {
+      background: #0D0F17;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 4px 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
+
+    .col-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-count {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: var(--bg-surface-elevated);
+      padding: 2px 7px;
+      border-radius: 99px;
+      color: var(--text-secondary);
+    }
+
+    .task-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .task-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .task-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .task-id {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .priority-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .p-high { background: rgba(244, 63, 94, 0.15); color: #FDA4AF; }
+    .p-med { background: rgba(245, 158, 11, 0.15); color: #FCD34D; }
+    .p-low { background: rgba(16, 185, 129, 0.15); color: #6EE7B7; }
+
+    .task-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .task-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    .task-tag {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .advance-hint {
+      font-size: 0.68rem;
+      color: var(--accent-cyan);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .task-card:hover .advance-hint {
+      opacity: 1;
+    }
+
+    /* Timeline & Analytics Alternative Views inside Workspace */
+    .hidden-view {
+      display: none;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.83rem;
+    }
+
+    .timeline-track {
+      height: 28px;
+      background: #0D0F17;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .timeline-bar {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Social Proof Bar */
+    .logos-section {
+      padding: 40px 0 64px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .logos-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .logos-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 48px;
+      opacity: 0.65;
+    }
+
+    .brand-item {
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Bento Features Section */
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 60px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.85rem, 3.5vw, 2.75rem);
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-4 { grid-column: span 4; }
+    .span-8 { grid-column: span 8; }
+
+    .bento-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .bento-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .feature-visual {
+      background: #0B0D14;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .git-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: var(--bg-surface-elevated);
+      margin-bottom: 8px;
+    }
+
+    .git-status {
+      color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+    }
+
+    /* Metrics Strip */
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      background: linear-gradient(180deg, rgba(23, 26, 38, 0.7), rgba(17, 19, 28, 0.9));
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      margin-top: 24px;
+    }
+
+    .metric-box {
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #FFF, #A5B4FC);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Pricing Section */
+    .billing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 48px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .switch {
+      width: 48px;
+      height: 26px;
+      background: var(--accent-primary);
+      border-radius: 99px;
+      padding: 3px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .switch-Knob {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      transform: translateX(22px);
+    }
+
+    .switch.monthly .switch-Knob {
+      transform: translateX(0);
+    }
+
+    .save-pill {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6EE7B7;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .price-card.featured {
+      border-color: var(--accent-primary);
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, var(--bg-surface) 40%);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 99px;
+      letter-spacing: 0.06em;
+    }
+
+    .price-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin: 16px 0 6px;
+    }
+
+    .price-period {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 28px 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .check-icon {
+      color: var(--accent-emerald);
+      font-weight: bold;
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+    }
+
+    .faq-answer {
+      padding: 0 24px 20px;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* Command Palette Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: none;
+      place-items: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .cmd-palette {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.8);
+      overflow: hidden;
+    }
+
+    .cmd-input {
+      width: 100%;
+      padding: 18px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      outline: none;
+    }
+
+    .cmd-list {
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .cmd-item:hover {
+      background: rgba(99, 102, 241, 0.18);
+      color: var(--text-primary);
+    }
+
+    /* CTA Footer Banner */
+    .cta-banner {
+      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.28), var(--bg-surface) 70%);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-xl);
+      padding: 64px 32px;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 48px 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    @media (max-width: 960px) {
+      .workspace-body { grid-template-columns: 1fr; }
+      .workspace-sidebar { display: none; }
+      .span-7, .span-5, .span-4, .span-8 { grid-column: span 12; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <span class="logo-icon">K</span>
+        Kinetix
+      </a>
+      <ul class="nav-links">
+        <li><a href="#workspace">Workspace</a></li>
+        <li><a href="#features">Architecture</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" id="openCmdBtn" title="Press Cmd+K">
+          Command <span class="kbd">⌘K</span>
+        </button>
+        <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Kinetix 3.0 is live — Sub-30ms sync engine & AI Sprint Autopilot</span>
+      </div>
+      <h1>Plan at the speed of thought. Ship without the friction.</h1>
+      <p>
+        Kinetix replaces bloated issue trackers with a keyboard-first workspace built for modern product and engineering teams.
+      </p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn btn-primary btn-lg">Deploy Your Workspace →</a>
+        <button class="btn btn-secondary btn-lg" id="heroCmdBtn">
+          Try Command Bar <span class="kbd">⌘K</span>
+        </button>
+      </div>
+
+      <!-- Interactive Workspace Preview -->
+      <div class="workspace-shell" id="workspace">
+        <div class="workspace-topbar">
+          <div style="display: flex; align-items: center;">
+            <div class="window-controls">
+              <span class="dot dot-r"></span>
+              <span class="dot dot-y"></span>
+              <span class="dot dot-g"></span>
+            </div>
+            <div class="workspace-breadcrumb">
+              <span class="mono">kinetix-core</span>
+              <span>/</span>
+              <strong style="color: var(--text-primary);">Sprint 42 — Q4 Launch</strong>
+            </div>
+          </div>
+
+          <div class="workspace-tabs">
+            <button class="tab-btn active" data-view="board">Kanban Board</button>
+            <button class="tab-btn" data-view="timeline">Roadmap Timeline</button>
+            <button class="tab-btn" data-view="velocity">Velocity Metrics</button>
+          </div>
+
+          <div class="workspace-filters">
+            <button class="filter-pill active" data-filter="all">All Issues</button>
+            <button class="filter-pill" data-filter="Frontend">Frontend</button>
+            <button class="filter-pill" data-filter="Infra">Infra</button>
+            <button class="filter-pill" data-filter="AI">AI Engine</button>
+          </div>
+        </div>
+
+        <div class="workspace-body">
+          <aside class="workspace-sidebar">
+            <div class="side-nav-group">
+              <div class="side-label">Workspace</div>
+              <div class="side-item active"><span>⚡ Active Sprint</span> <span class="mono">8</span></div>
+              <div class="side-item"><span>📥 Triage Inbox</span> <span class="mono">3</span></div>
+              <div class="side-item"><span>🗺️ Q4 Roadmap</span></div>
+              <div class="side-item"><span>🔄 GitHub PR Sync</span></div>
+            </div>
+
+            <div class="sprint-progress-box">
+              <div style="display:flex; justify-content:space-between; font-weight:600;">
+                <span>Sprint Completion</span>
+                <span class="mono" id="sprintPct">62%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="sprintBar" style="width: 62%;"></div>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.72rem;">
+                Click any card on the board to advance its status.
+              </div>
+            </div>
+          </aside>
+
+          <main class="workspace-content">
+            <!-- Kanban View -->
+            <div id="view-board" class="kanban-grid">
+              <div class="kanban-col" data-col="todo">
+                <div class="col-header">
+                  <span class="col-title"><span class="dot" style="background:#9CA3AF"></span> Backlog / Todo</span>
+                  <span class="col-count" id="count-todo">0</span>
+                </div>
+                <div class="col-cards" id="cards-todo" style="display:flex; flex-direction:column; gap:10px;"></div>
+              </div>
+
+              <div class="kanban-col" data-col="progress">
+                <div class="col-header">
+                  <span class="col-title"><span class="dot" style="background:var(--accent-amber)"></span> In Progress</span>
+                  <span class="col-count" id="count-progress">0</span>
+                </div>
+                <div class="col-cards" id="cards-progress" style="display:flex; flex-direction:column; gap:10px;"></div>
+              </div>
+
+              <div class="kanban-col" data-col="done">
+                <div class="col-header">
+                  <span class="col-title"><span class="dot" style="background:var(--accent-emerald)"></span> Shipped</span>
+                  <span class="col-count" id="count-done">0</span>
+                </div>
+                <div class="col-cards" id="cards-done" style="display:flex; flex-direction:column; gap:10px;"></div>
+              </div>
+            </div>
+
+            <!-- Timeline View -->
+            <div id="view-timeline" class="hidden-view">
+              <div style="margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center;">
+                <h4 style="font-size:0.95rem;">Q4 Engineering Milestones & Critical Path</h4>
+                <span class="mono" style="font-size:0.75rem; color:var(--accent-cyan);">Auto-adjusted via dependency graph</span>
+              </div>
+              <div class="timeline-row">
+                <div>
+                  <strong>Zero-Latency Sync Engine</strong>
+                  <div style="font-size:0.72rem; color:var(--text-muted);">Lead: @elena • Infra</div>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-bar" style="left: 5%; width: 45%; background: linear-gradient(90deg, #6366F1, #8B5CF6);">Oct 12 — Nov 08 (100%)</div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div>
+                  <strong>AI Triage & Spec Copilot</strong>
+                  <div style="font-size:0.72rem; color:var(--text-muted);">Lead: @marcus • AI Engine</div>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-bar" style="left: 30%; width: 50%; background: linear-gradient(90deg, #06B6D4, #3B82F6);">Nov 01 — Dec 02 (In Review)</div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div>
+                  <strong>Multi-Region Edge Cache</strong>
+                  <div style="font-size:0.72rem; color:var(--text-muted);">Lead: @devon • Infra</div>
+                </div>
+                <div class="timeline-track">
+                  <div class="timeline-bar" style="left: 55%; width: 40%; background: linear-gradient(90deg, #F59E0B, #EF4444);">Nov 18 — Dec 19 (Active)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Velocity View -->
+            <div id="view-velocity" class="hidden-view">
+              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom: 20px;">
+                <div style="background:#0D0F17; padding:16px; border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Cycle Time (Median)</div>
+                  <div style="font-size:1.6rem; font-weight:700; color:var(--accent-emerald); margin-top:4px;">1.4 days</div>
+                  <div style="font-size:0.72rem; color:var(--text-secondary);">↓ 38% vs last quarter</div>
+                </div>
+                <div style="background:#0D0F17; padding:16px; border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Sprint Predictability</div>
+                  <div style="font-size:1.6rem; font-weight:700; color:var(--accent-cyan); margin-top:4px;">94.2%</div>
+                  <div style="font-size:0.72rem; color:var(--text-secondary);">48 / 51 story points merged</div>
+                </div>
+                <div style="background:#0D0F17; padding:16px; border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Automated PR Updates</div>
+                  <div style="font-size:1.6rem; font-weight:700; color:#C7D2FE; margin-top:4px;">312</div>
+                  <div style="font-size:0.72rem; color:var(--text-secondary);">Zero manual ticket dragging</div>
+                </div>
+              </div>
+              <div style="background:#0D0F17; padding:18px; border-radius:8px; border:1px solid var(--border-subtle);">
+                <div style="font-size:0.8rem; font-weight:600; margin-bottom:12px;">Weekly Throughput (Completed Story Points)</div>
+                <div style="display:flex; align-items:flex-end; gap:16px; height:120px; padding-top:20px;">
+                  <div style="flex:1; background:rgba(99,102,241,0.3); height:45%; border-radius:4px 4px 0 0; position:relative;"><span class="mono" style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.7rem;">28</span></div>
+                  <div style="flex:1; background:rgba(99,102,241,0.45); height:60%; border-radius:4px 4px 0 0; position:relative;"><span class="mono" style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.7rem;">36</span></div>
+                  <div style="flex:1; background:rgba(99,102,241,0.6); height:72%; border-radius:4px 4px 0 0; position:relative;"><span class="mono" style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.7rem;">44</span></div>
+                  <div style="flex:1; background:rgba(99,102,241,0.8); height:85%; border-radius:4px 4px 0 0; position:relative;"><span class="mono" style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.7rem;">52</span></div>
+                  <div style="flex:1; background:linear-gradient(180deg, var(--accent-cyan), var(--accent-primary)); height:100%; border-radius:4px 4px 0 0; position:relative;"><span class="mono" style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.7rem; color:var(--accent-cyan);">61</span></div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted By Section -->
+  <section class="logos-section">
+    <div class="container">
+      <div class="logos-label">Powering product engineering at over 4,000 high-growth teams</div>
+      <div class="logos-grid">
+        <div class="brand-item">◆ VERCELIS</div>
+        <div class="brand-item">▲ RAYCASTLE</div>
+        <div class="brand-item">● CHRONOSPHERE</div>
+        <div class="brand-item">■ SUPASCALE</div>
+        <div class="brand-item">✦ ARCANE AI</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Architecture Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">Engineered for Flow State</div>
+        <h2>Every millisecond optimized for makers</h2>
+        <p>Most project management tools feel like tax software. Kinetix feels like your favorite code editor.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-card span-7">
+          <div>
+            <h3>Two-Way Git & PR Automation</h3>
+            <p>Link branches, commits, and pull requests automatically. When a PR merges to main, Kinetix transitions the issue, notifies stakeholders in Slack, and updates release notes.</p>
+          </div>
+          <div class="feature-visual">
+            <div class="git-line">
+              <span><strong style="color:#A5B4FC;">feat/KIN-104</strong> merged into <span class="mono">main</span> by @elena</span>
+              <span class="git-status">✓ KIN-104 → Shipped</span>
+            </div>
+            <div class="git-line" style="margin-bottom:0;">
+              <span><strong style="color:#FCD34D;">fix/KIN-108</strong> opened PR #842 • CI checks passing</span>
+              <span class="git-status" style="color:var(--accent-amber); background:rgba(245,158,11,0.12);">⟳ In Code Review</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card span-5">
+          <div>
+            <h3>Keyboard-First Command Bar</h3>
+            <p>Assign tasks, change sprint cycles, filter by label, or jump to any spec without ever touching your mouse.</p>
+          </div>
+          <div class="feature-visual" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Assign current issue to me</span>
+              <span class="kbd">I</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Change priority level</span>
+              <span class="kbd">P</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Move to active sprint cycle</span>
+              <span class="kbd">⇧ + S</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card span-4">
+          <div>
+            <h3>Local-First Sub-30ms Sync</h3>
+            <p>Built on an IndexedDB local store with delta WebSockets. Instant interactions even on flaky airplane Wi-Fi.</p>
+          </div>
+          <div class="feature-visual" style="text-align:center; padding: 24px 12px;">
+            <div class="mono" style="font-size:1.75rem; font-weight:700; color:var(--accent-cyan);">14ms</div>
+            <div style="color:var(--text-muted); font-size:0.75rem; margin-top:4px;">Average state mutation latency</div>
+          </div>
+        </div>
+
+        <div class="bento-card span-8">
+          <div>
+            <h3>AI Sprint Triage & Spec Generator</h3>
+            <p>Turn messy bug reports or 3-sentence product ideas into structured technical specifications with acceptance criteria, subtasks, and capacity estimates.</p>
+          </div>
+          <div class="feature-visual" style="border-left: 3px solid var(--accent-primary);">
+            <div style="color:var(--accent-secondary); font-size:0.72rem; margin-bottom:4px;">✦ KINETIX AI COPILOT</div>
+            <div style="color:var(--text-primary);">"Detected 3 overlapping memory leak issues in WebSocket pool. Consolidated under <strong>KIN-112</strong> and assigned to <strong>@devon</strong> based on git blame ownership."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-strip">
+        <div class="metric-box">
+          <div class="metric-val">2.4x</div>
+          <div class="metric-label">Faster Sprint Planning</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val">&lt;30ms</div>
+          <div class="metric-label">Global UI Response</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val">99.99%</div>
+          <div class="metric-label">Enterprise Uptime SLA</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val">1-Click</div>
+          <div class="metric-label">Jira & Linear Importer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">Transparent Pricing</div>
+        <h2>Scale from seed stage to IPO</h2>
+        <p>Start free with unlimited viewers. Upgrade when your engineering team expands.</p>
+      </div>
+
+      <div class="billing-toggle-wrap">
+        <span id="labelMonthly" style="color:var(--text-secondary);">Monthly billing</span>
+        <div class="switch" id="billingSwitch" role="switch" aria-checked="true">
+          <div class="switch-Knob"></div>
+        </div>
+        <span id="labelAnnual" style="color:var(--text-primary);">Annual billing</span>
+        <span class="save-pill">Save 20%</span>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Starter -->
+        <div class="price-card">
+          <div>
+            <h3>Starter</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">For early-stage startups and small teams.</p>
+            <div class="price-amount">$0 <span class="price-period">/ forever</span></div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span> Up to 10 active team members</li>
+              <li><span class="check-icon">✓</span> Unlimited issues & archived cycles</li>
+              <li><span class="check-icon">✓</span> GitHub & GitLab two-way sync</li>
+              <li><span class="check-icon">✓</span> Sub-30ms offline-ready client</li>
+            </ul>
+          </div>
+          <a href="#workspace" class="btn btn-secondary" style="width:100%;">Get Started Free</a>
+        </div>
+
+        <!-- Velocity Pro -->
+        <div class="price-card featured">
+          <span class="popular-tag">Most Popular</span>
+          <div>
+            <h3>Velocity</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">For growing product & engineering orgs.</p>
+            <div class="price-amount"><span class="dynamic-price" data-annual="$12" data-monthly="$15">$12</span> <span class="price-period">/ user / mo</span></div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span> Unlimited members & guest seats</li>
+              <li><span class="check-icon">✓</span> AI Sprint Copilot & automated triage</li>
+              <li><span class="check-icon">✓</span> Multi-team roadmaps & critical path</li>
+              <li><span class="check-icon">✓</span> Slack, Sentry & Datadog integrations</li>
+              <li><span class="check-icon">✓</span> Private teams & custom workflows</li>
+            </ul>
+          </div>
+          <a href="#workspace" class="btn btn-primary" style="width:100%;">Start 14-Day Free Trial</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="price-card">
+          <div>
+            <h3>Enterprise</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">Advanced security, compliance, and SLA.</p>
+            <div class="price-amount"><span class="dynamic-price" data-annual="$28" data-monthly="$34">$28</span> <span class="price-period">/ user / mo</span></div>
+            <ul class="feature-list">
+              <li><span class="check-icon">✓</span> SAML SSO & SCIM provisioning</li>
+              <li><span class="check-icon">✓</span> SOC2 Type II & HIPAA compliance</li>
+              <li><span class="check-icon">✓</span> Audit logs & data residency controls</li>
+              <li><span class="check-icon">✓</span> Dedicated Slack solutions engineer</li>
+            </ul>
+          </div>
+          <a href="#workspace" class="btn btn-secondary" style="width:100%;">Contact Enterprise Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently asked questions</h2>
+        <p>Everything you need to know about migrating your team to Kinetix.</p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-question">
+            How long does it take to migrate from Jira or Linear?
+            <span>+</span>
+          </button>
+          <div class="faq-answer">
+            Our real-time importer migrates your projects, epics, comments, attachments, and user mappings in under 5 minutes without downtime. You can even run bi-directional sync with Jira during your transition period.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Does Kinetix work offline?
+            <span>+</span>
+          </button>
+          <div class="faq-answer">
+            Yes. Kinetix uses a local-first sync engine stored directly in your browser's IndexedDB. You can create, search, and reorganize hundreds of tickets offline, and changes merge automatically once you reconnect.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Are external stakeholders or view-only guests billed?
+            <span>+</span>
+          </button>
+          <div class="faq-answer">
+            Never. Read-only observers and external client guests are 100% free on all plans so you can share live roadmaps across your entire company.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <div class="container">
+    <div class="cta-banner">
+      <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 14px;">Ready to reclaim your engineering velocity?</h2>
+      <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 28px;">
+        Import your existing backlog in 60 seconds. No credit card required.
+      </p>
+      <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+        <a href="#workspace" class="btn btn-primary btn-lg">Create Free Workspace</a>
+        <button class="btn btn-secondary btn-lg" id="footerCmdBtn">Add Sample Issue <span class="kbd">⌘K</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="logo-icon" style="width:22px; height:22px; font-size:0.75rem;">K</span>
+        <strong style="color:var(--text-primary);">Kinetix Inc.</strong>
+        <span>© 2026 All rights reserved.</span>
+      </div>
+      <div style="display:flex; gap:24px;">
+        <a href="#workspace" style="color:var(--text-muted); text-decoration:none;">Changelog</a>
+        <a href="#features" style="color:var(--text-muted); text-decoration:none;">Security</a>
+        <a href="#pricing" style="color:var(--text-muted); text-decoration:none;">Docs</a>
+        <a href="#faq" style="color:var(--text-muted); text-decoration:none;">Status: 99.99%</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Command Palette Modal -->
+  <div class="modal-backdrop" id="cmdModal">
+    <div class="cmd-palette">
+      <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command or create a quick issue..." />
+      <div class="cmd-list" id="cmdList">
+        <div class="cmd-item" data-action="create-issue">
+          <span>➕ Create new high-priority issue in Active Sprint</span>
+          <span class="kbd">Enter</span>
+        </div>
+        <div class="cmd-item" data-action="switch-timeline">
+          <span>🗺️ Switch workspace to Roadmap Timeline view</span>
+          <span class="kbd">G then T</span>
+        </div>
+        <div class="cmd-item" data-action="switch-velocity">
+          <span>📈 View Sprint Velocity & Cycle Time Analytics</span>
+          <span class="kbd">G then V</span>
+        </div>
+        <div class="cmd-item" data-action="complete-all">
+          <span>🚀 Ship all In-Progress tasks to Done</span>
+          <span class="kbd">⌘ + ⇧ + D</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial Kanban tasks state
+    const tasks = [
+      { id: 'KIN-101', title: 'Implement WebSocket delta compression for board sync', tag: 'Infra', priority: 'high', status: 'todo', user: 'EL', color: '#6366F1' },
+      { id: 'KIN-102', title: 'Add keyboard shortcut cheatsheet overlay', tag: 'Frontend', priority: 'low', status: 'todo', user: 'MK', color: '#10B981' },
+      { id: 'KIN-104', title: 'AI duplicate ticket detector using embeddings', tag: 'AI', priority: 'high', status: 'progress', user: 'DV', color: '#06B6D4' },
+      { id: 'KIN-105', title: 'Zero-flicker dark mode theme tokens', tag: 'Frontend', priority: 'med', status: 'progress', user: 'EL', color: '#6366F1' },
+      { id: 'KIN-106', title: 'GitHub webhook signature verification worker', tag: 'Infra', priority: 'high', status: 'done', user: 'DV', color: '#06B6D4' },
+      { id: 'KIN-107', title: 'Auto-generate release notes from merged PRs', tag: 'AI', priority: 'med', status: 'done', user: 'MK', color: '#10B981' },
+      { id: 'KIN-108', title: 'Virtualize 10,000+ row backlog list view', tag: 'Frontend', priority: 'high', status: 'done', user: 'EL', color: '#6366F1' }
+    ];
+
+    let activeFilter = 'all';
+
+    function renderBoard() {
+      const cols = { todo: [], progress: [], done: [] };
+      const filtered = activeFilter === 'all' ? tasks : tasks.filter(t => t.tag === activeFilter);
+
+      filtered.forEach(task => {
+        cols[task.status].push(task);
+      });
+
+      ['todo', 'progress', 'done'].forEach(status => {
+        const container = document.getElementById(`cards-${status}`);
+        const countEl = document.getElementById(`count-${status}`);
+        container.innerHTML = '';
+        countEl.textContent = cols[status].length;
+
+        cols[status].forEach(task => {
+          const card = document.createElement('div');
+          card.className = 'task-card';
+          const pClass = task.priority === 'high' ? 'p-high' : task.priority === 'med' ? 'p-med' : 'p-low';
+          const nextLabel = status === 'todo' ? 'Start →' : status === 'progress' ? 'Ship ✓' : 'Reopen ↺';
+
+          card.innerHTML = `
+            <div class="task-top">
+              <span class="task-id">${task.id}</span>
+              <span class="priority-tag ${pClass}">${task.priority}</span>
+            </div>
+            <div class="task-title">${task.title}</div>
+            <div class="task-footer">
+              <span class="task-tag">${task.tag}</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="advance-hint">${nextLabel}</span>
+                <span class="avatar" style="background:${task.color}">${task.user}</span>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            task.status = task.status === 'todo' ? 'progress' : task.status === 'progress' ? 'done' : 'todo';
+            renderBoard();
+          });
+
+          container.appendChild(card);
+        });
+      });
+
+      // Update sprint completion percentage
+      const doneCount = tasks.filter(t => t.status === 'done').length;
+      const pct = Math.round((doneCount / tasks.length) * 100);
+      document.getElementById('sprintPct').textContent = `${pct}%`;
+      document.getElementById('sprintBar').style.width = `${pct}%`;
+    }
+
+    renderBoard();
+
+    // Filter pills
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderBoard();
+      });
+    });
+
+    // Workspace View Tabs
+    function switchWorkspaceTab(viewName) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.view === viewName);
+      });
+      document.getElementById('view-board').style.display = viewName === 'board' ? 'grid' : 'none';
+      document.getElementById('view-timeline').style.display = viewName === 'timeline' ? 'block' : 'none';
+      document.getElementById('view-velocity').style.display = viewName === 'velocity' ? 'block' : 'none';
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchWorkspaceTab(btn.dataset.view));
+    });
+
+    // Billing Toggle
+    const billingSwitch = document.getElementById('billingSwitch');
+    let isAnnual = true;
+    billingSwitch.addEventListener('click', () => {
+      isAnnual = !isAnnual;
+      billingSwitch.classList.toggle('monthly', !isAnnual);
+      document.querySelectorAll('.dynamic-price').forEach(el => {
+        el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
+      });
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Command Palette Modal (Cmd+K)
+    const cmdModal = document.getElementById('cmdModal');
+    const cmdInput = document.getElementById('cmdInput');
+
+    function openCmd() {
+      cmdModal.classList.add('open');
+      cmdInput.value = '';
+      cmdInput.focus();
+    }
+
+    function closeCmd() {
+      cmdModal.classList.remove('open');
+    }
+
+    document.getElementById('openCmdBtn').addEventListener('click', openCmd);
+    document.getElementById('heroCmdBtn').addEventListener('click', openCmd);
+    document.getElementById('footerCmdBtn').addEventListener('click', openCmd);
+
+    cmdModal.addEventListener('click', (e) => {
+      if (e.target === cmdModal) closeCmd();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        cmdModal.classList.contains('open') ? closeCmd() : openCmd();
+      } else if (e.key === 'Escape') {
+        closeCmd();
+      }
+    });
+
+    document.querySelectorAll('.cmd-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const action = item.dataset.action;
+        if (action === 'create-issue') {
+          const customTitle = cmdInput.value.trim() || 'Optimize edge cache invalidation pipeline';
+          tasks.unshift({
+            id: `KIN-${109 + tasks.length}`,
+            title: customTitle,
+            tag: 'Infra',
+            priority: 'high',
+            status: 'todo',
+            user: 'YO',
+            color: '#F43F5E'
+          });
+          activeFilter = 'all';
+          switchWorkspaceTab('board');
+          renderBoard();
+          document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'switch-timeline') {
+          switchWorkspaceTab('timeline');
+          document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'switch-velocity') {
+          switchWorkspaceTab('velocity');
+          document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'complete-all') {
+          tasks.forEach(t => { if (t.status === 'progress') t.status = 'done'; });
+          switchWorkspaceTab('board');
+          renderBoard();
+          document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+        }
+        closeCmd();
+      });
+    });
+  </script>
+</body>
+</html>

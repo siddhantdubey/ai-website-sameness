@@ -1,0 +1,3256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trestle — Calm project tracking for small product teams</title>
+  <meta name="description" content="Trestle replaces bloated sprint boards with six-week cycles, plain-text briefs, and an honest daily view of who is carrying what." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f4f1ea;
+      --paper-raised: #fbf9f4;
+      --paper-sunk: #eae4d8;
+      --paper-deep: #e2dbcc;
+      --ink: #191816;
+      --ink-2: #4f4b44;
+      --ink-3: #7d776d;
+      --rule: rgba(25, 24, 22, 0.14);
+      --rule-strong: rgba(25, 24, 22, 0.28);
+      --accent: #c44021;
+      --accent-hover: #a63217;
+      --accent-soft: rgba(196, 64, 33, 0.08);
+      --slate: #294d5c;
+      --slate-soft: rgba(41, 77, 92, 0.1);
+      --moss: #355e43;
+      --moss-soft: rgba(53, 94, 67, 0.11);
+      --ochre: #966517;
+      --ochre-soft: rgba(150, 101, 23, 0.11);
+
+      --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+      --max-w: 1220px;
+      --radius: 3px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--paper);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle drafting-paper texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .serif {
+      font-family: var(--serif);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 120ms ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper-raised);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+
+    .btn-secondary:hover {
+      background: var(--paper-sunk);
+      border-color: var(--ink);
+    }
+
+    .btn-sm {
+      padding: 7px 13px;
+      font-size: 0.84rem;
+    }
+
+    .link-underline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--ink);
+      border-bottom: 1px solid var(--rule-strong);
+      padding-bottom: 2px;
+      transition: border-color 140ms ease, color 140ms ease;
+    }
+
+    .link-underline:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(244, 241, 234, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      font-size: 1.02rem;
+    }
+
+    .brand-version {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      padding: 2px 6px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      margin-left: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 0.88rem;
+      color: var(--ink-2);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-signin {
+      font-size: 0.88rem;
+      color: var(--ink-2);
+      padding: 6px 8px;
+    }
+
+    .nav-signin:hover {
+      color: var(--ink);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 68px 0 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 52px;
+    }
+
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      margin-bottom: 20px;
+    }
+
+    .hero-kicker .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 1px;
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.65rem, 5.2vw, 4.35rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-aside {
+      padding-bottom: 6px;
+    }
+
+    .hero-aside p {
+      margin: 0 0 24px;
+      font-size: 1.04rem;
+      line-height: 1.62;
+      color: var(--ink-2);
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px 22px;
+      margin-bottom: 18px;
+    }
+
+    .hero-footnote {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-3);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+
+    /* Interactive Workbench Frame */
+    .workbench-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-3);
+    }
+
+    .workbench-caption strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .workbench {
+      background: var(--paper-raised);
+      border: 1px solid var(--rule-strong);
+      border-radius: 4px;
+      box-shadow: 0 1px 0 rgba(25, 24, 22, 0.04), 0 18px 40px -24px rgba(25, 24, 22, 0.16);
+      overflow: hidden;
+    }
+
+    .wb-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--paper-sunk);
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.8rem;
+      gap: 12px;
+    }
+
+    .wb-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wb-window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .wb-window-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--rule-strong);
+    }
+
+    .wb-breadcrumb {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-2);
+    }
+
+    .wb-breadcrumb span {
+      color: var(--ink-3);
+    }
+
+    .wb-metrics {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-2);
+    }
+
+    .wb-progress-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wb-meter {
+      width: 78px;
+      height: 6px;
+      background: var(--paper-deep);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .wb-meter-fill {
+      height: 100%;
+      background: var(--moss);
+      transition: width 220ms ease;
+    }
+
+    .wb-layout {
+      display: grid;
+      grid-template-columns: 205px minmax(0, 1fr) 315px;
+      min-height: 455px;
+    }
+
+    .wb-sidebar {
+      background: #f7f4ed;
+      border-right: 1px solid var(--rule);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .wb-nav-group {
+      margin-bottom: 18px;
+    }
+
+    .wb-nav-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-3);
+      padding: 0 8px 6px;
+    }
+
+    .wb-nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 3px;
+      font-size: 0.84rem;
+      color: var(--ink-2);
+      text-align: left;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+
+    .wb-nav-btn:hover {
+      background: var(--paper-sunk);
+      color: var(--ink);
+    }
+
+    .wb-nav-btn.is-active {
+      background: var(--ink);
+      color: var(--paper-raised);
+    }
+
+    .wb-nav-btn .count {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      opacity: 0.75;
+    }
+
+    .wb-maker-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar-chip {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--paper-deep);
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    .wb-nav-btn.is-active .avatar-chip {
+      background: rgba(255, 255, 255, 0.16);
+      color: var(--paper-raised);
+    }
+
+    .wb-cycle-card {
+      padding: 10px;
+      background: var(--paper-raised);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      font-size: 0.76rem;
+    }
+
+    .wb-cycle-card-head {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .wb-cycle-bar {
+      height: 4px;
+      background: var(--paper-sunk);
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+
+    .wb-cycle-bar span {
+      display: block;
+      height: 100%;
+      width: 62%;
+      background: var(--accent);
+    }
+
+    .wb-cycle-meta {
+      color: var(--ink-3);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+
+    /* Center Task Ledger */
+    .wb-main {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--rule);
+      min-width: 0;
+    }
+
+    .wb-main-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--rule);
+      gap: 12px;
+    }
+
+    .wb-main-title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .wb-main-title h2 {
+      margin: 0;
+      font-size: 0.94rem;
+      font-weight: 600;
+    }
+
+    .wb-main-title span {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-3);
+    }
+
+    .wb-hint {
+      font-family: var(--mono);
+      font-size: 0.71rem;
+      color: var(--ink-3);
+    }
+
+    .wb-add-form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      background: #f9f7f2;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .wb-add-input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: 0.85rem;
+      padding: 4px 6px;
+      border-radius: 2px;
+    }
+
+    .wb-add-input:focus {
+      outline: none;
+      background: var(--paper-raised);
+      border-color: var(--rule-strong);
+    }
+
+    .wb-add-select {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      background: var(--paper-raised);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 4px 6px;
+      color: var(--ink-2);
+    }
+
+    .wb-add-btn {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      padding: 5px 10px;
+      background: var(--ink);
+      color: var(--paper-raised);
+      border: none;
+      border-radius: 2px;
+    }
+
+    .wb-add-btn:hover {
+      background: var(--accent);
+    }
+
+    .wb-task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 365px;
+    }
+
+    .wb-task-row {
+      display: grid;
+      grid-template-columns: auto 66px minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 100ms ease;
+    }
+
+    .wb-task-row:hover {
+      background: #f5f2ea;
+    }
+
+    .wb-task-row.is-selected {
+      background: #efeae0;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .status-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--rule);
+      background: var(--paper-raised);
+      border-radius: 2px;
+      padding: 2px 7px;
+      font-family: var(--mono);
+      font-size: 0.69rem;
+      color: var(--ink-2);
+      white-space: nowrap;
+      transition: border-color 120ms ease, background-color 120ms ease;
+    }
+
+    .status-btn:hover {
+      border-color: var(--ink);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-queued .status-dot { border: 1.5px solid var(--ink-3); background: transparent; }
+    .status-active { background: var(--slate-soft); border-color: rgba(41, 77, 92, 0.25); color: var(--slate); }
+    .status-active .status-dot { background: var(--slate); }
+    .status-review { background: var(--ochre-soft); border-color: rgba(150, 101, 23, 0.28); color: var(--ochre); }
+    .status-review .status-dot { background: var(--ochre); }
+    .status-done { background: var(--moss-soft); border-color: rgba(53, 94, 67, 0.28); color: var(--moss); }
+    .status-done .status-dot { background: var(--moss); }
+
+    .task-id {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-3);
+    }
+
+    .task-title {
+      font-size: 0.87rem;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wb-task-row.is-done .task-title {
+      text-decoration: line-through;
+      color: var(--ink-3);
+    }
+
+    .task-tag {
+      font-family: var(--mono);
+      font-size: 0.69rem;
+      color: var(--ink-2);
+      padding: 1px 6px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--paper);
+    }
+
+    .task-days {
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      color: var(--ink-3);
+      min-width: 28px;
+      text-align: right;
+    }
+
+    .wb-empty {
+      padding: 36px 20px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--ink-3);
+    }
+
+    /* Right Inspector */
+    .wb-inspector {
+      padding: 16px 18px;
+      background: var(--paper-raised);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 0.84rem;
+    }
+
+    .insp-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 10px;
+    }
+
+    .insp-id {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-3);
+    }
+
+    .insp-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.24rem;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    .insp-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.76rem;
+    }
+
+    .insp-meta-item label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 2px;
+    }
+
+    .insp-brief {
+      color: var(--ink-2);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .insp-out {
+      font-size: 0.78rem;
+      color: var(--ink-2);
+      padding: 8px 10px;
+      background: var(--paper);
+      border-left: 2px solid var(--rule-strong);
+    }
+
+    .insp-out strong {
+      font-family: var(--mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      display: block;
+      color: var(--ink-3);
+      margin-bottom: 2px;
+    }
+
+    .insp-checklist-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .insp-checklist {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .insp-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .insp-check-item input {
+      margin-top: 3px;
+      accent-color: var(--ink);
+      cursor: pointer;
+    }
+
+    .insp-check-item.checked span {
+      text-decoration: line-through;
+      color: var(--ink-3);
+    }
+
+    .insp-foot {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 0.71rem;
+      color: var(--ink-3);
+    }
+
+    /* Section Scaffolding */
+    .section {
+      padding: 84px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 32px;
+      margin-bottom: 48px;
+      align-items: start;
+    }
+
+    .section-index {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-3);
+      padding-top: 8px;
+      border-top: 1px solid var(--ink);
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.95rem, 3.2vw, 2.75rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+      max-width: 19ch;
+    }
+
+    .section-lead {
+      margin: 0;
+      font-size: 1.02rem;
+      color: var(--ink-2);
+      max-width: 58ch;
+      line-height: 1.62;
+    }
+
+    /* Section 01: What we left out (Ledger comparison) */
+    .ledger-table {
+      border-top: 1px solid var(--ink);
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: 28px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+    }
+
+    .ledger-row.ledger-head {
+      padding: 12px 0;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-3);
+      border-bottom: 1px solid var(--rule-strong);
+    }
+
+    .ledger-num {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      padding-top: 2px;
+    }
+
+    .ledger-omitted {
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: line-through;
+      text-decoration-color: rgba(196, 64, 33, 0.55);
+      text-decoration-thickness: 1.5px;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .ledger-omitted-note {
+      font-size: 0.87rem;
+      color: var(--ink-3);
+      margin: 0;
+    }
+
+    .ledger-instead {
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .ledger-instead-note {
+      font-size: 0.9rem;
+      color: var(--ink-2);
+      margin: 0;
+    }
+
+    /* Section 02: Three Core Mechanics (Interactive Spec Tabs) */
+    .mechanics-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+      margin-bottom: 36px;
+    }
+
+    .mech-tab {
+      text-align: left;
+      padding: 20px 22px;
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--rule);
+      transition: background-color 140ms ease;
+      position: relative;
+    }
+
+    .mech-tab:last-child {
+      border-right: none;
+    }
+
+    .mech-tab:hover {
+      background: var(--paper-sunk);
+    }
+
+    .mech-tab.is-active {
+      background: var(--paper-raised);
+    }
+
+    .mech-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .mech-tab-num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .mech-tab.is-active .mech-tab-num {
+      color: var(--accent);
+    }
+
+    .mech-tab-name {
+      font-size: 1rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .mech-tab-sub {
+      font-size: 0.84rem;
+      color: var(--ink-2);
+      display: block;
+    }
+
+    .mech-panel {
+      display: none;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 44px;
+      align-items: start;
+    }
+
+    .mech-panel.is-active {
+      display: grid;
+    }
+
+    .mech-copy h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.85rem;
+      line-height: 1.18;
+      margin: 0 0 16px;
+    }
+
+    .mech-copy p {
+      color: var(--ink-2);
+      margin: 0 0 18px;
+      line-height: 1.65;
+    }
+
+    .mech-bullets {
+      list-style: none;
+      padding: 18px 0 0;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .mech-bullets li {
+      display: flex;
+      gap: 10px;
+      color: var(--ink-2);
+    }
+
+    .mech-bullets li::before {
+      content: "—";
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    .mech-demo {
+      background: var(--paper-raised);
+      border: 1px solid var(--rule-strong);
+      border-radius: 4px;
+      padding: 22px;
+    }
+
+    .mech-demo-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-3);
+      gap: 12px;
+    }
+
+    /* Interactive Hill Chart inside Tab 1 */
+    .hill-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .hill-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hill-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      border-radius: 2px;
+      font-size: 0.83rem;
+    }
+
+    .hill-item-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .hill-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .hill-phase {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+    }
+
+    .hill-nudge {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      background: var(--paper-raised);
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+    }
+
+    .hill-nudge:hover {
+      background: var(--ink);
+      color: var(--paper-raised);
+      border-color: var(--ink);
+    }
+
+    /* Plain-text Brief Toggle inside Tab 2 */
+    .brief-toggle {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .brief-toggle button {
+      border: none;
+      background: transparent;
+      padding: 4px 10px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-2);
+    }
+
+    .brief-toggle button.is-active {
+      background: var(--ink);
+      color: var(--paper-raised);
+    }
+
+    .brief-rendered h4 {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin: 0 0 10px;
+    }
+
+    .brief-rendered p {
+      font-size: 0.88rem;
+      color: var(--ink-2);
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+
+    .brief-inline-ref {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      background: var(--paper-sunk);
+      padding: 1px 6px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      color: var(--ink);
+    }
+
+    .brief-source {
+      font-family: var(--mono);
+      font-size: 0.79rem;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--paper);
+      padding: 14px;
+      border: 1px solid var(--rule);
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    /* Honest Load Simulator inside Tab 3 */
+    .load-toggle-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      margin-bottom: 16px;
+      font-size: 0.83rem;
+    }
+
+    .load-toggle-btn {
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      padding: 5px 10px;
+      border-radius: 2px;
+      border: 1px solid var(--rule-strong);
+      background: var(--paper-raised);
+    }
+
+    .load-toggle-btn.is-on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--paper-raised);
+    }
+
+    .load-row {
+      margin-bottom: 14px;
+    }
+
+    .load-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .load-row-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      margin-bottom: 5px;
+    }
+
+    .load-row-head .mono {
+      font-size: 0.74rem;
+      color: var(--ink-2);
+    }
+
+    .load-bar-track {
+      height: 10px;
+      background: var(--paper-sunk);
+      border-radius: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .load-bar-fill {
+      height: 100%;
+      background: var(--slate);
+      transition: width 220ms ease, background-color 220ms ease;
+    }
+
+    .load-bar-fill.is-over {
+      background: var(--accent);
+    }
+
+    .load-warning {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border-left: 2px solid var(--accent);
+      font-size: 0.81rem;
+      color: var(--ink);
+      display: none;
+    }
+
+    .load-warning.is-visible {
+      display: block;
+    }
+
+    /* Section 03: Field Notes (Editorial Quotes) */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .quote-col {
+      padding: 32px 28px 32px 0;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .quote-col:not(:first-child) {
+      padding-left: 28px;
+    }
+
+    .quote-col:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .quote-text {
+      font-family: var(--serif);
+      font-size: 1.24rem;
+      line-height: 1.44;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .quote-meta {
+      border-top: 1px solid var(--rule);
+      padding-top: 14px;
+      font-size: 0.84rem;
+    }
+
+    .quote-author {
+      font-weight: 600;
+      display: block;
+    }
+
+    .quote-role {
+      color: var(--ink-2);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .quote-stat {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+    }
+
+    /* Section 04: Plain Pricing */
+    .pricing-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 36px;
+      align-items: start;
+    }
+
+    .rate-card {
+      background: var(--paper-raised);
+      border: 1px solid var(--rule-strong);
+      border-radius: 4px;
+      padding: 32px;
+    }
+
+    .rate-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 24px;
+    }
+
+    .rate-price {
+      font-family: var(--serif);
+      font-size: 3.1rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .rate-unit {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      margin-top: 6px;
+      display: block;
+    }
+
+    .billing-switch {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .billing-switch button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-2);
+    }
+
+    .billing-switch button.is-active {
+      background: var(--ink);
+      color: var(--paper-raised);
+    }
+
+    .calc-box {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 18px 20px;
+      border-radius: 3px;
+      margin-bottom: 22px;
+    }
+
+    .calc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .calc-head label {
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .calc-total {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .calc-slider {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .calc-scale {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .included-list {
+      list-style: none;
+      margin: 0 0 26px;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 18px;
+      font-size: 0.87rem;
+      color: var(--ink-2);
+    }
+
+    .included-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .included-list li::before {
+      content: "+";
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .pricing-side {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .side-card {
+      padding: 24px;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+      border-radius: 3px;
+    }
+
+    .side-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .side-card p {
+      margin: 0 0 14px;
+      font-size: 0.89rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    .side-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Section 05: Changelog Strip */
+    .changelog-section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .changelog-grid {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+
+    .changelog-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .changelog-item {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) auto;
+      gap: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.9rem;
+      align-items: baseline;
+    }
+
+    .changelog-date {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-3);
+    }
+
+    .changelog-tag {
+      font-family: var(--mono);
+      font-size: 0.71rem;
+      color: var(--ink-3);
+      padding: 2px 7px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+    }
+
+    /* Footer */
+    .site-footer {
+      padding: 56px 0 44px;
+      background: var(--paper-sunk);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 0.55fr));
+      gap: 36px;
+      padding-bottom: 44px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 24px;
+    }
+
+    .dispatch-box h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.45rem;
+      margin: 0 0 8px;
+    }
+
+    .dispatch-box p {
+      margin: 0 0 16px;
+      font-size: 0.88rem;
+      color: var(--ink-2);
+      max-width: 40ch;
+    }
+
+    .dispatch-form {
+      display: flex;
+      gap: 8px;
+      max-width: 410px;
+    }
+
+    .dispatch-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 9px 12px;
+      background: var(--paper-raised);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+    }
+
+    .dispatch-msg {
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--moss);
+      min-height: 1.2em;
+    }
+
+    .footer-col h4 {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-3);
+      margin: 0 0 12px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.87rem;
+      color: var(--ink-2);
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-3);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 24, 22, 0.52);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--paper-raised);
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(25, 24, 22, 0.28);
+    }
+
+    .modal-sheet.wide {
+      max-width: 640px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 20px;
+    }
+
+    .modal-head h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.65rem;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      padding: 4px 9px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .modal-close:hover {
+      background: var(--ink);
+      color: var(--paper-raised);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+    }
+
+    .slug-preview {
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-3);
+    }
+
+    .cycle-picker {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .cycle-opt {
+      padding: 9px 10px;
+      border: 1px solid var(--rule-strong);
+      background: var(--paper);
+      border-radius: var(--radius);
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    .cycle-opt.is-selected {
+      background: var(--ink);
+      color: var(--paper-raised);
+      border-color: var(--ink);
+    }
+
+    .handbook-body h3 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 20px 0 8px;
+    }
+
+    .handbook-body p {
+      margin: 0 0 12px;
+      font-size: 0.92rem;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .wb-layout {
+        grid-template-columns: 185px minmax(0, 1fr);
+      }
+      .wb-inspector {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--rule);
+      }
+      .hero-grid,
+      .section-header,
+      .changelog-grid,
+      .pricing-layout,
+      .mech-panel.is-active {
+        grid-template-columns: 1fr;
+      }
+      .quotes-grid {
+        grid-template-columns: 1fr;
+      }
+      .quote-col {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+        padding: 28px 0;
+      }
+      .quote-col:not(:first-child) {
+        padding-left: 0;
+      }
+      .quote-col:last-child {
+        border-bottom: none;
+      }
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        padding: 0 18px;
+      }
+      .nav-links,
+      .brand-version,
+      .wb-metrics {
+        display: none;
+      }
+      .hero {
+        padding: 44px 0 36px;
+      }
+      .wb-layout {
+        grid-template-columns: 1fr;
+      }
+      .wb-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .wb-main {
+        border-right: none;
+      }
+      .wb-task-row {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+      }
+      .task-id, .task-tag, .task-days {
+        display: none;
+      }
+      .ledger-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .ledger-row.ledger-head {
+        display: none;
+      }
+      .mechanics-tabs {
+        grid-template-columns: 1fr;
+      }
+      .mech-tab {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+      .included-list {
+        grid-template-columns: 1fr;
+      }
+      .changelog-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+      .dispatch-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Trestle home">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <path d="M2.5 5.5H19.5" stroke="#191816" stroke-width="2" stroke-linecap="square"/>
+          <path d="M6.5 5.5L3.5 18.5" stroke="#191816" stroke-width="1.8" stroke-linecap="square"/>
+          <path d="M15.5 5.5L18.5 18.5" stroke="#191816" stroke-width="1.8" stroke-linecap="square"/>
+          <path d="M5 12.5H17" stroke="#c44021" stroke-width="1.8" stroke-linecap="square"/>
+        </svg>
+        <span>Trestle</span>
+        <span class="brand-version">v2.4</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#method">What we left out</a>
+        <a href="#mechanics">How it works</a>
+        <a href="#notes">Field notes</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#pricing" class="nav-signin" data-open-modal="workspace">Sign in</a>
+        <button type="button" class="btn btn-primary btn-sm" data-open-modal="workspace">Start a workspace</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero + Live Workbench -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-kicker">
+              <span class="dot" aria-hidden="true"></span>
+              <span>For product &amp; engineering teams of 4 to 40</span>
+            </div>
+            <h1>Project tracking for teams who’d rather <em>build</em> than administer.</h1>
+          </div>
+          <div class="hero-aside">
+            <p>
+              Trestle replaces bloated sprint boards with six-week cycles, plain-text briefs,
+              and one quiet daily view of who is carrying what. No story points. No 14-column workflows.
+            </p>
+            <div class="hero-cta-row">
+              <button type="button" class="btn btn-primary" data-open-modal="workspace">Create a workspace — 30 days free</button>
+              <button type="button" class="link-underline" style="background:none;border-top:none;border-left:none;border-right:none;" data-open-modal="handbook">Read the 4-minute handbook &rarr;</button>
+            </div>
+            <div class="hero-footnote">
+              <span>No credit card required</span>
+              <span>&middot;</span>
+              <span>Exports to plain Markdown &amp; CSV anytime</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="workbench-caption">
+          <span><strong>Live workbench preview</strong> — click a status pill, filter by maker, or add a task below.</span>
+          <span id="wb-shortcut-hint">Press <kbd>/</kbd> to add a task</span>
+        </div>
+
+        <div class="workbench" role="region" aria-label="Interactive Trestle workbench demo">
+          <div class="wb-topbar">
+            <div class="wb-topbar-left">
+              <div class="wb-window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="wb-breadcrumb">northshore-studio <span>/</span> cycle-14-billing</div>
+            </div>
+            <div class="wb-metrics">
+              <span id="wb-done-ratio">2 of 7 done</span>
+              <span class="wb-progress-inline">
+                <span class="wb-meter"><span class="wb-meter-fill" id="wb-meter-fill" style="width: 28%;"></span></span>
+                <span id="wb-days-left">9.5d remaining</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="wb-layout">
+            <!-- Left Sidebar -->
+            <aside class="wb-sidebar" aria-label="Workbench views">
+              <div>
+                <div class="wb-nav-group">
+                  <div class="wb-nav-label">Views</div>
+                  <button type="button" class="wb-nav-btn is-active" data-view="cycle">
+                    <span>Cycle 14</span>
+                    <span class="count" id="count-cycle">7</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-view="backlog">
+                    <span>Queued Backlog</span>
+                    <span class="count" id="count-backlog">3</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-view="shipped">
+                    <span>Shipped</span>
+                    <span class="count" id="count-shipped">2</span>
+                  </button>
+                </div>
+
+                <div class="wb-nav-group">
+                  <div class="wb-nav-label">Makers</div>
+                  <button type="button" class="wb-nav-btn is-active" data-maker="all">
+                    <span>Everyone</span>
+                    <span class="count">4</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-maker="MK">
+                    <span class="wb-maker-row"><span class="avatar-chip">MK</span>Maren K.</span>
+                    <span class="count" data-maker-load="MK">3.5d</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-maker="DR">
+                    <span class="wb-maker-row"><span class="avatar-chip">DR</span>Devon R.</span>
+                    <span class="count" data-maker-load="DR">3.0d</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-maker="KT">
+                    <span class="wb-maker-row"><span class="avatar-chip">KT</span>Kenji T.</span>
+                    <span class="count" data-maker-load="KT">2.0d</span>
+                  </button>
+                  <button type="button" class="wb-nav-btn" data-maker="SL">
+                    <span class="wb-maker-row"><span class="avatar-chip">SL</span>Sora L.</span>
+                    <span class="count" data-maker-load="SL">1.0d</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="wb-cycle-card">
+                <div class="wb-cycle-card-head">
+                  <span>Cycle 14</span>
+                  <span>Day 26 / 42</span>
+                </div>
+                <div class="wb-cycle-bar"><span></span></div>
+                <div class="wb-cycle-meta">Cooldown starts Dec 11</div>
+              </div>
+            </aside>
+
+            <!-- Center Ledger -->
+            <div class="wb-main">
+              <div class="wb-main-head">
+                <div class="wb-main-title">
+                  <h2 id="wb-view-heading">Cycle 14 — Billing &amp; Print</h2>
+                  <span id="wb-filter-pill">All makers</span>
+                </div>
+                <span class="wb-hint">Click status to advance</span>
+              </div>
+
+              <form class="wb-add-form" id="wb-add-form">
+                <input type="text" id="wb-new-title" class="wb-add-input" placeholder="+ Add a concrete task to this view..." aria-label="New task title" />
+                <select id="wb-new-maker" class="wb-add-select" aria-label="Assign to maker">
+                  <option value="MK">Maren K.</option>
+                  <option value="DR">Devon R.</option>
+                  <option value="KT">Kenji T.</option>
+                  <option value="SL">Sora L.</option>
+                </select>
+                <button type="submit" class="wb-add-btn">Add</button>
+              </form>
+
+              <ul class="wb-task-list" id="wb-task-list" aria-label="Tasks"></ul>
+            </div>
+
+            <!-- Right Inspector -->
+            <aside class="wb-inspector" id="wb-inspector" aria-label="Selected task brief"></aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 01: What we left out -->
+    <section class="section" id="method">
+      <div class="container">
+        <div class="section-header">
+          <div><span class="section-index">01 / Restraint</span></div>
+          <div>
+            <h2 class="section-title">What we deliberately left out of Trestle.</h2>
+            <p class="section-lead">
+              Most project tools turn into a second job because they are built to satisfy reporting
+              layers rather than the people shipping the work. We designed Trestle by subtraction.
+            </p>
+          </div>
+        </div>
+
+        <div class="ledger-table">
+          <div class="ledger-row ledger-head">
+            <span>No.</span>
+            <span>Omitted ceremony</span>
+            <span>What Trestle does instead</span>
+          </div>
+
+          <div class="ledger-row">
+            <span class="ledger-num">01</span>
+            <div>
+              <div class="ledger-omitted">Story points &amp; velocity charts</div>
+              <p class="ledger-omitted-note">Abstract numbers inevitably get compared across people and gamed by quarter-end.</p>
+            </div>
+            <div>
+              <div class="ledger-instead">Appetite budgets in real days</div>
+              <p class="ledger-instead-note">Decide how many days a problem is worth up front, then shape the scope to fit inside that ceiling.</p>
+            </div>
+          </div>
+
+          <div class="ledger-row">
+            <span class="ledger-num">02</span>
+            <div>
+              <div class="ledger-omitted">Eleven-column Kanban graveyards</div>
+              <p class="ledger-omitted-note">Cards sit in "Blocked - External" for four months until nobody remembers why they exist.</p>
+            </div>
+            <div>
+              <div class="ledger-instead">Four honest states &amp; automatic cycle wrap</div>
+              <p class="ledger-instead-note">Queued, Active, Review, Done. Unfinished work isn’t quietly rolled over—it is re-decided consciously.</p>
+            </div>
+          </div>
+
+          <div class="ledger-row">
+            <span class="ledger-num">03</span>
+            <div>
+              <div class="ledger-omitted">Infinite threaded ticket debates</div>
+              <p class="ledger-omitted-note">Critical decisions get buried under comment #47 where nobody reads before implementing.</p>
+            </div>
+            <div>
+              <div class="ledger-instead">Living plain-text briefs with explicit boundaries</div>
+              <p class="ledger-instead-note">Every deliverable has one readable spec with an explicit "Out of scope" block that stays pinned at the top.</p>
+            </div>
+          </div>
+
+          <div class="ledger-row">
+            <span class="ledger-num">04</span>
+            <div>
+              <div class="ledger-omitted">Real-time notification anxiety</div>
+              <p class="ledger-omitted-note">Constant pings turn deep engineering mornings into fragmented chat support.</p>
+            </div>
+            <div>
+              <div class="ledger-instead">Batched 9am &amp; 2pm written digests</div>
+              <p class="ledger-instead-note">Updates arrive twice a day as one calm sheet, unless someone explicitly flags a production blocker.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 02: Three Core Mechanics -->
+    <section class="section" id="mechanics">
+      <div class="container">
+        <div class="section-header">
+          <div><span class="section-index">02 / Mechanics</span></div>
+          <div>
+            <h2 class="section-title">Three quiet surfaces. Everything connected.</h2>
+            <p class="section-lead">
+              No plugin marketplace, no custom workflow builder you need a consultant to maintain.
+              Just cycles, briefs, and an honest ledger of team load.
+            </p>
+          </div>
+        </div>
+
+        <div class="mechanics-tabs" role="tablist" aria-label="Core mechanics">
+          <button type="button" class="mech-tab is-active" role="tab" aria-selected="true" data-tab="cycles">
+            <span class="mech-tab-num">01</span>
+            <span class="mech-tab-name">Six-Week Cycles</span>
+            <span class="mech-tab-sub">See whether work is still unknown or merely unfinished.</span>
+          </button>
+          <button type="button" class="mech-tab" role="tab" aria-selected="false" data-tab="briefs">
+            <span class="mech-tab-num">02</span>
+            <span class="mech-tab-name">Plain-Text Briefs</span>
+            <span class="mech-tab-sub">Specs written in Markdown, linked cleanly to tasks.</span>
+          </button>
+          <button type="button" class="mech-tab" role="tab" aria-selected="false" data-tab="load">
+            <span class="mech-tab-num">03</span>
+            <span class="mech-tab-name">Honest Load</span>
+            <span class="mech-tab-sub">Make tradeoffs visible before someone’s week quietly breaks.</span>
+          </button>
+        </div>
+
+        <!-- Panel 1: Cycles -->
+        <div class="mech-panel is-active" data-panel="cycles">
+          <div class="mech-copy">
+            <h3>Progress isn’t a percentage bar. It’s the difference between figuring it out and executing.</h3>
+            <p>
+              A task at "80% done" can still have an unsolved architectural risk hiding inside it.
+              Trestle plots each deliverable across a simple uphill / downhill curve so the whole
+              studio can tell at a glance what still needs thinking and what is cleanly downhill.
+            </p>
+            <ul class="mech-bullets">
+              <li>Pick 2, 4, or 6-week cycles with a built-in cooldown week for bug fixes and polish.</li>
+              <li>Drag or nudge deliverables across the hill during your Friday check-in—no standup script needed.</li>
+              <li>Automatic snapshots let you replay how a cycle moved without interrogating anyone.</li>
+            </ul>
+          </div>
+
+          <div class="mech-demo">
+            <div class="mech-demo-head">
+              <span>CYCLE 14 — DELIVERABLE CONFIDENCE</span>
+              <span>Click "Advance" to move work over the hill</span>
+            </div>
+            <svg class="hill-svg" viewBox="0 0 540 165" id="hill-svg" aria-label="Cycle progress hill chart">
+              <line x1="20" y1="138" x2="520" y2="138" stroke="rgba(25,24,22,0.18)" stroke-width="1"/>
+              <line x1="270" y1="18" x2="270" y2="138" stroke="rgba(25,24,22,0.22)" stroke-dasharray="3 4" stroke-width="1"/>
+              <path d="M 30 136 C 130 136, 175 28, 270 28 C 365 28, 410 136, 510 136" fill="none" stroke="#191816" stroke-width="1.75"/>
+              <text x="145" y="156" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="#7d776d">FIGURING THINGS OUT</text>
+              <text x="395" y="156" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="#7d776d">MAKING IT HAPPEN</text>
+              <g id="hill-dots"></g>
+            </svg>
+            <div class="hill-controls" id="hill-controls"></div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Briefs -->
+        <div class="mech-panel" data-panel="briefs">
+          <div class="mech-copy">
+            <h3>Start every piece of work with a readable page, not an empty ticket title.</h3>
+            <p>
+              Most rework happens because a two-line card meant three different things to engineering,
+              design, and founders. Briefs in Trestle are plain Markdown documents stored right next
+              to the tasks they produce—and you can export your entire workspace as a clean folder of
+              <code>.md</code> files whenever you want.
+            </p>
+            <ul class="mech-bullets">
+              <li>Mention any task ID like <code>TRS-418</code> to embed its live status inline.</li>
+              <li>Dedicated "Out of scope" section prevents quiet feature creep mid-cycle.</li>
+              <li>Zero proprietary block editor lock-in—paste straight from Obsidian, Notion, or vim.</li>
+            </ul>
+          </div>
+
+          <div class="mech-demo">
+            <div class="mech-demo-head">
+              <span>BRIEF / PRINT-READY CLIENT INVOICES</span>
+              <div class="brief-toggle" role="group" aria-label="Brief format">
+                <button type="button" class="is-active" data-brief-mode="rendered">Rendered</button>
+                <button type="button" data-brief-mode="source">Markdown</button>
+              </div>
+            </div>
+            <div id="brief-rendered" class="brief-rendered">
+              <h4>Print-ready client invoices (Appetite: 4 days)</h4>
+              <p>
+                Agency customers currently screenshot the billing page because our PDF export breaks
+                across multi-page retainers. We will add a dedicated print stylesheet and server-side
+                PDF endpoint tied to <span class="brief-inline-ref">TRS-421 &middot; Active</span> and
+                <span class="brief-inline-ref">TRS-426 &middot; Done</span>.
+              </p>
+              <p>
+                <strong>Explicitly out of scope:</strong> Custom drag-and-drop invoice templates,
+                multi-currency FX rounding, and automated Xero sync (deferred to Cycle 15).
+              </p>
+              <p style="font-family:var(--mono);font-size:0.75rem;color:var(--ink-3);margin-bottom:0;">
+                Owner: Sora L. &middot; Last edited 3h ago &middot; 2 linked tasks
+              </p>
+            </div>
+            <pre id="brief-source" class="brief-source" style="display:none;"># Print-ready client invoices
+appetite: 4d
+owner: @sora
+
+## Context
+Agency customers screenshot the billing view because
+multi-page retainer tables split mid-row on PDF export.
+
+## Linked work
+- [[TRS-421]] Print stylesheet &amp; page-break rules (Active)
+- [[TRS-426]] Invoice line-item tax subtotal fix (Done)
+
+## Out of scope
+- Custom drag-and-drop invoice templates
+- Multi-currency FX rounding
+- Automated Xero sync (revisit in Cycle 15)</pre>
+          </div>
+        </div>
+
+        <!-- Panel 3: Honest Load -->
+        <div class="mech-panel" data-panel="load">
+          <div class="mech-copy">
+            <h3>See what adding "one quick request" actually displaces.</h3>
+            <p>
+              Unplanned work happens in every real company. The damage comes from pretending it’s free.
+              Trestle totals each person’s committed days against a realistic 4-day maker week—leaving
+              room for reviews, support, and life—so adding urgent scope forces an honest conversation.
+            </p>
+            <ul class="mech-bullets">
+              <li>Defaults to 4 focused build days per week instead of a mythical 40-hour utilization target.</li>
+              <li>Highlights collisions immediately before anyone signs up for quiet weekend overtime.</li>
+              <li>No surveillance timers, mouse trackers, or individual "productivity scores."</li>
+            </ul>
+          </div>
+
+          <div class="mech-demo">
+            <div class="mech-demo-head">
+              <span>WEEK OF NOV 23 — COMMITTED LOAD (4.0d CAP)</span>
+              <span class="mono">4 makers</span>
+            </div>
+
+            <div class="load-toggle-bar">
+              <span>Simulate adding <strong>"Urgent SSO hotfix (+2.0d)"</strong> to Devon</span>
+              <button type="button" class="load-toggle-btn" id="load-sim-btn">+ Add request</button>
+            </div>
+
+            <div class="load-row">
+              <div class="load-row-head">
+                <span>Maren K. — Backend</span>
+                <span class="mono">3.5d / 4.0d</span>
+              </div>
+              <div class="load-bar-track"><div class="load-bar-fill" style="width:87.5%;"></div></div>
+            </div>
+
+            <div class="load-row">
+              <div class="load-row-head">
+                <span>Devon R. — Infrastructure</span>
+                <span class="mono" id="devon-load-label">3.0d / 4.0d</span>
+              </div>
+              <div class="load-bar-track"><div class="load-bar-fill" id="devon-load-bar" style="width:75%;"></div></div>
+            </div>
+
+            <div class="load-row">
+              <div class="load-row-head">
+                <span>Kenji T. — Frontend</span>
+                <span class="mono">2.5d / 4.0d</span>
+              </div>
+              <div class="load-bar-track"><div class="load-bar-fill" style="width:62.5%;"></div></div>
+            </div>
+
+            <div class="load-row">
+              <div class="load-row-head">
+                <span>Sora L. — Product Design</span>
+                <span class="mono">3.0d / 4.0d</span>
+              </div>
+              <div class="load-bar-track"><div class="load-bar-fill" style="width:75%;"></div></div>
+            </div>
+
+            <div class="load-warning" id="load-warning">
+              <strong>Capacity collision (+1.0d over):</strong> Adding the SSO hotfix pushes Devon to 5.0d.
+              Consider moving <code>TRS-418</code> (Webhook retry migration) to next week or handing review to Maren.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 03: Field Notes -->
+    <section class="section" id="notes">
+      <div class="container">
+        <div class="section-header">
+          <div><span class="section-index">03 / Field Notes</span></div>
+          <div>
+            <h2 class="section-title">Used by studios that hate status meetings.</h2>
+            <p class="section-lead">
+              Independent software firms, hardware-adjacent engineering teams, and small product
+              groups running real production schedules on Trestle.
+            </p>
+          </div>
+        </div>
+
+        <div class="quotes-grid">
+          <article class="quote-col">
+            <p class="quote-text">
+              “We spent three years paying for Jira and still tracked our actual releases in a shared
+              text file. Trestle is the first tool that felt like our text file grew proper teeth.”
+            </p>
+            <div class="quote-meta">
+              <span class="quote-author">Tomasz Kowalski</span>
+              <span class="quote-role">Partner, Northshore Marine Software</span>
+              <span class="quote-stat">14 people &middot; Gdansk &amp; remote</span>
+            </div>
+          </article>
+
+          <article class="quote-col">
+            <p class="quote-text">
+              “Monday planning dropped from a fifty-five minute screen-share to a ten-minute quiet
+              read. Having an explicit ‘Out of scope’ box on every brief paid for the year in week two.”
+            </p>
+            <div class="quote-meta">
+              <span class="quote-author">Hana Sato</span>
+              <span class="quote-role">Design Director, Kiln &amp; Press</span>
+              <span class="quote-stat">9 people &middot; Portland, OR</span>
+            </div>
+          </article>
+
+          <article class="quote-col">
+            <p class="quote-text">
+              “My favorite feature is what isn’t there. Engineers open it at nine, see the two things
+              that matter today, and close the tab until afternoon. Nobody asks for a dashboard.”
+            </p>
+            <div class="quote-meta">
+              <span class="quote-author">Claire Gallagher</span>
+              <span class="quote-role">CTO, Fieldnote Freight Systems</span>
+              <span class="quote-stat">27 people &middot; Dublin</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 04: Plain Pricing -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header">
+          <div><span class="section-index">04 / Rate Card</span></div>
+          <div>
+            <h2 class="section-title">One honest price. No enterprise tax for SSO.</h2>
+            <p class="section-lead">
+              Every feature is included in a single seat rate. We don’t lock SAML, audit logs,
+              or data exports behind a "Contact Sales" wall.
+            </p>
+          </div>
+        </div>
+
+        <div class="pricing-layout">
+          <div class="rate-card">
+            <div class="rate-card-top">
+              <div>
+                <div class="rate-price" id="unit-price">$11</div>
+                <span class="rate-unit" id="unit-label">per active seat / month, billed annually</span>
+              </div>
+              <div class="billing-switch" role="group" aria-label="Billing interval">
+                <button type="button" class="is-active" data-billing="annual">Annual</button>
+                <button type="button" data-billing="monthly">Monthly</button>
+              </div>
+            </div>
+
+            <div class="calc-box">
+              <div class="calc-head">
+                <label for="team-slider">Team size: <strong id="team-size-val">12 people</strong></label>
+                <span class="calc-total" id="team-total">$132 / mo</span>
+              </div>
+              <input type="range" id="team-slider" class="calc-slider" min="2" max="50" value="12" />
+              <div class="calc-scale">
+                <span>2 seats</span>
+                <span>15</span>
+                <span>30</span>
+                <span>50 seats</span>
+              </div>
+            </div>
+
+            <ul class="included-list">
+              <li>Unlimited cycles &amp; briefs</li>
+              <li>GitHub, GitLab &amp; Linear import</li>
+              <li>SAML SSO &amp; 2FA enforcement</li>
+              <li>Full Markdown &amp; CSV export</li>
+              <li>Guest reviewers at $0</li>
+              <li>REST API &amp; webhooks</li>
+            </ul>
+
+            <button type="button" class="btn btn-primary" style="width:100%;" data-open-modal="workspace">Start 30-day free trial</button>
+          </div>
+
+          <div class="pricing-side">
+            <div class="side-card">
+              <h3>Free for solo makers &amp; pairs</h3>
+              <p>
+                Working by yourself or with one co-founder? Trestle is permanently free for workspaces
+                of 1–2 people, with the same Markdown exports and keyboard shortcuts.
+              </p>
+              <button type="button" class="link-underline" style="background:none;border-top:none;border-left:none;border-right:none;" data-open-modal="workspace">Open a free 2-person workspace &rarr;</button>
+            </div>
+
+            <div class="side-card">
+              <h3>Our fair-billing promise</h3>
+              <p>
+                If someone leaves your team or goes on parental leave, we automatically prorate unused
+                seat time back onto your next invoice—no support ticket required.
+              </p>
+              <p class="mono" style="font-size:0.75rem;color:var(--ink-3);">
+                Bootstrapped &amp; profitable since 2023. Zero VC pressure to pivot your tool into a suite.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 05: Recent Changelog -->
+    <section class="changelog-section" id="changelog">
+      <div class="container changelog-grid">
+        <div>
+          <span class="section-index">05 / Changelog</span>
+          <p style="font-size:0.86rem;color:var(--ink-2);margin:14px 0 0;">
+            Small, steady releases shipped every two weeks by our four-person team in Minneapolis &amp; Rotterdam.
+          </p>
+        </div>
+        <ul class="changelog-list">
+          <li class="changelog-item">
+            <span class="changelog-date">2026-11-18</span>
+            <span>Full keyboard navigation across nested brief checklists and quick-capture bar.</span>
+            <span class="changelog-tag">Editor</span>
+          </li>
+          <li class="changelog-item">
+            <span class="changelog-date">2026-11-04</span>
+            <span>Offline write queue for trains and flights—edit briefs locally and sync cleanly on reconnect.</span>
+            <span class="changelog-tag">Sync</span>
+          </li>
+          <li class="changelog-item">
+            <span class="changelog-date">2026-10-21</span>
+            <span>One-click full workspace archive (.zip of Markdown briefs, JSON ledger, and attachments).</span>
+            <span class="changelog-tag">Portability</span>
+          </li>
+          <li class="changelog-item">
+            <span class="changelog-date">2026-10-07</span>
+            <span>GitHub PR status links directly inside cycle rows without duplicating issue comments.</span>
+            <span class="changelog-tag">Integrations</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="dispatch-box">
+          <h3>The monthly engineering &amp; product dispatch</h3>
+          <p>
+            One plain-text email on the first Tuesday of each month: what we shipped, what we cut,
+            and notes on running calm software teams. No drip campaigns.
+          </p>
+          <form class="dispatch-form" id="dispatch-form">
+            <input type="email" id="dispatch-email" placeholder="you@studio.com" required aria-label="Email address" />
+            <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+          </form>
+          <div class="dispatch-msg" id="dispatch-msg" aria-live="polite"></div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#method">Philosophy</a></li>
+            <li><a href="#mechanics">Six-week cycles</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#changelog">Changelog</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#" data-open-modal="handbook">The 4-minute handbook</a></li>
+            <li><a href="#pricing">Migrating from Jira</a></li>
+            <li><a href="#changelog">Markdown export spec</a></li>
+            <li><a href="#changelog">API documentation</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#notes">Customers</a></li>
+            <li><a href="mailto:hello@trestle.works">hello@trestle.works</a></li>
+            <li><a href="#pricing">Security &amp; SOC 2</a></li>
+            <li><a href="#pricing">Status (99.98%)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Trestle Works LLC. Made in Minneapolis &amp; Rotterdam.</span>
+        <span>No third-party ad trackers. Ever.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: Create Workspace -->
+  <div class="modal-backdrop" id="modal-workspace" role="dialog" aria-modal="true" aria-labelledby="ws-modal-title">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <div>
+          <span class="mono" style="font-size:0.72rem;color:var(--ink-3);text-transform:uppercase;">30-day free trial</span>
+          <h2 id="ws-modal-title">Start your workspace</h2>
+        </div>
+        <button type="button" class="modal-close" data-close-modal>Esc</button>
+      </div>
+
+      <form id="ws-form">
+        <div class="field">
+          <label for="ws-name">Studio or team name</label>
+          <input type="text" id="ws-name" placeholder="e.g. Harbor Foundry" required />
+          <div class="slug-preview">Workspace URL: <strong id="ws-slug">trestle.works/harbor-foundry</strong></div>
+        </div>
+
+        <div class="field">
+          <label for="ws-email">Work email</label>
+          <input type="email" id="ws-email" placeholder="alex@harborfoundry.com" required />
+        </div>
+
+        <div class="field">
+          <label>Default cycle rhythm</label>
+          <div class="cycle-picker" role="group" aria-label="Cycle length">
+            <button type="button" class="cycle-opt" data-cycle="2 weeks">2 weeks</button>
+            <button type="button" class="cycle-opt" data-cycle="4 weeks">4 weeks</button>
+            <button type="button" class="cycle-opt is-selected" data-cycle="6 weeks">6 weeks</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">Create workspace</button>
+      </form>
+
+      <div id="ws-confirm" style="display:none;padding:12px 0;">
+        <p style="margin:0 0 12px;font-family:var(--serif);font-size:1.35rem;">Your workspace is reserved.</p>
+        <p style="margin:0 0 18px;font-size:0.9rem;color:var(--ink-2);" id="ws-confirm-copy"></p>
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Return to page</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 4-Minute Handbook -->
+  <div class="modal-backdrop" id="modal-handbook" role="dialog" aria-modal="true" aria-labelledby="hb-modal-title">
+    <div class="modal-sheet wide">
+      <div class="modal-head">
+        <div>
+          <span class="mono" style="font-size:0.72rem;color:var(--ink-3);text-transform:uppercase;">Trestle Operating Notes</span>
+          <h2 id="hb-modal-title">The 4-minute handbook</h2>
+        </div>
+        <button type="button" class="modal-close" data-close-modal>Esc</button>
+      </div>
+      <div class="handbook-body">
+        <p>
+          Software teams rarely miss deadlines because they typed too slowly. They miss deadlines
+          because nobody agreed on what was <em>not</em> being built, and half the team got pulled
+          into undocumented side quests by Wednesday.
+        </p>
+        <h3>1. Bet on cycles, not an endless backlog</h3>
+        <p>
+          An infinite backlog is a guilt list. In Trestle, you pick a fixed cycle (usually four or
+          six weeks) and commit only to the deliverables that fit cleanly inside your team’s real
+          appetite. Everything else stays calmly outside the fence until the next betting table.
+        </p>
+        <h3>2. Write the boundary before writing code</h3>
+        <p>
+          Every deliverable starts with a half-page plain-text brief: what problem we’re solving,
+          how many days it is worth, and three concrete things we are explicitly leaving out. That
+          single habit eliminates most mid-cycle thrash.
+        </p>
+        <h3>3. Reserve a cooldown week</h3>
+        <p>
+          Between cycles, take five days with no new feature commitments. Fix papercuts, upgrade
+          dependencies, pay down support debt, and breathe. Teams that never pause eventually stop
+          moving fast anyway.
+        </p>
+        <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="mono" style="font-size:0.74rem;color:var(--ink-3);">Updated Nov 2026 &middot; Plain text, no fluff</span>
+          <button type="button" class="btn btn-primary btn-sm" data-open-modal="workspace">Try it with your team</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------------- Interactive Workbench Data & State ---------------- */
+      const MAKERS = {
+        MK: 'Maren K.',
+        DR: 'Devon R.',
+        KT: 'Kenji T.',
+        SL: 'Sora L.'
+      };
+
+      const STATUS_ORDER = ['queued', 'active', 'review', 'done'];
+      const STATUS_LABEL = {
+        queued: 'Queued',
+        active: 'Active',
+        review: 'Review',
+        done: 'Done'
+      };
+
+      let nextId = 429;
+      let state = {
+        view: 'cycle',
+        maker: 'all',
+        selectedId: 'TRS-418',
+        tasks: [
+          {
+            id: 'TRS-418',
+            view: 'cycle',
+            status: 'active',
+            title: 'Migrate webhook retries off Redis queues',
+            tag: 'Sync',
+            days: 2.0,
+            maker: 'MK',
+            brief: 'Webhook deliveries currently stall when Redis restarts under load. Move retry scheduling to a Postgres backoff table with dead-letter inspection.',
+            outOfScope: 'Custom per-customer retry intervals and UI webhook replay debugger.',
+            updated: 'Updated 2h ago by Maren K.',
+            checks: [
+              { text: 'Add webhook_attempts table & index', done: true },
+              { text: 'Exponential backoff worker (max 6 tries)', done: true },
+              { text: 'Drain legacy Redis keys in staging', done: false }
+            ]
+          },
+          {
+            id: 'TRS-421',
+            view: 'cycle',
+            status: 'active',
+            title: 'Print stylesheet for multi-page client invoices',
+            tag: 'Billing',
+            days: 1.5,
+            maker: 'SL',
+            brief: 'Fix orphan table headers and clipped subtotal blocks when customers print or export PDF retainers over 25 line items.',
+            outOfScope: 'Custom brand fonts or drag-and-drop invoice layouts.',
+            updated: 'Updated 3h ago by Sora L.',
+            checks: [
+              { text: 'Audit A4 & US Letter page breaks', done: true },
+              { text: 'Repeat thead across printed pages', done: false },
+              { text: 'Verify Chrome & Safari print output', done: false }
+            ]
+          },
+          {
+            id: 'TRS-424',
+            view: 'cycle',
+            status: 'review',
+            title: 'Investigate Safari 18 sticky header jitter',
+            tag: 'Web',
+            days: 1.0,
+            maker: 'KT',
+            brief: 'Scrolling rapidly inside long briefs causes a 1px vertical jump under Safari 18 when the inline toolbar pins.',
+            outOfScope: 'Rewriting the markdown editor scroll container.',
+            updated: 'In review with Sora L. (40m ago)',
+            checks: [
+              { text: 'Reproduce on macOS 15 & iOS 18', done: true },
+              { text: 'Replace transform hack with position: sticky', done: true }
+            ]
+          },
+          {
+            id: 'TRS-425',
+            view: 'cycle',
+            status: 'queued',
+            title: 'Write migration notes for v2 API tokens',
+            tag: 'Docs',
+            days: 1.0,
+            maker: 'DR',
+            brief: 'Give integrators a 90-day sunset timeline and copy-paste curl examples for scoped read/write tokens.',
+            outOfScope: 'Automated token rotation CLI.',
+            updated: 'Queued yesterday by Devon R.',
+            checks: [
+              { text: 'Draft curl & Node examples', done: false },
+              { text: 'Review copy with support', done: false }
+            ]
+          },
+          {
+            id: 'TRS-427',
+            view: 'cycle',
+            status: 'queued',
+            title: 'Rate-limit CSV bulk export endpoint per org',
+            tag: 'Infra',
+            days: 2.0,
+            maker: 'DR',
+            brief: 'Prevent concurrent 50k-row CSV exports from saturating read replicas during peak European morning hours.',
+            outOfScope: 'Async email delivery for exports under 10MB.',
+            updated: 'Queued 2d ago by Devon R.',
+            checks: [
+              { text: 'Enforce 2 concurrent exports per workspace', done: false },
+              { text: 'Return clear Retry-After header', done: false }
+            ]
+          },
+          {
+            id: 'TRS-415',
+            view: 'cycle',
+            status: 'done',
+            title: 'Prorate mid-cycle seat removals automatically',
+            tag: 'Billing',
+            days: 1.5,
+            maker: 'MK',
+            brief: 'Credit unused days back to the next Stripe invoice the moment a member is deactivated.',
+            outOfScope: 'Manual retroactive credits older than 90 days.',
+            updated: 'Completed Tue by Maren K.',
+            checks: [
+              { text: 'Stripe invoice item credit calculation', done: true },
+              { text: 'Receipt line-item copy check', done: true }
+            ]
+          },
+          {
+            id: 'TRS-419',
+            view: 'cycle',
+            status: 'done',
+            title: 'Keyboard shortcut j/k across task rows',
+            tag: 'Web',
+            days: 1.0,
+            maker: 'KT',
+            brief: 'Allow moving selection cleanly without grabbing the mouse; Enter opens brief inspector.',
+            outOfScope: 'Custom user-remappable keybindings.',
+            updated: 'Completed Wed by Kenji T.',
+            checks: [
+              { text: 'Focus ring & scroll-into-view polish', done: true },
+              { text: 'Ignore keys inside text inputs', done: true }
+            ]
+          },
+          {
+            id: 'TRS-430',
+            view: 'backlog',
+            status: 'queued',
+            title: 'GitLab merge request status badges',
+            tag: 'Sync',
+            days: 2.0,
+            maker: 'MK',
+            brief: 'Mirror our existing GitHub PR badge behavior for self-hosted GitLab instances.',
+            outOfScope: 'Two-way comment sync.',
+            updated: 'Candidate for Cycle 15',
+            checks: [{ text: 'Verify GitLab webhook signature headers', done: false }]
+          },
+          {
+            id: 'TRS-431',
+            view: 'backlog',
+            status: 'queued',
+            title: 'Quarterly cycle archive PDF binder',
+            tag: 'Billing',
+            days: 1.5,
+            maker: 'SL',
+            brief: 'Let agencies export a clean summary of shipped briefs for client quarterly reviews.',
+            outOfScope: 'Editable slide decks.',
+            updated: 'Candidate for Cycle 15',
+            checks: [{ text: 'Sketch cover sheet typography', done: false }]
+          },
+          {
+            id: 'TRS-432',
+            view: 'backlog',
+            status: 'queued',
+            title: 'Audit log JSON stream to S3 bucket',
+            tag: 'Infra',
+            days: 2.5,
+            maker: 'DR',
+            brief: 'Nightly compressed NDJSON dump for compliance teams archiving workspace events.',
+            outOfScope: 'Real-time SIEM push.',
+            updated: 'Candidate for Cycle 15',
+            checks: [{ text: 'IAM role assumption flow', done: false }]
+          },
+          {
+            id: 'TRS-402',
+            view: 'shipped',
+            status: 'done',
+            title: 'Offline queue sync for brief edits',
+            tag: 'Sync',
+            days: 3.0,
+            maker: 'KT',
+            brief: 'Persist local Markdown edits in IndexedDB and reconcile cleanly when connection returns.',
+            outOfScope: 'Simultaneous CRDT multi-cursor editing.',
+            updated: 'Shipped Nov 04 in v2.4',
+            checks: [
+              { text: 'Conflict banner if remote changed', done: true },
+              { text: 'Retry with jitter on reconnect', done: true }
+            ]
+          },
+          {
+            id: 'TRS-406',
+            view: 'shipped',
+            status: 'done',
+            title: 'Full workspace Markdown + CSV export',
+            tag: 'Portability',
+            days: 2.0,
+            maker: 'DR',
+            brief: 'Download every brief, checklist, and cycle ledger in a single human-readable archive.',
+            outOfScope: 'Importing raw Jira XML dumps.',
+            updated: 'Shipped Oct 21 in v2.3',
+            checks: [{ text: 'Stream zip directly without temp disk bloat', done: true }]
+          }
+        ]
+      };
+
+      const VIEW_TITLES = {
+        cycle: 'Cycle 14 — Billing & Print',
+        backlog: 'Queued Backlog (Cycle 15 candidates)',
+        shipped: 'Recently Shipped'
+      };
+
+      const taskListEl = document.getElementById('wb-task-list');
+      const inspectorEl = document.getElementById('wb-inspector');
+      const viewHeadingEl = document.getElementById('wb-view-heading');
+      const filterPillEl = document.getElementById('wb-filter-pill');
+      const doneRatioEl = document.getElementById('wb-done-ratio');
+      const meterFillEl = document.getElementById('wb-meter-fill');
+      const daysLeftEl = document.getElementById('wb-days-left');
+
+      function getFilteredTasks() {
+        return state.tasks.filter(function (t) {
+          const matchView = t.view === state.view;
+          const matchMaker = state.maker === 'all' || t.maker === state.maker;
+          return matchView && matchMaker;
+        });
+      }
+
+      function renderCountsAndMetrics() {
+        ['cycle', 'backlog', 'shipped'].forEach(function (v) {
+          const el = document.getElementById('count-' + v);
+          if (el) el.textContent = state.tasks.filter(function (t) { return t.view === v; }).length;
+        });
+
+        const cycleTasks = state.tasks.filter(function (t) { return t.view === 'cycle'; });
+        const doneCount = cycleTasks.filter(function (t) { return t.status === 'done'; }).length;
+        const pct = cycleTasks.length ? Math.round((doneCount / cycleTasks.length) * 100) : 0;
+        const remDays = cycleTasks
+          .filter(function (t) { return t.status !== 'done'; })
+          .reduce(function (sum, t) { return sum + t.days; }, 0);
+
+        doneRatioEl.textContent = doneCount + ' of ' + cycleTasks.length + ' done';
+        meterFillEl.style.width = pct + '%';
+        daysLeftEl.textContent = remDays.toFixed(1) + 'd remaining';
+
+        Object.keys(MAKERS).forEach(function (code) {
+          const load = cycleTasks
+            .filter(function (t) { return t.maker === code && t.status !== 'done'; })
+            .reduce(function (sum, t) { return sum + t.days; }, 0);
+          const el = document.querySelector('[data-maker-load="' + code + '"]');
+          if (el) el.textContent = load.toFixed(1) + 'd';
+        });
+      }
+
+      function renderTaskList() {
+        const items = getFilteredTasks();
+        viewHeadingEl.textContent = VIEW_TITLES[state.view];
+        filterPillEl.textContent = state.maker === 'all' ? 'All makers' : MAKERS[state.maker];
+
+        if (!items.some(function (t) { return t.id === state.selectedId; })) {
+          state.selectedId = items.length ? items[0].id : null;
+        }
+
+        if (!items.length) {
+          taskListEl.innerHTML = '<li class="wb-empty">No tasks match this filter. Add one above or switch makers.</li>';
+          renderInspector();
+          return;
+        }
+
+        taskListEl.innerHTML = items.map(function (t) {
+          const selected = t.id === state.selectedId ? ' is-selected' : '';
+          const doneCls = t.status === 'done' ? ' is-done' : '';
+          return (
+            '<li class="wb-task-row' + selected + doneCls + '" data-task-id="' + t.id + '">' +
+              '<button type="button" class="status-btn status-' + t.status + '" data-cycle-status="' + t.id + '" title="Click to advance status">' +
+                '<span class="status-dot" aria-hidden="true"></span>' +
+                STATUS_LABEL[t.status] +
+              '</button>' +
+              '<span class="task-id">' + t.id + '</span>' +
+              '<span class="task-title">' + escapeHtml(t.title) + '</span>' +
+              '<span class="task-tag">' + escapeHtml(t.tag) + '</span>' +
+              '<span class="task-days">' + t.days.toFixed(1) + 'd</span>' +
+              '<span class="avatar-chip" title="' + MAKERS[t.maker] + '">' + t.maker + '</span>' +
+            '</li>'
+          );
+        }).join('');
+
+        renderInspector();
+      }
+
+      function renderInspector() {
+        const task = state.tasks.find(function (t) { return t.id === state.selectedId; });
+        if (!task) {
+          inspectorEl.innerHTML = '<p style="color:var(--ink-3);margin:0;">Select a task to read its plain-text brief and scope boundaries.</p>';
+          return;
+        }
+
+        const doneChecks = task.checks.filter(function (c) { return c.done; }).length;
+        const checksHtml = task.checks.map(function (c, idx) {
+          return (
+            '<li>' +
+              '<label class="insp-check-item' + (c.done ? ' checked' : '') + '">' +
+                '<input type="checkbox" data-check-idx="' + idx + '"' + (c.done ? ' checked' : '') + ' />' +
+                '<span>' + escapeHtml(c.text) + '</span>' +
+              '</label>' +
+            '</li>'
+          );
+        }).join('');
+
+        inspectorEl.innerHTML =
+          '<div class="insp-head">' +
+            '<span class="insp-id">' + task.id + ' &middot; ' + escapeHtml(task.tag) + '</span>' +
+            '<button type="button" class="status-btn status-' + task.status + '" data-cycle-status="' + task.id + '">' +
+              '<span class="status-dot" aria-hidden="true"></span>' + STATUS_LABEL[task.status] +
+            '</button>' +
+          '</div>' +
+          '<h3 class="insp-title">' + escapeHtml(task.title) + '</h3>' +
+          '<div class="insp-meta-grid">' +
+            '<div class="insp-meta-item"><label>Owner</label><span>' + MAKERS[task.maker] + '</span></div>' +
+            '<div class="insp-meta-item"><label>Appetite</label><span class="mono">' + task.days.toFixed(1) + ' days</span></div>' +
+          '</div>' +
+          '<p class="insp-brief">' + escapeHtml(task.brief) + '</p>' +
+          '<div class="insp-out"><strong>Out of scope</strong>' + escapeHtml(task.outOfScope) + '</div>' +
+          '<div>' +
+            '<div class="insp-checklist-title"><span>Checklist</span><span>' + doneChecks + '/' + task.checks.length + '</span></div>' +
+            '<ul class="insp-checklist">' + checksHtml + '</ul>' +
+          '</div>' +
+          '<div class="insp-foot">' + escapeHtml(task.updated) + '</div>';
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function cycleStatus(id) {
+        const task = state.tasks.find(function (t) { return t.id === id; });
+        if (!task) return;
+        const idx = STATUS_ORDER.indexOf(task.status);
+        task.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+        task.updated = 'Updated just now';
+        renderCountsAndMetrics();
+        renderTaskList();
+      }
+
+      // Sidebar clicks
+      document.querySelectorAll('[data-view]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('[data-view]').forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          state.view = btn.getAttribute('data-view');
+          renderTaskList();
+        });
+      });
+
+      document.querySelectorAll('[data-maker]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('[data-maker]').forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          state.maker = btn.getAttribute('data-maker');
+          renderTaskList();
+        });
+      });
+
+      // Task list & inspector delegation
+      document.querySelector('.workbench').addEventListener('click', function (e) {
+        const statusBtn = e.target.closest('[data-cycle-status]');
+        if (statusBtn) {
+          e.stopPropagation();
+          cycleStatus(statusBtn.getAttribute('data-cycle-status'));
+          return;
+        }
+        const row = e.target.closest('[data-task-id]');
+        if (row) {
+          state.selectedId = row.getAttribute('data-task-id');
+          renderTaskList();
+        }
+      });
+
+      inspectorEl.addEventListener('change', function (e) {
+        if (e.target.matches('[data-check-idx]')) {
+          const task = state.tasks.find(function (t) { return t.id === state.selectedId; });
+          if (!task) return;
+          const idx = Number(e.target.getAttribute('data-check-idx'));
+          if (task.checks[idx]) {
+            task.checks[idx].done = e.target.checked;
+            renderInspector();
+          }
+        }
+      });
+
+      // Add new task
+      const addForm = document.getElementById('wb-add-form');
+      const newTitleInput = document.getElementById('wb-new-title');
+      const newMakerSelect = document.getElementById('wb-new-maker');
+
+      addForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const title = newTitleInput.value.trim();
+        if (!title) return;
+        const maker = newMakerSelect.value;
+        const id = 'TRS-' + (++nextId);
+        state.tasks.unshift({
+          id: id,
+          view: state.view,
+          status: state.view === 'shipped' ? 'done' : 'queued',
+          title: title,
+          tag: 'Cycle 14',
+          days: 1.0,
+          maker: maker,
+          brief: 'Added during live workbench preview. Edit scope and boundaries before kicking off work.',
+          outOfScope: 'Anything not required to ship the core deliverable inside 1 day.',
+          updated: 'Added just now',
+          checks: [
+            { text: 'Confirm scope boundary with owner', done: false },
+            { text: 'Ship & write Friday note', done: false }
+          ]
+        });
+        state.selectedId = id;
+        if (state.maker !== 'all' && state.maker !== maker) {
+          state.maker = 'all';
+          document.querySelectorAll('[data-maker]').forEach(function (b) {
+            b.classList.toggle('is-active', b.getAttribute('data-maker') === 'all');
+          });
+        }
+        newTitleInput.value = '';
+        renderCountsAndMetrics();
+        renderTaskList();
+      });
+
+      // Keyboard shortcut `/` focuses quick-add
+      document.addEventListener('keydown', function (e) {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          newTitleInput.focus();
+          newTitleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+
+      renderCountsAndMetrics();
+      renderTaskList();
+
+      /* ---------------- Section 02: Mechanics Tabs & Demos ---------------- */
+      document.querySelectorAll('.mech-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          const target = tab.getAttribute('data-tab');
+          document.querySelectorAll('.mech-tab').forEach(function (t) {
+            const active = t === tab;
+            t.classList.toggle('is-active', active);
+            t.setAttribute('aria-selected', String(active));
+          });
+          document.querySelectorAll('.mech-panel').forEach(function (p) {
+            p.classList.toggle('is-active', p.getAttribute('data-panel') === target);
+          });
+        });
+      });
+
+      // Interactive Hill Chart
+      const hillDeliverables = [
+        { name: 'Webhook retry queue', color: '#c44021', pos: 0.34 },
+        { name: 'Print invoice CSS', color: '#294d5c', pos: 0.62 },
+        { name: 'Safari sticky header', color: '#966517', pos: 0.78 },
+        { name: 'Seat proration credits', color: '#355e43', pos: 0.94 }
+      ];
+
+      function hillPoint(t) {
+        // Smooth bell curve matching the SVG path from x=30..510, y=136..28
+        const x = 30 + t * 480;
+        const y = 136 - 108 * Math.exp(-Math.pow((t - 0.5) / 0.23, 2));
+        return { x: x, y: y };
+      }
+
+      function phaseLabel(pos) {
+        if (pos < 0.25) return 'Early discovery';
+        if (pos < 0.5) return 'Solving unknowns';
+        if (pos < 0.85) return 'Execution downhill';
+        return 'Ready to ship';
+      }
+
+      function renderHill() {
+        const dotsGroup = document.getElementById('hill-dots');
+        const controls = document.getElementById('hill-controls');
+
+        dotsGroup.innerHTML = hillDeliverables.map(function (d) {
+          const pt = hillPoint(d.pos);
+          return (
+            '<g>' +
+              '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="7" fill="' + d.color + '" stroke="#fbf9f4" stroke-width="2" />' +
+            '</g>'
+          );
+        }).join('');
+
+        controls.innerHTML = hillDeliverables.map(function (d, i) {
+          return (
+            '<div class="hill-item">' +
+              '<div class="hill-item-left">' +
+                '<span class="hill-swatch" style="background:' + d.color + ';"></span>' +
+                '<strong>' + d.name + '</strong>' +
+                '<span class="hill-phase">&middot; ' + phaseLabel(d.pos) + '</span>' +
+              '</div>' +
+              '<button type="button" class="hill-nudge" data-hill-idx="' + i + '">' + (d.pos >= 0.92 ? 'Reset' : 'Advance →') + '</button>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      document.getElementById('hill-controls').addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-hill-idx]');
+        if (!btn) return;
+        const idx = Number(btn.getAttribute('data-hill-idx'));
+        const item = hillDeliverables[idx];
+        item.pos = item.pos >= 0.92 ? 0.16 : Math.min(0.95, item.pos + 0.18);
+        renderHill();
+      });
+
+      renderHill();
+
+      // Brief Markdown / Rendered toggle
+      document.querySelectorAll('[data-brief-mode]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const mode = btn.getAttribute('data-brief-mode');
+          document.querySelectorAll('[data-brief-mode]').forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
+          document.getElementById('brief-rendered').style.display = mode === 'rendered' ? 'block' : 'none';
+          document.getElementById('brief-source').style.display = mode === 'source' ? 'block' : 'none';
+        });
+      });
+
+      // Honest Load Simulator
+      let urgentAdded = false;
+      const loadSimBtn = document.getElementById('load-sim-btn');
+      const devonLabel = document.getElementById('devon-load-label');
+      const devonBar = document.getElementById('devon-load-bar');
+      const loadWarn = document.getElementById('load-warning');
+
+      loadSimBtn.addEventListener('click', function () {
+        urgentAdded = !urgentAdded;
+        loadSimBtn.classList.toggle('is-on', urgentAdded);
+        loadSimBtn.textContent = urgentAdded ? 'Remove request' : '+ Add request';
+        devonLabel.textContent = urgentAdded ? '5.0d / 4.0d (over)' : '3.0d / 4.0d';
+        devonBar.style.width = urgentAdded ? '100%' : '75%';
+        devonBar.classList.toggle('is-over', urgentAdded);
+        loadWarn.classList.toggle('is-visible', urgentAdded);
+      });
+
+      /* ---------------- Section 04: Pricing Calculator ---------------- */
+      let billing = 'annual';
+      const slider = document.getElementById('team-slider');
+      const unitPriceEl = document.getElementById('unit-price');
+      const unitLabelEl = document.getElementById('unit-label');
+      const teamSizeValEl = document.getElementById('team-size-val');
+      const teamTotalEl = document.getElementById('team-total');
+
+      function updatePricing() {
+        const seats = Number(slider.value);
+        const rate = billing === 'annual' ? 11 : 14;
+        unitPriceEl.textContent = '$' + rate;
+        unitLabelEl.textContent = billing === 'annual'
+          ? 'per active seat / month, billed annually'
+          : 'per active seat / month, billed monthly';
+        teamSizeValEl.textContent = seats + ' people';
+        if (seats <= 2) {
+          teamTotalEl.textContent = '$0 / mo (Free tier)';
+        } else {
+          teamTotalEl.textContent = '$' + (seats * rate) + ' / mo';
+        }
+      }
+
+      document.querySelectorAll('[data-billing]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          billing = btn.getAttribute('data-billing');
+          document.querySelectorAll('[data-billing]').forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
+          updatePricing();
+        });
+      });
+
+      slider.addEventListener('input', updatePricing);
+      updatePricing();
+
+      /* ---------------- Dispatch Email Form ---------------- */
+      document.getElementById('dispatch-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const input = document.getElementById('dispatch-email');
+        const msg = document.getElementById('dispatch-msg');
+        if (!input.value.trim()) return;
+        msg.textContent = 'Subscribed ' + input.value.trim() + '. Next issue goes out Dec 1.';
+        input.value = '';
+      });
+
+      /* ---------------- Modals ---------------- */
+      function closeAllModals() {
+        document.querySelectorAll('.modal-backdrop.is-open').forEach(function (m) {
+          m.classList.remove('is-open');
+        });
+      }
+
+      function openModal(name) {
+        closeAllModals();
+        const el = document.getElementById('modal-' + name);
+        if (!el) return;
+        el.classList.add('is-open');
+        const firstInput = el.querySelector('input, button.modal-close');
+        if (firstInput) firstInput.focus();
+      }
+
+      document.querySelectorAll('[data-open-modal]').forEach(function (trigger) {
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          openModal(trigger.getAttribute('data-open-modal'));
+        });
+      });
+
+      document.querySelectorAll('[data-close-modal]').forEach(function (btn) {
+        btn.addEventListener('click', closeAllModals);
+      });
+
+      document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+        backdrop.addEventListener('click', function (e) {
+          if (e.target === backdrop) closeAllModals();
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAllModals();
+      });
+
+      // Workspace form slug preview & cycle selector
+      const wsNameInput = document.getElementById('ws-name');
+      const wsSlugEl = document.getElementById('ws-slug');
+      let selectedCycle = '6 weeks';
+
+      wsNameInput.addEventListener('input', function () {
+        const slug = wsNameInput.value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '') || 'harbor-foundry';
+        wsSlugEl.textContent = 'trestle.works/' + slug;
+      });
+
+      document.querySelectorAll('.cycle-opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          selectedCycle = opt.getAttribute('data-cycle');
+          document.querySelectorAll('.cycle-opt').forEach(function (o) {
+            o.classList.toggle('is-selected', o === opt);
+          });
+        });
+      });
+
+      document.getElementById('ws-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = wsNameInput.value.trim() || 'Your studio';
+        const email = document.getElementById('ws-email').value.trim();
+        document.getElementById('ws-form').style.display = 'none';
+        const confirm = document.getElementById('ws-confirm');
+        document.getElementById('ws-confirm-copy').textContent =
+          'We prepared ' + wsSlugEl.textContent + ' (' + name + ') with ' + selectedCycle +
+          ' cycles and sent a sign-in link to ' + email + '.';
+        confirm.style.display = 'block';
+      });
+    })();
+  </script>
+</body>
+</html>

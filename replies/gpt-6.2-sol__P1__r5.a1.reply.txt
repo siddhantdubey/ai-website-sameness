@@ -1,0 +1,293 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Daymark is a project management workspace for planning projects, assigning work, and seeing what’s moving.">
+  <title>Daymark — A clear plan for good work</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #211c2c;
+      --muted: #625c70;
+      --purple: #5737bb;
+      --paper: #fbfaf7;
+      --line: #e7e0ec;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); }
+    a { color: inherit; }
+    button { font: inherit; cursor: pointer; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #6b48da; outline-offset: 4px; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .site-header { background: var(--paper); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 780; letter-spacing: -.05em; text-decoration: none; }
+    .mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--ink); color: #e1d4ff; font-size: 22px; line-height: 1; }
+    .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; font-weight: 650; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { text-decoration: underline; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 13px 18px; border: 1px solid transparent; border-radius: 9px; background: var(--purple); color: white; font-weight: 700; text-decoration: none; line-height: 1.25; }
+    .button:hover { background: #482ba1; }
+    .nav .button { padding: 9px 13px; font-size: 14px; background: transparent; color: var(--ink); border-color: #d7cde0; }
+    .nav .button:hover { background: #eee7f8; text-decoration: none; }
+    .hero { overflow: hidden; background: radial-gradient(ellipse at 50% 68%, #faf7ff 0, transparent 63%), #ebe2fc; border-bottom: 1px solid #ddd0ef; }
+    .hero-copy { text-align: center; padding: 76px 0 45px; }
+    .eyebrow { margin: 0 0 16px; color: #52388e; font-size: 12px; font-weight: 780; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.06em; }
+    h1 { margin: 0; font-size: clamp(55px, 8vw, 108px); line-height: .92; }
+    h1 em { color: var(--purple); font-weight: inherit; }
+    .intro { max-width: 465px; margin: 24px auto; color: var(--muted); font-size: 17px; line-height: 1.6; }
+    .demo { max-width: 960px; margin: 0 auto 54px; scroll-margin-top: 20px; background: white; border: 1px solid #d7c9e8; border-radius: 16px; box-shadow: 0 22px 55px #47276520; overflow: hidden; }
+    .window-bar { display: flex; align-items: center; justify-content: space-between; min-height: 45px; padding: 0 17px; border-bottom: 1px solid var(--line); background: #fcfaff; font-size: 12px; color: var(--muted); font-weight: 650; }
+    .dots { display: flex; gap: 5px; }
+    .dots i { width: 7px; height: 7px; border-radius: 50%; background: #c6b9d6; }
+    .workspace { display: grid; grid-template-columns: 176px minmax(0, 1fr); }
+    .sidebar { padding: 19px 12px; background: #f8f5fb; border-right: 1px solid var(--line); }
+    .team { display: flex; align-items: center; gap: 8px; padding: 0 6px 22px; font-size: 13px; font-weight: 750; }
+    .team-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: #e2d4ff; color: #4b2e95; }
+    .sidebar p { margin: 0 6px 8px; font-size: 10px; font-weight: 760; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+    .project { width: 100%; display: flex; align-items: center; gap: 7px; padding: 8px 7px; border: 0; border-radius: 6px; color: var(--muted); background: transparent; text-align: left; font-size: 12px; }
+    .project::before { content: ""; flex: 0 0 7px; height: 7px; border-radius: 50%; background: #7f60c5; }
+    .project + .project::before { background: #658a66; }
+    .project:hover, .project[aria-pressed="true"] { background: #eee5fa; color: #3f2877; }
+    .work { min-width: 0; padding: 23px; }
+    .project-label { margin: 0 0 5px; color: var(--muted); font-size: 11px; }
+    .work h2 { margin: 0 0 14px; font-family: inherit; font-size: clamp(21px, 4vw, 28px); font-weight: 760; letter-spacing: -.045em; }
+    .tools { display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .view { padding: 5px 9px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .view:hover, .view[aria-pressed="true"] { background: #eee5fa; color: #4c3091; }
+    .progress { margin-left: auto; color: var(--muted); font-size: 11px; }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 13px; }
+    .column { padding: 9px; border-radius: 8px; background: #f7f5f9; }
+    .column h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 9px; font-size: 11px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #8a8097; }
+    .status-dot.doing { background: #8963d7; }
+    .status-dot.done { background: #50865d; }
+    .count { color: var(--muted); font-weight: 500; }
+    .task { padding: 10px; border: 1px solid #ece6f0; border-radius: 7px; background: white; }
+    .task + .task { margin-top: 7px; }
+    .task label { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .task input { margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--purple); }
+    .task:has(input:checked) label { color: #625c70; }
+    .task-meta { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 9px; }
+    .tag { padding: 3px 5px; border-radius: 4px; background: #eee6fc; color: #51368e; font-size: 10px; }
+    .avatar { display: grid; place-items: center; flex: 0 0 21px; height: 21px; border-radius: 50%; background: #f5dfcf; color: #683a24; font-size: 9px; font-weight: 800; }
+    .list .column { padding: 8px 0; border-radius: 0; background: transparent; }
+    .list .task { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .list .task-meta { margin: 0; }
+    .features { padding-block: 74px 80px; scroll-margin-top: 20px; }
+    .features h2 { font-size: clamp(38px, 6vw, 65px); line-height: 1; margin: 0 0 28px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature { border-top: 1px solid #d8cce4; padding-top: 20px; }
+    .feature h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.025em; }
+    .feature p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+    footer { border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 23px; }
+    .footer-inner a:last-child { color: var(--muted); font-size: 13px; }
+    @media (max-width: 720px) {
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 8px; padding: 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .team { padding: 0 6px 0 0; }
+      .sidebar p { display: none; }
+      .project { width: auto; }
+      .work { padding: 14px; }
+    }
+    @media (max-width: 500px) {
+      .wrap { width: calc(100% - 28px); }
+      .nav { min-height: 61px; }
+      .nav-links { gap: 12px; }
+      .hero-copy { padding: 55px 0 32px; }
+      .demo { margin-bottom: 32px; }
+      .board { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; gap: 20px; }
+      .features { padding-block: 52px; }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#top"><span class="mark" aria-hidden="true">✳</span>Daymark</a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a class="button" href="#demo">Try the demo</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="headline">
+      <div class="wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">Project management for teams</p>
+          <h1 id="headline">A clear plan<br>for <em>good work.</em></h1>
+          <p class="intro">Give every task an owner and see what’s moving, what’s waiting, and what your team can call done.</p>
+          <a class="button" href="#demo">Explore the workspace <span aria-hidden="true">↘</span></a>
+        </div>
+
+        <section class="demo" id="demo" aria-label="Interactive Daymark demo">
+          <div class="window-bar">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span>Interactive demo</span>
+          </div>
+          <div class="workspace">
+            <aside class="sidebar" aria-label="Demo projects">
+              <div class="team"><span class="team-icon" aria-hidden="true">N</span> North Studio</div>
+              <p>Projects</p>
+              <button class="project" type="button" data-project="launch" aria-pressed="true">Website launch</button>
+              <button class="project" type="button" data-project="brand" aria-pressed="false">Brand refresh</button>
+            </aside>
+            <div class="work">
+              <p class="project-label">North Studio / Projects</p>
+              <h2 id="project-title">Website launch</h2>
+              <div class="tools">
+                <div role="group" aria-label="Project view">
+                  <button class="view" type="button" data-view="board" aria-pressed="true">Board</button>
+                  <button class="view" type="button" data-view="list" aria-pressed="false">List</button>
+                </div>
+                <span class="progress" id="progress" role="status"></span>
+              </div>
+              <div class="board" id="tasks"></div>
+              <noscript><p>Enable JavaScript to switch projects and check off sample tasks.</p></noscript>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="features wrap" id="features" aria-labelledby="features-title">
+      <h2 id="features-title">From first task to finish.</h2>
+      <div class="feature-grid">
+        <article class="feature">
+          <h3>See the whole project</h3>
+          <p>Scan progress across a board or switch to a list when you want to focus on the next task.</p>
+        </article>
+        <article class="feature">
+          <h3>Know who owns what</h3>
+          <p>See the assignee on each card so you know who to check in with when a task needs attention.</p>
+        </article>
+        <article class="feature">
+          <h3>See progress as it happens</h3>
+          <p>Check off a task and it moves into Done. The project count updates as you go.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner wrap">
+      <a class="brand" href="#top"><span class="mark" aria-hidden="true">✳</span>Daymark</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const projects = {
+      launch: {
+        name: "Website launch",
+        tasks: [
+          { title: "Write launch announcement", tag: "Content", owner: "Maya Chen", status: "todo" },
+          { title: "Check mobile layouts", tag: "Engineering", owner: "Leo Ross", status: "todo" },
+          { title: "Design pricing page", tag: "Design", owner: "Ivy Cole", status: "doing" },
+          { title: "Prepare product screenshots", tag: "Design", owner: "Maya Chen", status: "doing" },
+          { title: "Approve homepage copy", tag: "Content", owner: "Leo Ross", status: "done" }
+        ]
+      },
+      brand: {
+        name: "Brand refresh",
+        tasks: [
+          { title: "Update presentation template", tag: "Design", owner: "Ivy Cole", status: "todo" },
+          { title: "Draft voice guidelines", tag: "Content", owner: "Maya Chen", status: "doing" },
+          { title: "Audit existing brand assets", tag: "Research", owner: "Leo Ross", status: "done" }
+        ]
+      }
+    };
+
+    const statuses = [
+      { key: "todo", label: "To do" },
+      { key: "doing", label: "In progress" },
+      { key: "done", label: "Done" }
+    ];
+
+    let selectedProject = "launch";
+    let selectedView = "board";
+
+    const taskArea = document.querySelector("#tasks");
+    const projectTitle = document.querySelector("#project-title");
+    const progress = document.querySelector("#progress");
+    const projectButtons = document.querySelectorAll("[data-project]");
+    const viewButtons = document.querySelectorAll("[data-view]");
+
+    function render() {
+      const project = projects[selectedProject];
+      projectTitle.textContent = project.name;
+      taskArea.className = selectedView;
+
+      const completed = project.tasks.filter(task => task.status === "done").length;
+      const progressText = `${completed} of ${project.tasks.length} done`;
+      if (progress.textContent !== progressText) progress.textContent = progressText;
+
+      taskArea.innerHTML = statuses.map(({ key, label }) => {
+        const tasks = project.tasks
+          .map((task, index) => ({ ...task, index }))
+          .filter(task => task.status === key);
+
+        const cards = tasks.map(task => {
+          const initials = task.owner.split(" ").map(name => name[0]).join("");
+          return `
+            <div class="task">
+              <label>
+                <input type="checkbox" data-task="${task.index}" ${key === "done" ? "checked" : ""}>
+                <span>${task.title}</span>
+              </label>
+              <div class="task-meta">
+                <span class="tag">${task.tag}</span>
+                <span class="avatar" role="img" aria-label="Assigned to ${task.owner}" title="${task.owner}">${initials}</span>
+              </div>
+            </div>`;
+        }).join("");
+
+        return `
+          <section class="column" aria-labelledby="status-${key}">
+            <h3 id="status-${key}"><span class="status-dot ${key}" aria-hidden="true"></span>${label} <span class="count">${tasks.length}</span></h3>
+            ${cards}
+          </section>`;
+      }).join("");
+    }
+
+    projectButtons.forEach(button => button.addEventListener("click", () => {
+      selectedProject = button.dataset.project;
+      projectButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+      render();
+    }));
+
+    viewButtons.forEach(button => button.addEventListener("click", () => {
+      selectedView = button.dataset.view;
+      viewButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+      render();
+    }));
+
+    taskArea.addEventListener("change", event => {
+      const checkbox = event.target.closest("input[data-task]");
+      if (!checkbox) return;
+
+      const task = projects[selectedProject].tasks[Number(checkbox.dataset.task)];
+      if (checkbox.checked) {
+        task.previousStatus = task.status;
+        task.status = "done";
+      } else {
+        task.status = task.previousStatus || "todo";
+      }
+
+      render();
+      taskArea.querySelector(`[data-task="${checkbox.dataset.task}"]`).focus();
+    });
+
+    render();
+  </script>
+</body>
+</html>
+```

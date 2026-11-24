@@ -1,0 +1,537 @@
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brackett &amp; Oyelaran · Attorneys at Law · Portland, Maine</title>
+<meta name="description" content="A two-lawyer firm in Portland, Maine advising small businesses, employees, and families. Flat fees on most matters, quoted in writing before work begins.">
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --paper-light: #fbf8f2;
+    --ink: #1d1c19;
+    --muted: #5c594f;
+    --rule: rgba(29, 28, 25, 0.2);
+    --red: #a4392a;
+    --gutter: clamp(1rem, 7vw, 6.5rem);
+    --pad-left: calc(var(--gutter) + clamp(1rem, 3vw, 2.5rem));
+    --pad-right: clamp(1.25rem, 5vw, 4rem);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  a { color: inherit; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+  a:hover { color: var(--red); }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+  .skip {
+    position: absolute; left: -999px; top: 0;
+    background: var(--ink); color: var(--paper);
+    padding: 0.6rem 1rem; z-index: 10;
+  }
+  .skip:focus { left: 0; color: var(--paper); }
+
+  /* The page is set like a sheet of pleading paper: a double rule down the left margin. */
+  .page { position: relative; max-width: 88rem; margin: 0 auto; }
+  .page::before {
+    content: "";
+    position: absolute; top: 0; bottom: 0;
+    left: calc(var(--gutter) - 5px);
+    width: 4px;
+    border-left: 1px solid var(--red);
+    border-right: 1px solid var(--red);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .label {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- Header ---------- */
+  header.site {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding: 1.5rem var(--pad-right) 1.25rem var(--pad-left);
+    border-bottom: 1px solid var(--rule);
+  }
+  .wordmark { font-size: 1.3rem; letter-spacing: 0.01em; text-decoration: none; white-space: nowrap; }
+  .wordmark span { color: var(--red); font-style: italic; padding: 0 0.1em; }
+  nav.primary ul {
+    display: flex; flex-wrap: wrap; gap: 0.25rem 1.6rem;
+    list-style: none; margin: 0; padding: 0;
+    font-family: var(--sans); font-size: 0.9rem;
+  }
+  nav.primary a { text-decoration: none; padding: 0.35rem 0; display: inline-block; }
+  nav.primary a:hover { text-decoration: underline; }
+  nav.primary .tel { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: clamp(3rem, 9vw, 7rem) var(--pad-right) clamp(3rem, 8vw, 6rem) var(--pad-left);
+    border-bottom: 1px solid var(--rule);
+  }
+  .lines {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: calc(var(--gutter) - 1.1rem);
+    margin: 0; padding: 0.4rem 0 0; list-style: none;
+    overflow: hidden;
+    text-align: right;
+    font-family: var(--sans); font-size: 0.7rem; line-height: 2.25rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted); opacity: 0.7;
+  }
+  .hero-grid { display: grid; gap: 3rem; }
+  .hero h1 {
+    font-weight: 400;
+    font-size: clamp(2.4rem, 6.2vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    margin: 1rem 0 1.5rem;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .hero h1 em { color: var(--red); }
+  .hero p.lede { font-size: clamp(1.1rem, 1.6vw, 1.3rem); max-width: 34em; margin: 0 0 2rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .btn {
+    display: inline-block;
+    font-family: var(--sans); font-size: 0.95rem; font-weight: 600;
+    background: var(--ink); color: var(--paper);
+    padding: 0.9rem 1.4rem;
+    border: 1px solid var(--ink); border-radius: 2px;
+    text-decoration: none; cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .btn:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
+  .actions .alt { font-family: var(--sans); font-size: 0.95rem; }
+
+  .facts { margin: 0; align-self: end; border-top: 1px solid var(--ink); }
+  .facts div { padding: 0.9rem 0; border-bottom: 1px solid var(--rule); }
+  .facts dt { font-size: 1.6rem; line-height: 1.2; }
+  .facts dd { margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.85rem; color: var(--muted); }
+
+  /* ---------- Sections ---------- */
+  section.block {
+    position: relative;
+    padding: clamp(3rem, 7vw, 5.5rem) var(--pad-right) clamp(3rem, 7vw, 5.5rem) var(--pad-left);
+    border-bottom: 1px solid var(--rule);
+    display: grid; gap: 1.5rem 4rem;
+  }
+  .mark { font-family: var(--sans); font-size: 0.8rem; color: var(--red); font-variant-numeric: tabular-nums; }
+  section.block h2 {
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    line-height: 1.12; letter-spacing: -0.01em;
+    margin: 0.4rem 0 0.8rem;
+    text-wrap: balance;
+  }
+  .intro p { color: var(--muted); margin: 0; max-width: 30em; }
+
+  /* Practice clauses */
+  .clauses { list-style: none; margin: 0; padding: 0; }
+  .clauses > li {
+    display: grid; grid-template-columns: 3rem 1fr; gap: 0 0.5rem;
+    padding: 1.5rem 0; border-top: 1px solid var(--rule);
+  }
+  .clauses > li:first-child { border-top: 1px solid var(--ink); }
+  .clauses .num { font-family: var(--sans); font-size: 0.8rem; color: var(--muted); padding-top: 0.45rem; font-variant-numeric: tabular-nums; }
+  .clauses h3, .people h3 { font-weight: 400; font-size: 1.45rem; line-height: 1.25; margin: 0 0 0.4rem; }
+  .clauses p { margin: 0 0 0.6rem; max-width: 38em; }
+  .clauses .matters { font-family: var(--sans); font-size: 0.875rem; color: var(--muted); margin: 0; }
+  .aside-note {
+    margin: 1.5rem 0 0; padding: 1rem 1.25rem;
+    background: var(--paper-light); border-left: 2px solid var(--red);
+    font-size: 1rem; max-width: 40em;
+  }
+
+  /* Steps */
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; gap: 0; }
+  .steps li {
+    counter-increment: step;
+    padding: 1.4rem 0 1.4rem 3.5rem; position: relative;
+    border-top: 1px solid var(--rule);
+  }
+  .steps li:first-child { border-top: 1px solid var(--ink); }
+  .steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 1.05rem;
+    font-size: 2rem; line-height: 1.2; color: var(--red); font-style: italic;
+  }
+  .steps strong { font-weight: 400; font-size: 1.25rem; display: block; margin-bottom: 0.2rem; }
+  .steps span { color: var(--muted); display: block; max-width: 36em; }
+
+  /* People */
+  .people { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .people article { border-top: 1px solid var(--ink); padding-top: 1.1rem; }
+  .people .role { margin: 0 0 0.8rem; }
+  .people p { margin: 0 0 0.7rem; font-size: 1rem; }
+  .people .adm { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); }
+
+  /* Fees */
+  table.fees { width: 100%; border-collapse: collapse; border-top: 1px solid var(--ink); }
+  table.fees caption { text-align: left; padding-bottom: 0.8rem; }
+  table.fees th, table.fees td { text-align: left; padding: 0.95rem 0; border-bottom: 1px solid var(--rule); vertical-align: baseline; font-weight: 400; }
+  table.fees th small { display: block; font-family: var(--sans); font-size: 0.82rem; color: var(--muted); margin-top: 0.1rem; }
+  table.fees td { text-align: right; white-space: nowrap; padding-left: 1.5rem; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+  .fine { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); margin: 1rem 0 0; max-width: 44em; }
+
+  /* FAQ */
+  .faq { border-top: 1px solid var(--ink); }
+  .faq details { border-bottom: 1px solid var(--rule); }
+  .faq summary {
+    cursor: pointer; list-style: none;
+    padding: 1.1rem 2.5rem 1.1rem 0; position: relative;
+    font-size: 1.2rem; line-height: 1.35;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+"; position: absolute; right: 0.25rem; top: 0.95rem;
+    font-family: var(--sans); font-size: 1.3rem; color: var(--red);
+  }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details p { margin: 0 0 1.2rem; max-width: 38em; color: var(--muted); }
+
+  /* Contact */
+  form { display: grid; gap: 1.1rem; grid-template-columns: 1fr 1fr; }
+  form .full { grid-column: 1 / -1; }
+  form label { display: block; font-family: var(--sans); font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; }
+  form label span { font-weight: 400; color: var(--muted); }
+  input, select, textarea {
+    width: 100%; font: inherit; font-family: var(--sans); font-size: 1rem; color: var(--ink);
+    background: var(--paper-light);
+    border: 1px solid rgba(29, 28, 25, 0.45); border-radius: 2px;
+    padding: 0.7rem 0.8rem;
+  }
+  textarea { min-height: 8rem; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 0; border-color: var(--red); }
+  #form-status { font-family: var(--sans); font-size: 0.9rem; margin: 0; min-height: 1.4em; }
+
+  address { font-style: normal; }
+  .office { margin-top: 2rem; display: grid; gap: 1.25rem; font-size: 1rem; }
+  .office p { margin: 0.2rem 0 0; }
+
+  /* Footer */
+  footer.site {
+    padding: 2rem var(--pad-right) 3rem var(--pad-left);
+    font-family: var(--sans); font-size: 0.8rem; color: var(--muted);
+  }
+  footer.site p { margin: 0 0 0.6rem; max-width: 62em; }
+
+  /* ---------- Wider screens ---------- */
+  @media (min-width: 900px) {
+    .hero-grid { grid-template-columns: minmax(0, 2.2fr) minmax(14rem, 1fr); }
+    section.block { grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); }
+    .intro { position: sticky; top: 2rem; align-self: start; }
+    /* Section marks move out into the ruled margin */
+    .mark {
+      position: absolute; left: 0;
+      width: calc(var(--gutter) - 1.1rem);
+      text-align: right;
+      padding-top: 0.9rem;
+    }
+    section.block h2 { margin-top: 0; }
+  }
+  @media (max-width: 719px) {
+    .lines { display: none; }
+    nav.primary .minor { display: none; }
+    form { grid-template-columns: 1fr; }
+    table.fees td { font-size: 1.05rem; }
+  }
+  @media print {
+    .page::before, .lines, nav.primary, form, .btn { display: none; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="page">
+
+  <header class="site">
+    <a class="wordmark" href="#top" aria-label="Brackett and Oyelaran, home">Brackett <span>&amp;</span> Oyelaran</a>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li class="minor"><a href="#practice">Practice</a></li>
+        <li class="minor"><a href="#approach">How we work</a></li>
+        <li class="minor"><a href="#people">People</a></li>
+        <li class="minor"><a href="#fees">Fees</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a class="tel" href="tel:+12075550142">(207) 555-0142</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <div class="hero" id="top">
+      <ol class="lines" aria-hidden="true">
+        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li>
+        <li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li>
+        <li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li>
+      </ol>
+      <div class="hero-grid">
+        <div>
+          <p class="label">Attorneys at Law · Portland, Maine · Est. 2011</p>
+          <h1>Two lawyers. When you call, <em>one of us</em> picks up.</h1>
+          <p class="lede">We advise Maine's small businesses, employees, and families on contracts, workplace disputes, and estate plans. You get a straight answer, a fee in writing before any work begins, and a lawyer who knows your file.</p>
+          <div class="actions">
+            <a class="btn" href="#contact">Schedule a free 20-minute call</a>
+            <span class="alt">or ring us at <a href="tel:+12075550142">(207) 555-0142</a></span>
+          </div>
+        </div>
+        <dl class="facts">
+          <div><dt>Flat fees</dt><dd>on most matters, quoted before we start</dd></div>
+          <div><dt>One business day</dt><dd>is the longest you'll wait for a reply</dd></div>
+          <div><dt>Since 2011</dt><dd>on Exchange Street, in the Old Port</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <section class="block" id="practice" aria-labelledby="h-practice">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 1</span>
+        <h2 id="h-practice">What we handle</h2>
+        <p>Three areas, chosen on purpose. We'd rather know them thoroughly than take every matter that comes through the door.</p>
+      </div>
+      <div>
+        <ol class="clauses">
+          <li>
+            <span class="num">1.1</span>
+            <div>
+              <h3>Small business</h3>
+              <p>Setting a company up properly, then keeping its paperwork from becoming a problem later. Most of our business clients have fewer than thirty employees.</p>
+              <p class="matters">LLC and corporation formation · operating agreements · commercial leases · vendor and customer contracts · buying or selling a business</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">1.2</span>
+            <div>
+              <h3>Employment</h3>
+              <p>We represent both employees and small employers, never in the same matter. Often the most useful hour is the one before you sign something.</p>
+              <p class="matters">Severance and non-compete review · unpaid wages · discrimination and retaliation claims · handbooks and policies · workplace investigations</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">1.3</span>
+            <div>
+              <h3>Wills and estates</h3>
+              <p>Plans a family can actually follow, and steady help with probate when someone has died. We meet at your kitchen table if that's easier.</p>
+              <p class="matters">Wills · powers of attorney · health care directives · simple trusts · probate administration</p>
+            </div>
+          </li>
+        </ol>
+        <p class="aside-note">We don't take criminal, immigration, or personal injury cases. If that's what you need, call anyway and we'll give you the names of lawyers we trust.</p>
+      </div>
+    </section>
+
+    <section class="block" id="approach" aria-labelledby="h-approach">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 2</span>
+        <h2 id="h-approach">How we work</h2>
+        <p>The same four steps for every client, whether the matter takes an afternoon or a year.</p>
+      </div>
+      <ol class="steps">
+        <li><strong>A short call, free</strong><span>Twenty minutes with a lawyer. We'll tell you whether you need one at all, and whether we're the right ones.</span></li>
+        <li><strong>Scope and fee, in writing</strong><span>A one-page engagement letter says what we'll do, what it costs, and what would change that number. Nothing starts until you've signed it.</span></li>
+        <li><strong>The work, with updates</strong><span>You hear from us whenever something happens and every two weeks when nothing has. You'll always know what the next step is and who is taking it.</span></li>
+        <li><strong>A clean finish</strong><span>You receive your complete file, a plain-language summary of where things stand, and a note of any dates to keep on your calendar.</span></li>
+      </ol>
+    </section>
+
+    <section class="block" id="people" aria-labelledby="h-people">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 3</span>
+        <h2 id="h-people">Who you'll work with</h2>
+        <p>There are three of us. Whoever takes your first call stays with your matter to the end.</p>
+      </div>
+      <div class="people">
+        <article>
+          <h3>Hannah Brackett</h3>
+          <p class="label role">Partner · Business and estates</p>
+          <p>Spent eight years at a large Boston firm drafting agreements for companies that had their own legal departments. Came home to Maine to do the same work for those that don't.</p>
+          <p class="adm">Admitted in Maine and Massachusetts<br><a href="mailto:hannah@brackettoyelaran.example">hannah@brackettoyelaran.example</a></p>
+        </article>
+        <article>
+          <h3>Tunde Oyelaran</h3>
+          <p class="label role">Partner · Employment</p>
+          <p>A former investigator with the state's human rights commission, with more than a hundred employment matters tried, settled, or mediated since. Teaches a workplace law clinic each spring.</p>
+          <p class="adm">Admitted in Maine and New Hampshire<br><a href="mailto:tunde@brackettoyelaran.example">tunde@brackettoyelaran.example</a></p>
+        </article>
+        <article>
+          <h3>Marie Pelletier</h3>
+          <p class="label role">Senior paralegal</p>
+          <p>Keeps every filing deadline in the office and knows the probate court clerks by first name. Speaks French, and is usually the fastest way to get a question answered.</p>
+          <p class="adm">With the firm since 2013<br><a href="mailto:marie@brackettoyelaran.example">marie@brackettoyelaran.example</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="block" id="fees" aria-labelledby="h-fees">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 4</span>
+        <h2 id="h-fees">What it costs</h2>
+        <p>Most firms won't print their prices. We think you should know the number before you pick up the phone.</p>
+      </div>
+      <div>
+        <table class="fees">
+          <caption class="label">Common flat fees</caption>
+          <tbody>
+            <tr><th scope="row">First call<small>Twenty minutes with a lawyer</small></th><td>Free</td></tr>
+            <tr><th scope="row">LLC formation<small>State filing, operating agreement, EIN</small></th><td>$1,200</td></tr>
+            <tr><th scope="row">Contract review<small>Up to 15 pages, with written comments</small></th><td>$450</td></tr>
+            <tr><th scope="row">Severance agreement review<small>Includes one round of negotiation</small></th><td>$600</td></tr>
+            <tr><th scope="row">Will, power of attorney, health care directive<small>$1,400 for a couple</small></th><td>$900</td></tr>
+            <tr><th scope="row">Everything else<small>Hourly, with a written estimate up front</small></th><td>$285 / hr</td></tr>
+          </tbody>
+        </table>
+        <p class="fine">Court filing fees and other third-party costs are billed at cost. Some employment claims can be taken on a contingency basis; ask us on the first call.</p>
+      </div>
+    </section>
+
+    <section class="block" id="questions" aria-labelledby="h-faq">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 5</span>
+        <h2 id="h-faq">Questions people ask first</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Do I actually need a lawyer for this?</summary>
+          <p>Sometimes not. If a form from the Secretary of State or a call to the Department of Labor will solve it, we'll say so on the first call and point you to the right page.</p>
+        </details>
+        <details>
+          <summary>What should I have ready for the first call?</summary>
+          <p>The document at the center of things, if there is one (the contract, the letter, the offer), and any deadline you've been given. Don't send anything in advance; we'll ask for it once we've confirmed we can represent you.</p>
+        </details>
+        <details>
+          <summary>Can we meet in person?</summary>
+          <p>Yes. The office is on the second floor at 48 Exchange Street, with an elevator from the lobby. We also meet by video, by phone, and for estate clients, at home.</p>
+        </details>
+        <details>
+          <summary>What if my matter ends up in court?</summary>
+          <p>We appear regularly in Maine's District, Superior, and Probate courts. If your matter needs a specialist or a larger team, we'll tell you early and help you move it.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="block" id="contact" aria-labelledby="h-contact">
+      <div class="intro">
+        <span class="mark" aria-hidden="true">§ 6</span>
+        <h2 id="h-contact">Tell us what's going on</h2>
+        <p>A lawyer will reply within one business day. Please keep it brief for now and leave out anything confidential.</p>
+        <div class="office">
+          <address>
+            <span class="label">Office</span>
+            <p>48 Exchange Street, Suite 3<br>Portland, Maine 04101</p>
+          </address>
+          <div>
+            <span class="label">Hours</span>
+            <p>Monday to Friday, 8:30 to 5:30<br>Evenings by appointment</p>
+          </div>
+          <div>
+            <span class="label">Direct</span>
+            <p><a href="tel:+12075550142">(207) 555-0142</a><br><a href="mailto:hello@brackettoyelaran.example">hello@brackettoyelaran.example</a></p>
+          </div>
+        </div>
+      </div>
+      <form id="contact-form" novalidate>
+        <div>
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div>
+          <label for="f-phone">Phone <span>(optional)</span></label>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+        </div>
+        <div>
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div>
+          <label for="f-area">This is about</label>
+          <select id="f-area" name="area">
+            <option>A business matter</option>
+            <option>An employment matter</option>
+            <option>A will or an estate</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="f-msg">In a few sentences, what's happening? <span>Include any deadline.</span></label>
+          <textarea id="f-msg" name="message" required></textarea>
+        </div>
+        <div class="full">
+          <button class="btn" type="submit">Send message</button>
+        </div>
+        <p class="full" id="form-status" role="status" aria-live="polite"></p>
+        <p class="full fine" style="margin-top:0">Contacting us does not create an attorney-client relationship. That begins only when we've both signed an engagement letter.</p>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <p>© <span id="year">2026</span> Brackett &amp; Oyelaran LLP. Attorney advertising.</p>
+    <p>The information on this site is general and is not legal advice. Every matter is different, and past results do not guarantee a similar outcome. Hannah Brackett and Tunde Oyelaran are responsible for the content of this site.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // No backend: the form composes an email in the visitor's own mail app.
+  (function () {
+    var form = document.getElementById('contact-form');
+    var status = document.getElementById('form-status');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = form.elements.name.value.trim();
+      var email = form.elements.email.value.trim();
+      var message = form.elements.message.value.trim();
+      var missing = !name ? form.elements.name : (!email || !form.elements.email.checkValidity()) ? form.elements.email : !message ? form.elements.message : null;
+      if (missing) {
+        status.textContent = 'Please add your name, a valid email address, and a short message.';
+        missing.focus();
+        return;
+      }
+      var body = message + '\n\n' + name + '\n' + email +
+        (form.elements.phone.value.trim() ? '\n' + form.elements.phone.value.trim() : '');
+      window.location.href = 'mailto:hello@brackettoyelaran.example' +
+        '?subject=' + encodeURIComponent('New inquiry: ' + form.elements.area.value) +
+        '&body=' + encodeURIComponent(body);
+      status.textContent = 'Your email app should open with the message ready to send. If it doesn\u2019t, call us at (207) 555-0142.';
+    });
+  })();
+</script>
+</body>
+</html>
+````
+
+The landing page is a single HTML file with no external fonts, images or libraries; I have not opened it in a browser, so it is untested. It is laid out like a sheet of pleading paper, with a red double rule down the left margin, line numbers beside the hero and section marks (§ 1 to § 6) in the gutter.
+
+- **Placeholder content:** the firm (Brackett & Oyelaran, Portland, Maine), its people, fees, phone number, address and email addresses are all invented. Swap in the real details before publishing.
+- **Contact form:** there is no backend, so submitting opens the visitor's email app with the message pre-filled. To have it post to a server or form service instead, replace the script at the bottom.
+- **Footer disclaimer:** the attorney-advertising and no-attorney-client-relationship wording is generic. Check it against your state bar's advertising rules.
+
+The page has six sections: practice areas, how the firm works, people, a published fee table, common questions and contact.

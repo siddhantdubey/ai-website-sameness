@@ -1,0 +1,441 @@
+I'll write the site as one HTML file with inline CSS and JS. Since it can't use external images, the gallery photos are procedurally generated SVG placeholders. You can swap in real photos by setting a `src` on each entry in the `WORKS` array.
+
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/sonnet-5.5__P3__r4.a1.ln4hc9ol/index.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mara Ellison — Photographer</title>
+<meta name="description" content="Mara Ellison is a freelance photographer working in landscape, portrait, wedding and street photography.">
+<style>
+:root{
+  --bg:#12100e; --bg2:#1a1714; --ink:#efe8dd; --mute:#9d9488; --line:#2e2924;
+  --accent:#e0a458; --accent-ink:#1a1209;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.eyebrow{font:500 .72rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.08;letter-spacing:-.01em}
+h2{font-size:clamp(2rem,4.5vw,3.4rem);margin:.5rem 0 1.2rem}
+section{padding:clamp(64px,10vw,128px) 0}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 14px;z-index:100}
+.skip:focus{left:8px}
+
+/* header */
+header.top{position:fixed;inset:0 0 auto 0;z-index:20;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+header.top.solid{background:rgba(18,16,14,.88);backdrop-filter:blur(10px);border-color:var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:var(--serif);font-size:1.25rem;text-decoration:none;letter-spacing:.01em}
+.logo span{color:var(--accent)}
+nav ul{display:flex;gap:clamp(16px,3vw,36px);list-style:none}
+nav a{font:500 .74rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--mute);transition:color .2s}
+nav a:hover{color:var(--ink)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--ink);padding:8px 12px;font:500 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+@media(max-width:760px){
+  .menu-btn{display:block}
+  nav ul{position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);display:none}
+  nav ul.open{display:flex}
+  nav li a{display:block;padding:16px clamp(20px,4vw,48px);border-top:1px solid var(--line)}
+}
+
+/* hero */
+.hero{min-height:100svh;display:grid;align-items:end;position:relative;overflow:hidden;padding:120px 0 56px}
+.hero-bg{position:absolute;inset:0;z-index:-1}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,16,14,.35) 0%,rgba(18,16,14,.15) 40%,var(--bg) 100%)}
+.hero h1{font-size:clamp(3rem,9.5vw,8rem);max-width:12ch;margin:1rem 0 1.6rem}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero p.lead{max-width:46ch;font-size:1.1rem;color:#d4ccc0}
+.hero-meta{display:flex;flex-wrap:wrap;gap:20px 40px;margin-top:40px;align-items:center}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:15px 28px;font:600 .76rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border:1px solid var(--accent);cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:#5a5248}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.avail{font:500 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:10px}
+.avail::before{content:"";width:8px;height:8px;border-radius:50%;background:#7bc47f;box-shadow:0 0 0 4px rgba(123,196,127,.18)}
+
+/* work */
+.work-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{background:none;border:1px solid var(--line);color:var(--mute);padding:9px 16px;font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.filters button:hover{color:var(--ink);border-color:#5a5248}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{columns:3 320px;column-gap:18px}
+.tile{break-inside:avoid;margin-bottom:18px;position:relative;display:block;width:100%;background:var(--bg2);border:0;padding:0;cursor:zoom-in;overflow:hidden;color:inherit;text-align:left}
+.tile[hidden]{display:none}
+.tile img{width:100%;height:auto;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.tile:hover img,.tile:focus-visible img{transform:scale(1.04)}
+.tile .cap{position:absolute;inset:auto 0 0 0;padding:44px 18px 16px;background:linear-gradient(transparent,rgba(10,8,6,.85));opacity:0;transform:translateY(8px);transition:all .35s}
+.tile:hover .cap,.tile:focus-visible .cap{opacity:1;transform:none}
+.cap b{display:block;font:400 1.15rem var(--serif)}
+.cap small{font:500 .68rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+@media(hover:none){.tile .cap{opacity:1;transform:none}}
+
+/* about */
+.about{background:var(--bg2);border-block:1px solid var(--line)}
+.about-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,7vw,96px);align-items:center}
+.portrait{aspect-ratio:4/5;overflow:hidden;position:relative}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.portrait::after{content:"";position:absolute;inset:14px;border:1px solid rgba(239,232,221,.35);pointer-events:none}
+.about p{color:#cfc7ba;margin-bottom:1.1rem;max-width:56ch}
+.stats{display:flex;flex-wrap:wrap;gap:20px 48px;margin-top:32px;padding-top:28px;border-top:1px solid var(--line)}
+.stats div b{display:block;font:400 2.4rem var(--serif);color:var(--accent);line-height:1}
+.stats div span{font:500 .68rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+@media(max-width:820px){.about-grid{grid-template-columns:1fr}.portrait{max-width:420px}}
+
+/* services */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:40px}
+.card{background:var(--bg);padding:36px 30px 32px;display:flex;flex-direction:column}
+.card h3{font-size:1.7rem;margin:.9rem 0 .6rem}
+.card p{color:var(--mute);font-size:.95rem}
+.card ul{list-style:none;margin:20px 0 28px;font-size:.92rem;color:#cfc7ba}
+.card li{padding:9px 0;border-top:1px solid var(--line)}
+.card li::before{content:"— ";color:var(--accent)}
+.price{margin-top:auto;font:500 .78rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.price b{display:block;font:400 2rem var(--serif);color:var(--ink);letter-spacing:0;text-transform:none}
+
+/* testimonials */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;margin-top:40px}
+blockquote{font:italic 1.25rem/1.5 var(--serif);color:#e2dacd;border-left:2px solid var(--accent);padding-left:24px}
+blockquote cite{display:block;margin-top:16px;font:500 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-style:normal}
+
+/* contact */
+.contact{background:var(--bg2);border-top:1px solid var(--line)}
+.contact-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,7vw,96px)}
+.contact-info p{color:#cfc7ba;max-width:40ch;margin-bottom:28px}
+.contact-info dl{font-size:.95rem}
+.contact-info dt{font:500 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-top:18px}
+.contact-info dd a{text-decoration:none;border-bottom:1px solid #5a5248}
+.contact-info dd a:hover{border-color:var(--accent)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.f{display:flex;flex-direction:column;gap:8px}
+.f.full{grid-column:1/-1}
+label{font:500 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+input,select,textarea{background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:14px;font:inherit;border-radius:0;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:140px;resize:vertical}
+.note{font-size:.82rem;color:var(--mute);grid-column:1/-1}
+@media(max-width:820px){.contact-grid{grid-template-columns:1fr}form{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding:32px 0;font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer a{text-decoration:none}footer a:hover{color:var(--accent)}
+
+/* lightbox */
+dialog{border:0;background:transparent;color:var(--ink);max-width:none;max-height:none;width:100vw;height:100vh;margin:0;padding:0}
+dialog::backdrop{background:rgba(8,6,5,.94)}
+.lb{height:100%;display:grid;grid-template-rows:1fr auto;padding:clamp(12px,3vw,32px);gap:16px}
+.lb-img{min-height:0;display:flex;align-items:center;justify-content:center}
+.lb-img img{max-height:100%;max-width:100%;object-fit:contain;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+.lb-cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;max-width:1100px;width:100%;margin:0 auto}
+.lb-cap b{font:400 1.4rem var(--serif)}
+.lb-cap span{font:500 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.lb button{position:absolute;background:rgba(18,16,14,.7);border:1px solid var(--line);color:var(--ink);width:48px;height:48px;font-size:1.3rem;cursor:pointer;transition:all .2s}
+.lb button:hover{border-color:var(--accent);color:var(--accent)}
+.lb .x{top:16px;right:16px}.lb .p{left:16px;top:50%}.lb .n{right:16px;top:50%}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="top" id="top">
+  <div class="wrap bar">
+    <a class="logo" href="#home">Mara Ellison<span>.</span></a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav aria-label="Primary">
+      <ul id="menu">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home" style="padding-bottom:56px">
+  <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow">Freelance Photographer · Portland, OR · Available worldwide</p>
+    <h1>Light, <em>patience</em> &amp; the quiet moment.</h1>
+    <p class="lead">I photograph landscapes, people and the days that matter most — with a documentary eye and an unhurried hand.</p>
+    <div class="hero-meta">
+      <a class="btn" href="#work">View selected work</a>
+      <a class="btn ghost" href="#contact">Book a session</a>
+      <span class="avail">Booking spring &amp; summer 2027</span>
+    </div>
+  </div>
+</section>
+
+<section id="work" aria-labelledby="work-h">
+  <div class="wrap">
+    <div class="work-head">
+      <div>
+        <p class="eyebrow">Selected work</p>
+        <h2 id="work-h" style="margin-bottom:0">Portfolio</h2>
+      </div>
+      <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="about" id="about" aria-labelledby="about-h">
+  <div class="wrap about-grid">
+    <div class="portrait reveal" id="aboutImg"></div>
+    <div class="reveal">
+      <p class="eyebrow">About</p>
+      <h2 id="about-h">I wait for the picture to arrive.</h2>
+      <p>I'm Mara — a photographer based in the Pacific Northwest, travelling wherever the light is good and the story is honest. I started with a secondhand film camera and a habit of getting up before dawn; twelve years on, the habit has stuck.</p>
+      <p>My work is quiet and natural. I don't over-direct, and I don't over-edit. Whether it's a mountain ridge at first light or a wedding toast that runs long, I'm looking for the frame that feels the way the moment felt.</p>
+      <p>Clients include independent magazines, outdoor brands, hotels and — most often — people who want their own days remembered well.</p>
+      <div class="stats">
+        <div><b>12</b><span>Years shooting</span></div>
+        <div><b>180+</b><span>Weddings &amp; events</span></div>
+        <div><b>31</b><span>Countries</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" aria-labelledby="serv-h">
+  <div class="wrap">
+    <p class="eyebrow">Services</p>
+    <h2 id="serv-h">Ways to work together</h2>
+    <div class="cards">
+      <article class="card reveal">
+        <p class="eyebrow">01</p><h3>Portraits</h3>
+        <p>Personal, family and professional portraits — on location or in natural light.</p>
+        <ul><li>90-minute session</li><li>25 edited images</li><li>Online gallery &amp; prints</li></ul>
+        <p class="price">From<b>$450</b></p>
+      </article>
+      <article class="card reveal">
+        <p class="eyebrow">02</p><h3>Weddings</h3>
+        <p>Full-day, unobtrusive coverage from getting ready to the last dance.</p>
+        <ul><li>8 hours coverage</li><li>500+ edited images</li><li>Engagement session included</li></ul>
+        <p class="price">From<b>$3,200</b></p>
+      </article>
+      <article class="card reveal">
+        <p class="eyebrow">03</p><h3>Editorial &amp; Brand</h3>
+        <p>Landscape and lifestyle imagery for publications, hotels and outdoor brands.</p>
+        <ul><li>Half- or full-day rate</li><li>Licensing tailored to use</li><li>Travel considered</li></ul>
+        <p class="price">Day rate<b>$1,800</b></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" aria-labelledby="kind-h">
+  <div class="wrap">
+    <p class="eyebrow">Kind words</p>
+    <h2 id="kind-h">What clients say</h2>
+    <div class="quotes">
+      <blockquote class="reveal">She disappeared into the day. We got the photos and never once felt photographed.<cite>Hannah &amp; Luca — Wedding, Hood River</cite></blockquote>
+      <blockquote class="reveal">Calm on set, exacting in the edit. The images carried our entire autumn issue.<cite>Fieldnotes Quarterly — Art Director</cite></blockquote>
+      <blockquote class="reveal">Delivered a week early and every frame was usable. Booking again for spring.<cite>Cascade Lodge — Marketing</cite></blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap contact-grid">
+    <div class="contact-info">
+      <p class="eyebrow">Contact</p>
+      <h2 id="contact-h">Let's make something.</h2>
+      <p>Tell me about your project, date and location. I reply to every enquiry within two working days.</p>
+      <dl>
+        <dt>Email</dt><dd><a href="mailto:hello@example.com">hello@example.com</a></dd>
+        <dt>Studio</dt><dd>Portland, Oregon</dd>
+        <dt>Follow</dt><dd><a href="#" aria-label="Instagram">Instagram</a> · <a href="#" aria-label="Behance">Behance</a></dd>
+      </dl>
+    </div>
+    <form id="form" novalidate>
+      <div class="f"><label for="name">Name</label><input id="name" name="name" required autocomplete="name"></div>
+      <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+      <div class="f"><label for="type">Project</label>
+        <select id="type" name="type"><option>Portrait session</option><option>Wedding</option><option>Editorial / brand</option><option>Something else</option></select></div>
+      <div class="f"><label for="date">Preferred date</label><input id="date" name="date" type="date"></div>
+      <div class="f full"><label for="msg">Message</label><textarea id="msg" name="msg" required></textarea></div>
+      <div class="f full"><button class="btn" type="submit">Send enquiry</button></div>
+      <p class="note" id="status" role="status" aria-live="polite">This opens your email app with the details filled in.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> Mara Ellison Photography</span><a href="#home">Back to top ↑</a></div></footer>
+
+<dialog id="lb" aria-label="Image viewer">
+  <div class="lb">
+    <div class="lb-img"><img id="lbImg" alt=""></div>
+    <div class="lb-cap"><b id="lbTitle"></b><span id="lbMeta"></span></div>
+    <button class="x" aria-label="Close">✕</button>
+    <button class="p" aria-label="Previous image">←</button>
+    <button class="n" aria-label="Next image">→</button>
+  </div>
+</dialog>
+
+<script>
+/* ---------- Content ----------
+   To use real photos, add  src:"photos/yourfile.jpg"  to any entry
+   (and keep w/h as the image's aspect ratio). Otherwise a generated
+   placeholder scene is drawn. */
+const WORKS = [
+  {t:"First Ridge",      c:"Landscape", loc:"Mt. Hood, OR",        y:2025, w:1200,h:1500, scene:"mountain", seed:3,  pal:["#26304f","#d98a6c","#f2c48d","#fff1c9"], alt:"Layered mountain ridges at sunrise under a peach sky"},
+  {t:"Slow Tide",        c:"Landscape", loc:"Cannon Beach, OR",    y:2024, w:1500,h:1000, scene:"sea",      seed:8,  pal:["#31405e","#9aa6b8","#e8c9a6","#fbe7c0"], alt:"Calm sea meeting a pale horizon at dusk"},
+  {t:"Marguerite",       c:"Portrait",  loc:"Studio, Portland",    y:2025, w:1200,h:1500, scene:"portrait", seed:12, pal:["#3b2a2a","#a8604b","#e2a77d","#f6d7ae"], alt:"Silhouetted portrait against warm bokeh lights"},
+  {t:"Last Tram",        c:"Street",    loc:"Lisbon, PT",          y:2023, w:1200,h:1200, scene:"city",     seed:5,  pal:["#141a33","#3a3566","#c1587a","#ffcf7a"], alt:"City skyline with lit windows at blue hour"},
+  {t:"Vows",             c:"Wedding",   loc:"Hood River, OR",      y:2025, w:1500,h:1000, scene:"bokeh",    seed:21, pal:["#2c2420","#8a6a4a","#e5c595","#fff3d8"], alt:"Wedding ceremony glowing with golden bokeh"},
+  {t:"Basalt Morning",   c:"Landscape", loc:"Columbia Gorge, OR",  y:2024, w:1200,h:1600, scene:"mountain", seed:17, pal:["#1b2a3a","#5c7a8c","#b9c8c4","#f4efe0"], alt:"Misty cool-toned ridgelines in the gorge"},
+  {t:"Night Market",     c:"Street",    loc:"Taipei, TW",          y:2023, w:1500,h:1000, scene:"city",     seed:30, pal:["#1a0f24","#4d2457","#d2465e","#ffb347"], alt:"Neon-tinted city blocks at night"},
+  {t:"Amelie, Age 6",    c:"Portrait",  loc:"Family session",      y:2025, w:1200,h:1500, scene:"portrait", seed:44, pal:["#2f3a2c","#7e8f5a","#d8c58b","#fff0b8"], alt:"Child silhouette against green and gold light"},
+  {t:"First Dance",      c:"Wedding",   loc:"Bend, OR",            y:2024, w:1200,h:1200, scene:"bokeh",    seed:9,  pal:["#241a2e","#6a4a7a","#d79ab0","#ffe1d0"], alt:"Soft violet and rose bokeh from a reception"},
+  {t:"Salt Flat Dusk",   c:"Landscape", loc:"Bonneville, UT",      y:2022, w:1500,h:1000, scene:"sea",      seed:51, pal:["#3a2850","#c0708a","#f0b69a","#ffe9bf"], alt:"Endless flat horizon under a violet and pink sky"},
+  {t:"Rain, Shibuya",    c:"Street",    loc:"Tokyo, JP",           y:2023, w:1200,h:1500, scene:"city",     seed:61, pal:["#0f1d2b","#1f4a5e","#4f93a0","#f5e08a"], alt:"Teal-toned city streets in the rain"},
+  {t:"Morning, Getting Ready", c:"Wedding", loc:"Astoria, OR",     y:2025, w:1200,h:1500, scene:"portrait", seed:73, pal:["#40342c","#b79a7a","#ecd9bd","#fffaf0"], alt:"Bright airy silhouette in window light"}
+];
+const CATS = ["All","Landscape","Portrait","Wedding","Street"];
+
+/* ---------- Procedural placeholder scenes ---------- */
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mix(a,b,k){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const A=p(a),B=p(b);return"#"+A.map((v,i)=>Math.round(v+(B[i]-v)*k).toString(16).padStart(2,"0")).join("")}
+function scene(o){
+  const {w,h,pal,seed,scene:kind}=o, r=rng(seed), [c0,c1,c2,c3]=pal;
+  let g=`<defs>
+  <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c0}"/><stop offset=".6" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>
+  <radialGradient id="sun"><stop offset="0" stop-color="${c3}"/><stop offset=".25" stop-color="${c3}" stop-opacity=".8"/><stop offset="1" stop-color="${c3}" stop-opacity="0"/></radialGradient>
+  <filter id="bl"><feGaussianBlur stdDeviation="${w/90}"/></filter>
+  <filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="${seed}"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0"/></filter>
+  <radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>
+  <rect width="${w}" height="${h}" fill="url(#s)"/>`;
+  if(kind==="mountain"){
+    const sx=w*(.25+r()*.5), sy=h*(.32+r()*.1);
+    g+=`<circle cx="${sx}" cy="${sy}" r="${w*.45}" fill="url(#sun)"/>`;
+    for(let L=0;L<5;L++){
+      const base=h*(.45+L*.11), amp=h*(.16-L*.02), f=1.5+r()*2, ph=r()*6, col=mix(c1,c0,.25+L*.17);
+      let d=`M0 ${h} L0 ${base}`;
+      for(let x=0;x<=w;x+=w/48){d+=` L${x.toFixed(1)} ${(base-Math.abs(Math.sin(x/w*f*3+ph))*amp-Math.sin(x/w*11+ph*2)*amp*.12).toFixed(1)}`}
+      g+=`<path d="${d} L${w} ${h} Z" fill="${col}" opacity="${.55+L*.1}"/>`;
+    }
+  }
+  if(kind==="sea"){
+    const hz=h*.56, sx=w*(.3+r()*.4);
+    g+=`<circle cx="${sx}" cy="${hz-h*.06}" r="${w*.35}" fill="url(#sun)"/>
+    <rect y="${hz}" width="${w}" height="${h-hz}" fill="${mix(c0,c1,.35)}"/>
+    <rect x="${sx-w*.06}" y="${hz}" width="${w*.12}" height="${h-hz}" fill="${c3}" opacity=".28" filter="url(#bl)"/>`;
+    for(let i=0;i<46;i++){const y=hz+Math.pow(r(),1.6)*(h-hz), len=w*(.05+r()*.3), x=r()*w;
+      g+=`<rect x="${x}" y="${y}" width="${len}" height="${1+(y-hz)/h*3}" fill="${r()>.5?c3:c0}" opacity="${.08+r()*.18}"/>`}
+  }
+  if(kind==="city"){
+    g+=`<circle cx="${w*.7}" cy="${h*.35}" r="${w*.4}" fill="url(#sun)" opacity=".55"/>`;
+    for(let L=0;L<3;L++){
+      let x=-20; const col=mix(c0,"#000000",.25+L*.22);
+      while(x<w){const bw=w*(.07+r()*.1), bh=h*(.2+r()*.34)*(1-L*.12), y=h-bh-h*(.02+L*.0);
+        g+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh+h}" fill="${col}"/>`;
+        if(L>0)for(let wy=y+14;wy<h-20;wy+=h*.035)for(let wx=x+8;wx<x+bw-10;wx+=w*.022)
+          if(r()>.62)g+=`<rect x="${wx}" y="${wy}" width="${w*.011}" height="${h*.015}" fill="${c3}" opacity="${.5+r()*.5}"/>`;
+        x+=bw+w*.004}
+    }
+  }
+  if(kind==="portrait"||kind==="bokeh"){
+    const n=kind==="bokeh"?26:16;
+    for(let i=0;i<n;i++){const rr=w*(.03+r()*.1);
+      g+=`<circle cx="${r()*w}" cy="${r()*h*.85}" r="${rr}" fill="${r()>.4?c3:c2}" opacity="${.12+r()*.4}" filter="url(#bl)"/>`}
+    const cx=w*(kind==="bokeh"?.35:.5), hy=h*.5, hr=w*.1, dark=mix(c0,"#000000",.55);
+    g+=`<g fill="${dark}"><ellipse cx="${cx}" cy="${hy}" rx="${hr}" ry="${hr*1.2}"/>
+      <path d="M${cx-w*.3} ${h} C${cx-w*.28} ${hy+h*.14} ${cx-hr*1.2} ${hy+hr*1.2} ${cx} ${hy+hr*1.6} C${cx+hr*1.2} ${hy+hr*1.2} ${cx+w*.28} ${hy+h*.14} ${cx+w*.3} ${h} Z"/>`;
+    if(kind==="bokeh")g+=`<ellipse cx="${cx+w*.24}" cy="${hy+h*.03}" rx="${hr*.95}" ry="${hr*1.15}"/>
+      <path d="M${cx+w*.0} ${h} C${cx+w*.02} ${hy+h*.16} ${cx+w*.12} ${hy+hr*1.4} ${cx+w*.24} ${hy+hr*1.6} C${cx+w*.36} ${hy+hr*1.4} ${cx+w*.46} ${hy+h*.16} ${cx+w*.5} ${h} Z"/>`;
+    g+=`</g>`;
+  }
+  g+=`<rect width="${w}" height="${h}" fill="url(#vg)"/><rect width="${w}" height="${h}" filter="url(#gr)"/>`;
+  return"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">${g}</svg>`);
+}
+WORKS.forEach(o=>{o.src=o.src||scene(o)});
+
+/* ---------- Gallery ---------- */
+const grid=document.getElementById("grid"), filters=document.getElementById("filters");
+WORKS.forEach((o,i)=>{
+  const b=document.createElement("button");
+  b.className="tile"; b.dataset.cat=o.c; b.dataset.i=i;
+  b.setAttribute("aria-label",`Open “${o.t}”, ${o.c}, ${o.loc}`);
+  b.innerHTML=`<img src="${o.src}" alt="${o.alt}" width="${o.w}" height="${o.h}" loading="lazy"><span class="cap"><small>${o.c}</small><b>${o.t}</b></span>`;
+  grid.appendChild(b);
+});
+CATS.forEach((c,i)=>{
+  const b=document.createElement("button");
+  b.textContent=c; b.setAttribute("aria-pressed",i===0);
+  b.onclick=()=>{
+    filters.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    grid.querySelectorAll(".tile").forEach(t=>t.hidden=!(c==="All"||t.dataset.cat===c));
+  };
+  filters.appendChild(b);
+});
+
+/* ---------- Lightbox ---------- */
+const lb=document.getElementById("lb"), lbImg=document.getElementById("lbImg");
+let cur=0, opener=null;
+const visible=()=>[...grid.querySelectorAll(".tile:not([hidden])")].map(t=>+t.dataset.i);
+function show(i){
+  const o=WORKS[i]; cur=i;
+  lbImg.src=o.src; lbImg.alt=o.alt;
+  document.getElementById("lbTitle").textContent=o.t;
+  document.getElementById("lbMeta").textContent=`${o.c} · ${o.loc} · ${o.y}`;
+}
+function step(d){const v=visible(); show(v[(v.indexOf(cur)+d+v.length)%v.length])}
+grid.addEventListener("click",e=>{const t=e.target.closest(".tile"); if(!t)return; opener=t; show(+t.dataset.i); lb.showModal()});
+lb.querySelector(".x").onclick=()=>lb.close();
+lb.querySelector(".p").onclick=()=>step(-1);
+lb.querySelector(".n").onclick=()=>step(1);
+lb.addEventListener("click",e=>{if(e.target===lb||e.target.classList.contains("lb")||e.target.classList.contains("lb-img"))lb.close()});
+lb.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1)});
+lb.addEventListener("close",()=>opener&&opener.focus());
+
+/* ---------- Hero / about imagery ---------- */
+const heroO=WORKS[0], heroImg=new Image();
+heroImg.src=scene({...heroO,w:1800,h:1100,scene:"mountain",seed:3}); heroImg.alt="";
+document.getElementById("heroBg").appendChild(heroImg);
+const ab=new Image(); ab.alt="Placeholder portrait of the photographer — replace with your own photo";
+ab.src=scene({w:900,h:1125,seed:99,scene:"portrait",pal:["#2a2420","#8a6a52","#dcb48a","#fff0cf"]});
+document.getElementById("aboutImg").appendChild(ab);
+
+/* ---------- Header, menu, reveal ---------- */
+const hdr=document.getElementById("top");
+const onScroll=()=>hdr.classList.toggle("solid",scrollY>40); onScroll(); addEventListener("scroll",onScroll,{passive:true});
+const mb=document.querySelector(".menu-btn"), menu=document.getElementById("menu");
+mb.onclick=()=>{const o=menu.classList.toggle("open"); mb.setAttribute("aria-expanded",o)};
+menu.addEventListener("click",e=>{if(e.target.tagName==="A"){menu.classList.remove("open");mb.setAttribute("aria-expanded",false)}});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+document.getElementById("yr").textContent=new Date().getFullYear();
+
+/* ---------- Contact form (opens mail client; no backend needed) ---------- */
+document.getElementById("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const f=e.target, s=document.getElementById("status");
+  if(!f.name.value.trim()||!f.email.validity.valid||!f.msg.value.trim()){s.textContent="Please fill in your name, a valid email and a message.";return}
+  const body=`Name: ${f.name.value}\nEmail: ${f.email.value}\nProject: ${f.type.value}\nDate: ${f.date.value||"flexible"}\n\n${f.msg.value}`;
+  location.href=`mailto:hello@example.com?subject=${encodeURIComponent("Enquiry: "+f.type.value)}&body=${encodeURIComponent(body)}`;
+  s.textContent="Thank you — your email app should open with the message ready to send.";
+});
+</script>
+</body>
+</html>
+</parameter>
+</invoke>

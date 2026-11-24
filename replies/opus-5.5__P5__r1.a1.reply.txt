@@ -1,0 +1,551 @@
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/opus-5.5__P5__r1.a1.5fdg006r/index.html</parameter>
+<parameter name="content"><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foreman — Project tracking for teams who hate status meetings</title>
+<meta name="description" content="Foreman gives every project one page, one owner, and a date that means something. Built for teams of 5 to 50.">
+<style>
+  :root {
+    --paper: #f3efe6;
+    --paper-2: #ebe5d8;
+    --ink: #1c1a16;
+    --ink-2: #4a463e;
+    --ink-3: #8a8476;
+    --rule: #cfc7b6;
+    --signal: #c8431a;
+    --ok: #3d6b4a;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- top ---------- */
+  .notice {
+    border-bottom: 1px solid var(--rule);
+    font: 12.5px/1 var(--mono);
+    color: var(--ink-2);
+  }
+  .notice .wrap { display: flex; justify-content: space-between; padding-top: 10px; padding-bottom: 10px; gap: 16px; }
+  .notice a { text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .notice a:hover { border-color: var(--ink); }
+
+  header.nav .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 22px; padding-bottom: 22px;
+  }
+  .mark {
+    font: 600 24px/1 var(--serif);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mark svg { display: block; }
+  nav ul { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; font-size: 15px; align-items: center; }
+  nav a { text-decoration: none; color: var(--ink-2); }
+  nav a:hover { color: var(--ink); }
+  nav .btn-sm {
+    color: var(--ink); border: 1px solid var(--ink); padding: 7px 14px; border-radius: 2px;
+  }
+  nav .btn-sm:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 56px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: end; }
+  h1 {
+    font: 400 clamp(46px, 6.4vw, 84px)/0.98 var(--serif);
+    letter-spacing: -0.025em;
+    margin: 0 0 28px;
+  }
+  h1 em { font-style: italic; color: var(--signal); }
+  .lede { font-size: 19px; color: var(--ink-2); max-width: 30em; margin: 0 0 32px; }
+  .cta-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; background: var(--ink); color: var(--paper);
+    text-decoration: none; padding: 15px 22px; font-weight: 600; font-size: 16px;
+    border-radius: 2px; transition: transform .12s ease, background .12s;
+  }
+  .btn:hover { background: var(--signal); }
+  .btn:active { transform: translateY(1px); }
+  .link-arrow { font-size: 15.5px; text-decoration: none; border-bottom: 1px solid var(--ink-3); padding-bottom: 1px; }
+  .link-arrow:hover { border-color: var(--ink); }
+  .fine { font: 12.5px/1.5 var(--mono); color: var(--ink-3); margin-top: 18px; }
+
+  /* ---------- mock project page ---------- */
+  .sheet {
+    background: #fffdf8;
+    border: 1px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    font-size: 13.5px;
+  }
+  .sheet-head {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--ink); padding: 10px 14px;
+    font: 11.5px/1 var(--mono); color: var(--ink-2);
+  }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border: 1px solid var(--ink); border-radius: 50%; display: block; }
+  .sheet-body { padding: 20px 20px 8px; }
+  .proj-title { font: 400 26px/1.1 var(--serif); margin: 0 0 6px; }
+  .meta { display: flex; gap: 18px; flex-wrap: wrap; color: var(--ink-2); font-size: 12.5px; margin-bottom: 16px; }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .flag {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: #fbe9e1; border-left: 3px solid var(--signal);
+    padding: 10px 12px; margin-bottom: 18px; font-size: 13px; color: #6b2a12;
+  }
+  .flag strong { color: var(--signal); }
+  .tl { width: 100%; border-collapse: collapse; }
+  .tl th {
+    text-align: left; font: 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em;
+    color: var(--ink-3); font-weight: 400; padding: 0 0 8px; border-bottom: 1px solid var(--rule);
+  }
+  .tl td { padding: 9px 0; border-bottom: 1px solid #ece6d9; vertical-align: middle; }
+  .tl tr:last-child td { border-bottom: 0; }
+  .tl .who { color: var(--ink-2); width: 70px; }
+  .tl .when { font-family: var(--mono); font-size: 12px; width: 92px; text-align: right; }
+  .bar { position: relative; height: 8px; background: var(--paper-2); width: 110px; }
+  .bar span { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
+  .bar.late span { background: var(--signal); }
+  .bar.done span { background: var(--ok); }
+  .strike { text-decoration: line-through; color: var(--ink-3); }
+  .slip { color: var(--signal); }
+  .tl tr { transition: background .1s; }
+  .tl tbody tr:hover { background: #f8f3e8; }
+
+  .sticky-note {
+    position: relative; margin: -22px 0 0 auto; width: 230px; transform: rotate(2.2deg);
+    background: #f6e27a; padding: 14px 16px 16px; font: 15px/1.35 "Marker Felt", "Comic Neue", "Bradley Hand", var(--serif);
+    box-shadow: 0 2px 0 rgba(0,0,0,.08), 0 10px 18px -10px rgba(0,0,0,.35);
+    color: #3a3210; z-index: 2;
+  }
+
+  /* ---------- section scaffolding ---------- */
+  section { padding: 88px 0; }
+  .ruled { border-top: 1px solid var(--ink); }
+  .eyebrow {
+    font: 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3);
+    display: flex; gap: 14px; margin-bottom: 34px;
+  }
+  .eyebrow .n { color: var(--ink); }
+  h2 {
+    font: 400 clamp(34px, 4.2vw, 52px)/1.04 var(--serif);
+    letter-spacing: -0.02em; margin: 0 0 22px; max-width: 16em;
+  }
+  h3 { font: 600 19px/1.3 var(--sans); margin: 0 0 8px; letter-spacing: -0.005em; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--ink-2); }
+
+  /* ---------- how it works ---------- */
+  .rules-list { list-style: none; padding: 0; margin: 48px 0 0; counter-reset: r; }
+  .rules-list li {
+    display: grid; grid-template-columns: 90px 1fr 1.1fr; gap: 36px;
+    padding: 32px 0; border-top: 1px solid var(--rule);
+  }
+  .rules-list li:last-child { border-bottom: 1px solid var(--rule); }
+  .rules-list .num { font: 400 46px/1 var(--serif); color: var(--ink-3); }
+  .rules-list p { color: var(--ink-2); margin: 0; }
+  .rules-list .aside { font-size: 15px; color: var(--ink-2); border-left: 1px solid var(--rule); padding-left: 22px; }
+  .rules-list .aside code { font: 13px var(--mono); background: var(--paper-2); padding: 1px 5px; }
+
+  /* ---------- digest ---------- */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .email {
+    background: #fffdf8; border: 1px solid var(--rule); padding: 26px 28px;
+    font-size: 14.5px; line-height: 1.6;
+  }
+  .email .hdr { font: 12px/1.7 var(--mono); color: var(--ink-3); border-bottom: 1px dashed var(--rule); padding-bottom: 12px; margin-bottom: 16px; }
+  .email .hdr b { color: var(--ink-2); font-weight: 400; }
+  .email h4 { font: 600 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; margin: 18px 0 8px; }
+  .email ul { margin: 0; padding-left: 18px; }
+  .email li { margin-bottom: 4px; }
+  .email .r { color: var(--signal); }
+  .email .g { color: var(--ok); }
+
+  /* ---------- not list ---------- */
+  .nots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 56px; margin-top: 40px; }
+  .nots div { padding: 22px 0; border-top: 1px solid var(--rule); }
+  .nots h3 { font-family: var(--serif); font-weight: 400; font-size: 22px; }
+  .nots h3 s { text-decoration-color: var(--signal); text-decoration-thickness: 2px; }
+
+  /* ---------- quote ---------- */
+  .quote { background: var(--ink); color: var(--paper); }
+  .quote blockquote {
+    margin: 0; font: 400 clamp(28px, 3.4vw, 42px)/1.22 var(--serif); letter-spacing: -0.012em; max-width: 24em;
+  }
+  .quote blockquote::before { content: "“"; color: var(--signal); margin-left: -0.45em; }
+  .quote cite { display: block; margin-top: 30px; font: normal 14px/1.5 var(--mono); color: #b8b0a0; }
+  .quote cite b { color: var(--paper); font-weight: 400; }
+
+  /* ---------- pricing ---------- */
+  .price-top { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 20px; }
+  .toggle { display: inline-flex; border: 1px solid var(--ink); font: 13px/1 var(--mono); }
+  .toggle button {
+    border: 0; background: transparent; padding: 9px 14px; cursor: pointer; font: inherit; color: var(--ink);
+  }
+  .toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 40px; border: 1px solid var(--ink); }
+  .plan { padding: 30px 28px 32px; border-right: 1px solid var(--ink); display: flex; flex-direction: column; }
+  .plan:last-child { border-right: 0; }
+  .plan.pick { background: #fffdf8; }
+  .plan .name { font: 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 18px; display: flex; justify-content: space-between; }
+  .plan .name .tag { color: var(--signal); }
+  .plan .amt { font: 400 54px/1 var(--serif); letter-spacing: -0.02em; }
+  .plan .per { font-size: 14px; color: var(--ink-2); margin: 8px 0 22px; min-height: 2.6em; }
+  .plan ul { list-style: none; padding: 0; margin: 0 0 28px; font-size: 15px; flex: 1; }
+  .plan li { padding: 7px 0; border-top: 1px solid #e2dbcc; }
+  .plan .btn, .plan .btn-ghost { text-align: center; }
+  .btn-ghost {
+    display: block; border: 1px solid var(--ink); padding: 14px 20px; text-decoration: none;
+    font-weight: 600; font-size: 15px; border-radius: 2px;
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+  .price-note { font-size: 14.5px; color: var(--ink-2); margin-top: 20px; max-width: 46em; }
+
+  /* ---------- changelog ---------- */
+  .log { display: grid; grid-template-columns: 220px 1fr; gap: 56px; }
+  .log dl { margin: 0; }
+  .log .entry { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding: 16px 0; border-top: 1px solid var(--rule); }
+  .log dt { font: 13px/1.6 var(--mono); color: var(--ink-3); }
+  .log dd { margin: 0; }
+  .log dd b { font-weight: 600; }
+  .pill { font: 11px/1 var(--mono); border: 1px solid currentColor; padding: 2px 6px; margin-right: 8px; vertical-align: 2px; }
+  .pill.new { color: var(--ok); }
+  .pill.fix { color: var(--ink-3); }
+
+  /* ---------- closing ---------- */
+  .close { text-align: left; padding-bottom: 110px; }
+  .close h2 { max-width: 13em; }
+
+  footer { border-top: 1px solid var(--ink); padding: 34px 0 48px; font-size: 14px; color: var(--ink-2); }
+  footer .wrap { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+  footer h5 { font: 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin: 0 0 14px; font-weight: 400; }
+  footer ul { list-style: none; margin: 0; padding: 0; }
+  footer li { margin-bottom: 7px; }
+  footer a { text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 920px) {
+    .hero-grid, .split, .log { grid-template-columns: 1fr; gap: 48px; }
+    .rules-list li { grid-template-columns: 60px 1fr; }
+    .rules-list .aside { grid-column: 2; border-left: 0; padding-left: 0; }
+    .plans { grid-template-columns: 1fr; }
+    .plan { border-right: 0; border-bottom: 1px solid var(--ink); }
+    .plan:last-child { border-bottom: 0; }
+    footer .wrap { grid-template-columns: 1fr 1fr; }
+    nav ul li.hide-sm { display: none; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    section { padding: 64px 0; }
+    .nots { grid-template-columns: 1fr; }
+    .notice .right { display: none; }
+    .tl .bar-cell { display: none; }
+    .log .entry { grid-template-columns: 1fr; gap: 4px; }
+    .sticky-note { width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="notice">
+  <div class="wrap">
+    <span>Foreman 4.2 is out — dependencies now push dates for you. <a href="#changelog">What changed</a></span>
+    <span class="right">Status: all systems normal</span>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" fill="none" stroke="#1c1a16" stroke-width="2"/>
+        <path d="M7 8h12M7 13h8M7 18h4" stroke="#1c1a16" stroke-width="2"/>
+        <circle cx="19" cy="18" r="2.4" fill="#c8431a"/>
+      </svg>
+      Foreman
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        <li class="hide-sm"><a href="#how">How it works</a></li>
+        <li class="hide-sm"><a href="#pricing">Pricing</a></li>
+        <li class="hide-sm"><a href="#changelog">Changelog</a></li>
+        <li><a href="#">Sign in</a></li>
+        <li><a class="btn-sm" href="#start">Try it</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Find out it’s late on <em>Tuesday</em>, not Friday.</h1>
+        <p class="lede">Foreman is a project tracker for teams of 5 to 50. Every project gets one page, one owner, and a due date that moves when the work does — so you stop learning about slips in the meeting where it’s too late to fix them.</p>
+        <div class="cta-row" id="start">
+          <a class="btn" href="#">Start a free project</a>
+          <a class="link-arrow" href="#how">See how it works →</a>
+        </div>
+        <p class="fine">Free for 3 active projects. No card. Imports from Asana, Trello and CSV.</p>
+      </div>
+
+      <div>
+        <div class="sheet" role="img" aria-label="Example Foreman project page showing a rebrand project at risk by three days">
+          <div class="sheet-head">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span>halden-studio / projects / northgate-rebrand</span>
+            <span></span>
+          </div>
+          <div class="sheet-body">
+            <h2 class="proj-title" style="max-width:none">Northgate Credit Union — rebrand</h2>
+            <div class="meta">
+              <span>Owner <b>Priya S.</b></span>
+              <span>Due <b>Dec 12</b></span>
+              <span>Started <b>Oct 21</b></span>
+            </div>
+            <div class="flag">
+              <span>●</span>
+              <span><strong>Projected Dec 15 — 3 days late.</strong> Signage proofs are waiting on the printer’s quote, which blocks final files.</span>
+            </div>
+            <table class="tl">
+              <thead><tr><th>Step</th><th>Who</th><th class="bar-cell">Progress</th><th style="text-align:right">Date</th></tr></thead>
+              <tbody>
+                <tr><td class="strike">Discovery interviews</td><td class="who">Marco</td><td class="bar-cell"><div class="bar done"><span style="width:100%"></span></div></td><td class="when">Oct 30</td></tr>
+                <tr><td class="strike">Logo round 2</td><td class="who">Priya</td><td class="bar-cell"><div class="bar done"><span style="width:100%"></span></div></td><td class="when">Nov 14</td></tr>
+                <tr><td>Signage proofs</td><td class="who">Dana</td><td class="bar-cell"><div class="bar late"><span style="width:40%"></span></div></td><td class="when slip">Nov 28 → Dec 1</td></tr>
+                <tr><td>Brand guidelines PDF</td><td class="who">Priya</td><td class="bar-cell"><div class="bar"><span style="width:65%"></span></div></td><td class="when">Dec 5</td></tr>
+                <tr><td>Final file handoff</td><td class="who">Marco</td><td class="bar-cell"><div class="bar"><span style="width:0%"></span></div></td><td class="when slip">Dec 12 → 15</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="sticky-note">Called the printer. Quote by Thurs. — D.</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="how" class="ruled">
+    <div class="wrap">
+      <div class="eyebrow"><span class="n">01</span><span>How it works</span></div>
+      <h2>Three rules. We’re strict about them so you don’t have to be.</h2>
+      <p class="muted" style="max-width:36em">Most project tools let you build anything, which is how you end up with 400 tasks and no idea what’s actually behind. Foreman has opinions.</p>
+
+      <ol class="rules-list">
+        <li>
+          <div class="num">i.</div>
+          <div><h3>One owner per project. Not a team, a person.</h3><p>Shared ownership means nobody chases the printer. Foreman won’t let you save a project without a name in the owner field.</p></div>
+          <div class="aside">You can hand a project off, and the handoff is logged — so “I thought you had it” becomes a thing you can look up.</div>
+        </li>
+        <li>
+          <div class="num">ii.</div>
+          <div><h3>Dates move with the work.</h3><p>Link steps together and a slip in one pushes everything after it. The project’s due date stops being a wish and starts being a forecast.</p></div>
+          <div class="aside">The original date never disappears. Every project keeps its baseline, so you can see <code>Dec 12 → 15</code> and exactly which step caused it.</div>
+        </li>
+        <li>
+          <div class="num">iii.</div>
+          <div><h3>Updates happen where the work is.</h3><p>Comment on a step, attach the file, tick it off. That’s the status update. Nobody writes a separate report.</p></div>
+          <div class="aside">If a step goes a week with no activity, its owner gets one quiet nudge. Not a notification storm — one.</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap split">
+      <div>
+        <div class="eyebrow"><span class="n">02</span><span>The Monday digest</span></div>
+        <h2>Replace the status meeting with a five-minute read.</h2>
+        <p class="muted">Every Monday at 8am, each person gets a short email: what moved, what slipped, and what’s theirs this week. Leads get the same thing across every project they care about.</p>
+        <p class="muted">Teams who switch usually cut their weekly sync to fifteen minutes. A few cancelled it outright.</p>
+      </div>
+      <div class="email" aria-label="Example digest email">
+        <div class="hdr">
+          <b>From:</b> Foreman<br>
+          <b>Subject:</b> Week of Nov 24 — 1 project needs you<br>
+          <b>To:</b> priya@halden.studio
+        </div>
+        <p>Morning, Priya.</p>
+        <h4 class="r">Slipping</h4>
+        <ul>
+          <li><b>Northgate rebrand</b> — now Dec 15 (+3d). Blocked on signage proofs, owned by Dana.</li>
+        </ul>
+        <h4 class="g">On track</h4>
+        <ul>
+          <li>Ferrous Coffee packaging — Jan 9</li>
+          <li>Halden site refresh — Dec 20</li>
+        </ul>
+        <h4>Yours this week</h4>
+        <ul>
+          <li>Brand guidelines PDF (Northgate) — Fri</li>
+          <li>Review dieline v3 (Ferrous) — Wed</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="eyebrow"><span class="n">03</span><span>What we left out</span></div>
+      <h2>Things Foreman doesn’t do, on purpose.</h2>
+      <div class="nots">
+        <div><h3><s>Time tracking</s></h3><p class="muted">Use Harvest or Toggl; we’ll show their hours on the project page. Timers inside a planning tool turn it into a surveillance tool.</p></div>
+        <div><h3><s>Story points</s></h3><p class="muted">Steps have dates and owners. If you need velocity charts, you’re probably a software team and Linear is great.</p></div>
+        <div><h3><s>Chat</s></h3><p class="muted">Comments live on the step they’re about. Everything else belongs in Slack, and we post there if you want us to.</p></div>
+        <div><h3><s>Custom fields, 40 of them</s></h3><p class="muted">You get tags and one free-text field. We’ve watched too many workspaces drown in dropdowns nobody fills in.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <div class="wrap">
+      <blockquote>We used to find out a job was behind when the client emailed asking where it was. Now Dana sees it on Tuesday and calls the printer before lunch.</blockquote>
+      <cite><b>Priya Shah</b>, studio lead at Halden — 14 people, on Foreman since 2023</cite>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="eyebrow"><span class="n">04</span><span>Pricing</span></div>
+      <div class="price-top">
+        <h2 style="margin:0">Priced per seat. Guests are free.</h2>
+        <div class="toggle" role="group" aria-label="Billing period">
+          <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+          <button type="button" data-period="yearly" aria-pressed="true">Yearly (2 months free)</button>
+        </div>
+      </div>
+
+      <div class="plans">
+        <div class="plan">
+          <div class="name"><span>Starter</span></div>
+          <div class="amt">$0</div>
+          <div class="per">Forever, for up to 3 active projects</div>
+          <ul>
+            <li>Unlimited people</li>
+            <li>Linked steps &amp; forecasting</li>
+            <li>Monday digest</li>
+            <li>30 days of history</li>
+          </ul>
+          <a class="btn-ghost" href="#">Start free</a>
+        </div>
+        <div class="plan pick">
+          <div class="name"><span>Studio</span><span class="tag">Most teams</span></div>
+          <div class="amt" data-m="10" data-y="8">$8</div>
+          <div class="per" data-m="per seat / month, billed monthly" data-y="per seat / month, billed yearly">per seat / month, billed yearly</div>
+          <ul>
+            <li>Unlimited projects</li>
+            <li>Client guest access</li>
+            <li>Slack, Harvest &amp; Google Drive</li>
+            <li>Full history &amp; baselines</li>
+          </ul>
+          <a class="btn" href="#">Try Studio for 30 days</a>
+        </div>
+        <div class="plan">
+          <div class="name"><span>Agency</span></div>
+          <div class="amt" data-m="16" data-y="13">$13</div>
+          <div class="per" data-m="per seat / month, billed monthly" data-y="per seat / month, billed yearly">per seat / month, billed yearly</div>
+          <ul>
+            <li>Everything in Studio</li>
+            <li>Workload view across people</li>
+            <li>SSO &amp; audit log</li>
+            <li>A human on the phone</li>
+          </ul>
+          <a class="btn-ghost" href="#">Talk to us</a>
+        </div>
+      </div>
+      <p class="price-note">Seats are counted on the 1st of the month. If someone leaves mid-month, you don’t pay for them next month — no tickets to file. Nonprofits and schools get 50% off; just email us.</p>
+    </div>
+  </section>
+
+  <section id="changelog" class="ruled">
+    <div class="wrap log">
+      <div>
+        <div class="eyebrow"><span class="n">05</span><span>Changelog</span></div>
+        <h2 style="font-size:34px">We ship most weeks.</h2>
+        <a class="link-arrow" href="#">Full history →</a>
+      </div>
+      <dl>
+        <div class="entry"><dt>Nov 18, 2026</dt><dd><span class="pill new">New</span><b>Dependency pushing.</b> Link two steps and a slip in the first moves the second. Baselines are kept.</dd></div>
+        <div class="entry"><dt>Nov 6, 2026</dt><dd><span class="pill new">New</span><b>Harvest hours on project pages.</b> See budget burn next to the timeline without opening another tab.</dd></div>
+        <div class="entry"><dt>Oct 29, 2026</dt><dd><span class="pill fix">Fix</span>Digest emails no longer arrive at 8am UTC for people who set their timezone after signing up. Sorry, Auckland.</dd></div>
+        <div class="entry"><dt>Oct 15, 2026</dt><dd><span class="pill new">New</span><b>Guest comments.</b> Clients can comment on steps you share with them, and nothing else.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="close ruled">
+    <div class="wrap">
+      <h2>Put your messiest project in. See what it says about Friday.</h2>
+      <div class="cta-row" style="margin-top:28px">
+        <a class="btn" href="#">Start a free project</a>
+        <span class="fine" style="margin:0">Takes about four minutes. Bring a CSV if you have one.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="mark" href="#" style="font-size:20px">Foreman</a>
+      <p style="margin-top:14px;max-width:22em">Made by a small team in Rotterdam and Toronto. Independent, profitable, and not going anywhere.</p>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="#how">How it works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#changelog">Changelog</a></li><li><a href="#">Imports</a></li></ul></div>
+    <div><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Jobs (1 open)</a></li></ul></div>
+    <div><h5>Fine print</h5><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li><li><a href="#">Status</a></li></ul></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.toggle button');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.dataset.period === 'monthly' ? 'm' : 'y';
+        buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+        document.querySelectorAll('.plan .amt[data-m]').forEach(function (el) { el.textContent = '$' + el.dataset[key]; });
+        document.querySelectorAll('.plan .per[data-m]').forEach(function (el) { el.textContent = el.dataset[key]; });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/opus-5.5__P5__r1.a1.5fdg006r && python3 -c "import html.parser,sys;p=html.parser.HTMLParser();p.feed(open('index.html').read());print('parsed ok')" && wc -c index.html</parameter>
+</invoke>
+[TOOL_RESULT]
+parsed ok
+ 32404 bytes
+
+I've written the landing page to `index.html`. It's a single file with no external fonts, images or libraries, so it works offline. It parses cleanly, but I haven't checked it in a browser.
+
+The product is a made-up tracker called **Foreman**, aimed at small studios and agencies. To keep it from looking AI-generated, I avoided the usual tells:
+
+- **Look:** warm paper background, a serif headline, monospace labels, thin ruled dividers and one rust-orange accent. There are no purple gradients, frosted glass, emoji icons or grids of feature cards.
+- **Product mockup:** the hero shows a project page built in HTML instead of an abstract illustration. It has real-sounding steps and people, a "3 days late" warning explaining why, and a yellow sticky note from a teammate.
+- **Copy:** concrete instead of vague. The headline is "Find out it's late on *Tuesday*, not Friday." It names specific competitors and tools, shows a sample Monday digest email, and lists what the product deliberately leaves out.
+- **Small human details:** an odd number of plans, notes about mid-month seat billing and nonprofit discounts, a changelog fix that says "Sorry, Auckland," and "Jobs (1 open)" in the footer.
+- **Layout:** numbered sections that vary in structure, plus a dark full-width section for the customer quote.
+
+The only script is a monthly/yearly switch on the pricing section. The layout adapts down to phone width.
+
+To change the product name, people or prices, edit the text directly; the names and numbers appear only in the page content, not in the styling.

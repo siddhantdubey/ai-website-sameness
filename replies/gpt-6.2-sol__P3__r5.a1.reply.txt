@@ -1,0 +1,594 @@
+Save this as `index.html` and open it in a browser. The portfolio uses fictional sample content and built-in landscape illustrations. Replace the sample name, email, and artwork before publishing. Everything runs offline in a single file.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f3ec">
+<title>Avery Vale — Freelance Photographer</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f6f3ec;
+    --ink: #242820;
+    --muted: #535b4e;
+    --line: #cbcabe;
+    --dark: #252d25;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 1rem/1.55 system-ui, sans-serif;
+  }
+  a { color: inherit; text-underline-offset: .22em; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid #ad602a; outline-offset: 5px; }
+  img, canvas { display: block; width: 100%; height: auto; }
+  h1, h2, h3, p, figure { margin: 0; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  h1, h2 { letter-spacing: -.055em; line-height: .98; }
+  [hidden] { display: none !important; }
+  .wrap { width: min(100% - 3rem, 86rem); margin-inline: auto; }
+  .small {
+    font-size: .69rem;
+    font-weight: 650;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+  .skip {
+    position: fixed;
+    z-index: 5;
+    top: 1rem;
+    left: 1rem;
+    padding: .6rem 1rem;
+    background: var(--paper);
+    transform: translateY(-200%);
+  }
+  .skip:focus { transform: none; }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .wordmark {
+    font: 1.65rem/1 var(--serif);
+    letter-spacing: -.05em;
+    text-decoration: none;
+  }
+  nav { display: flex; flex-wrap: wrap; gap: .4rem clamp(.9rem, 3vw, 2.4rem); }
+  nav a { text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+
+  .hero { padding-top: clamp(3.5rem, 8vw, 8rem); }
+  .intro {
+    display: grid;
+    grid-template-columns: 1fr minmax(13rem, 21rem);
+    gap: 1.3rem 3rem;
+    align-items: end;
+    margin-bottom: clamp(1.8rem, 4vw, 3.5rem);
+  }
+  .intro .small { margin-bottom: 1.15rem; color: var(--muted); }
+  h1 { font-size: clamp(4rem, 9.5vw, 9rem); }
+  h1 em { color: #4d5a48; }
+  .intro-copy { max-width: 28ch; padding-bottom: .3rem; color: var(--muted); }
+  .intro-copy a { display: inline-block; margin-top: .9rem; color: var(--ink); }
+  .hero-image {
+    aspect-ratio: 2.15;
+    object-fit: cover;
+    background: #63766f;
+  }
+  .hero figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: .7rem;
+    color: var(--muted);
+  }
+
+  .work { padding-block: clamp(5rem, 10vw, 9rem); }
+  .work-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem;
+    margin-bottom: 1.8rem;
+  }
+  h2 { font-size: clamp(3.15rem, 6.7vw, 6.3rem); }
+  .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .filters button, .viewer-controls button {
+    border: 1px solid var(--line);
+    background: transparent;
+    cursor: pointer;
+    padding: .5rem .9rem;
+  }
+  .filters button[aria-pressed="true"],
+  .filters button:hover,
+  .viewer-controls button:hover {
+    background: var(--dark);
+    border-color: var(--dark);
+    color: var(--paper);
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.8rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.7rem);
+  }
+  .project {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: zoom-in;
+  }
+  .project-image { display: block; overflow: hidden; background: #687361; }
+  .project canvas { aspect-ratio: 1.45; object-fit: cover; transition: transform .45s; }
+  .project:hover canvas { transform: scale(1.035); }
+  .project-caption {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1rem;
+    padding-top: .65rem;
+  }
+  .project-title { font: clamp(1.45rem, 3vw, 2.5rem)/1.1 var(--serif); }
+  .project-caption .small { color: var(--muted); margin-top: .35rem; }
+  .project-arrow { grid-column: 2; grid-row: 1 / span 2; font-size: 1.3rem; }
+
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 3rem;
+    padding-block: clamp(3rem, 7vw, 6rem);
+    border-top: 1px solid var(--line);
+  }
+  .about p { max-width: 47ch; color: var(--muted); }
+  .about p + p { margin-top: 1rem; }
+  .contact {
+    background: var(--dark);
+    color: var(--paper);
+    padding-block: clamp(3rem, 8vw, 7rem) 1.5rem;
+  }
+  .contact .small { margin-bottom: 1.2rem; }
+  .contact h2 { max-width: 15ch; margin-bottom: 1.5rem; }
+  .email { font-size: clamp(1rem, 2.6vw, 1.55rem); overflow-wrap: anywhere; }
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-top: clamp(3rem, 7vw, 6rem);
+    padding-top: 1rem;
+    border-top: 1px solid #667063;
+    color: #e0e2d8;
+  }
+
+  dialog {
+    width: min(60rem, 100% - 2rem);
+    max-height: 94dvh;
+    padding: clamp(.8rem, 3vw, 1.5rem);
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+    overscroll-behavior: contain;
+  }
+  dialog::backdrop { background: rgb(20 24 20 / .84); }
+  .viewer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin-bottom: .75rem;
+  }
+  .viewer-controls .close { margin-left: auto; }
+  .viewer-image { max-height: 63dvh; width: auto; max-width: 100%; margin-inline: auto; }
+  .viewer-caption { padding-top: .85rem; }
+  .viewer-caption h2 { font-size: clamp(1.9rem, 5vw, 3.2rem); }
+  .viewer-caption p { color: var(--muted); margin-top: .45rem; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 670px) {
+    .wrap { width: calc(100% - 2rem); }
+    .intro, .about { grid-template-columns: 1fr; }
+    .hero-image { aspect-ratio: 1.25; }
+    .gallery { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<header class="wrap">
+  <a class="wordmark" href="#top">Avery Vale</a>
+  <nav class="small" aria-label="Main navigation">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="intro">
+      <div>
+        <p class="small">Freelance photographer</p>
+        <h1 id="hero-title">Where the<br><em>light lands.</em></h1>
+      </div>
+      <div class="intro-copy">
+        <p>Editorial and outdoor photography for people with a story rooted in place.</p>
+        <a href="#work">View selected work <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <figure>
+      <canvas class="hero-image" data-scene="coast" width="1440" height="740"
+        role="img" aria-label="Illustration of a dark headland and pale surf under a misty sky">
+        A dark headland and pale surf under a misty sky.
+      </canvas>
+      <figcaption class="small"><span>The Far Shore</span><span>Pacific Northwest</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="work wrap" id="work" aria-labelledby="work-title">
+    <div class="work-heading">
+      <h2 id="work-title">Selected work</h2>
+      <div class="filters" role="group" aria-label="Filter projects" hidden>
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="outdoors" aria-pressed="false">Outdoors</button>
+        <button type="button" data-filter="editorial" aria-pressed="false">Editorial</button>
+      </div>
+    </div>
+    <p id="filter-status" class="sr-only" role="status"></p>
+    <div class="gallery" id="gallery">
+      <article data-category="outdoors" data-description="A study of coastal weather, tidal lines, and the last light over the Pacific.">
+        <button class="project" type="button" aria-labelledby="coast-title">
+          <span class="project-image"><canvas data-scene="coast" width="800" height="552"
+            role="img" aria-label="Misty coastline with surf and a dark headland"></canvas></span>
+          <span class="project-caption">
+            <span class="project-title" id="coast-title">The Far Shore</span>
+            <span class="small">Outdoors · Pacific Northwest</span>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </span>
+        </button>
+      </article>
+      <article data-category="editorial" data-description="A desert travel story framed by long shadows and the warmth of late afternoon.">
+        <button class="project" type="button" aria-labelledby="desert-title">
+          <span class="project-image"><canvas data-scene="desert" width="800" height="552"
+            role="img" aria-label="Layers of sandstone-colored desert ridges in evening light"></canvas></span>
+          <span class="project-caption">
+            <span class="project-title" id="desert-title">A Slower Hour</span>
+            <span class="small">Editorial · American Southwest</span>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </span>
+        </button>
+      </article>
+      <article data-category="outdoors" data-description="An early start in the Cascades, following the ridgeline as the fog lifts.">
+        <button class="project" type="button" aria-labelledby="alpine-title">
+          <span class="project-image"><canvas data-scene="alpine" width="800" height="552"
+            role="img" aria-label="A jagged mountain range beyond a misty evergreen valley"></canvas></span>
+          <span class="project-caption">
+            <span class="project-title" id="alpine-title">Above the Trees</span>
+            <span class="small">Outdoors · Cascade Range</span>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </span>
+        </button>
+      </article>
+      <article data-category="editorial" data-description="A rural travel story about open fields, quiet roads, and the first light of the day.">
+        <button class="project" type="button" aria-labelledby="field-title">
+          <span class="project-image"><canvas data-scene="field" width="800" height="552"
+            role="img" aria-label="Soft morning light over layered green hills and meadow grasses"></canvas></span>
+          <span class="project-caption">
+            <span class="project-title" id="field-title">The Long Way Home</span>
+            <span class="small">Editorial · Willamette Valley</span>
+            <span class="project-arrow" aria-hidden="true">↗</span>
+          </span>
+        </button>
+      </article>
+    </div>
+    <noscript><p>The gallery previews and project viewer require JavaScript.</p></noscript>
+  </section>
+
+  <section class="about wrap" id="about" aria-labelledby="about-title">
+    <h2 id="about-title">Behind the lens</h2>
+    <div>
+      <p>I’m Avery, a freelance photographer based in Portland, Oregon. I work with magazines, outdoor brands, and small teams to tell stories about the places they know best.</p>
+      <p>I’m available for editorial assignments, brand commissions, and image licensing in the Pacific Northwest and beyond.</p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <p class="small">Bookings &amp; licensing</p>
+      <h2 id="contact-title">Let’s talk about your project.</h2>
+      <a class="email" href="mailto:hello@averyvale.example">hello@averyvale.example <span aria-hidden="true">↗</span></a>
+      <footer class="small">
+        <span>© Avery Vale</span>
+        <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-controls">
+    <button type="button" id="previous" aria-label="Previous project">←</button>
+    <button type="button" id="next" aria-label="Next project">→</button>
+    <button type="button" class="close" id="close-viewer" autofocus>Close</button>
+  </div>
+  <canvas class="viewer-image" id="viewer-image" role="img"></canvas>
+  <div class="viewer-caption" aria-live="polite">
+    <h2 id="viewer-title"></h2>
+    <p id="viewer-description"></p>
+  </div>
+</dialog>
+
+<script>
+  const palettes = {
+    coast: {
+      sky: ['#718987', '#ddd3b8'],
+      layers: [
+        ['#78908b', '#a4b2a2', .49, .018, .05],
+        ['#576d67', '#304944', .57, .08, .3],
+        ['#384c44', '#192a25', .65, .10, .8],
+        ['#7d8f82', '#465f58', .76, .026, .09],
+        ['#3d5550', '#253c37', .91, .048, .13]
+      ],
+      accent: '227, 231, 206'
+    },
+    desert: {
+      sky: ['#a87b6f', '#f1c997'],
+      layers: [
+        ['#b77c64', '#9f614d', .48, .075, .35],
+        ['#b76f51', '#844a3e', .59, .085, .5],
+        ['#dd9160', '#a15a43', .68, .095, .18],
+        ['#a7583e', '#733a31', .81, .12, .24],
+        ['#d38959', '#884433', .96, .12, .1]
+      ],
+      accent: '253, 204, 154'
+    },
+    alpine: {
+      sky: ['#6e8995', '#d7ded0'],
+      layers: [
+        ['#8f9e9a', '#c3cbc4', .46, .14, .55],
+        ['#687d7c', '#415b5c', .56, .15, .74],
+        ['#98a7a0', '#627a73', .68, .055, .24],
+        ['#405b51', '#27423a', .78, .09, .4],
+        ['#283e37', '#172d28', .90, .105, .44]
+      ],
+      accent: '202, 217, 198'
+    },
+    field: {
+      sky: ['#9aa6a0', '#efdbad'],
+      layers: [
+        ['#acac7e', '#878d64', .50, .065, .09],
+        ['#7a865e', '#5a704f', .61, .105, .1],
+        ['#a0a26b', '#748156', .72, .12, .1],
+        ['#6c784d', '#485837', .85, .082, .12],
+        ['#8c8b56', '#525636', .96, .065, .17]
+      ],
+      accent: '239, 219, 158'
+    }
+  };
+
+  // Render the sample artwork locally so the page has no asset dependencies.
+  function paintLandscape(canvas) {
+    const scene = canvas.dataset.scene;
+    const { sky, layers, accent } = palettes[scene];
+    const ctx = canvas.getContext('2d');
+    const { width, height } = canvas;
+    let seed = [...scene].reduce((value, letter) => value * 31 + letter.charCodeAt(0), 17);
+    function random() {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+
+    function gradient(top, bottom, start = 0) {
+      const fill = ctx.createLinearGradient(0, start * height, 0, height);
+      fill.addColorStop(0, top);
+      fill.addColorStop(1, bottom);
+      return fill;
+    }
+
+    ctx.fillStyle = gradient(...sky);
+    ctx.fillRect(0, 0, width, height);
+    const glow = ctx.createRadialGradient(width * .69, height * .34, 0,
+      width * .69, height * .34, width * .58);
+    glow.addColorStop(0, `rgba(${accent}, .65)`);
+    glow.addColorStop(1, `rgba(${accent}, 0)`);
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < 105; i++) {
+      const x = random() * width;
+      const y = random() * height * .52;
+      const radius = width * (.035 + random() * .17);
+      const haze = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+      haze.addColorStop(0, `rgba(${accent}, ${random() * .07})`);
+      haze.addColorStop(1, `rgba(${accent}, 0)`);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, .06 + random() * .12);
+      ctx.fillStyle = haze;
+      ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
+      ctx.restore();
+    }
+
+    layers.forEach(([top, bottom, level, amplitude, roughness], index) => {
+      const phase = random() * 6;
+      const points = [];
+      const count = 250;
+      ctx.beginPath();
+      for (let i = 0; i <= count; i++) {
+        const x = i / count;
+        const broad = Math.sin(x * (5 + index * .9) + phase) * .66;
+        const fine = Math.sin(x * 19 + phase) * .18;
+        const edge = (Math.sin(x * 82 + phase) * .38 + (random() - .5) * .26) * roughness;
+        const coastSlope = scene === 'coast' && index === 2 ? x * .24 - .12 : 0;
+        const y = (level + amplitude * (broad + fine + edge) + coastSlope) * height;
+        points.push(y);
+        if (i === 0) ctx.moveTo(0, y);
+        else ctx.lineTo(x * width, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = gradient(top, bottom, Math.max(0, level - amplitude));
+      ctx.fill();
+
+      ctx.save();
+      ctx.clip();
+      for (let i = 0; i < 950; i++) {
+        const x = random() * width;
+        const ridge = points[Math.floor(x / width * count)];
+        const y = ridge + random() * (height - ridge);
+        const length = 2 + random() * width * (scene === 'coast' ? .085 : .045);
+        ctx.strokeStyle = i % 3 === 0
+          ? `rgba(20, 24, 20, ${random() * .12})`
+          : `rgba(${accent}, ${random() * .14})`;
+        ctx.lineWidth = .4 + random() * 1.3;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + length * .35, y - length * .04,
+          x + length, y + length * (scene === 'desert' ? -.13 : .016));
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      if (scene === 'alpine' && index >= 3) {
+        for (let i = 0; i < 260; i++) {
+          const x = random() * width;
+          const y = points[Math.floor(x / width * count)] + random() * height * .055;
+          const size = (2 + random() * 15) * width / 800;
+          ctx.fillStyle = random() < .6 ? bottom : top;
+          ctx.beginPath();
+          ctx.moveTo(x, y - size);
+          ctx.lineTo(x - size * .24, y + size * .13);
+          ctx.lineTo(x + size * .24, y + size * .13);
+          ctx.fill();
+        }
+      }
+    });
+
+    if (scene === 'coast') {
+      for (let i = 0; i < 9; i++) {
+        const y = height * (.777 + i * .011);
+        ctx.strokeStyle = `rgba(${accent}, ${.1 + random() * .23})`;
+        ctx.lineWidth = .7 + random() * 1.5;
+        ctx.setLineDash([2 + random() * 14, 2 + random() * 18]);
+        ctx.beginPath();
+        ctx.moveTo(-10, y + height * .13);
+        ctx.bezierCurveTo(width * .34, y - height * .015, width * .66, y + height * .04, width + 10, y - height * .08);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    if (scene === 'field') {
+      for (let i = 0; i < 410; i++) {
+        const x = random() * width;
+        const y = height * (.87 + random() * .17);
+        const size = (3 + random() * 22) * width / 800;
+        ctx.strokeStyle = i % 3 === 0 ? 'rgba(236, 211, 146, .47)' : 'rgba(43, 56, 30, .4)';
+        ctx.lineWidth = .7;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x, y - size * .6, x + size * .3, y - size);
+        ctx.stroke();
+      }
+    }
+
+    const pixels = ctx.getImageData(0, 0, width, height);
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const grain = (random() - .5) * 23;
+      for (let channel = 0; channel < 3; channel++) pixels.data[i + channel] += grain;
+    }
+    ctx.putImageData(pixels, 0, 0);
+  }
+
+  document.querySelectorAll('canvas[data-scene]').forEach(paintLandscape);
+
+  const filters = [...document.querySelectorAll('[data-filter]')];
+  const projects = [...document.querySelectorAll('#gallery article')];
+  const viewer = document.querySelector('#viewer');
+  const viewerImage = document.querySelector('#viewer-image');
+  const viewerTitle = document.querySelector('#viewer-title');
+  const viewerDescription = document.querySelector('#viewer-description');
+  const previous = document.querySelector('#previous');
+  const next = document.querySelector('#next');
+  let visibleProjects = projects;
+  let activeIndex = 0;
+  let opener;
+
+  document.querySelector('.filters').hidden = false;
+  filters.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.dataset.filter;
+      filters.forEach(filter => filter.setAttribute('aria-pressed', String(filter === button)));
+      visibleProjects = projects.filter(project => {
+        project.hidden = category !== 'all' && project.dataset.category !== category;
+        return !project.hidden;
+      });
+      document.querySelector('#filter-status').textContent =
+        `${visibleProjects.length} projects shown.`;
+    });
+  });
+
+  function showProject(index) {
+    activeIndex = (index + visibleProjects.length) % visibleProjects.length;
+    const project = visibleProjects[activeIndex];
+    const source = project.querySelector('canvas');
+    viewerImage.width = source.width;
+    viewerImage.height = source.height;
+    viewerImage.getContext('2d').drawImage(source, 0, 0);
+    viewerImage.setAttribute('aria-label', source.getAttribute('aria-label'));
+    viewerTitle.textContent = project.querySelector('.project-title').textContent;
+    viewerDescription.textContent = project.dataset.description;
+    previous.disabled = next.disabled = visibleProjects.length < 2;
+  }
+
+  projects.forEach(project => {
+    const trigger = project.querySelector('button');
+    trigger.addEventListener('click', () => {
+      opener = trigger;
+      showProject(visibleProjects.indexOf(project));
+      viewer.showModal();
+    });
+  });
+
+  previous.addEventListener('click', () => showProject(activeIndex - 1));
+  next.addEventListener('click', () => showProject(activeIndex + 1));
+  document.querySelector('#close-viewer').addEventListener('click', () => viewer.close());
+  viewer.addEventListener('close', () => opener?.focus());
+  viewer.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      showProject(activeIndex + (event.key === 'ArrowLeft' ? -1 : 1));
+    }
+  });
+</script>
+</body>
+</html>
+```

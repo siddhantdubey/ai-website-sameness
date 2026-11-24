@@ -1,0 +1,324 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f1e7">
+  <meta name="description" content="Casa Rosa — handmade pasta, good wine, and a place at the table. Your neighborhood Italian kitchen.">
+  <title>Casa Rosa — Your Neighborhood Italian Kitchen</title>
+  <style>
+    @import url('data:text/css,');
+    :root{--cream:#f6f1e7;--ink:#292d23;--red:#a43227;--line:#d9d3c6;--olive:#656d43}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+    a{color:inherit}
+    button,a{-webkit-tap-highlight-color:transparent}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--olive);outline-offset:5px}
+    .wrap{width:min(1280px,90%);margin:auto}
+    .announcement{text-align:center;background:var(--red);color:var(--cream);font-size:11px;letter-spacing:1.8px;padding:11px 16px;text-transform:uppercase}
+    header{border-bottom:1px solid var(--line)}
+    nav{min-height:100px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo{text-decoration:none;font-family:Georgia,serif;font-size:36px;font-weight:bold;letter-spacing:-2px;color:var(--red)}
+    .logo span{font-weight:normal;font-style:italic}
+    .nav-links{display:flex;align-items:center;gap:32px}
+    .nav-links a{text-decoration:none;font-size:12px;font-weight:bold}
+    .nav-links a:not(.button):hover{text-decoration:underline;text-underline-offset:5px}
+    .button{display:inline-flex;align-items:center;justify-content:center;gap:24px;background:var(--red);color:var(--cream);padding:17px 24px;text-decoration:none;font-size:12px;font-weight:bold;border:1px solid var(--red);transition:background .2s}
+    .button:hover{background:#80271f}
+    .button.outline{background:transparent;color:var(--red)}
+    .button.outline:hover{background:#ece1d4}
+    .eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:2px;font-weight:bold}
+    .hero{display:grid;grid-template-columns:1fr 1fr;min-height:655px;align-items:center;gap:30px;padding:56px 0 64px}
+    .hero-copy{padding-right:25px}
+    .hero .eyebrow{display:flex;align-items:center;gap:12px;color:var(--red)}
+    .hero .eyebrow:before{content:"";width:27px;height:1px;background:var(--red)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(64px,6.8vw,100px);font-weight:normal;letter-spacing:-5px;line-height:1.02;margin:28px 0}
+    h1 em{color:var(--red);font-weight:normal}
+    .intro{max-width:360px;font-size:15px;line-height:1.8;color:#65675e}
+    .hero-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+    .hero-note{display:flex;gap:10px;align-items:center;font-size:11px;margin-top:30px;color:#65675e}
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--olive)}
+    .art{position:relative;align-self:stretch;display:grid;place-items:center;background:#e8c9a5;border-radius:48% 48% 3px 3px;overflow:hidden;min-height:520px}
+    .art svg{display:block;width:100%;height:100%;position:absolute;inset:0}
+    .art-caption{position:absolute;bottom:20px;left:25px;right:25px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:1px;color:#563921}
+    .stamp{position:absolute;right:8px;top:22px;width:112px;height:112px;border-radius:50%;background:var(--red);color:var(--cream);display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(12deg);font-family:Georgia,serif;font-size:19px;line-height:1.15;border:1px dashed #e6b1a0;outline:6px solid var(--red)}
+    .ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:23px 0;display:flex;align-items:center;justify-content:space-around;gap:20px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--red)}
+    .ticker span:nth-child(even){font-size:17px}
+    section{padding:90px 0}
+    .section-heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}
+    h2{font-family:Georgia,serif;font-size:clamp(38px,4vw,54px);font-weight:normal;letter-spacing:-2px;line-height:1.1;margin:13px 0 0}
+    .section-heading>p{font-size:13px;color:#65675e;max-width:285px;line-height:1.8;margin-bottom:0}
+    .menu-top{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);margin-bottom:10px}
+    .tabs{display:flex;gap:28px}
+    .tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:17px 0;color:#74766a;font:inherit;font-size:12px;cursor:pointer}
+    .tabs button[aria-selected="true"]{border-color:var(--red);color:var(--red);font-weight:bold}
+    .menu-note{font-size:10px;color:#74766a}
+    .menu-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:64px}
+    .dish{padding:25px 0;border-bottom:1px solid var(--line)}
+    .dish-title{display:flex;justify-content:space-between;gap:20px;align-items:baseline}
+    .dish h3{font-family:Georgia,serif;font-size:23px;font-weight:normal;margin-bottom:9px}
+    .price{font-size:12px;color:var(--red)}
+    .dish p{font-size:12px;color:#737569;line-height:1.7;margin:0}
+    .menu-footer{margin-top:24px;font-size:11px;color:#74766a}
+    .story{background:#eae9de;padding:0}
+    .story-inner{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;padding:68px 0}
+    .story-illustration{position:relative;min-height:350px;display:grid;place-items:center;border:1px solid #c9cbb9}
+    .story-illustration:before{content:"";position:absolute;inset:10px;border:1px solid #c9cbb9}
+    .story-illustration svg{width:90%;max-height:300px}
+    .story-copy p{font-size:14px;color:#676d5a;line-height:1.9;margin:22px 0}
+    .signature{font-family:Georgia,serif;font-size:26px;font-style:italic;color:var(--red)}
+    .visit{display:grid;grid-template-columns:1fr 1fr;gap:80px}
+    .visit-copy>p{font-size:14px;line-height:1.8;color:#737569;max-width:330px;margin:22px 0 27px}
+    .details{display:grid;grid-template-columns:1fr 1fr;gap:35px;padding-top:10px}
+    .details h3{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--red);margin-bottom:16px}
+    .details p{font-size:13px;line-height:1.9;margin-bottom:12px}
+    .details a{text-underline-offset:4px}
+    .hours{grid-column:1/-1;border-top:1px solid var(--line);padding-top:25px}
+    .hours-row{display:flex;justify-content:space-between;gap:15px;font-size:12px;margin:12px 0}
+    footer{background:var(--red);color:var(--cream);padding:35px 0}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    footer .logo{color:var(--cream);font-size:30px}
+    footer p{margin:0;font-size:10px;letter-spacing:.5px}
+    @media(min-width:1450px){.hero{min-height:730px}}
+    @media(max-width:800px){
+      nav{min-height:85px}.nav-links{gap:20px}.nav-links .button{padding:13px 16px}
+      .hero{gap:24px;padding:40px 0}.hero-copy{padding:0}h1{font-size:66px;letter-spacing:-3px}.art{min-height:480px}
+      .stamp{width:85px;height:85px;font-size:15px;right:7px}.hero-actions .button{padding:15px 18px}
+      .story-inner{gap:35px}.menu-grid{column-gap:30px}.visit{gap:35px}
+    }
+    @media(max-width:600px){
+      .announcement{font-size:9px;letter-spacing:1px}.logo{font-size:30px}.nav-links{gap:15px}
+      .nav-links a{font-size:11px}.nav-links a:nth-child(2){display:none}.nav-links .button{padding:11px}
+      .hero{grid-template-columns:1fr;padding-top:35px;gap:35px}.hero-copy{max-width:440px}h1{font-size:70px;margin:23px 0}
+      .intro{max-width:310px}.hero-note{margin-top:22px}.art{min-height:430px}.stamp{right:17px;top:25px;width:95px;height:95px}
+      .ticker{font-size:8px;letter-spacing:.7px;gap:8px;padding:19px 0}.ticker span:nth-child(even){font-size:12px}
+      section{padding:60px 0}.section-heading{display:block}.section-heading>p{margin-top:20px;max-width:320px}
+      .menu-note{display:none}.tabs{gap:28px}.menu-grid{grid-template-columns:1fr}
+      .story-inner,.visit{grid-template-columns:1fr;gap:35px}.story-inner{padding:40px 0}.story-illustration{min-height:300px}
+      .story-copy{padding:8px 0 10px}.details{gap:25px}.footer-inner{align-items:start;flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="announcement">A little Italy. A lot of heart. • Dinner Tuesday–Sunday</div>
+  <header>
+    <nav class="wrap" aria-label="Main navigation">
+      <a class="logo" href="#" aria-label="Casa Rosa home">casa <span>rosa</span></a>
+      <div class="nav-links">
+        <a href="#menu">The menu</a>
+        <a href="#story">Our story</a>
+        <a class="button" href="#visit">Come on over <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero wrap">
+      <div class="hero-copy">
+        <div class="eyebrow">Your neighborhood Italian kitchen</div>
+        <h1>Good food.<br>Better <em>company.</em></h1>
+        <p class="intro">Handmade pasta. Another glass of wine. The kind of evening you wish would last a little longer.</p>
+        <div class="hero-actions">
+          <a class="button" href="#visit">Find your table <span aria-hidden="true">↗</span></a>
+          <a class="button outline" href="#menu">Explore the menu</a>
+        </div>
+        <div class="hero-note"><span class="dot" aria-hidden="true"></span> Made with care. Served like family.</div>
+      </div>
+      <div class="art">
+        <svg viewBox="0 0 600 620" role="img" aria-label="Illustration of fresh tomato pasta on a ceramic plate, with basil and a fork" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="cloth" width="46" height="46" patternUnits="userSpaceOnUse" patternTransform="rotate(-17)">
+              <rect width="46" height="46" fill="#e5b995"/>
+              <path d="M0 0H46M0 0V46" stroke="#f4d8b8" stroke-width="17" opacity=".55"/>
+            </pattern>
+            <radialGradient id="plate"><stop stop-color="#fff9e9"/><stop offset=".75" stop-color="#f3e9d3"/><stop offset="1" stop-color="#d4c9ae"/></radialGradient>
+            <filter id="shadow"><feDropShadow dx="4" dy="13" stdDeviation="12" flood-color="#664523" flood-opacity=".23"/></filter>
+          </defs>
+          <rect width="600" height="620" fill="url(#cloth)"/>
+          <path d="M-35 450L210 620H-35Z" fill="#eee7d5" opacity=".85"/>
+          <g filter="url(#shadow)" transform="rotate(-12 300 315)">
+            <circle cx="300" cy="315" r="238" fill="url(#plate)"/>
+            <circle cx="300" cy="315" r="219" fill="none" stroke="#8b9a79" stroke-width="3"/>
+            <circle cx="300" cy="315" r="208" fill="none" stroke="#8b9a79" stroke-width="1"/>
+            <circle cx="300" cy="315" r="174" fill="#ded2ae"/>
+            <circle cx="300" cy="315" r="166" fill="#a44025"/>
+            <g fill="none" stroke-linecap="round">
+              <path d="M198 229C350 169 445 292 290 315S165 425 344 414 422 277 251 275 191 370 383 355" stroke="#d98e37" stroke-width="23"/>
+              <path d="M177 307C234 207 419 209 400 316S238 407 215 349 322 246 356 306 290 431 208 380" stroke="#edb35a" stroke-width="20"/>
+              <path d="M255 176C187 240 321 254 370 276S433 389 302 430M167 332C208 295 350 345 362 382M231 234C283 202 407 329 301 365S236 287 278 278" stroke="#f0bd65" stroke-width="17"/>
+              <path d="M198 229C350 169 445 292 290 315S165 425 344 414M177 307C234 207 419 209 400 316M231 234C283 202 407 329 301 365" stroke="#ffd68b" stroke-width="4" opacity=".7"/>
+            </g>
+            <g fill="#b33520">
+              <path d="M186 259q32-32 55 6l-17 29-35-7Z"/><path d="M334 362q43-23 54 14l-24 26-30-14Z"/>
+              <path d="M338 226q22-24 43-3l-7 26-29 1Z"/><path d="M237 398l33-15 16 28-36 13Z"/>
+            </g>
+            <g fill="#f7e7b3">
+              <path d="M248 242l35-8-16 17Z"/><path d="M321 383l31-12-8 20Z"/><path d="M207 328l25-10 7 12Z"/><path d="M358 291l27-9-10 18Z"/>
+              <path d="M277 351l25-5-9 14Z"/><path d="M285 205l25 7-19 5Z"/>
+            </g>
+            <g fill="#48673b" stroke="#314e29" stroke-width="1.5">
+              <path d="M307 291Q256 226 277 210Q330 224 307 291Z"/>
+              <path d="M307 291Q319 220 360 228Q356 275 307 291Z"/>
+              <path d="M307 291Q355 267 370 298Q337 322 307 291Z"/>
+              <path d="M307 291l-9 29" fill="none" stroke-width="4"/>
+            </g>
+            <g fill="#374426">
+              <circle cx="217" cy="248" r="2"/><circle cx="259" cy="376" r="2"/><circle cx="377" cy="337" r="2"/><circle cx="290" cy="323" r="2"/><circle cx="325" cy="215" r="2"/><circle cx="209" cy="356" r="2"/>
+            </g>
+          </g>
+          <g transform="translate(505 75) rotate(17)" stroke="#6e6657" stroke-linecap="round">
+            <path d="M0 0V70Q0 86 14 90V240" fill="none" stroke-width="9"/>
+            <path d="M10 0V63M21 0V63M31 0V70Q31 86 14 90" fill="none" stroke-width="5"/>
+          </g>
+        </svg>
+        <div class="stamp" aria-hidden="true">Pasta fatta<br>a mano<br>✶</div>
+        <div class="art-caption"><span>A TASTE OF THE GOOD LIFE</span><span>BUON APPETITO!</span></div>
+      </div>
+    </div>
+
+    <div class="ticker" aria-label="Fresh pasta, seasonal ingredients, Italian hospitality">
+      <span>Pasta made daily</span><span aria-hidden="true">✳</span>
+      <span>Seasonal & simple</span><span aria-hidden="true">✳</span>
+      <span>Everyone’s welcome</span>
+    </div>
+
+    <section class="wrap" id="menu">
+      <div class="section-heading">
+        <div><div class="eyebrow">From our kitchen</div><h2>A few house favorites.</h2></div>
+        <p>Rooted in tradition, inspired by the season. Always best shared across the table.</p>
+      </div>
+      <div class="menu-top">
+        <div class="tabs" role="tablist" aria-label="Menu categories">
+          <button id="tab-pasta" role="tab" aria-selected="true" aria-controls="menu-panel" data-menu="pasta">La pasta</button>
+          <button id="tab-start" role="tab" aria-selected="false" aria-controls="menu-panel" tabindex="-1" data-menu="start">To start</button>
+          <button id="tab-sweet" role="tab" aria-selected="false" aria-controls="menu-panel" tabindex="-1" data-menu="sweet">Something sweet</button>
+        </div>
+        <span class="menu-note">Made from scratch. Every single day.</span>
+      </div>
+      <div class="menu-grid" id="menu-panel" role="tabpanel" aria-labelledby="tab-pasta" tabindex="0">
+        <article class="dish"><div class="dish-title"><h3>Tagliatelle al Ragù</h3><span class="price">$24</span></div><p>Slow-braised beef & pork, San Marzano tomato, Parmigiano.</p></article>
+        <article class="dish"><div class="dish-title"><h3>Rigatoni alla Vodka</h3><span class="price">$22</span></div><p>Tomato cream, a little chili, fresh basil, a generous finish of Parmesan.</p></article>
+        <article class="dish"><div class="dish-title"><h3>Ravioli di Ricotta</h3><span class="price">$25</span></div><p>Ricotta & spinach pillows, brown butter, crispy sage.</p></article>
+        <article class="dish"><div class="dish-title"><h3>Spaghetti alle Vongole</h3><span class="price">$27</span></div><p>Littleneck clams, white wine, garlic, parsley & lemon.</p></article>
+      </div>
+      <p class="menu-footer">A little something for everyone. Please tell us about any allergies when you order.</p>
+    </section>
+
+    <section class="story" id="story">
+      <div class="story-inner wrap">
+        <div class="story-illustration">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Line drawing of a welcoming Italian restaurant with striped awning">
+            <g fill="none" stroke="#66704e" stroke-width="2">
+              <path d="M54 267H386M85 267V89H355V267M76 89H364L345 47H95Z"/>
+              <path d="M86 89v14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89m0 14q14 17 28 0V89"/>
+              <path d="M110 48L99 89m40-41-12 41m43-41-15 41m43-41-15 41m43-41-15 41m43-41-15 41m43-41-15 41m43-41-15 41"/>
+              <path d="M191 267V157a29 29 0 0 1 58 0v110M113 147h53v70h-53zM275 147h53v70h-53zM139 147v70m-26-35h53m135-35v70m-26-35h53M198 260h44"/>
+              <circle cx="236" cy="212" r="2"/>
+              <path d="M104 240h68m-57 0-7 27m52-27 7 27M280 240h59m-50 0-6 27m47-27 6 27"/>
+              <path d="M63 267l-7-42h30l-7 42M65 225q-27-37-11-42 20 0 17 42 4-56 20-46 10 14-17 46M356 267l-5-35h28l-7 35m-7-35q-25-36-10-37 15 2 10 37 7-47 20-34 4 13-20 34"/>
+            </g>
+            <text x="220" y="76" text-anchor="middle" fill="#f6f1e7" stroke="#66704e" stroke-width="12" paint-order="stroke" font-family="Georgia,serif" font-size="25">casa rosa</text>
+          </svg>
+        </div>
+        <div class="story-copy">
+          <div class="eyebrow">A seat at our table</div>
+          <h2>A little place.<br>A big Italian heart.</h2>
+          <p>We believe the best meals aren’t complicated. A handful of good ingredients, recipes passed around the family, and enough room for one more.</p>
+          <p>Casa Rosa is our love letter to the neighborhood: a place for first dates, family Sundays, and those lovely, ordinary Tuesdays.</p>
+          <div class="signature">Con amore, Casa Rosa</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="visit wrap" id="visit">
+      <div class="visit-copy">
+        <div class="eyebrow">We’ll put the kettle on. Or open the wine.</div>
+        <h2>Your table is waiting.</h2>
+        <p>Bring your favorite people and a healthy appetite. Walk-ins are always welcome. For reservations, give us a ring.</p>
+        <a class="button" href="tel:+12125550148">Call to reserve <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="details">
+        <div><h3>Find us</h3><p>148 Thompson Street<br>New York, NY 10012</p><a href="https://www.google.com/maps/search/?api=1&query=148+Thompson+Street+New+York+NY+10012" target="_blank" rel="noopener noreferrer" style="font-size:12px">Get directions ↗</a></div>
+        <div><h3>Say ciao</h3><p><a href="tel:+12125550148">(212) 555-0148</a><br><a href="mailto:ciao@casarosa.example">ciao@casarosa.example</a></p><p>Good food. No dress code.</p></div>
+        <div class="hours"><h3>When we’re cooking</h3><div class="hours-row"><span>Tuesday–Thursday</span><span>5–9:30 pm</span></div><div class="hours-row"><span>Friday–Saturday</span><span>5–10:30 pm</span></div><div class="hours-row"><span>Sunday</span><span>4–9 pm</span></div><div class="hours-row"><span>Monday</span><span>A little rest</span></div></div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-inner wrap">
+      <a class="logo" href="#">casa <span>rosa</span></a>
+      <p>Handmade pasta. Heartfelt hospitality.</p>
+      <p>© <span id="year">2026</span> Casa Rosa • Fictional restaurant concept</p>
+    </div>
+  </footer>
+  <script>
+    const menus = {
+      pasta: [
+        ["Tagliatelle al Ragù","24","Slow-braised beef & pork, San Marzano tomato, Parmigiano."],
+        ["Rigatoni alla Vodka","22","Tomato cream, a little chili, fresh basil, a generous finish of Parmesan."],
+        ["Ravioli di Ricotta","25","Ricotta & spinach pillows, brown butter, crispy sage."],
+        ["Spaghetti alle Vongole","27","Littleneck clams, white wine, garlic, parsley & lemon."]
+      ],
+      start: [
+        ["Burrata e Pomodori","16","Creamy burrata, seasonal tomatoes, basil & extra virgin olive oil."],
+        ["Arancini","12","Golden risotto balls, melted mozzarella & tomato sauce."],
+        ["Insalata della Casa","13","Little gem lettuce, shaved fennel, olives & lemon dressing."],
+        ["Focaccia Calda","8","Warm house-baked focaccia, rosemary & good olive oil."]
+      ],
+      sweet: [
+        ["Tiramisù della Casa","11","Espresso-soaked ladyfingers, mascarpone & cocoa."],
+        ["Panna Cotta","10","Vanilla cream, seasonal fruit & a little citrus."],
+        ["Cannoli","10","Crisp pastry shells, sweet ricotta & dark chocolate."],
+        ["Affogato","8","Vanilla gelato with a warm shot of espresso."]
+      ]
+    };
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const panel = document.getElementById("menu-panel");
+    function selectTab(tab) {
+      tabs.forEach(item => {
+        const selected = item === tab;
+        item.setAttribute("aria-selected", String(selected));
+        item.tabIndex = selected ? 0 : -1;
+      });
+      panel.setAttribute("aria-labelledby", tab.id);
+      panel.replaceChildren(...menus[tab.dataset.menu].map(([name, price, description]) => {
+        const article = document.createElement("article");
+        article.className = "dish";
+        const title = document.createElement("div");
+        title.className = "dish-title";
+        const heading = document.createElement("h3");
+        heading.textContent = name;
+        const amount = document.createElement("span");
+        amount.className = "price";
+        amount.textContent = "$" + price;
+        const copy = document.createElement("p");
+        copy.textContent = description;
+        title.append(heading, amount);
+        article.append(title, copy);
+        return article;
+      }));
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => selectTab(tab));
+      tab.addEventListener("keydown", event => {
+        let next;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = tabs.length - 1;
+        if (next !== undefined) {
+          event.preventDefault();
+          tabs[next].focus();
+          selectTab(tabs[next]);
+        }
+      });
+    });
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+```

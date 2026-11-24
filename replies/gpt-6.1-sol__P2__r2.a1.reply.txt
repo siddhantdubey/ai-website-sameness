@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f0e6">
+<title>Casa Lucia — A little taste of home</title>
+<style>
+@import url('data:text/css,');
+:root{--paper:#f5f0e6;--ink:#303b2e;--red:#a83828;--line:#cdcdbb;--green:#334534}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--red);outline-offset:5px}
+.wrap{max-width:1320px;margin:auto;padding:0 6%}
+.topline{text-align:center;background:var(--green);color:var(--paper);padding:10px 18px;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center;padding-top:29px;padding-bottom:27px;border-bottom:1px solid var(--line);gap:25px}
+.logo{text-decoration:none;font-family:Georgia,serif;font-size:34px;font-weight:bold;letter-spacing:-1.8px;white-space:nowrap}
+.logo span{font-weight:normal;font-style:italic}
+nav{display:flex;align-items:center;gap:31px}
+nav a{font-size:11px;letter-spacing:1.3px;text-decoration:none;text-transform:uppercase}
+nav a:hover{text-decoration:underline;text-underline-offset:5px}
+.button{display:inline-flex;justify-content:center;align-items:center;gap:25px;padding:16px 23px;background:var(--red);border:1px solid var(--red);color:#fff9ed;text-decoration:none;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer}
+.button:hover{background:#8c2d21}
+.button.outline{background:transparent;border-color:var(--ink);color:var(--ink)}
+.button.outline:hover{background:#e8e4d8}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:6%;align-items:center;padding-top:56px;padding-bottom:61px}
+.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:2px;font-weight:bold;display:flex;align-items:center;gap:12px}
+.eyebrow:before{content:"";width:26px;height:1px;background:currentColor}
+h1,h2,h3,p{margin:0}
+h1{font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:clamp(54px,6.1vw,88px);line-height:1.04;letter-spacing:-4px;margin:28px 0 25px}
+h1 em{color:var(--red);font-weight:normal}
+.intro{font-size:14px;line-height:1.9;max-width:340px;color:#666b5f}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:31px}
+.hero-note{display:flex;align-items:center;gap:12px;margin-top:34px;font-size:10px;letter-spacing:.5px}
+.hero-note span{font-size:22px;color:var(--red)}
+.hero-art{position:relative}
+.art-frame{overflow:hidden;border-radius:48% 48% 2px 2px;background:#d9b386;aspect-ratio: .94}
+.art-frame svg{width:100%;height:100%;display:block}
+.seal{position:absolute;right:-18px;bottom:31px;width:104px;height:104px;background:var(--paper);border:1px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(12deg);color:var(--red);box-shadow:0 0 0 6px var(--paper);font-size:9px;line-height:1.8;letter-spacing:1.6px}
+.seal b{font:italic 31px Georgia,serif;letter-spacing:0}
+.ribbon{border-block:1px solid var(--line);display:flex;justify-content:space-around;gap:18px;padding:20px 0;font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.ribbon span{color:var(--red)}
+.menu-section{padding-top:65px;padding-bottom:65px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px}
+h2{font:normal 43px/1.15 Georgia,serif;letter-spacing:-1.5px;margin-top:15px}
+.section-head>p{font-size:12px;line-height:1.8;color:#737669;max-width:250px}
+.tabs{display:flex;gap:27px;margin:29px 0 0;border-bottom:1px solid var(--line)}
+.tab{border:0;border-bottom:2px solid transparent;background:none;padding:12px 0;color:#75796c;font-size:11px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--red);border-color:var(--red)}
+.dishes{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding-top:27px}
+.dish{border-bottom:1px solid var(--line);padding-bottom:26px}
+.dish-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+h3{font:normal 21px Georgia,serif}
+.price{font:italic 17px Georgia,serif;color:var(--red)}
+.dish p{font-size:12px;color:#737669;line-height:1.8;margin-top:12px}
+.story{background:var(--green);color:var(--paper);padding:47px 6%;display:grid;grid-template-columns:.75fr 1.25fr;gap:10%;align-items:center}
+.story-mark{font:italic 82px Georgia,serif;text-align:center;color:#d9d8b5}
+.story-mark small{display:block;font:9px Arial,sans-serif;letter-spacing:3px;margin-top:13px;text-transform:uppercase}
+.story h2{font-size:35px;margin:0 0 18px}
+.story p{max-width:490px;color:#d1d5c6;font-size:13px;line-height:1.9}
+.visit{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:45px;padding-top:59px;padding-bottom:59px}
+.visit h2{margin-top:0;font-size:38px}
+.visit h3{font:10px Arial,sans-serif;letter-spacing:1.8px;text-transform:uppercase;margin:5px 0 18px}
+.visit p,.visit a{font-size:12px;line-height:1.9}
+.visit .small{color:#777b6c;font-size:11px;margin-top:13px}
+footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;padding-top:23px!important;padding-bottom:23px!important;gap:16px;color:#7b7e70;font-size:10px}
+dialog{background:var(--paper);border:1px solid var(--ink);color:var(--ink);padding:38px;max-width:440px;width:calc(100% - 32px)}
+dialog::backdrop{background:#172519a8}
+dialog h2{margin:10px 0 20px}
+dialog p{font-size:14px;line-height:1.8;margin-bottom:25px}
+.close{float:right;border:0;background:none;font-size:26px;cursor:pointer;color:var(--ink)}
+@media(min-width:1500px){.hero{gap:9%}}
+@media(max-width:760px){
+.wrap{padding-left:7%;padding-right:7%}
+header{padding-top:21px;padding-bottom:21px}.logo{font-size:29px}
+nav{gap:15px}nav a{display:none}nav .button{display:inline-flex;padding:12px;font-size:9px}
+.hero{grid-template-columns:1fr;padding-top:37px;gap:38px}
+h1{font-size:66px;letter-spacing:-3px}.intro{max-width:380px}
+.hero-art{max-width:480px;width:100%;margin:auto}.art-frame{aspect-ratio:1.06}
+.seal{right:-8px;width:90px;height:90px}
+.ribbon{font-size:9px;letter-spacing:.7px;flex-wrap:wrap;justify-content:center;gap:13px}.ribbon .extra{display:none}
+.section-head{display:block}.section-head>p{margin-top:17px;max-width:100%}
+h2{font-size:37px}.dishes{grid-template-columns:1fr;gap:24px}
+.story{grid-template-columns:1fr;gap:31px;padding:40px 7%}.story-mark{font-size:65px}
+.visit{grid-template-columns:1fr 1fr;gap:30px}.visit>div:first-child{grid-column:1/-1}
+footer{flex-wrap:wrap;line-height:1.7}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="topline">Good food. Good company. Always room for one more.</div>
+<div class="wrap">
+<header>
+<a class="logo" href="#" aria-label="Casa Lucia home">casa <span>lucia</span><span style="color:var(--red)">.</span></a>
+<nav aria-label="Main navigation">
+<a href="#menu">The menu</a>
+<a href="#story">Our story</a>
+<a href="#visit">Find us</a>
+<button class="button reserve">A table for you <span aria-hidden="true">↗</span></button>
+</nav>
+</header>
+<main>
+<section class="hero" aria-labelledby="hero-heading">
+<div>
+<div class="eyebrow">Your neighborhood trattoria</div>
+<h1 id="hero-heading">A little Italy.<br>A lot of <em>heart.</em></h1>
+<p class="intro">Pasta made by hand. Wine poured with love. Pull up a chair — around here, you’re family.</p>
+<div class="actions">
+<a class="button" href="#menu">Explore the menu <span aria-hidden="true">↗</span></a>
+<button class="button outline reserve">Book a table</button>
+</div>
+<p class="hero-note"><span aria-hidden="true">✳</span> From our kitchen, with amore. Since 1998.</p>
+</div>
+<div class="hero-art">
+<div class="art-frame">
+<svg viewBox="0 0 550 585" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="art-title">
+<title id="art-title">Illustration of handmade tomato pasta, basil, wine, and a striped linen napkin on an Italian restaurant table</title>
+<defs>
+<pattern id="cloth" width="38" height="38" patternUnits="userSpaceOnUse" patternTransform="rotate(-17)">
+<rect width="38" height="38" fill="#f1dbba"/><path d="M0 0v38M7 0v38" stroke="#a34a36" stroke-width="3"/>
+</pattern>
+<radialGradient id="plate"><stop stop-color="#f6ead1"/><stop offset=".78" stop-color="#fff5dc"/><stop offset="1" stop-color="#dccaa6"/></radialGradient>
+<radialGradient id="table"><stop stop-color="#e0b885"/><stop offset="1" stop-color="#ba8255"/></radialGradient>
+<filter id="shadow"><feDropShadow dx="4" dy="12" stdDeviation="10" flood-color="#5e3c24" flood-opacity=".25"/></filter>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".08"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+</defs>
+<g filter="url(#grain)">
+<path fill="url(#table)" d="M0 0h550v585H0z"/>
+<path fill="url(#cloth)" d="M345-25 610 52 543 630 344 585 300 320Z"/>
+<g transform="translate(62 56) rotate(-16)" filter="url(#shadow)">
+<ellipse cy="24" rx="44" ry="16" fill="#f8e5bd" opacity=".6"/>
+<path d="M-46-35Q-47 43 0 45Q47 43 46-35Z" fill="#eed9ad" fill-opacity=".45" stroke="#f8e9cb" stroke-width="2"/>
+<path d="M-40-9Q-35 36 0 37Q35 36 40-9Z" fill="#752b26"/>
+<ellipse cy="-9" rx="40" ry="10" fill="#90372d"/>
+<path d="M0 45V106M-27 109Q0 97 27 109" fill="none" stroke="#f8e9cb" stroke-width="4"/>
+</g>
+<g filter="url(#shadow)">
+<circle cx="280" cy="322" r="202" fill="#f1e6cc"/>
+<circle cx="280" cy="322" r="188" fill="none" stroke="#74826a" stroke-width="2"/>
+<circle cx="280" cy="322" r="179" fill="none" stroke="#74826a" stroke-width="1"/>
+<circle cx="280" cy="322" r="152" fill="url(#plate)" stroke="#e0d1b3" stroke-width="3"/>
+<path d="M173 277Q190 211 268 215Q363 208 396 280Q432 359 350 411Q253 454 185 388Q145 345 173 277" fill="#b44729"/>
+<g fill="none" stroke="#df9f47" stroke-width="13" stroke-linecap="round">
+<path d="M202 279Q307 222 353 278T238 316T213 370T364 345"/>
+<path d="M199 313Q214 244 315 262T338 323T237 357T303 399"/>
+<path d="M227 249Q184 325 277 341T375 306"/>
+<path d="M190 346Q251 298 323 367T356 390"/>
+<path d="M254 235Q351 270 292 303T266 382"/>
+<path d="M211 387Q198 349 309 285T374 347"/>
+</g>
+<g fill="none" stroke="#f2c06d" stroke-width="3" stroke-linecap="round">
+<path d="M203 277Q307 220 352 276T237 314T212 368T363 343"/>
+<path d="M198 311Q213 242 314 260T337 321T236 355T302 397"/>
+<path d="M226 247Q183 323 276 339T374 304"/>
+<path d="M253 233Q350 268 291 301T265 380"/>
+</g>
+<g fill="#b33c24"><ellipse cx="223" cy="276" rx="19" ry="13" transform="rotate(-25 223 276)"/><ellipse cx="346" cy="363" rx="19" ry="14"/><ellipse cx="262" cy="389" rx="15" ry="11"/></g>
+<g fill="#49623a" stroke="#344d2e" stroke-width="1">
+<path d="M283 291Q237 279 247 244Q283 241 283 291"/>
+<path d="M283 291Q280 240 319 246Q328 279 283 291"/>
+<path d="M283 291Q315 273 330 297Q305 318 283 291"/>
+</g>
+<path d="m283 291 7 17" stroke="#48603b" stroke-width="3"/>
+<g fill="#fff1cb" opacity=".9">
+<path d="m212 307 13-5 2 5-14 5zM321 334l16-5 1 5-15 5zM251 365l12-5 3 5-13 5zM300 245l12 4-2 4-12-3zM358 309l12 5-2 5-13-5zM224 347l10 5-2 4-11-4zM293 372l12-3 1 5-13 3z"/>
+</g>
+</g>
+<g transform="translate(470 345) rotate(14)" stroke="#e9e2ce" fill="none" stroke-linecap="round" filter="url(#shadow)">
+<path d="M0-100V94" stroke="#706e5d" stroke-width="8"/><path d="M0-100V94" stroke-width="4"/>
+<path d="M-13-143v35q0 14 13 14t13-14v-35M-4-143v39M4-143v39" stroke-width="4"/>
+</g>
+<g fill="#48613b"><path d="M63 508Q15 475 28 438Q70 455 63 508"/><path d="M63 508Q65 460 104 466Q103 501 63 508"/><path d="M63 508Q23 505 21 534Q55 543 63 508"/></g>
+<path d="M63 508 83 544" stroke="#48613b" stroke-width="4"/>
+<g fill="#f0dab2"><ellipse cx="363" cy="78" rx="49" ry="30" transform="rotate(25 363 78)"/><path d="m323 65 70 22" stroke="#b08b5c" stroke-width="4"/></g>
+</g>
+</svg>
+</div>
+<div class="seal"><div>FATTO A MANO<br><b>con amore</b><br>MADE WITH LOVE</div></div>
+</div>
+</section>
+<div class="ribbon" aria-label="Our kitchen philosophy">
+<div>Handmade pasta</div><span aria-hidden="true">✳</span>
+<div>Seasonal ingredients</div><span aria-hidden="true">✳</span>
+<div>Italian soul</div><span class="extra" aria-hidden="true">✳</span>
+<div class="extra">Neighborhood heart</div>
+</div>
+<section class="menu-section" id="menu" aria-labelledby="menu-heading">
+<div class="section-head">
+<div><div class="eyebrow">Simple ingredients. Beautiful things.</div><h2 id="menu-heading">A few house favorites.</h2></div>
+<p>A little of what we love to cook.<br>Made fresh, shared generously.</p>
+</div>
+<div class="tabs" role="tablist" aria-label="Menu categories">
+<button class="tab" id="tab-pasta" role="tab" aria-selected="true" aria-controls="menu-panel" tabindex="0" data-category="pasta">Pasta della casa</button>
+<button class="tab" id="tab-starters" role="tab" aria-selected="false" aria-controls="menu-panel" tabindex="-1" data-category="starters">To start & share</button>
+<button class="tab" id="tab-sweets" role="tab" aria-selected="false" aria-controls="menu-panel" tabindex="-1" data-category="sweets">Something sweet</button>
+</div>
+<div class="dishes" id="menu-panel" role="tabpanel" aria-labelledby="tab-pasta" tabindex="0">
+<article class="dish"><div class="dish-top"><h3>Tagliatelle al Ragù</h3><span class="price">$24</span></div><p>Slow-braised beef, hand-cut ribbons, Parmigiano Reggiano. Sunday supper, any day.</p></article>
+<article class="dish"><div class="dish-top"><h3>Ravioli di Ricotta</h3><span class="price">$23</span></div><p>Soft pillows of ricotta and spinach, brown butter, crispy sage, a little nutmeg.</p></article>
+<article class="dish"><div class="dish-top"><h3>Spaghetti al Pomodoro</h3><span class="price">$20</span></div><p>San Marzano tomatoes, fresh basil, extra virgin olive oil. Simple for a reason.</p></article>
+</div>
+</section>
+</main>
+</div>
+<section class="story" id="story" aria-labelledby="story-heading">
+<div class="story-mark" aria-hidden="true">La famiglia<small>At the heart of every table</small></div>
+<div><h2 id="story-heading">Some things are better<br>the old-fashioned way.</h2><p>Lucia’s kitchen always had room for another chair. In 1998, we brought that same spirit to our little corner of the neighborhood. Today, we still roll our pasta every morning, cook with the seasons, and believe the best meals are the ones that bring us together.</p></div>
+</section>
+<section class="visit wrap" id="visit" aria-labelledby="visit-heading">
+<div><h2 id="visit-heading">Come on over.</h2><p class="small">Date nights, family nights, just-because nights.</p></div>
+<div><h3>Our little corner</h3><p>214 Olive Street<br>Brooklyn, NY 11211</p><a href="https://www.google.com/maps/search/?api=1&query=214+Olive+Street+Brooklyn+NY+11211" target="_blank" rel="noopener noreferrer">Get directions ↗</a></div>
+<div><h3>When the kitchen’s on</h3><p>Tuesday – Thursday · 5–9 pm<br>Friday – Saturday · 5–10 pm<br>Sunday · 4–9 pm</p><p class="small">Mondays are for family.</p></div>
+</section>
+<footer class="wrap"><span>© <span id="year">2026</span> Casa Lucia · Made with amore.</span><span>Fictional restaurant concept · Address and menu are illustrative.</span></footer>
+<dialog id="reservation" aria-labelledby="reservation-title">
+<button class="close" aria-label="Close reservation details">×</button>
+<div class="eyebrow">There’s a place for you</div>
+<h2 id="reservation-title">Join us at the table.</h2>
+<p>This is a sample restaurant website. Online reservations aren’t available. For a real restaurant, this space would connect you with the host or a booking service.</p>
+<button class="button close-dialog">Back to the kitchen</button>
+</dialog>
+<script>
+const menus={
+pasta:[
+["Tagliatelle al Ragù","24","Slow-braised beef, hand-cut ribbons, Parmigiano Reggiano. Sunday supper, any day."],
+["Ravioli di Ricotta","23","Soft pillows of ricotta and spinach, brown butter, crispy sage, a little nutmeg."],
+["Spaghetti al Pomodoro","20","San Marzano tomatoes, fresh basil, extra virgin olive oil. Simple for a reason."]
+],
+starters:[
+["Burrata e Pomodori","16","Creamy burrata, seasonal tomatoes, basil, and olive oil. Bring a little extra bread."],
+["Polpette della Nonna","15","Three tender beef meatballs in slow-simmered tomato sauce, with shaved Parmigiano."],
+["Focaccia della Casa","8","Warm from the oven with rosemary, flaky sea salt, and our favorite olive oil."]
+],
+sweets:[
+["Tiramisù","11","Espresso-soaked ladyfingers, mascarpone cream, and a generous dusting of cocoa."],
+["Panna Cotta","10","Vanilla bean cream, seasonal fruit, and a little something crunchy."],
+["Affogato","8","A scoop of vanilla gelato meets a shot of hot espresso. A perfect little finish."]
+]};
+const tabs=[...document.querySelectorAll(".tab")];
+function selectTab(tab){
+tabs.forEach(t=>{const active=t===tab;t.setAttribute("aria-selected",active);t.tabIndex=active?0:-1});
+const panel=document.getElementById("menu-panel");
+panel.setAttribute("aria-labelledby",tab.id);
+panel.replaceChildren(...menus[tab.dataset.category].map(([name,price,description])=>{
+const article=document.createElement("article");article.className="dish";
+const top=document.createElement("div");top.className="dish-top";
+const heading=document.createElement("h3");heading.textContent=name;
+const amount=document.createElement("span");amount.className="price";amount.textContent="$"+price;
+const p=document.createElement("p");p.textContent=description;
+top.append(heading,amount);article.append(top,p);return article;
+}));
+}
+tabs.forEach((tab,index)=>{
+tab.addEventListener("click",()=>selectTab(tab));
+tab.addEventListener("keydown",event=>{
+let next;
+if(event.key==="ArrowRight")next=(index+1)%tabs.length;
+if(event.key==="ArrowLeft")next=(index+tabs.length-1)%tabs.length;
+if(event.key==="Home")next=0;
+if(event.key==="End")next=tabs.length-1;
+if(next!==undefined){event.preventDefault();selectTab(tabs[next]);tabs[next].focus()}
+});
+});
+const dialog=document.getElementById("reservation");
+document.querySelectorAll(".reserve").forEach(button=>button.addEventListener("click",()=>dialog.showModal()));
+document.querySelectorAll(".close,.close-dialog").forEach(button=>button.addEventListener("click",()=>dialog.close()));
+dialog.addEventListener("click",event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()}});
+document.getElementById("year").textContent=new Date().getFullYear();
+</script>
+</body>
+</html>

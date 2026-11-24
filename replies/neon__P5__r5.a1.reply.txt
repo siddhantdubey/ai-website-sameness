@@ -1,0 +1,3084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plumb — Project tracking that stays square</title>
+  <meta name="description" content="A quiet, fast project ledger for product teams of 5 to 40. Weekly cycles, flat issue lists, and automatic Friday digests." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #F5F2EB;
+      --paper-elevated: #FCFBF8;
+      --paper-recessed: #EBE6DC;
+      --paper-hover: #EFECE4;
+      --ink: #191816;
+      --ink-secondary: #534F47;
+      --ink-muted: #847E73;
+      --rule: #DAD4C8;
+      --rule-strong: #C5BEB0;
+      --vermilion: #C94124;
+      --vermilion-soft: #F7E5E0;
+      --slate: #245B6B;
+      --slate-soft: #E2EEF1;
+      --moss: #2D6846;
+      --moss-soft: #E3EFE7;
+      --ochre: #9A6619;
+      --ochre-soft: #F4EBDA;
+
+      --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --max-w: 1180px;
+      --radius-sm: 3px;
+      --radius-md: 6px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--paper);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle archival paper grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--vermilion);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+    }
+
+    /* ==================== HEADER ==================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: rgba(245, 242, 235, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-inner {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.015em;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+    }
+
+    .nav-links a {
+      transition: color 120ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-date {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      border: 1px solid var(--rule);
+      padding: 1px 5px;
+      border-radius: 2px;
+      background: var(--paper-elevated);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 80ms ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background-color: var(--ink);
+      color: var(--paper-elevated);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background-color: #2E2C28;
+    }
+
+    .btn-secondary {
+      background-color: var(--paper-elevated);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--paper-hover);
+      border-color: var(--ink-muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-secondary);
+      padding: 8px 10px;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: var(--paper-recessed);
+    }
+
+    .btn-lg {
+      padding: 12px 22px;
+      font-size: 0.95rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      padding: 64px 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-secondary);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow-rule {
+      width: 24px;
+      height: 1px;
+      background-color: var(--vermilion);
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.85rem, 5.4vw, 4.55rem);
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--vermilion);
+    }
+
+    .hero-aside {
+      padding-bottom: 6px;
+    }
+
+    .hero-copy {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--ink-secondary);
+      margin: 0 0 24px;
+      max-width: 44ch;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .text-link {
+      font-size: 0.92rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--rule-strong);
+      padding-bottom: 2px;
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      transition: border-color 120ms ease, color 120ms ease;
+    }
+
+    .text-link:hover {
+      border-bottom-color: var(--vermilion);
+      color: var(--vermilion);
+    }
+
+    .hero-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    /* ==================== INTERACTIVE WORKBENCH SPECIMEN ==================== */
+    .specimen-wrap {
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-md);
+      background-color: var(--paper-elevated);
+      box-shadow: 0 1px 0 rgba(25, 24, 22, 0.04), 0 18px 40px -28px rgba(25, 24, 22, 0.22);
+      overflow: hidden;
+    }
+
+    .specimen-chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background-color: var(--paper-recessed);
+      border-bottom: 1px solid var(--rule);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .specimen-workspace {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.84rem;
+      font-weight: 500;
+    }
+
+    .ws-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      background: var(--ink);
+      color: var(--paper-elevated);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .specimen-crumb-sep {
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+
+    .specimen-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .specimen-tab {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .specimen-tab:hover {
+      color: var(--ink);
+      background: rgba(25, 24, 22, 0.04);
+    }
+
+    .specimen-tab[aria-selected="true"] {
+      background: var(--paper-elevated);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .tab-count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+    }
+
+    .specimen-cycle-meter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-secondary);
+    }
+
+    .meter-track {
+      width: 88px;
+      height: 6px;
+      background: var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: var(--moss);
+      transition: width 220ms ease;
+    }
+
+    .specimen-body {
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      min-height: 410px;
+    }
+
+    .specimen-main {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--rule);
+      min-width: 0;
+    }
+
+    .specimen-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule);
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--paper-elevated);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-size: 0.76rem;
+      padding: 4px 9px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .filter-btn:hover {
+      background: var(--paper-hover);
+      color: var(--ink);
+    }
+
+    .filter-btn.active {
+      background: var(--paper-recessed);
+      border-color: var(--rule-strong);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 165px;
+      padding: 5px 24px 5px 9px;
+      font-size: 0.78rem;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      background: var(--paper);
+      color: var(--ink);
+      transition: width 150ms ease, border-color 120ms ease;
+    }
+
+    .search-input:focus {
+      width: 205px;
+      border-color: var(--ink-muted);
+      background: var(--paper-elevated);
+      outline: none;
+    }
+
+    .search-hint {
+      position: absolute;
+      right: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+
+    .btn-mini {
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--ink);
+      color: var(--paper-elevated);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-mini:hover {
+      background: #2E2C28;
+    }
+
+    /* New issue inline composer */
+    .quick-add {
+      display: none;
+      padding: 10px 16px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quick-add.open {
+      display: flex;
+    }
+
+    .quick-add input {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      color: var(--ink);
+    }
+
+    .quick-add select {
+      padding: 7px 8px;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      color: var(--ink);
+    }
+
+    /* Issue rows */
+    .issue-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .issue-row {
+      display: grid;
+      grid-template-columns: 24px 70px 1fr auto auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 90ms ease;
+      font-size: 0.875rem;
+    }
+
+    .issue-row:hover {
+      background-color: var(--paper-hover);
+    }
+
+    .issue-row.selected {
+      background-color: #EFEAE0;
+    }
+
+    .issue-row.done-row .issue-title {
+      color: var(--ink-muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--rule-strong);
+    }
+
+    .status-toggle {
+      width: 20px;
+      height: 20px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .status-toggle:hover {
+      background: rgba(25, 24, 22, 0.07);
+    }
+
+    .issue-id {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .issue-title {
+      color: var(--ink);
+      font-weight: 450;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .status-progress { background: var(--slate-soft); color: var(--slate); }
+    .status-review { background: var(--ochre-soft); color: var(--ochre); }
+    .status-blocked { background: var(--vermilion-soft); color: var(--vermilion); }
+    .status-done { background: var(--moss-soft); color: var(--moss); }
+    .status-todo { background: var(--paper-recessed); color: var(--ink-secondary); }
+
+    .issue-est {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      min-width: 24px;
+      text-align: right;
+    }
+
+    .issue-owner {
+      font-size: 0.76rem;
+      color: var(--ink-secondary);
+      min-width: 78px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Updates tab view */
+    .updates-view {
+      padding: 20px 22px;
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .updates-view.visible {
+      display: flex;
+    }
+
+    .update-entry {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      background: var(--paper);
+    }
+
+    .update-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .update-entry-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .update-entry-meta {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--ink-muted);
+    }
+
+    .update-entry p {
+      margin: 0 0 10px;
+      font-size: 0.87rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+    }
+
+    .update-bullets {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.84rem;
+      color: var(--ink);
+    }
+
+    .update-bullets li {
+      margin-bottom: 4px;
+    }
+
+    /* Right inspector drawer */
+    .specimen-inspector {
+      padding: 18px 20px;
+      background: #F9F7F2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .inspector-title {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      line-height: 1.25;
+      margin: 0;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .inspector-meta-grid {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 8px 10px;
+      font-size: 0.8rem;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .meta-label {
+      color: var(--ink-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding-top: 2px;
+    }
+
+    .meta-val {
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pr-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper-elevated);
+      color: var(--ink-secondary);
+    }
+
+    .inspector-notes {
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+      margin: 0;
+    }
+
+    .inspector-note-box {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px dashed var(--rule-strong);
+    }
+
+    .inspector-comment {
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+
+    .inspector-comment strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .specimen-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--paper-recessed);
+      border-top: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .kbd-hints {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    kbd {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      background: var(--paper-elevated);
+      border: 1px solid var(--rule-strong);
+      border-bottom-width: 2px;
+      border-radius: 3px;
+      padding: 0 5px;
+      color: var(--ink);
+    }
+
+    .live-hint {
+      color: var(--vermilion);
+      font-weight: 500;
+    }
+
+    /* ==================== TEAMS STRIP ==================== */
+    .teams-strip {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 26px 0;
+      margin-top: 56px;
+    }
+
+    .teams-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .teams-label {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      max-width: 210px;
+      line-height: 1.45;
+    }
+
+    .teams-marks {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      flex-wrap: wrap;
+      color: var(--ink-secondary);
+    }
+
+    .team-mark {
+      opacity: 0.78;
+      transition: opacity 150ms ease;
+    }
+
+    .team-mark:hover {
+      opacity: 1;
+    }
+
+    /* ==================== SECTION HEADERS ==================== */
+    .section {
+      padding: 84px 0;
+    }
+
+    .section-bordered {
+      border-top: 1px solid var(--rule);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      margin-bottom: 52px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 3.6vw, 2.95rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .section-lead {
+      font-size: 1rem;
+      color: var(--ink-secondary);
+      margin: 0;
+      max-width: 48ch;
+      line-height: 1.6;
+    }
+
+    /* ==================== PRINCIPLES LEDGER ==================== */
+    .ledger-rows {
+      border-top: 1px solid var(--rule-strong);
+    }
+
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 1.05fr;
+      gap: 32px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+    }
+
+    .ledger-num {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--vermilion);
+      padding-top: 4px;
+    }
+
+    .ledger-copy h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 1.55rem;
+      line-height: 1.2;
+      margin: 0 0 12px;
+      letter-spacing: -0.015em;
+    }
+
+    .ledger-copy p {
+      margin: 0 0 16px;
+      color: var(--ink-secondary);
+      font-size: 0.96rem;
+      line-height: 1.62;
+      max-width: 44ch;
+    }
+
+    .ledger-detail {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+    }
+
+    /* Bespoke visual cards inside ledger */
+    .plate {
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      padding: 18px 20px;
+    }
+
+    .plate-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-secondary);
+    }
+
+    /* Plate 1: Interactive Scope Cut */
+    .scope-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--rule);
+      font-size: 0.86rem;
+      gap: 12px;
+    }
+
+    .scope-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .scope-item.cut {
+      opacity: 0.48;
+      text-decoration: line-through;
+    }
+
+    .scope-cut-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border: 1px solid var(--rule-strong);
+      border-radius: 2px;
+      background: var(--paper);
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .scope-cut-btn:hover {
+      border-color: var(--vermilion);
+      color: var(--vermilion);
+    }
+
+    .scope-summary {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .scope-status-ok { color: var(--moss); }
+    .scope-status-tight { color: var(--vermilion); }
+
+    /* Plate 2: Friday Digest specimen */
+    .digest-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .digest-stat {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 10px 12px;
+      border-radius: 2px;
+    }
+
+    .digest-stat-num {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      line-height: 1;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .digest-stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+    }
+
+    .digest-quote {
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin: 0;
+      padding-left: 12px;
+      border-left: 2px solid var(--vermilion);
+      line-height: 1.55;
+    }
+
+    /* Plate 3: Keyboard latency tester */
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .shortcut-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--ink);
+      transition: border-color 100ms ease, background 100ms ease;
+    }
+
+    .shortcut-btn:hover, .shortcut-btn.triggered {
+      border-color: var(--ink);
+      background: var(--paper-elevated);
+    }
+
+    .latency-readout {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: var(--ink);
+      color: var(--paper-elevated);
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .latency-ms {
+      color: #8CD4A4;
+    }
+
+    /* ==================== WEEKLY RHYTHM ==================== */
+    .rhythm-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--paper-elevated);
+    }
+
+    .rhythm-day {
+      text-align: left;
+      padding: 18px 18px 20px;
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 120ms ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rhythm-day:last-child {
+      border-right: none;
+    }
+
+    .rhythm-day:hover {
+      background: var(--paper-hover);
+    }
+
+    .rhythm-day[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--paper-elevated);
+    }
+
+    .rhythm-day-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+    }
+
+    .rhythm-day[aria-selected="true"] .rhythm-day-label {
+      color: #C7C1B5;
+    }
+
+    .rhythm-day-title {
+      font-weight: 500;
+      font-size: 0.94rem;
+    }
+
+    .rhythm-day-time {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--vermilion);
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .rhythm-day[aria-selected="true"] .rhythm-day-time {
+      color: #F28B72;
+    }
+
+    .rhythm-panel {
+      margin-top: 20px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      padding: 26px 28px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .rhythm-panel h4 {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 400;
+      margin: 0 0 10px;
+    }
+
+    .rhythm-panel p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 0.95rem;
+      line-height: 1.62;
+    }
+
+    .rhythm-artifact {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 16px 18px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.65;
+      color: var(--ink-secondary);
+    }
+
+    .rhythm-artifact strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ==================== FIELD NOTES / TESTIMONIALS ==================== */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
+    }
+
+    .quote-card {
+      padding: 44px 40px 44px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .quote-card:last-child {
+      padding: 44px 0 44px 44px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.42rem;
+      line-height: 1.38;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .quote-author {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 0.86rem;
+    }
+
+    .quote-author strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .quote-author span {
+      color: var(--ink-secondary);
+    }
+
+    .quote-team-size {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+    }
+
+    /* ==================== PRICING ==================== */
+    .pricing-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding: 18px 22px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      margin-bottom: 24px;
+    }
+
+    .seat-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .seat-slider-wrap label {
+      font-size: 0.88rem;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+    }
+
+    .seat-count-badge {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 72px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 4px;
+      background: var(--rule-strong);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid var(--paper-elevated);
+      box-shadow: 0 0 0 1px var(--ink);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid var(--paper-elevated);
+      box-shadow: 0 0 0 1px var(--ink);
+      cursor: pointer;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .billing-opt {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .billing-opt.active {
+      background: var(--ink);
+      color: var(--paper-elevated);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .plan-card {
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper-elevated);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 140ms ease;
+    }
+
+    .plan-card.recommended-by-size {
+      border-color: var(--ink);
+      box-shadow: inset 0 3px 0 var(--vermilion);
+    }
+
+    .plan-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .plan-name {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .plan-fit {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .plan-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .plan-price {
+      font-family: var(--font-serif);
+      font-size: 2.7rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .plan-unit {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .plan-calc-note {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--moss);
+      min-height: 20px;
+      margin-bottom: 18px;
+    }
+
+    .plan-desc {
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin: 0 0 22px;
+      line-height: 1.55;
+    }
+
+    .plan-list {
+      list-style: none;
+      padding: 20px 0 26px;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+      flex: 1;
+    }
+
+    .plan-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .plan-list li::before {
+      content: "—";
+      font-family: var(--font-mono);
+      color: var(--vermilion);
+      flex-shrink: 0;
+    }
+
+    .pricing-footnote {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      max-width: 66ch;
+    }
+
+    /* ==================== CLOSING BAND & FOOTER ==================== */
+    .closing-band {
+      background-color: var(--ink);
+      color: var(--paper);
+      padding: 80px 0 44px;
+      margin-top: 40px;
+    }
+
+    .closing-top {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: end;
+      padding-bottom: 64px;
+      border-bottom: 1px solid #33302B;
+    }
+
+    .closing-top h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .closing-top h2 em {
+      font-style: italic;
+      color: #EB7B62;
+    }
+
+    .signup-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .signup-input {
+      flex: 1;
+      padding: 12px 14px;
+      background: #24221F;
+      border: 1px solid #44403A;
+      border-radius: var(--radius-sm);
+      color: var(--paper-elevated);
+      font-size: 0.92rem;
+    }
+
+    .signup-input::placeholder {
+      color: #8D877D;
+    }
+
+    .signup-input:focus {
+      border-color: #EB7B62;
+      outline: none;
+    }
+
+    .btn-invert {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--paper);
+      padding: 12px 20px;
+    }
+
+    .btn-invert:hover {
+      background: #FFFFFF;
+    }
+
+    .signup-feedback {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #A6A096;
+      min-height: 20px;
+    }
+
+    .signup-feedback.success {
+      color: #8CD4A4;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 36px;
+      padding: 44px 0 40px;
+      border-bottom: 1px solid #33302B;
+      font-size: 0.88rem;
+    }
+
+    .footer-brand-note {
+      color: #A6A096;
+      max-width: 30ch;
+      margin: 12px 0 18px;
+      line-height: 1.55;
+    }
+
+    .status-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #C4BEB3;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6CC48A;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8D877D;
+      margin: 0 0 14px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .footer-col a {
+      color: #D5CFC4;
+      transition: color 120ms ease;
+    }
+
+    .footer-col a:hover {
+      color: #FFFFFF;
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #8D877D;
+    }
+
+    /* ==================== MODAL (HANDBOOK / START) ==================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 24, 22, 0.48);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      width: 100%;
+      max-width: 560px;
+      max-height: 86vh;
+      overflow-y: auto;
+      background: var(--paper-elevated);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-md);
+      padding: 28px 30px;
+      box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.35);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .modal-head h3 {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      color: var(--ink-secondary);
+    }
+
+    .modal-close:hover {
+      background: var(--paper-recessed);
+      color: var(--ink);
+    }
+
+    .modal-body p {
+      color: var(--ink-secondary);
+      font-size: 0.94rem;
+      line-height: 1.65;
+      margin: 0 0 14px;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-secondary);
+      margin-bottom: 6px;
+    }
+
+    .field-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-sm);
+      background: var(--paper);
+      font-size: 0.92rem;
+      color: var(--ink);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 980px) {
+      .hero-grid,
+      .section-header,
+      .closing-top,
+      .rhythm-panel {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .specimen-body {
+        grid-template-columns: 1fr;
+      }
+
+      .specimen-main {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .ledger-row {
+        grid-template-columns: 44px 1fr;
+      }
+
+      .ledger-row > .plate {
+        grid-column: 1 / -1;
+      }
+
+      .quotes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quote-card,
+      .quote-card:last-child {
+        padding: 32px 0;
+        border-left: none;
+      }
+
+      .quote-card:last-child {
+        border-top: 1px solid var(--rule);
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        padding: 0 18px;
+      }
+
+      .nav-links,
+      .header-actions .btn-ghost {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .nav-links.mobile-open {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+        top: 62px;
+        left: 0;
+        right: 0;
+        background: var(--paper-elevated);
+        border-bottom: 1px solid var(--rule-strong);
+        padding: 16px 20px;
+        gap: 14px;
+      }
+
+      .hero {
+        padding: 40px 0 32px;
+      }
+
+      .issue-row {
+        grid-template-columns: 22px 62px 1fr auto;
+      }
+
+      .issue-est,
+      .issue-owner {
+        display: none;
+      }
+
+      .rhythm-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .rhythm-day {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 16px;
+      }
+
+      .rhythm-day-time {
+        margin-top: 0;
+        padding-top: 0;
+      }
+
+      .signup-form {
+        flex-direction: column;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Plumb home">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <line x1="12" y1="2" x2="12" y2="11" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" />
+          <path d="M12 10L17.5 14.5L12 22L6.5 14.5L12 10Z" fill="#C94124" stroke="currentColor" stroke-width="1.5" stroke-linejoin="miter" />
+          <line x1="4" y1="2.75" x2="20" y2="2.75" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+        <span>Plumb</span>
+      </a>
+
+      <nav class="nav-links" id="mainNav" aria-label="Primary">
+        <a href="#workbench">Specimen</a>
+        <a href="#principles">How it works</a>
+        <a href="#rhythm">Weekly cadence</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#handbook" id="navHandbookLink">Changelog <span class="nav-date">Nov 14</span></a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-ghost" data-open-modal="signin">Sign in</button>
+        <button type="button" class="btn btn-primary" data-open-modal="signup">Start free</button>
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <line x1="2" y1="5" x2="16" y2="5" stroke="currentColor" stroke-width="1.5" />
+            <line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5" />
+            <line x1="2" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">
+              <span class="eyebrow-rule" aria-hidden="true"></span>
+              <span>Issue ledger &amp; weekly cycles — teams of 5 to 40</span>
+            </div>
+            <h1>Keep the work true,<br />without the <em>ceremony</em>.</h1>
+          </div>
+
+          <div class="hero-aside">
+            <p class="hero-copy">
+              Plumb replaces sprawling ticket queues and performative sprint rituals with a single quiet ledger for tasks, weekly cycles, and Friday notes. Fast enough to update while someone is still talking.
+            </p>
+            <div class="hero-cta-row">
+              <button type="button" class="btn btn-primary btn-lg" data-open-modal="signup">Start a workspace — free</button>
+              <button type="button" class="text-link" data-open-modal="handbook">Read the field guide (4 min)</button>
+            </div>
+            <div class="hero-meta">Free up to 5 people · Imports from Jira, Linear &amp; GitHub in 2 min</div>
+          </div>
+        </div>
+
+        <!-- ==================== LIVE INTERACTIVE SPECIMEN ==================== -->
+        <div class="specimen-wrap" id="workbench" aria-label="Interactive Plumb workspace preview">
+          <div class="specimen-chrome">
+            <div class="specimen-workspace">
+              <span class="ws-badge">AA</span>
+              <span>Alder Audio</span>
+              <span class="specimen-crumb-sep">/</span>
+              <span class="mono" style="font-size: 0.78rem; color: var(--ink-secondary);">Firmware &amp; Web</span>
+            </div>
+
+            <div class="specimen-tabs" role="tablist" aria-label="Workspace views">
+              <button type="button" class="specimen-tab" role="tab" aria-selected="true" data-view="cycle">
+                Cycle 18 <span class="tab-count" id="countCycle">6</span>
+              </button>
+              <button type="button" class="specimen-tab" role="tab" aria-selected="false" data-view="backlog">
+                Backlog <span class="tab-count" id="countBacklog">3</span>
+              </button>
+              <button type="button" class="specimen-tab" role="tab" aria-selected="false" data-view="updates">
+                Friday notes <span class="tab-count">2</span>
+              </button>
+            </div>
+
+            <div class="specimen-cycle-meter" title="Cycle 18 completion">
+              <span id="cycleProgressText">1 / 6 shipped</span>
+              <div class="meter-track">
+                <div class="meter-fill" id="cycleProgressFill" style="width: 17%;"></div>
+              </div>
+              <span>Ends Fri</span>
+            </div>
+          </div>
+
+          <div class="specimen-body">
+            <div class="specimen-main">
+              <div class="specimen-toolbar" id="issueToolbar">
+                <div class="filter-group" role="group" aria-label="Filter by status">
+                  <button type="button" class="filter-btn active" data-filter="all">All</button>
+                  <button type="button" class="filter-btn" data-filter="progress">In Progress</button>
+                  <button type="button" class="filter-btn" data-filter="review">Review</button>
+                  <button type="button" class="filter-btn" data-filter="blocked">Blocked</button>
+                  <button type="button" class="filter-btn" data-filter="done">Done</button>
+                </div>
+                <div class="toolbar-right">
+                  <div class="search-box">
+                    <input type="text" class="search-input" id="issueSearch" placeholder="Filter issues…" aria-label="Filter issues" />
+                    <span class="search-hint">/</span>
+                  </div>
+                  <button type="button" class="btn-mini" id="toggleQuickAdd">+ New</button>
+                </div>
+              </div>
+
+              <form class="quick-add" id="quickAddForm">
+                <input type="text" id="newIssueTitle" placeholder="Describe the deliverable (e.g. Support MIDI clock out on Rev B)" required />
+                <select id="newIssueEst" aria-label="Estimate">
+                  <option value="2h">2h</option>
+                  <option value="4h">4h</option>
+                  <option value="1d" selected>1d</option>
+                  <option value="2d">2d</option>
+                </select>
+                <button type="submit" class="btn-mini">Add</button>
+              </form>
+
+              <div class="issue-list" id="issueList" role="list">
+                <!-- Populated by JS -->
+              </div>
+
+              <div class="updates-view" id="updatesView">
+                <article class="update-entry">
+                  <div class="update-entry-head">
+                    <span class="update-entry-title">Cycle 17 wrap-up — Audio engine &amp; browser export</span>
+                    <span class="update-entry-meta">Fri Nov 14 · M. Sato</span>
+                  </div>
+                  <p>
+                    Solid week. We cut two preset-tagging chores on Wednesday so Tomasz could finish the offline WAV renderer cleanly before the beta freeze.
+                  </p>
+                  <ul class="update-bullets">
+                    <li><strong>Shipped (7):</strong> Worker-based 24-bit export, bundle size trim to 168kb, Rev B bootloader handshake.</li>
+                    <li><strong>Carried over (1):</strong> Calibration mic-permission recovery (waiting on Safari 18 quirk repro).</li>
+                  </ul>
+                </article>
+                <article class="update-entry">
+                  <div class="update-entry-head">
+                    <span class="update-entry-title">Cycle 16 wrap-up — USB-C power states</span>
+                    <span class="update-entry-meta">Fri Nov 07 · H. Lindqvist</span>
+                  </div>
+                  <p>
+                    Enclosure tolerances from Shenzhen came back within 0.08mm. Firmware team spent Thursday debugging host wake sleep-states on M3 MacBooks.
+                  </p>
+                </article>
+              </div>
+            </div>
+
+            <aside class="specimen-inspector" id="issueInspector" aria-label="Selected issue details">
+              <!-- Populated by JS -->
+            </aside>
+          </div>
+
+          <div class="specimen-footer">
+            <div class="kbd-hints">
+              <span><kbd>Click circle</kbd> cycle status</span>
+              <span><kbd>C</kbd> new issue</span>
+              <span><kbd>/</kbd> filter</span>
+              <span><kbd>J</kbd> <kbd>K</kbd> navigate</span>
+            </div>
+            <div class="live-hint" id="specimenStatusHint">Try clicking a status dot or adding an issue above</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== QUIET SOCIAL PROOF ==================== -->
+    <div class="teams-strip">
+      <div class="container teams-inner">
+        <div class="teams-label">Used every workday by 340+ independent product, hardware, and editorial teams</div>
+        <div class="teams-marks" aria-label="Selected customer teams">
+          <svg class="team-mark" width="112" height="22" viewBox="0 0 112 22" fill="none" aria-label="Alder Audio">
+            <rect x="1" y="4" width="10" height="14" stroke="currentColor" stroke-width="1.5" />
+            <line x1="6" y1="4" x2="6" y2="18" stroke="currentColor" stroke-width="1.5" />
+            <text x="18" y="15.5" fill="currentColor" font-family="Newsreader, Georgia, serif" font-size="15.5" font-weight="500">Alder Audio</text>
+          </svg>
+          <svg class="team-mark" width="118" height="22" viewBox="0 0 118 22" fill="none" aria-label="Northbound">
+            <text x="0" y="15" fill="currentColor" font-family="IBM Plex Sans, sans-serif" font-size="13.5" font-weight="600" letter-spacing="0.11em">NORTHBOUND</text>
+          </svg>
+          <svg class="team-mark" width="116" height="22" viewBox="0 0 116 22" fill="none" aria-label="Kestrel Press">
+            <text x="0" y="15.5" fill="currentColor" font-family="Newsreader, Georgia, serif" font-style="italic" font-size="16">Kestrel Press</text>
+          </svg>
+          <svg class="team-mark" width="96" height="22" viewBox="0 0 96 22" fill="none" aria-label="fieldnote">
+            <text x="0" y="15" fill="currentColor" font-family="IBM Plex Mono, monospace" font-size="13.5" font-weight="500">fieldnote/</text>
+          </svg>
+          <svg class="team-mark" width="94" height="22" viewBox="0 0 94 22" fill="none" aria-label="Cinder Lab">
+            <circle cx="6" cy="11" r="4.5" stroke="currentColor" stroke-width="1.5" />
+            <text x="16" y="15.5" fill="currentColor" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="500" letter-spacing="-0.02em">Cinder Lab</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PRINCIPLES LEDGER ==================== -->
+    <section class="section" id="principles">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Why most project tools slowly turn into chores.</h2>
+          <p class="section-lead">
+            Trackers break down when configuring the board takes longer than doing the work. Plumb keeps the surface area deliberately small so your team spends its attention on the craft.
+          </p>
+        </div>
+
+        <div class="ledger-rows">
+          <!-- Row 01 -->
+          <div class="ledger-row">
+            <div class="ledger-num">01</div>
+            <div class="ledger-copy">
+              <h3>Scope you can weigh on one screen.</h3>
+              <p>
+                No nested epics, story-point poker, or nineteen required dropdowns. A project has one owner, a target Friday, and a flat list of concrete deliverables. When a week gets tight, you cut scope visibly instead of quietly slipping every deadline.
+              </p>
+              <div class="ledger-detail">Interactive: click “Cut” on an item to rebalance Friday’s target →</div>
+            </div>
+            <div class="plate" aria-label="Interactive scope balancer">
+              <div class="plate-head">
+                <span>RELEASE 2.4 · TARGET FRI NOV 28</span>
+                <span>CAPACITY: 6.0d</span>
+              </div>
+              <div id="scopeList">
+                <div class="scope-item" data-days="2.0">
+                  <span>Rev B USB-C wake calibration</span>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="mono" style="font-size:0.75rem;color:var(--ink-muted);">2.0d</span>
+                    <button type="button" class="scope-cut-btn">Cut</button>
+                  </div>
+                </div>
+                <div class="scope-item" data-days="2.5">
+                  <span>Offline 24-bit WAV worker export</span>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="mono" style="font-size:0.75rem;color:var(--ink-muted);">2.5d</span>
+                    <button type="button" class="scope-cut-btn">Cut</button>
+                  </div>
+                </div>
+                <div class="scope-item" data-days="1.5">
+                  <span>Preset browser arrow-key navigation</span>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="mono" style="font-size:0.75rem;color:var(--ink-muted);">1.5d</span>
+                    <button type="button" class="scope-cut-btn">Cut</button>
+                  </div>
+                </div>
+                <div class="scope-item" data-days="1.5">
+                  <span>Custom dark theme for MIDI monitor</span>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="mono" style="font-size:0.75rem;color:var(--ink-muted);">1.5d</span>
+                    <button type="button" class="scope-cut-btn">Cut</button>
+                  </div>
+                </div>
+              </div>
+              <div class="scope-summary">
+                <span id="scopeTotalLabel">Committed: 7.5d / 6.0d</span>
+                <span id="scopeVerdict" class="scope-status-tight">Over by 1.5d — cut to ship Friday</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 02 -->
+          <div class="ledger-row">
+            <div class="ledger-num">02</div>
+            <div class="ledger-copy">
+              <h3>Friday digests that write their own first draft.</h3>
+              <p>
+                Nobody should spend Friday afternoon copy-pasting ticket IDs into Slack. Plumb gathers merged pull requests, completed items, and stalled tasks into a quiet summary. One person adds three sentences of human context and hits publish.
+              </p>
+              <div class="ledger-detail">Connects natively to GitHub, GitLab, and email digests.</div>
+            </div>
+            <div class="plate">
+              <div class="plate-head">
+                <span>AUTO-DRAFTED DIGEST · CYCLE 18</span>
+                <span>FRI 15:00</span>
+              </div>
+              <div class="digest-stats">
+                <div class="digest-stat">
+                  <span class="digest-stat-num" style="color:var(--moss);">6</span>
+                  <span class="digest-stat-label">Shipped</span>
+                </div>
+                <div class="digest-stat">
+                  <span class="digest-stat-num" style="color:var(--slate);">9</span>
+                  <span class="digest-stat-label">PRs merged</span>
+                </div>
+                <div class="digest-stat">
+                  <span class="digest-stat-num" style="color:var(--ochre);">1</span>
+                  <span class="digest-stat-label">Rolled over</span>
+                </div>
+              </div>
+              <p class="digest-quote">
+                “Audio export is now live on staging and passes the 10-minute stress test. Only slip is the Safari mic prompt edge case — moving that to Monday morning.”
+              </p>
+            </div>
+          </div>
+
+          <!-- Row 03 -->
+          <div class="ledger-row">
+            <div class="ledger-num">03</div>
+            <div class="ledger-copy">
+              <h3>Sub-50ms speed, treated as basic courtesy.</h3>
+              <p>
+                Your workspace lives in a local SQLite-backed sync cache in the browser. Opening an issue, filtering two thousand archived tasks, or reassigning work on a train with patchy Wi-Fi happens immediately and reconciles quietly in the background.
+              </p>
+              <div class="ledger-detail">Click any command below to test the local action response.</div>
+            </div>
+            <div class="plate">
+              <div class="plate-head">
+                <span>LOCAL SYNC ENGINE · COMMAND DECK</span>
+                <span>OFFLINE READY</span>
+              </div>
+              <div class="shortcut-grid" id="shortcutDeck">
+                <button type="button" class="shortcut-btn" data-action="Created ALD-215 in Cycle 18" data-ms="8">
+                  <span>New issue</span>
+                  <kbd>C</kbd>
+                </button>
+                <button type="button" class="shortcut-btn" data-action="Assigned to M. Sato" data-ms="6">
+                  <span>Assign owner</span>
+                  <kbd>A</kbd>
+                </button>
+                <button type="button" class="shortcut-btn" data-action="Moved to Review · notified 2" data-ms="11">
+                  <span>Mark in review</span>
+                  <kbd>S</kbd>
+                </button>
+                <button type="button" class="shortcut-btn" data-action="Indexed 2,418 archived issues" data-ms="14">
+                  <span>Jump anywhere</span>
+                  <kbd>⌘K</kbd>
+                </button>
+              </div>
+              <div class="latency-readout">
+                <span id="latencyAction">Ready — click a shortcut above</span>
+                <span class="latency-ms" id="latencyMs">0ms local</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== WEEKLY CADENCE ==================== -->
+    <section class="section section-bordered" id="rhythm">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">How a calm week actually runs.</h2>
+          <p class="section-lead">
+            Plumb is opinionated about one thing: a week is the longest stretch most product teams can plan honestly. Everything in the interface follows that five-day rhythm.
+          </p>
+        </div>
+
+        <div class="rhythm-tabs" role="tablist" aria-label="Weekly cadence">
+          <button type="button" class="rhythm-day" role="tab" aria-selected="true" data-day="mon">
+            <span class="rhythm-day-label">Monday</span>
+            <span class="rhythm-day-title">Set the ledger</span>
+            <span class="rhythm-day-time">12 min</span>
+          </button>
+          <button type="button" class="rhythm-day" role="tab" aria-selected="false" data-day="tue">
+            <span class="rhythm-day-label">Tuesday</span>
+            <span class="rhythm-day-title">Uninterrupted build</span>
+            <span class="rhythm-day-time">0 meetings</span>
+          </button>
+          <button type="button" class="rhythm-day" role="tab" aria-selected="false" data-day="wed">
+            <span class="rhythm-day-label">Wednesday</span>
+            <span class="rhythm-day-title">Mid-week trim</span>
+            <span class="rhythm-day-time">5 min</span>
+          </button>
+          <button type="button" class="rhythm-day" role="tab" aria-selected="false" data-day="thu">
+            <span class="rhythm-day-label">Thursday</span>
+            <span class="rhythm-day-title">Review &amp; merge</span>
+            <span class="rhythm-day-time">PR-linked</span>
+          </button>
+          <button type="button" class="rhythm-day" role="tab" aria-selected="false" data-day="fri">
+            <span class="rhythm-day-label">Friday</span>
+            <span class="rhythm-day-title">Written note</span>
+            <span class="rhythm-day-time">4 min</span>
+          </button>
+        </div>
+
+        <div class="rhythm-panel" id="rhythmPanel">
+          <div>
+            <h4 id="rhythmHeading">Pick the 6 to 10 things that actually matter this week.</h4>
+            <p id="rhythmCopy">
+              On Monday morning, Plumb shows what carried over from last Friday alongside your curated backlog. Drag only what fits your real capacity into the active cycle. Everything else stays calmly out of sight until next Monday.
+            </p>
+          </div>
+          <div class="rhythm-artifact" id="rhythmArtifact">
+            <strong>CYCLE 18 · OPENED MON 09:15</strong><br />
+            Carried over: 1 issue (ALD-189)<br />
+            Newly committed: 5 issues (9.5d est)<br />
+            Team capacity: 4 engineers · 12.0d available<br />
+            <span style="color:var(--moss);">Status: Square (2.5d buffer for support)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CUSTOMER FIELD NOTES ==================== -->
+    <section class="section" style="padding-top: 24px;">
+      <div class="container">
+        <div class="quotes-grid">
+          <div class="quote-card">
+            <blockquote>
+              “We moved off Jira after realizing our staff engineers spent four hours a week grooming tickets nobody read. With Plumb, Monday planning takes twelve minutes and everyone actually keeps it open.”
+            </blockquote>
+            <div class="quote-author">
+              <div>
+                <strong>Maren Lindholm</strong> — <span>Principal Engineer, Northbound</span>
+              </div>
+              <span class="quote-team-size">19 people</span>
+            </div>
+          </div>
+          <div class="quote-card">
+            <blockquote>
+              “I didn’t think I cared about sub-50ms interactions in a tracker until I stopped dreading updating my tasks. It feels like a well-kept bench ledger instead of a ticketing system.”
+            </blockquote>
+            <div class="quote-author">
+              <div>
+                <strong>Devon Alverez</strong> — <span>Co-founder, Alder Audio</span>
+              </div>
+              <span class="quote-team-size">11 people</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PRICING ==================== -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Two plain tiers. No seat-tax games.</h2>
+          <p class="section-lead">
+            Every feature that makes Plumb pleasant to use—keyboard speed, GitHub sync, offline mode, full search—is included in the free Workshop tier. You only pay when your team outgrows five people.
+          </p>
+        </div>
+
+        <div class="pricing-controls">
+          <div class="seat-slider-wrap">
+            <label for="seatSlider">Team size:</label>
+            <input type="range" id="seatSlider" min="1" max="40" value="12" />
+            <span class="seat-count-badge" id="seatCountLabel">12 people</span>
+          </div>
+          <div class="billing-toggle" role="group" aria-label="Billing interval">
+            <button type="button" class="billing-opt active" data-billing="annual">Annual (save 20%)</button>
+            <button type="button" class="billing-opt" data-billing="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="plan-card" id="planWorkshop">
+            <div class="plan-head">
+              <h3 class="plan-name">Workshop</h3>
+              <span class="plan-fit">1 – 5 PEOPLE</span>
+            </div>
+            <div class="plan-price-row">
+              <span class="plan-price">$0</span>
+              <span class="plan-unit">forever</span>
+            </div>
+            <div class="plan-calc-note" id="workshopNote">Free for small founding teams.</div>
+            <p class="plan-desc">
+              Everything you need to run weekly cycles with a tight crew, with zero artificial walls or time limits.
+            </p>
+            <ul class="plan-list">
+              <li>Up to 5 active members, unlimited read-only guests</li>
+              <li>Unlimited cycles, issues, and Friday digests</li>
+              <li>GitHub, GitLab, and Slack digest integrations</li>
+              <li>Full JSON &amp; CSV export anytime, no lock-in</li>
+            </ul>
+            <button type="button" class="btn btn-secondary btn-lg" data-open-modal="signup">Start a free Workshop</button>
+          </div>
+
+          <div class="plan-card recommended-by-size" id="planStudio">
+            <div class="plan-head">
+              <h3 class="plan-name">Studio</h3>
+              <span class="plan-fit">6 – 40+ PEOPLE</span>
+            </div>
+            <div class="plan-price-row">
+              <span class="plan-price" id="studioUnitPrice">$8</span>
+              <span class="plan-unit" id="studioUnitLabel">/ seat / month, billed annually</span>
+            </div>
+            <div class="plan-calc-note" id="studioTotalNote">12 people = $96 / month ($1,152 / year)</div>
+            <p class="plan-desc">
+              For established product teams that want calm multi-team cycles, access controls, and direct engineer support.
+            </p>
+            <ul class="plan-list">
+              <li>Unlimited members &amp; multiple product ledgers</li>
+              <li>SAML SSO, Google Workspace sync, and audit log</li>
+              <li>Cross-team Friday rollup for founders &amp; leads</li>
+              <li>Email support directly from the engineers building Plumb</li>
+            </ul>
+            <button type="button" class="btn btn-primary btn-lg" data-open-modal="signup">Try Studio free for 30 days</button>
+          </div>
+        </div>
+
+        <p class="pricing-footnote">
+          Fair-billing promise: we never charge for inactive accounts, contractors who only comment, or read-only stakeholders. If someone leaves your team mid-cycle, we automatically credit the unused days to your next invoice.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== CLOSING BAND & FOOTER ==================== -->
+  <footer class="closing-band">
+    <div class="container">
+      <div class="closing-top">
+        <h2>A calmer ledger for the things you’re <em>building</em>.</h2>
+        <div>
+          <form class="signup-form" id="footerSignupForm">
+            <input type="email" class="signup-input" id="footerEmail" placeholder="name@company.com" required aria-label="Work email address" />
+            <button type="submit" class="btn btn-invert">Create workspace</button>
+          </form>
+          <div class="signup-feedback" id="footerFeedback">30 seconds to set up · No credit card required</div>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" style="color: var(--paper);">
+            <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <line x1="12" y1="2" x2="12" y2="11" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" />
+              <path d="M12 10L17.5 14.5L12 22L6.5 14.5L12 10Z" fill="#EB7B62" stroke="currentColor" stroke-width="1.5" stroke-linejoin="miter" />
+              <line x1="4" y1="2.75" x2="20" y2="2.75" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+            <span>Plumb</span>
+          </a>
+          <p class="footer-brand-note">
+            Independent software crafted for product teams who would rather ship than administer a backlog.
+          </p>
+          <div class="status-line">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>All systems operational · 99.98% (90d)</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#workbench">Interactive specimen</a></li>
+            <li><a href="#principles">Weekly cycles</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#" data-open-modal="handbook">Changelog (Nov 14)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Field Guide</h4>
+          <ul>
+            <li><a href="#" data-open-modal="handbook">Why 1-week cycles work</a></li>
+            <li><a href="#" data-open-modal="handbook">Migrating from Jira cleanly</a></li>
+            <li><a href="#" data-open-modal="handbook">Writing better Friday notes</a></li>
+            <li><a href="#" data-open-modal="handbook">Keyboard reference</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#" data-open-modal="handbook">About Plumb</a></li>
+            <li><a href="mailto:hello@plumb.work">hello@plumb.work</a></li>
+            <li><a href="#" data-open-modal="handbook">Security &amp; SOC 2</a></li>
+            <li><a href="#" data-open-modal="handbook">Privacy &amp; terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Plumb Software, Inc.</span>
+        <span>Built in Portland &amp; Copenhagen · No third-party trackers</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL DIALOG ==================== -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+      <div class="modal-head">
+        <h3 id="modalTitle">Create your workspace</h3>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      /* ==================== STATE: SPECIMEN WORKBENCH ==================== */
+      const STATUS_ORDER = ['todo', 'progress', 'review', 'done'];
+      const STATUS_META = {
+        todo:     { label: 'Todo',        cls: 'status-todo' },
+        progress: { label: 'In Progress', cls: 'status-progress' },
+        review:   { label: 'Review',      cls: 'status-review' },
+        blocked:  { label: 'Blocked',     cls: 'status-blocked' },
+        done:     { label: 'Done',        cls: 'status-done' }
+      };
+
+      const issues = [
+        {
+          id: 'ALD-204',
+          bucket: 'cycle',
+          title: 'Fix MIDI clock drift on USB-C wake',
+          status: 'progress',
+          est: '2d',
+          owner: 'M. Sato',
+          pr: 'PR #418',
+          updated: '18m ago',
+          notes: 'After host sleep > 15m on macOS 15, the STM32 timer drifts by ~4ms/min until soft reset. Switching PLL re-lock onto the SOF interrupt resolves it on Rev B boards.',
+          commentAuthor: 'T. Kowalski',
+          commentText: 'Tested your branch on the M3 Air for two hours — zero drift recorded.'
+        },
+        {
+          id: 'ALD-198',
+          bucket: 'cycle',
+          title: 'Export stems as 24-bit WAV in browser worker',
+          status: 'review',
+          est: '3d',
+          owner: 'T. Kowalski',
+          pr: 'PR #412',
+          updated: '1h ago',
+          notes: 'Moved PCM encoding off the main thread so the transport scrub bar stays responsive during 8-track bounces. Peak memory dropped from 410MB to 94MB.',
+          commentAuthor: 'N. Okafor',
+          commentText: 'Header checksum matches Logic and Reaper imports. One small nit on progress % rounding.'
+        },
+        {
+          id: 'ALD-211',
+          bucket: 'cycle',
+          title: 'Rework preset browser keyboard nav (arrows + Enter)',
+          status: 'progress',
+          est: '1d',
+          owner: 'N. Okafor',
+          pr: 'PR #421',
+          updated: '2h ago',
+          notes: 'Musicians audition presets with one hand on the synth and one on the laptop. Arrow keys should immediately preview patch state without requiring Enter to commit.',
+          commentAuthor: 'D. Alverez',
+          commentText: 'Yes! Let’s make Escape restore the previous patch cleanly.'
+        },
+        {
+          id: 'ALD-189',
+          bucket: 'cycle',
+          title: 'Calibration wizard stalls when mic permission denied',
+          status: 'blocked',
+          est: '4h',
+          owner: 'M. Sato',
+          pr: null,
+          updated: 'Yesterday',
+          notes: 'Safari 18 rejects getUserMedia silently if permission was previously revoked in System Settings. Need a fallback inline instruction step with a re-check button.',
+          commentAuthor: 'M. Sato',
+          commentText: 'Blocked waiting on QA’s Safari 18.1 test unit; will unblock Thursday morning.'
+        },
+        {
+          id: 'ALD-207',
+          bucket: 'cycle',
+          title: 'Draft Q4 enclosure tolerance sheet for Shenzhen run',
+          status: 'todo',
+          est: '1d',
+          owner: 'H. Lindqvist',
+          pr: null,
+          updated: 'Yesterday',
+          notes: 'Confirm anodized bead-blast finish sample #3 and tighten encoder shaft clearance from 0.20mm to 0.12mm before greenlighting the 500-unit pilot.',
+          commentAuthor: 'H. Lindqvist',
+          commentText: 'Calipers check done on pre-prod unit #4. Writing final PDF tomorrow.'
+        },
+        {
+          id: 'ALD-195',
+          bucket: 'cycle',
+          title: 'Trim web companion bundle below 180kb gzipped',
+          status: 'done',
+          est: '2d',
+          owner: 'T. Kowalski',
+          pr: 'PR #405',
+          updated: 'Tue 16:40',
+          notes: 'Replaced heavy DSP plotting lib with a 210-line canvas waveform renderer and dropped unused locale tables. Final bundle sits at 164kb gzipped.',
+          commentAuthor: 'T. Kowalski',
+          commentText: 'Merged to main and deployed to staging.'
+        },
+        {
+          id: 'ALD-214',
+          bucket: 'backlog',
+          title: 'Add SysEx bank import for legacy DX patches',
+          status: 'todo',
+          est: '3d',
+          owner: 'Unassigned',
+          pr: null,
+          updated: '3d ago',
+          notes: 'Requested by 14 beta testers. Needs checksum verification for malformed 32-voice dumps.',
+          commentAuthor: 'D. Alverez',
+          commentText: 'Good candidate for Cycle 19 once Rev B firmware is frozen.'
+        },
+        {
+          id: 'ALD-212',
+          bucket: 'backlog',
+          title: 'Print-ready quickstart card (A6 folded stock)',
+          status: 'todo',
+          est: '1d',
+          owner: 'H. Lindqvist',
+          pr: null,
+          updated: '4d ago',
+          notes: 'Two-color riso or offset print spec with QR link to the offline manual PDF.',
+          commentAuthor: 'H. Lindqvist',
+          commentText: 'Waiting on final knob legends before sending to press.'
+        },
+        {
+          id: 'ALD-209',
+          bucket: 'backlog',
+          title: 'Investigate WebMIDI permission persistence on Linux Chromium',
+          status: 'todo',
+          est: '4h',
+          owner: 'Unassigned',
+          pr: null,
+          updated: '5d ago',
+          notes: 'Verify udev rules documentation for Fedora and Arch users connecting over USB-C.',
+          commentAuthor: 'M. Sato',
+          commentText: 'Added udev snippet to internal wiki; needs clean user-facing doc.'
+        }
+      ];
+
+      let activeView = 'cycle';
+      let activeFilter = 'all';
+      let searchQuery = '';
+      let selectedId = 'ALD-204';
+      let nextIssueNum = 215;
+
+      const issueListEl = document.getElementById('issueList');
+      const inspectorEl = document.getElementById('issueInspector');
+      const updatesViewEl = document.getElementById('updatesView');
+      const toolbarEl = document.getElementById('issueToolbar');
+      const quickAddForm = document.getElementById('quickAddForm');
+      const newIssueTitle = document.getElementById('newIssueTitle');
+      const newIssueEst = document.getElementById('newIssueEst');
+      const searchInput = document.getElementById('issueSearch');
+      const statusHint = document.getElementById('specimenStatusHint');
+
+      function statusIconSvg(status) {
+        if (status === 'done') {
+          return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#2D6846" stroke="#2D6846"/><path d="M5 8.1L7.1 10.2L11.2 5.8" stroke="#FCFBF8" stroke-width="1.5" stroke-linecap="square"/></svg>';
+        }
+        if (status === 'progress') {
+          return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#245B6B" stroke-width="1.5"/><path d="M8 2A6 6 0 0 1 14 8H8V2Z" fill="#245B6B"/></svg>';
+        }
+        if (status === 'review') {
+          return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#9A6619" stroke-width="1.5"/><circle cx="8" cy="8" r="2.75" fill="#9A6619"/></svg>';
+        }
+        if (status === 'blocked') {
+          return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#C94124" stroke-width="1.5"/><line x1="5.2" y1="8" x2="10.8" y2="8" stroke="#C94124" stroke-width="1.6"/></svg>';
+        }
+        return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#847E73" stroke-width="1.5" stroke-dasharray="2.5 2"/></svg>';
+      }
+
+      function getFilteredIssues() {
+        return issues.filter(item => {
+          if (item.bucket !== activeView) return false;
+          if (activeFilter !== 'all' && item.status !== activeFilter) return false;
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            return item.title.toLowerCase().includes(q) ||
+                   item.id.toLowerCase().includes(q) ||
+                   item.owner.toLowerCase().includes(q);
+          }
+          return true;
+        });
+      }
+
+      function updateCycleMeter() {
+        const cycleItems = issues.filter(i => i.bucket === 'cycle');
+        const backlogItems = issues.filter(i => i.bucket === 'backlog');
+        const doneCount = cycleItems.filter(i => i.status === 'done').length;
+        const pct = cycleItems.length ? Math.round((doneCount / cycleItems.length) * 100) : 0;
+        document.getElementById('countCycle').textContent = cycleItems.length;
+        document.getElementById('countBacklog').textContent = backlogItems.length;
+        document.getElementById('cycleProgressText').textContent = `${doneCount} / ${cycleItems.length} shipped`;
+        document.getElementById('cycleProgressFill').style.width = `${pct}%`;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function renderInspector() {
+        const issue = issues.find(i => i.id === selectedId) || issues[0];
+        if (!issue) return;
+        const meta = STATUS_META[issue.status];
+        inspectorEl.innerHTML = `
+          <div class="inspector-top">
+            <span>${escapeHtml(issue.id)} · ${issue.bucket === 'cycle' ? 'Cycle 18' : 'Backlog'}</span>
+            <span>Updated ${escapeHtml(issue.updated)}</span>
+          </div>
+          <h3 class="inspector-title">${escapeHtml(issue.title)}</h3>
+          <div class="inspector-meta-grid">
+            <span class="meta-label">Status</span>
+            <span class="meta-val"><span class="status-pill ${meta.cls}">${meta.label}</span></span>
+            <span class="meta-label">Owner</span>
+            <span class="meta-val">${escapeHtml(issue.owner)}</span>
+            <span class="meta-label">Estimate</span>
+            <span class="meta-val mono">${escapeHtml(issue.est)}</span>
+            <span class="meta-label">Branch</span>
+            <span class="meta-val">${issue.pr ? `<span class="pr-tag">${escapeHtml(issue.pr)}</span>` : '<span style="color:var(--ink-muted)">No PR linked</span>'}</span>
+          </div>
+          <p class="inspector-notes">${escapeHtml(issue.notes)}</p>
+          <div class="inspector-note-box">
+            <div class="inspector-comment">
+              <strong>${escapeHtml(issue.commentAuthor)}:</strong> ${escapeHtml(issue.commentText)}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderIssues() {
+        updateCycleMeter();
+
+        if (activeView === 'updates') {
+          toolbarEl.style.display = 'none';
+          quickAddForm.classList.remove('open');
+          issueListEl.style.display = 'none';
+          updatesViewEl.classList.add('visible');
+          renderInspector();
+          return;
+        }
+
+        toolbarEl.style.display = 'flex';
+        issueListEl.style.display = 'block';
+        updatesViewEl.classList.remove('visible');
+
+        const list = getFilteredIssues();
+        if (list.length === 0) {
+          issueListEl.innerHTML = `<div style="padding:36px 20px;text-align:center;color:var(--ink-muted);font-size:0.86rem;">No matching issues in this view. Try clearing your filter or press <kbd>C</kbd> to add one.</div>`;
+          renderInspector();
+          return;
+        }
+
+        if (!list.some(i => i.id === selectedId)) {
+          selectedId = list[0].id;
+        }
+
+        issueListEl.innerHTML = list.map(item => {
+          const meta = STATUS_META[item.status];
+          const isSelected = item.id === selectedId;
+          const isDone = item.status === 'done';
+          return `
+            <div class="issue-row ${isSelected ? 'selected' : ''} ${isDone ? 'done-row' : ''}" role="listitem" data-id="${escapeHtml(item.id)}">
+              <button type="button" class="status-toggle" data-toggle-id="${escapeHtml(item.id)}" title="Cycle status (${meta.label})" aria-label="Change status of ${escapeHtml(item.id)}">
+                ${statusIconSvg(item.status)}
+              </button>
+              <span class="issue-id">${escapeHtml(item.id)}</span>
+              <span class="issue-title">${escapeHtml(item.title)}</span>
+              <span class="status-pill ${meta.cls}">${meta.label}</span>
+              <span class="issue-est">${escapeHtml(item.est)}</span>
+              <span class="issue-owner">${escapeHtml(item.owner)}</span>
+            </div>
+          `;
+        }).join('');
+
+        renderInspector();
+      }
+
+      function cycleIssueStatus(id) {
+        const item = issues.find(i => i.id === id);
+        if (!item) return;
+        const idx = STATUS_ORDER.indexOf(item.status);
+        item.status = idx === -1 ? 'progress' : STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+        item.updated = 'just now';
+        selectedId = item.id;
+        statusHint.textContent = `${item.id} moved to ${STATUS_META[item.status].label} · synced in 9ms`;
+        renderIssues();
+      }
+
+      issueListEl.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('[data-toggle-id]');
+        if (toggleBtn) {
+          e.stopPropagation();
+          cycleIssueStatus(toggleBtn.dataset.toggleId);
+          return;
+        }
+        const row = e.target.closest('.issue-row');
+        if (row) {
+          selectedId = row.dataset.id;
+          renderIssues();
+        }
+      });
+
+      document.querySelectorAll('.specimen-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.specimen-tab').forEach(t => t.setAttribute('aria-selected', 'false'));
+          tab.setAttribute('aria-selected', 'true');
+          activeView = tab.dataset.view;
+          renderIssues();
+        });
+      });
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          renderIssues();
+        });
+      });
+
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        renderIssues();
+      });
+
+      document.getElementById('toggleQuickAdd').addEventListener('click', () => {
+        quickAddForm.classList.toggle('open');
+        if (quickAddForm.classList.contains('open')) {
+          newIssueTitle.focus();
+        }
+      });
+
+      quickAddForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = newIssueTitle.value.trim();
+        if (!title) return;
+        const id = `ALD-${nextIssueNum++}`;
+        const bucket = activeView === 'backlog' ? 'backlog' : 'cycle';
+        issues.unshift({
+          id,
+          bucket,
+          title,
+          status: 'todo',
+          est: newIssueEst.value,
+          owner: 'You',
+          pr: null,
+          updated: 'just now',
+          notes: 'Added directly from the interactive landing page specimen. Click its status circle to move it through the cycle.',
+          commentAuthor: 'Plumb',
+          commentText: 'Saved locally in 7ms and queued for team sync.'
+        });
+        selectedId = id;
+        activeFilter = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        newIssueTitle.value = '';
+        quickAddForm.classList.remove('open');
+        statusHint.textContent = `Added ${id} to ${bucket === 'cycle' ? 'Cycle 18' : 'Backlog'} · 7ms local`;
+        renderIssues();
+      });
+
+      /* Keyboard shortcuts when not typing in an input */
+      document.addEventListener('keydown', (e) => {
+        const tag = document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+          if (e.key === 'Escape') {
+            document.activeElement.blur();
+            quickAddForm.classList.remove('open');
+          }
+          return;
+        }
+        if (modalBackdrop.classList.contains('open')) {
+          if (e.key === 'Escape') closeModal();
+          return;
+        }
+        if (e.key === '/') {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key.toLowerCase() === 'c') {
+          e.preventDefault();
+          if (activeView === 'updates') {
+            document.querySelector('[data-view="cycle"]').click();
+          }
+          quickAddForm.classList.add('open');
+          newIssueTitle.focus();
+        } else if (e.key.toLowerCase() === 'j' || e.key.toLowerCase() === 'k') {
+          const list = getFilteredIssues();
+          if (!list.length) return;
+          const idx = list.findIndex(i => i.id === selectedId);
+          const nextIdx = e.key.toLowerCase() === 'j'
+            ? (idx + 1) % list.length
+            : (idx - 1 + list.length) % list.length;
+          selectedId = list[nextIdx].id;
+          renderIssues();
+        }
+      });
+
+      renderIssues();
+
+      /* ==================== PLATE 1: SCOPE CUTTER ==================== */
+      const scopeList = document.getElementById('scopeList');
+      const scopeTotalLabel = document.getElementById('scopeTotalLabel');
+      const scopeVerdict = document.getElementById('scopeVerdict');
+      const CAPACITY = 6.0;
+
+      function updateScopeMath() {
+        let total = 0;
+        scopeList.querySelectorAll('.scope-item').forEach(row => {
+          if (!row.classList.contains('cut')) {
+            total += parseFloat(row.dataset.days);
+          }
+        });
+        scopeTotalLabel.textContent = `Committed: ${total.toFixed(1)}d / ${CAPACITY.toFixed(1)}d`;
+        if (total > CAPACITY) {
+          scopeVerdict.className = 'scope-status-tight';
+          scopeVerdict.textContent = `Over by ${(total - CAPACITY).toFixed(1)}d — cut to ship Friday`;
+        } else {
+          scopeVerdict.className = 'scope-status-ok';
+          const buffer = CAPACITY - total;
+          scopeVerdict.textContent = buffer === 0 ? 'Exact fit — ready to ship' : `Square · ${buffer.toFixed(1)}d buffer`;
+        }
+      }
+
+      scopeList.addEventListener('click', (e) => {
+        const btn = e.target.closest('.scope-cut-btn');
+        if (!btn) return;
+        const row = btn.closest('.scope-item');
+        row.classList.toggle('cut');
+        btn.textContent = row.classList.contains('cut') ? 'Restore' : 'Cut';
+        updateScopeMath();
+      });
+
+      /* ==================== PLATE 3: SHORTCUT LATENCY DECK ==================== */
+      const shortcutDeck = document.getElementById('shortcutDeck');
+      const latencyAction = document.getElementById('latencyAction');
+      const latencyMs = document.getElementById('latencyMs');
+
+      shortcutDeck.addEventListener('click', (e) => {
+        const btn = e.target.closest('.shortcut-btn');
+        if (!btn) return;
+        shortcutDeck.querySelectorAll('.shortcut-btn').forEach(b => b.classList.remove('triggered'));
+        btn.classList.add('triggered');
+        const jitter = Math.floor(Math.random() * 4);
+        const ms = parseInt(btn.dataset.ms, 10) + jitter;
+        latencyAction.textContent = btn.dataset.action;
+        latencyMs.textContent = `${ms}ms local`;
+      });
+
+      /* ==================== WEEKLY CADENCE TABS ==================== */
+      const RHYTHM_DATA = {
+        mon: {
+          heading: 'Pick the 6 to 10 things that actually matter this week.',
+          copy: 'On Monday morning, Plumb shows what carried over from last Friday alongside your curated backlog. Drag only what fits your real capacity into the active cycle. Everything else stays calmly out of sight until next Monday.',
+          artifact: `<strong>CYCLE 18 · OPENED MON 09:15</strong><br />Carried over: 1 issue (ALD-189)<br />Newly committed: 5 issues (9.5d est)<br />Team capacity: 4 engineers · 12.0d available<br /><span style="color:var(--moss);">Status: Square (2.5d buffer for support)</span>`
+        },
+        tue: {
+          heading: 'Close the tab and build. GitHub updates the ledger for you.',
+          copy: 'Opening a pull request with an issue ID automatically moves the task to In Progress. Merging moves it to Review or Done. Nobody gets pinged at 10:15am asking for a status update they already wrote in a commit.',
+          artifact: `<strong>GITHUB SYNC · TUE 14:22</strong><br />PR #418 opened by @msato → ALD-204<br />Status: Todo → In Progress<br />Checks: 4/4 passing (firmware-ci)<br /><span style="color:var(--slate);">0 manual ticket updates needed</span>`
+        },
+        wed: {
+          heading: 'Trim scope on Wednesday before it becomes a Friday panic.',
+          copy: 'By Wednesday afternoon, you know which task turned out twice as knotty as expected. Plumb highlights stalled items gently so you can cut a lower-priority chore back to the backlog while there is still time to finish strong.',
+          artifact: `<strong>MID-WEEK CHECK · WED 15:30</strong><br />Shipped so far: 2 / 6<br />Flagged: ALD-189 (no movement 36h)<br />Action: Deferred ALD-207 → Cycle 19<br /><span style="color:var(--ochre);">Friday target restored to green</span>`
+        },
+        thu: {
+          heading: 'Review work in context, not buried in chat threads.',
+          copy: 'Every task in Review sits in a clean single-column queue with its linked PR, original spec paragraph, and estimate side-by-side. Reviewers clear the queue from the keyboard in minutes.',
+          artifact: `<strong>REVIEW QUEUE · THU 11:05</strong><br />ALD-198 · Export 24-bit WAV · PR #412<br />Reviewer: N. Okafor (approved)<br />Bundle delta: -14.2kb gzipped<br /><span style="color:var(--moss);">Ready to merge for Friday beta</span>`
+        },
+        fri: {
+          heading: 'Four minutes on Friday replaces an hour of Monday meetings.',
+          copy: 'At 3pm Friday, Plumb compiles everything shipped, every merged PR, and what rolled over into a plain-text digest. Add a short human note about what you learned, publish to Slack or email, and close your laptop cleanly.',
+          artifact: `<strong>FRIDAY NOTE · PUBLISHED 15:12</strong><br />Shipped: 5 issues · Rolled over: 1<br />Read by: 11/11 team members<br />Next cycle opens automatically Mon 08:00<br /><span style="color:var(--moss);">Have a quiet weekend.</span>`
+        }
+      };
+
+      document.querySelectorAll('.rhythm-day').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.rhythm-day').forEach(b => b.setAttribute('aria-selected', 'false'));
+          btn.setAttribute('aria-selected', 'true');
+          const d = RHYTHM_DATA[btn.dataset.day];
+          document.getElementById('rhythmHeading').textContent = d.heading;
+          document.getElementById('rhythmCopy').textContent = d.copy;
+          document.getElementById('rhythmArtifact').innerHTML = d.artifact;
+        });
+      });
+
+      /* ==================== PRICING CALCULATOR ==================== */
+      const seatSlider = document.getElementById('seatSlider');
+      const seatCountLabel = document.getElementById('seatCountLabel');
+      const planWorkshop = document.getElementById('planWorkshop');
+      const planStudio = document.getElementById('planStudio');
+      const studioUnitPrice = document.getElementById('studioUnitPrice');
+      const studioUnitLabel = document.getElementById('studioUnitLabel');
+      const studioTotalNote = document.getElementById('studioTotalNote');
+      const workshopNote = document.getElementById('workshopNote');
+      let billing = 'annual';
+
+      function updatePricing() {
+        const seats = parseInt(seatSlider.value, 10);
+        const rate = billing === 'annual' ? 8 : 10;
+        seatCountLabel.textContent = seats === 1 ? '1 person' : `${seats} people`;
+        studioUnitPrice.textContent = `$${rate}`;
+        studioUnitLabel.textContent = billing === 'annual'
+          ? '/ seat / month, billed annually'
+          : '/ seat / month, billed monthly';
+
+        if (seats <= 5) {
+          planWorkshop.classList.add('recommended-by-size');
+          planStudio.classList.remove('recommended-by-size');
+          workshopNote.textContent = `Fits your team of ${seats} — $0 forever.`;
+          studioTotalNote.textContent = `Optional if you need SAML SSO ($${seats * rate}/mo).`;
+        } else {
+          planWorkshop.classList.remove('recommended-by-size');
+          planStudio.classList.add('recommended-by-size');
+          workshopNote.textContent = 'Workshop covers up to 5 active members.';
+          const monthlyTotal = seats * rate;
+          studioTotalNote.textContent = billing === 'annual'
+            ? `${seats} people = $${monthlyTotal} / month ($${(monthlyTotal * 12).toLocaleString()} / year)`
+            : `${seats} people = $${monthlyTotal} / month, cancel anytime`;
+        }
+      }
+
+      seatSlider.addEventListener('input', updatePricing);
+      document.querySelectorAll('.billing-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.billing-opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          billing = btn.dataset.billing;
+          updatePricing();
+        });
+      });
+      updatePricing();
+
+      /* ==================== FOOTER SIGNUP ==================== */
+      const footerForm = document.getElementById('footerSignupForm');
+      const footerEmail = document.getElementById('footerEmail');
+      const footerFeedback = document.getElementById('footerFeedback');
+
+      footerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = footerEmail.value.trim();
+        if (!email) return;
+        footerFeedback.classList.add('success');
+        footerFeedback.textContent = `Invite link prepared for ${email}. Check your inbox to name your first ledger.`;
+        footerEmail.value = '';
+      });
+
+      /* ==================== MOBILE NAV ==================== */
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mainNav = document.getElementById('mainNav');
+      mobileMenuBtn.addEventListener('click', () => {
+        const open = mainNav.classList.toggle('mobile-open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+      });
+      mainNav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          mainNav.classList.remove('mobile-open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* ==================== MODALS ==================== */
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      const modalClose = document.getElementById('modalClose');
+
+      function openModal(type) {
+        if (type === 'handbook') {
+          modalTitle.textContent = 'The Plumb Field Guide';
+          modalBody.innerHTML = `
+            <p class="mono" style="font-size:0.75rem;color:var(--vermilion);margin-bottom:14px;">EXCERPT · CHAPTER 1: KEEP THE LEDGER FLAT</p>
+            <p>Most project software grows by accretion. A team adds one custom field for quarterly planning, another for customer tier, and three workflow columns for QA handoffs. Six months later, opening a ticket feels like filing a tax return.</p>
+            <p>We built Plumb around three constraints we refuse to relax:</p>
+            <p><strong>1. One week at a time.</strong> Two-week sprints hide slippage until day eleven. Weekly cycles keep commitments small enough that everyone remembers why they picked them on Monday.</p>
+            <p><strong>2. Flat lists beat nested trees.</strong> Sub-sub-tasks hide real work. If a deliverable takes more than three days, split it into two plain items on the same list.</p>
+            <p><strong>3. Written Friday notes beat daily standups.</strong> Synchronous check-ins interrupt makers. A four-minute written digest builds an archive you can actually search six months later.</p>
+            <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+              <button type="button" class="btn btn-primary" data-switch-modal="signup">Start a workspace</button>
+            </div>
+          `;
+        } else if (type === 'signin') {
+          modalTitle.textContent = 'Sign in to Plumb';
+          modalBody.innerHTML = `
+            <p>Enter your work email and we’ll send a one-time sign-in link, or continue with your workspace SSO.</p>
+            <form id="modalAuthForm">
+              <div class="field-group">
+                <label for="signinEmail">Work email</label>
+                <input id="signinEmail" type="email" placeholder="maren@northbound.co" required />
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Send sign-in link</button>
+            </form>
+          `;
+        } else {
+          modalTitle.textContent = 'Start your Plumb workspace';
+          modalBody.innerHTML = `
+            <p>Free forever for up to 5 people. Takes 30 seconds — and you can import existing issues from Jira, Linear, or GitHub right after.</p>
+            <form id="modalAuthForm">
+              <div class="field-group">
+                <label for="wsName">Team or studio name</label>
+                <input id="wsName" type="text" placeholder="Alder Audio" required />
+              </div>
+              <div class="field-group">
+                <label for="wsEmail">Work email</label>
+                <input id="wsEmail" type="email" placeholder="you@company.com" required />
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Create workspace</button>
+            </form>
+          `;
+        }
+
+        modalBackdrop.classList.add('open');
+        const firstInput = modalBody.querySelector('input');
+        if (firstInput) setTimeout(() => firstInput.focus(), 40);
+
+        const switchBtn = modalBody.querySelector('[data-switch-modal]');
+        if (switchBtn) {
+          switchBtn.addEventListener('click', () => openModal(switchBtn.dataset.switchModal));
+        }
+
+        const form = modalBody.querySelector('#modalAuthForm');
+        if (form) {
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailVal = form.querySelector('input[type="email"]').value.trim();
+            modalBody.innerHTML = `
+              <p style="color:var(--moss);font-weight:500;">Link dispatched to ${escapeHtml(emailVal)}.</p>
+              <p>Because this is a standalone HTML landing page preview, no real email was sent — but your form flow is wired and ready to connect to your auth endpoint.</p>
+              <div style="margin-top:18px;text-align:right;">
+                <button type="button" class="btn btn-secondary" id="doneModalBtn">Back to page</button>
+              </div>
+            `;
+            document.getElementById('doneModalBtn').addEventListener('click', closeModal);
+          });
+        }
+      }
+
+      function closeModal() {
+        modalBackdrop.classList.remove('open');
+      }
+
+      document.querySelectorAll('[data-open-modal]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          openModal(el.dataset.openModal);
+        });
+      });
+
+      document.getElementById('navHandbookLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal('handbook');
+      });
+
+      modalClose.addEventListener('click', closeModal);
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>

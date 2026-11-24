@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f3ed">
+<meta name="description" content="Selected landscape studies from the independent photography portfolio of Ellis Rowan.">
+<title>Ellis Rowan — Field Studies</title>
+<style>
+  :root {
+    --paper: #f5f3ed;
+    --ink: #242420;
+    --rule: #c8c7bd;
+    --accent: #aa452b;
+    --serif: "Baskerville", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: "DM Sans", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+  a { color: inherit; text-decoration: none; }
+  button { color: inherit; font: inherit; cursor: pointer; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .page { width: min(100% - clamp(36px, 9vw, 160px), 1520px); margin: auto; }
+  header { min-height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--rule); }
+  .brand { font: 600 23px var(--serif); letter-spacing: -.07em; display: flex; align-items: center; gap: 11px; }
+  .mark { display: inline-block; width: 21px; height: 21px; border: 1px solid; border-radius: 50%; background: repeating-conic-gradient(from 15deg, var(--ink) 0 28deg, transparent 28deg 60deg); }
+  nav { display: flex; gap: clamp(18px, 3vw, 46px); align-items: center; font-size: 13px; }
+  nav a:hover, footer a:hover { color: var(--accent); }
+  .contact { border: 1px solid #aba99e; border-radius: 40px; padding: 9px 15px; }
+  .intro { display: flex; align-items: end; justify-content: space-between; gap: 30px; padding: clamp(35px, 5vw, 78px) 0 27px; }
+  .eyebrow, .index, .tag { font: 10px/1.5 "Courier New", monospace; letter-spacing: .13em; text-transform: uppercase; }
+  .eyebrow { display: flex; align-items: center; gap: 9px; }
+  .eyebrow::before { content: ""; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+  h1, h2, h3, p, figure { margin: 0; }
+  h1 { font: 400 clamp(62px, 9.6vw, 150px)/.98 var(--serif); letter-spacing: -.075em; margin: 12px 0 0 -4px; }
+  h1 em { font-weight: 400; }
+  .intro p { max-width: 270px; margin-bottom: 5px; font: 17px/1.45 var(--serif); }
+  .frame { border: 0; padding: 0; width: 100%; display: block; overflow: hidden; position: relative; background: #9faaa1; }
+  canvas { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero .frame { aspect-ratio: 2.72; }
+  .hero .frame::after { content: "↗"; position: absolute; right: 16px; bottom: 16px; width: 32px; height: 32px; display: grid; place-items: center; color: white; border: 1px solid #ffffff90; border-radius: 50%; }
+  figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 11px; }
+  .caption { font: italic 17px var(--serif); }
+  .index { color: #696960; font-size: 10px; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 13px; margin: 55px 0 22px; }
+  h2 { font: 400 clamp(32px, 4vw, 58px)/1.1 var(--serif); letter-spacing: -.055em; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(15px, 2vw, 32px); }
+  .grid .frame { aspect-ratio: 1.35; }
+  .frame canvas { transition: transform .6s ease; }
+  .frame:hover canvas { transform: scale(1.025); }
+  .about { border-top: 1px solid var(--rule); margin-top: 70px; padding: 38px 0 60px; display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+  .about p { max-width: 680px; font: clamp(22px, 2.5vw, 40px)/1.25 var(--serif); letter-spacing: -.03em; margin-bottom: 20px; }
+  .email { display: inline-block; border-bottom: 1px solid; padding-bottom: 3px; font-size: 14px; }
+  footer { border-top: 1px solid var(--rule); padding: 18px 0 28px; display: flex; justify-content: space-between; gap: 16px; }
+  dialog { width: min(96vw, 1200px); max-height: 94dvh; border: 0; padding: 14px; background: var(--paper); color: var(--ink); }
+  dialog::backdrop { background: #151714e8; }
+  .viewer-head, .viewer-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .viewer-head { margin-bottom: 12px; }
+  .viewer-foot { margin-top: 12px; }
+  dialog canvas { width: 100%; height: auto; max-height: 70dvh; object-fit: contain; }
+  dialog button { background: transparent; border: 1px solid var(--rule); padding: 7px 12px; border-radius: 30px; }
+  @media (max-width: 700px) {
+    header { min-height: 64px; }
+    .brand { font-size: 20px; gap: 7px; }
+    nav { gap: 13px; font-size: 12px; }
+    .contact { padding: 6px 10px; }
+    .intro { display: block; }
+    .intro p { margin: 16px 0 0; max-width: 350px; }
+    .hero .frame { aspect-ratio: 1.38; }
+    .grid { grid-template-columns: 1fr; gap: 25px; }
+    .about { grid-template-columns: 1fr; margin-top: 45px; }
+    .section-head { margin-top: 38px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .frame canvas { transition: none; }
+  }
+</style>
+</head>
+<body id="top">
+<div class="page">
+  <header>
+    <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span>Ellis Rowan</a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a><a href="#about">About</a><a class="contact" href="#contact">Contact ↗</a>
+    </nav>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <div><div class="eyebrow">Independent photographer</div><h1 id="title">Field <em>Studies</em></h1></div>
+      <p>A landscape portfolio by Ellis Rowan, following the quiet edges of water, weather, and stone.</p>
+    </section>
+    <figure class="hero">
+      <button class="frame" data-scene="0" aria-label="View After the Rain">
+        <canvas width="1440" height="540" role="img" aria-label="Soft evening light falls across a folded green mountain valley."></canvas>
+      </button>
+      <figcaption><span class="caption">After the Rain, Highlands</span><span class="index">Fig. 01 / 04</span></figcaption>
+    </figure>
+    <section id="work" aria-labelledby="work-title">
+      <div class="section-head"><h2 id="work-title">Selected work</h2><span class="index">Field archive</span></div>
+      <div class="grid">
+        <figure>
+          <button class="frame" data-scene="1" aria-label="View Salt Line"><canvas width="720" height="540" role="img" aria-label="Pale surf threads along a dark headland on a misty coast."></canvas></button>
+          <figcaption><span class="caption">Salt Line</span><span class="index">Fig. 02</span></figcaption>
+        </figure>
+        <figure>
+          <button class="frame" data-scene="2" aria-label="View Last Light"><canvas width="720" height="540" role="img" aria-label="Copper dunes overlap beneath a dusty apricot sky."></canvas></button>
+          <figcaption><span class="caption">Last Light</span><span class="index">Fig. 03</span></figcaption>
+        </figure>
+        <figure>
+          <button class="frame" data-scene="3" aria-label="View Upper Basin"><canvas width="720" height="540" role="img" aria-label="Snow collects in the gullies of a distant slate-blue mountain range."></canvas></button>
+          <figcaption><span class="caption">Upper Basin</span><span class="index">Fig. 04</span></figcaption>
+        </figure>
+      </div>
+    </section>
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">About Ellis</h2>
+      <div><p>I’m a freelance photographer based in Scotland. I return to the same places through the seasons, watching how a passing shower or a falling tide redraws a familiar view.</p>
+      <a id="contact" class="email" href="mailto:ellis@example.com">Commission enquiries ↗</a></div>
+    </section>
+  </main>
+  <footer class="tag"><span>© Ellis Rowan</span><a href="#top">Back to top ↑</a></footer>
+</div>
+<dialog aria-labelledby="viewer-title">
+  <div class="viewer-head"><span class="caption" id="viewer-title"></span><button id="close" autofocus>Close ×</button></div>
+  <canvas id="enlarged" role="img"></canvas>
+  <div class="viewer-foot"><button id="prev" aria-label="Previous image">← Previous</button><span class="index" id="count"></span><button id="next" aria-label="Next image">Next →</button></div>
+</dialog>
+<script>
+/* Original procedural landscape studies keep the portfolio entirely offline. */
+const fields = [...document.querySelectorAll("[data-scene]")];
+const table = new Float32Array(65536);
+let seed = 1732;
+for (let i = 0; i < table.length; i++) {
+  seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+  table[i] = seed / 4294967296;
+}
+function noise(x, y) {
+  const ix = Math.floor(x), iy = Math.floor(y);
+  let u = x - ix, v = y - iy;
+  u *= u * (3 - 2*u);
+  v *= v * (3 - 2*v);
+  const k = (ix + iy * 251) & 65535;
+  const a = table[k], b = table[(k+1)&65535];
+  const c = table[(k+251)&65535], d = table[(k+252)&65535];
+  return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
+}
+function terrain(x,y) {
+  return .52*noise(x,y)+.27*noise(x*2.1,y*2.1)+.14*noise(x*4.4,y*4.4)+.07*noise(x*9,y*9);
+}
+const skies = [[165,179,179],[170,184,185],[211,173,144],[163,176,187]];
+const earth = [[78,83,56],[61,70,61],[175,113,76],[91,102,111]];
+function render(canvas, scene) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  const frame = ctx.createImageData(w,h), pixels = frame.data;
+  const sky = skies[scene], soil = earth[scene];
+  for (let col=0; col<w; col++) {
+    const x=col/w, ridges=[];
+    for (let layer=0; layer<5; layer++) {
+      const n=terrain(x*(scene===2?2:4)+layer*13,scene*19+layer);
+      const valley=scene===0 ? .17*Math.cos((x-.48)*6+layer*.62) : 0;
+      ridges.push(.27+layer*.119+(n-.5)*(scene===2?.30:.65)+valley);
+    }
+    for (let row=0; row<h; row++) {
+      const y=row/h, i=(row*w+col)*4;
+      const grain=(table[(row*571+col*17)&65535]-.5)*7;
+      let layer=-1;
+      for(let j=0;j<5;j++) if(y>=ridges[j]) layer=j;
+      const cloud=terrain(x*5+14,y*9+scene*11);
+      let r,g,b;
+      if(layer<0) {
+        const light=y*72+cloud*37+Math.max(0,1-Math.abs(x-.72)*2)*9;
+        r=sky[0]+light; g=sky[1]+light*.84; b=sky[2]+light*.71;
+      } else if(scene===1 && y>.47+.32*x+.09*noise(x*5,2)) {
+        const line=y-(.47+.32*x+.09*noise(x*5,2));
+        const ripple=noise(x*38,y*290);
+        const foam=Math.max(0,1-line*22)*noise(x*92,y*55)*96;
+        r=113+ripple*18+foam; g=137+ripple*17+foam; b=139+ripple*15+foam;
+      } else {
+        const depth=y-ridges[layer];
+        const fold=terrain(x*13+depth*4+layer,depth*5+layer*9);
+        const grass=noise(x*160,y*90);
+        const shade=(fold-.5)*(scene===2?100:138)+(grass-.5)*17-depth*23;
+        const haze=(4-layer)*.15;
+        r=soil[0]*(1-haze)+(sky[0]+10)*haze+shade;
+        g=soil[1]*(1-haze)+(sky[1]+10)*haze+shade*.91;
+        b=soil[2]*(1-haze)+(sky[2]+10)*haze+shade*.73;
+        if(scene===3) {
+          const snow=Math.min(1,Math.max(0,(fold-depth*.85+.13*grass-.47)*10));
+          r+=(225-r)*snow; g+=(230-g)*snow; b+=(231-b)*snow;
+        }
+      }
+      pixels[i]=r+grain; pixels[i+1]=g+grain; pixels[i+2]=b+grain; pixels[i+3]=255;
+    }
+  }
+  ctx.putImageData(frame,0,0);
+}
+fields.forEach((button,index)=>render(button.firstElementChild,index));
+const dialog=document.querySelector("dialog"), enlarged=document.querySelector("#enlarged");
+let active=0;
+function show(index) {
+  active=(index+fields.length)%fields.length;
+  const source=fields[active].firstElementChild;
+  enlarged.width=source.width; enlarged.height=source.height;
+  enlarged.getContext("2d").drawImage(source,0,0);
+  enlarged.setAttribute("aria-label",source.getAttribute("aria-label"));
+  document.querySelector("#viewer-title").textContent=fields[active].nextElementSibling.querySelector(".caption").textContent;
+  document.querySelector("#count").textContent=`Fig. 0${active+1} / 04`;
+  if(!dialog.open) dialog.showModal();
+}
+fields.forEach((button,index)=>button.addEventListener("click",()=>show(index)));
+document.querySelector("#prev").onclick=()=>show(active-1);
+document.querySelector("#next").onclick=()=>show(active+1);
+document.querySelector("#close").onclick=()=>dialog.close();
+dialog.addEventListener("keydown",event=>{
+  if(event.key==="ArrowLeft") show(active-1);
+  if(event.key==="ArrowRight") show(active+1);
+});
+dialog.addEventListener("click",event=>{
+  if(event.target!==dialog) return;
+  const box=dialog.getBoundingClientRect();
+  if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom) dialog.close();
+});
+</script>
+</body>
+</html>

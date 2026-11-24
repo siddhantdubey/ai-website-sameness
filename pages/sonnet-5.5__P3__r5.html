@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mara Ellison — Photographer</title>
+<meta name="description" content="Mara Ellison is a freelance photographer working in landscape, portrait, street and editorial photography.">
+<style>
+  :root{
+    --bg:#0f0e0c;
+    --bg2:#171512;
+    --ink:#ece6da;
+    --mute:#9b9384;
+    --line:#2b2822;
+    --accent:#e0a458;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  img{display:block;max-width:100%}
+  .wrap{width:min(1200px,92vw);margin-inline:auto}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#000;padding:.5rem 1rem;z-index:100}
+  .skip:focus{left:0}
+
+  /* header */
+  header.nav{position:fixed;inset:0 0 auto 0;z-index:20;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+  header.nav.solid{background:rgba(15,14,12,.88);backdrop-filter:blur(10px);border-color:var(--line)}
+  .nav .wrap{display:flex;justify-content:space-between;align-items:center;height:68px}
+  .logo{font-family:var(--serif);font-size:1.15rem;letter-spacing:.04em;text-decoration:none}
+  .logo span{color:var(--accent)}
+  nav ul{display:flex;gap:2rem;list-style:none}
+  nav a{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--mute);transition:color .2s}
+  nav a:hover{color:var(--ink)}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--ink);padding:.4rem .8rem;font:inherit;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+
+  /* hero */
+  .hero{min-height:100svh;display:grid;align-items:end;position:relative;overflow:hidden;padding:0 0 9vh}
+  .hero-art{position:absolute;inset:0}
+  .hero-art svg{width:100%;height:100%;display:block}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 2%,rgba(15,14,12,.35) 45%,rgba(15,14,12,.1))}
+  .hero .wrap{position:relative;z-index:2}
+  .eyebrow{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.8rem,8.5vw,7.5rem);line-height:.98;letter-spacing:-.02em;max-width:14ch}
+  h1 em{font-style:italic;color:var(--accent)}
+  .hero p.lede{max-width:46ch;color:#cfc8b9;margin-top:1.6rem;font-size:1.05rem}
+  .cta{display:inline-flex;gap:.7rem;align-items:center;margin-top:2.2rem;padding:.9rem 1.6rem;border:1px solid var(--ink);text-decoration:none;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;transition:.25s}
+  .cta:hover{background:var(--ink);color:var(--bg)}
+
+  section{padding:clamp(4.5rem,10vw,8rem) 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;margin-bottom:3rem}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,4.5vw,3.4rem);letter-spacing:-.01em;line-height:1.1}
+  .num{font-size:.72rem;letter-spacing:.3em;color:var(--mute);text-transform:uppercase;display:block;margin-bottom:.8rem}
+
+  /* filters */
+  .filters{display:flex;gap:.4rem;flex-wrap:wrap}
+  .filters button{background:none;border:1px solid var(--line);color:var(--mute);padding:.5rem 1.1rem;font:inherit;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border-radius:99px;transition:.2s}
+  .filters button:hover{color:var(--ink);border-color:var(--mute)}
+  .filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+  /* gallery */
+  .grid{columns:3 300px;column-gap:1rem}
+  .item{break-inside:avoid;margin-bottom:1rem;position:relative;cursor:zoom-in;overflow:hidden;background:var(--bg2);border:0;padding:0;display:block;width:100%;text-align:left;color:inherit}
+  .item img{width:100%;height:auto;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .4s}
+  .item:hover img,.item:focus-visible img{transform:scale(1.04)}
+  .item .cap{position:absolute;inset:auto 0 0 0;padding:2.5rem 1.1rem 1rem;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);opacity:0;transform:translateY(8px);transition:.35s}
+  .item:hover .cap,.item:focus-visible .cap{opacity:1;transform:none}
+  .cap b{display:block;font-family:var(--serif);font-weight:400;font-size:1.15rem}
+  .cap small{color:#cfc8b9;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase}
+  .item.hide{display:none}
+  @media (hover:none){.item .cap{opacity:1;transform:none}}
+
+  /* about */
+  .about{background:var(--bg2);border-block:1px solid var(--line)}
+  .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(2rem,6vw,6rem);align-items:center}
+  .portrait{aspect-ratio:4/5;overflow:hidden;position:relative}
+  .portrait svg{width:100%;height:100%;display:block}
+  .about p{color:#cfc8b9;margin-top:1.2rem;max-width:56ch}
+  .stats{display:flex;gap:2.5rem;margin-top:2.5rem;flex-wrap:wrap}
+  .stats div{border-top:1px solid var(--line);padding-top:.8rem;min-width:100px}
+  .stats strong{font-family:var(--serif);font-weight:400;font-size:2.4rem;display:block;line-height:1;color:var(--accent)}
+  .stats span{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+
+  /* services */
+  .services{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-top:1px solid var(--line)}
+  .svc{padding:2rem 1.8rem 2.4rem 0;border-bottom:1px solid var(--line)}
+  .svc h3{font-family:var(--serif);font-weight:400;font-size:1.55rem;margin:.6rem 0 .7rem}
+  .svc p{color:var(--mute);font-size:.95rem}
+  .svc .from{display:block;margin-top:1.2rem;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+
+  /* testimonial */
+  blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,3vw,2.3rem);line-height:1.35;max-width:30ch;margin-inline:auto;text-align:center}
+  blockquote footer{margin-top:1.5rem;font-family:var(--sans);font-style:normal;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(2rem,6vw,6rem)}
+  .contact-grid p{color:#cfc8b9;margin-top:1.2rem;max-width:42ch}
+  .direct{margin-top:2rem;list-style:none;color:var(--mute);font-size:.95rem}
+  .direct li{padding:.5rem 0;border-bottom:1px solid var(--line)}
+  .direct a{color:var(--ink);text-decoration-color:var(--accent);text-underline-offset:4px}
+  form{display:grid;gap:1.2rem}
+  label{display:grid;gap:.4rem;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+  input,select,textarea{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:inherit;font-size:1rem;letter-spacing:0;text-transform:none;padding:.6rem 0;border-radius:0;transition:border-color .2s}
+  select option{background:var(--bg2)}
+  textarea{resize:vertical;min-height:120px}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent)}
+  form button{justify-self:start;background:var(--accent);color:#1a1307;border:0;padding:1rem 2rem;font:inherit;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:filter .2s}
+  form button:hover{filter:brightness(1.1)}
+  .note{font-size:.8rem;color:var(--mute)}
+
+  footer.site{border-top:1px solid var(--line);padding:2rem 0;color:var(--mute);font-size:.8rem}
+  footer.site .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+  /* lightbox */
+  dialog.lb{border:0;background:rgba(8,7,6,.96);color:var(--ink);width:100vw;height:100vh;max-width:none;max-height:none;padding:0}
+  dialog.lb::backdrop{background:#000}
+  .lb-inner{height:100%;display:grid;grid-template-rows:1fr auto;padding:3.5rem 4rem 1.5rem}
+  .lb-stage{display:grid;place-items:center;min-height:0}
+  .lb-stage img{max-height:100%;max-width:100%;object-fit:contain;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+  .lb-cap{text-align:center;padding-top:1rem}
+  .lb-cap b{font-family:var(--serif);font-weight:400;font-size:1.3rem;display:block}
+  .lb-cap span{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+  .lb button{position:absolute;background:none;border:1px solid var(--line);color:var(--ink);width:46px;height:46px;border-radius:50%;font-size:1.2rem;cursor:pointer;transition:.2s}
+  .lb button:hover{background:var(--ink);color:var(--bg)}
+  .lb .x{top:1rem;right:1rem}
+  .lb .prev{left:1rem;top:50%}
+  .lb .next{right:1rem;top:50%}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(24px);transition:opacity .9s,transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .rv{opacity:1;transform:none;transition:none}
+    .item img,.item .cap{transition:none}
+  }
+
+  @media (max-width:800px){
+    .menu-btn{display:block}
+    nav ul{position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);display:none}
+    nav ul.open{display:flex}
+    nav li a{display:block;padding:1rem 4vw}
+    .about-grid,.contact-grid{grid-template-columns:1fr}
+    .portrait{max-width:420px}
+    .lb-inner{padding:4rem 1rem 1rem}
+    .lb .prev,.lb .next{top:auto;bottom:1rem}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="nav" id="top">
+  <div class="wrap">
+    <a class="logo" href="#top">Mara <span>Ellison</span></a>
+    <nav aria-label="Main">
+      <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+      <ul id="menu">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding-top:0">
+    <div class="hero-art" id="heroArt" aria-hidden="true"></div>
+    <div class="wrap">
+      <p class="eyebrow">Freelance photographer · Based in Portland, OR · Available worldwide</p>
+      <h1>Quiet light, <em>honest</em> frames.</h1>
+      <p class="lede">I photograph places, people and the in-between moments — for editorial teams, small brands and anyone who wants pictures that feel like the day actually did.</p>
+      <a class="cta" href="#work">View selected work <span aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div><span class="num">01 — Selected work</span><h2>Recent photographs</h2></div>
+        <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div class="portrait rv" id="portrait" role="img" aria-label="Portrait placeholder of the photographer"></div>
+      <div class="rv">
+        <span class="num">02 — About</span>
+        <h2>I wait for the picture to show up.</h2>
+        <p>I'm Mara — a self-taught photographer who spent a decade chasing weather across coastlines and mountain passes before turning the camera toward people. That patience carries into everything I shoot: I'd rather spend an hour watching the light than ten minutes forcing a pose.</p>
+        <p>My work has appeared in travel and lifestyle magazines, and I take on a limited number of commissions each year so every project gets real attention.</p>
+        <div class="stats">
+          <div><strong>12</strong><span>Years shooting</span></div>
+          <div><strong>40+</strong><span>Countries</span></div>
+          <div><strong>150</strong><span>Commissions</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head rv"><div><span class="num">03 — Services</span><h2>How we can work together</h2></div></div>
+      <div class="services rv">
+        <div class="svc"><span class="num">Editorial</span><h3>Magazine &amp; brand stories</h3><p>Location-led storytelling with a full shot list and edited selects delivered within a week.</p><span class="from">From $1,800 / day</span></div>
+        <div class="svc"><span class="num">Portraits</span><h3>Natural-light portraits</h3><p>Relaxed sessions for founders, artists and families — in your space or somewhere we scout together.</p><span class="from">From $450 / session</span></div>
+        <div class="svc"><span class="num">Landscape</span><h3>Prints &amp; licensing</h3><p>Limited-edition fine-art prints, plus licensing for hospitality, publishing and interiors.</p><span class="from">Prints from $120</span></div>
+        <div class="svc"><span class="num">Events</span><h3>Documentary coverage</h3><p>Unobtrusive, candid coverage of weddings, launches and gatherings — no stiff group shots.</p><span class="from">From $1,200 / event</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap rv">
+      <blockquote>“Mara has a rare ability to disappear into a room and come out with the one frame that explains it.”
+        <footer>— Photo editor, Meridian Quarterly</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="contact" style="border-top:1px solid var(--line)">
+    <div class="wrap contact-grid">
+      <div class="rv">
+        <span class="num">04 — Contact</span>
+        <h2>Let's make something.</h2>
+        <p>Tell me about your project — dates, location, and what you'd like the pictures to do. I reply within two working days.</p>
+        <ul class="direct">
+          <li>Email — <a href="mailto:hello@example.com">hello@example.com</a></li>
+          <li>Instagram — <a href="#" onclick="return false">@maraellison</a></li>
+          <li>Studio — Portland, Oregon</li>
+        </ul>
+      </div>
+      <form class="rv" id="form" novalidate>
+        <label>Name<input name="name" required autocomplete="name"></label>
+        <label>Email<input name="email" type="email" required autocomplete="email"></label>
+        <label>Project type
+          <select name="type"><option>Editorial</option><option>Portrait</option><option>Landscape / licensing</option><option>Event</option><option>Something else</option></select>
+        </label>
+        <label>Message<textarea name="msg" required></textarea></label>
+        <button type="submit">Send enquiry</button>
+        <p class="note" id="formNote" role="status">This opens your email app with the message pre-filled.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap"><span>© <span id="yr"></span> Mara Ellison Photography</span><span>All images are placeholders — swap in your own.</span></div></footer>
+
+<dialog class="lb" id="lb" aria-label="Photo viewer">
+  <div class="lb-inner">
+    <div class="lb-stage"><img id="lbImg" alt=""></div>
+    <div class="lb-cap"><b id="lbTitle"></b><span id="lbMeta"></span></div>
+  </div>
+  <button class="x" id="lbClose" aria-label="Close">✕</button>
+  <button class="prev" id="lbPrev" aria-label="Previous photo">←</button>
+  <button class="next" id="lbNext" aria-label="Next photo">→</button>
+</dialog>
+
+<script>
+/* ============================================================
+   EDIT ME — your photos.
+   Add a `src` (path or URL to a real image) to any entry and it
+   will be used instead of the generated placeholder.
+   ============================================================ */
+const PHOTOS = [
+  {title:"Last Light on the Ridge",   cat:"Landscape", place:"Cascade Range, OR", style:"land",   seed:3,  w:1200,h:800,  pal:["#1d2b45","#e07a4f","#f2c078"]},
+  {title:"Sunday, Window Seat",       cat:"Portrait",  place:"Portland, OR",      style:"port",   seed:7,  w:800, h:1000, pal:["#3a2a24","#c9825b","#f0d2b0"]},
+  {title:"Rain on Via Garibaldi",     cat:"Street",    place:"Genoa, Italy",      style:"street", seed:11, w:800, h:1100, pal:["#0f1a24","#3f6c8a","#f2b660"]},
+  {title:"Salt Flats, Morning",       cat:"Landscape", place:"Uyuni, Bolivia",    style:"land",   seed:19, w:1200,h:700,  pal:["#6a7f96","#cfdbe4","#f4ece0"]},
+  {title:"Studio Study No. 4",        cat:"Editorial", place:"Brooklyn, NY",      style:"geo",    seed:23, w:900, h:900,  pal:["#7a2d2d","#e8c9a0","#1b1b1b"]},
+  {title:"The Fishmonger",            cat:"Portrait",  place:"Lisbon, Portugal",  style:"port",   seed:31, w:800, h:1050, pal:["#14313a","#4b9a9a","#f0c987"]},
+  {title:"Crossing, 6 p.m.",          cat:"Street",    place:"Tokyo, Japan",      style:"street", seed:37, w:1100,h:750,  pal:["#1a1030","#8a4fa0","#ff9f6b"]},
+  {title:"Fog Over the Fjord",        cat:"Landscape", place:"Nordland, Norway",  style:"land",   seed:41, w:900, h:1100, pal:["#2c3a47","#8fa3b0","#e4e0d6"]},
+  {title:"Autumn Issue, Cover Test",  cat:"Editorial", place:"London, UK",        style:"geo",    seed:47, w:800, h:1100, pal:["#2e3b1f","#d49a3a","#f1e3c2"]},
+  {title:"Late Shift",                cat:"Street",    place:"Mexico City",       style:"street", seed:53, w:1000,h:800,  pal:["#201010","#b5483a","#ffd08a"]},
+  {title:"Hands, Clay, Wheel",        cat:"Editorial", place:"Oaxaca, Mexico",    style:"geo",    seed:59, w:1000,h:700,  pal:["#4a2f20","#b87a4b","#ead3b6"]},
+  {title:"Dune Ridgeline",            cat:"Landscape", place:"Namib Desert",      style:"land",   seed:61, w:1200,h:750,  pal:["#40201a","#d1623c","#f7c88a"]}
+];
+
+/* ---------- placeholder art generator ---------- */
+function rng(s){return function(){s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+function art(p){
+  const r=rng(p.seed*977), W=p.w, H=p.h, [a,b,c]=p.pal;
+  let g=`<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".7" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient>
+  <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0"/></filter></defs>
+  <rect width="${W}" height="${H}" fill="url(#s)"/>`;
+  if(p.style==="land"){
+    g+=`<circle cx="${W*(.3+r()*.4)}" cy="${H*(.38+r()*.12)}" r="${W*.07}" fill="${c}" opacity=".9"/>`;
+    for(let l=0;l<5;l++){
+      const base=H*(.5+l*.1), amp=H*(.14-l*.015), op=.35+l*.15;
+      let d=`M0 ${H} L0 ${base}`;
+      for(let x=0;x<=W;x+=W/14) d+=` L${x.toFixed(0)} ${(base-r()*amp).toFixed(0)}`;
+      d+=` L${W} ${H}Z`;
+      g+=`<path d="${d}" fill="${a}" opacity="${op}"/>`;
+    }
+  } else if(p.style==="port"){
+    g+=`<ellipse cx="${W*.5}" cy="${H*.38}" rx="${W*.14}" ry="${H*.11}" fill="#0d0907" opacity=".72"/>
+        <path d="M${W*.14} ${H} C${W*.15} ${H*.6} ${W*.85} ${H*.6} ${W*.86} ${H} Z" fill="#0d0907" opacity=".72"/>
+        <circle cx="${W*.78}" cy="${H*.2}" r="${W*.22}" fill="${c}" opacity=".35"/>`;
+  } else if(p.style==="street"){
+    for(let i=0,x=0;x<W;i++){
+      const bw=W*(.08+r()*.14), bh=H*(.3+r()*.5);
+      g+=`<rect x="${x.toFixed(0)}" y="${(H-bh).toFixed(0)}" width="${bw.toFixed(0)}" height="${bh.toFixed(0)}" fill="#05070a" opacity=".85"/>`;
+      for(let wy=H-bh+14;wy<H-20;wy+=24) for(let wx=x+8;wx<x+bw-14;wx+=20)
+        if(r()>.62) g+=`<rect x="${wx.toFixed(0)}" y="${wy.toFixed(0)}" width="9" height="13" fill="${c}" opacity="${(.5+r()*.5).toFixed(2)}"/>`;
+      x+=bw+4;
+    }
+    g+=`<rect y="${H*.9}" width="${W}" height="${H*.1}" fill="${c}" opacity=".18"/>`;
+  } else {
+    for(let i=0;i<5;i++){
+      const x=r()*W*.7,y=r()*H*.7,s=W*(.15+r()*.3);
+      g+= r()>.5
+        ? `<circle cx="${x+s/2}" cy="${y+s/2}" r="${s/2}" fill="${[a,b,c][i%3]}" opacity=".8"/>`
+        : `<rect x="${x}" y="${y}" width="${s}" height="${s*(.6+r()*.8)}" fill="${[c,a,b][i%3]}" opacity=".8"/>`;
+    }
+  }
+  g+=`<rect width="${W}" height="${H}" filter="url(#n)"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${g}</svg>`;
+}
+const uri=svg=>"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+PHOTOS.forEach(p=>{p.url=p.src||uri(art(p))});
+
+/* hero + portrait art */
+document.getElementById("heroArt").innerHTML=art({style:"land",seed:5,w:1600,h:900,pal:["#16213a","#c9633f","#f6c37a"]});
+document.getElementById("portrait").innerHTML=art({style:"port",seed:13,w:800,h:1000,pal:["#2a2018","#b4744d","#ecc9a2"]});
+
+/* ---------- gallery ---------- */
+const grid=document.getElementById("grid"), filters=document.getElementById("filters");
+const cats=["All",...new Set(PHOTOS.map(p=>p.cat))];
+grid.innerHTML=PHOTOS.map((p,i)=>`
+  <button class="item rv" data-i="${i}" data-cat="${p.cat}" aria-label="Open ${p.title}">
+    <img src="${p.url}" width="${p.w}" height="${p.h}" alt="${p.title}, ${p.place}" loading="lazy">
+    <div class="cap"><b>${p.title}</b><small>${p.cat} · ${p.place}</small></div>
+  </button>`).join("");
+filters.innerHTML=cats.map((c,i)=>`<button aria-pressed="${i===0}" data-c="${c}">${c}</button>`).join("");
+filters.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  filters.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  grid.querySelectorAll(".item").forEach(it=>it.classList.toggle("hide",b.dataset.c!=="All"&&it.dataset.cat!==b.dataset.c));
+});
+
+/* ---------- lightbox ---------- */
+const lb=document.getElementById("lb"), lbImg=document.getElementById("lbImg");
+let cur=0, lastFocus=null;
+const visible=()=>[...grid.querySelectorAll(".item:not(.hide)")].map(e=>+e.dataset.i);
+function show(i){
+  const p=PHOTOS[i]; cur=i;
+  lbImg.src=p.url; lbImg.alt=`${p.title}, ${p.place}`;
+  document.getElementById("lbTitle").textContent=p.title;
+  document.getElementById("lbMeta").textContent=`${p.cat} · ${p.place}`;
+}
+function step(d){const v=visible(); show(v[(v.indexOf(cur)+d+v.length)%v.length])}
+grid.addEventListener("click",e=>{
+  const it=e.target.closest(".item"); if(!it) return;
+  lastFocus=it; show(+it.dataset.i); lb.showModal();
+});
+document.getElementById("lbClose").onclick=()=>lb.close();
+document.getElementById("lbPrev").onclick=()=>step(-1);
+document.getElementById("lbNext").onclick=()=>step(1);
+lb.addEventListener("click",e=>{if(e.target===lb) lb.close()});
+lb.addEventListener("close",()=>lastFocus&&lastFocus.focus());
+lb.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft") step(-1);
+  if(e.key==="ArrowRight") step(1);
+});
+let tx=null;
+lb.addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
+lb.addEventListener("touchend",e=>{
+  if(tx===null) return; const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) step(dx<0?1:-1); tx=null;
+});
+
+/* ---------- nav ---------- */
+const nav=document.querySelector("header.nav");
+const onScroll=()=>nav.classList.toggle("solid",scrollY>40);
+addEventListener("scroll",onScroll,{passive:true}); onScroll();
+const mb=document.querySelector(".menu-btn"), menu=document.getElementById("menu");
+mb.onclick=()=>{const o=menu.classList.toggle("open"); mb.setAttribute("aria-expanded",o)};
+menu.addEventListener("click",e=>{if(e.target.tagName==="A"){menu.classList.remove("open");mb.setAttribute("aria-expanded","false")}});
+
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+
+/* ---------- contact form → mailto ---------- */
+const CONTACT_EMAIL="hello@example.com"; // change to your address
+document.getElementById("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const f=e.target, d=Object.fromEntries(new FormData(f));
+  const note=document.getElementById("formNote");
+  if(!d.name||!/^\S+@\S+\.\S+$/.test(d.email||"")||!d.msg){note.textContent="Please fill in your name, a valid email and a message.";return}
+  const body=`${d.msg}\n\n— ${d.name} (${d.email})\nProject type: ${d.type}`;
+  location.href=`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Enquiry: "+d.type)}&body=${encodeURIComponent(body)}`;
+  note.textContent="Thanks! If your email app didn't open, write to "+CONTACT_EMAIL+".";
+});
+document.getElementById("yr").textContent=new Date().getFullYear();
+</script>
+</body>
+</html>

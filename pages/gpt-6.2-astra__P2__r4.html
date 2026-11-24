@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e7">
+  <meta name="description" content="Casa Rosa is a neighborhood Italian restaurant in Brooklyn serving handmade pasta, seasonal plates, and wine by the glass.">
+  <title>Casa Rosa Trattoria · Brooklyn</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f2e7;
+      --ink: #233c30;
+      --red: #a53729;
+      --rule: #b8b8a4;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid var(--red); outline-offset: 5px; }
+    .wrap { width: min(1280px, 90%); margin-inline: auto; }
+    header .wrap, nav, .brand, .actions, .section-head, footer .wrap {
+      display: flex; align-items: center;
+    }
+    header .wrap { min-height: 82px; justify-content: space-between; border-bottom: 1px solid var(--ink); }
+    .brand { gap: 10px; font: bold 24px var(--serif); text-decoration: none; letter-spacing: -.06em; }
+    .brand svg { width: 30px; height: 30px; color: var(--red); }
+    nav { gap: clamp(18px, 3vw, 44px); }
+    nav a, .label, .button, summary {
+      font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+    }
+    nav a { text-decoration: none; }
+    nav a:hover, .text-link:hover { color: var(--red); text-decoration: underline; }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 5%; padding-block: clamp(48px, 6vw, 90px); }
+    .label { margin: 0; line-height: 1.6; }
+    .eyebrow { display: flex; align-items: center; gap: 12px; color: var(--red); }
+    .eyebrow::before { content: ""; width: 30px; height: 1px; background: currentColor; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { margin: 22px 0; font: normal clamp(72px, 8.8vw, 132px)/.86 var(--serif); letter-spacing: -.083em; }
+    h1 em { display: block; color: var(--red); font-weight: normal; }
+    .intro { max-width: 390px; font: 19px/1.55 var(--serif); }
+    .actions { gap: 26px; flex-wrap: wrap; margin-top: 28px; }
+    .button { display: inline-block; color: var(--paper); background: var(--ink); padding: 17px 21px; text-decoration: none; }
+    .button:hover { background: var(--red); }
+    .text-link { font-size: 14px; font-weight: 600; }
+    figure { margin: 0; }
+    .print { display: block; width: 100%; height: auto; color: var(--red); }
+    figcaption { margin-top: 8px; text-align: center; font: italic 14px var(--serif); color: var(--red); }
+    .menu { border-block: 1px solid var(--ink); padding-block: 34px 40px; }
+    .section-head { justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+    h2 { font: normal clamp(36px, 4.3vw, 64px)/1.05 var(--serif); letter-spacing: -.065em; }
+    .section-head .label, .price { color: var(--red); }
+    .dishes { display: grid; grid-template-columns: repeat(3, 1fr); }
+    article { padding-inline: 7%; border-left: 1px solid var(--rule); }
+    article:first-child { padding-left: 0; border: 0; }
+    article:last-child { padding-right: 0; }
+    .dish-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    h3 { font: normal clamp(22px, 2.1vw, 31px)/1.15 var(--serif); letter-spacing: -.045em; }
+    .price { font: italic 18px var(--serif); }
+    article p, .visit p { margin-top: 9px; font-size: 15px; line-height: 1.6; }
+    details { margin-top: 26px; }
+    summary { cursor: pointer; width: fit-content; padding-block: 7px; }
+    details ul { padding: 0; list-style: none; max-width: 580px; }
+    details li { display: flex; justify-content: space-between; gap: 18px; padding: 12px 0; border-bottom: 1px solid var(--rule); font: 18px var(--serif); }
+    .visit { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px; padding-block: 46px; }
+    .visit .label { margin-top: 0; }
+    footer { background: var(--ink); color: var(--paper); }
+    footer .wrap { justify-content: space-between; gap: 15px; padding-block: 20px; }
+    footer small { font: italic 16px var(--serif); }
+    @media (max-width: 740px) {
+      header .wrap { min-height: 65px; }
+      .hero { grid-template-columns: 1fr; gap: 30px; }
+      h1 em { display: inline; }
+      h1 { font-size: clamp(62px, 13.6vw, 96px); }
+      figure { width: min(100%, 490px); justify-self: center; }
+      .dishes, .visit { grid-template-columns: 1fr; }
+      article, article:first-child { padding: 17px 0; border: 0; border-bottom: 1px solid var(--rule); }
+      .section-head { margin-bottom: 8px; }
+      .visit { gap: 19px; }
+      nav { gap: 16px; }
+      nav a { font-size: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="#home" aria-label="Casa Rosa home">
+        <svg viewBox="0 0 40 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M19 12C6 5 1 23 10 31c5 5 8 3 10 3s7 2 12-4c8-10 2-24-11-18Z"/>
+          <path d="m12 11 8 6 8-6-7 2 2-8c-4 1-5 5-4 8Zm-3 9c-1 4 0 7 3 10"/>
+        </svg>
+        Casa Rosa
+      </a>
+      <nav aria-label="Main navigation"><a href="#menu">Menu</a><a href="#visit">Visit us</a></nav>
+    </div>
+  </header>
+
+  <main id="home" class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <p class="label eyebrow">Neighborhood trattoria</p>
+        <h1 id="title">Casa <em>Rosa</em></h1>
+        <p class="intro">Handmade pasta, a glass of something good, and a corner of Brooklyn to call home.</p>
+        <div class="actions">
+          <a class="button" href="#menu">Explore the menu &nbsp;↓</a>
+          <a class="text-link" href="#visit">Hours &amp; location</a>
+        </div>
+      </div>
+
+      <figure>
+        <svg class="print" viewBox="0 0 560 380" role="img" aria-labelledby="art-title">
+          <title id="art-title">A red ink illustration of Casa Rosa, with a striped awning, café table, and potted olive trees</title>
+          <defs>
+            <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse">
+              <path d="m0 5 5-5" stroke="currentColor" stroke-width=".8"/>
+            </pattern>
+            <pattern id="awning" width="34" height="18" patternUnits="userSpaceOnUse" patternTransform="skewX(-18)">
+              <rect width="15" height="18" fill="currentColor"/>
+            </pattern>
+            <g id="leaf" fill="currentColor">
+              <path d="M0 0Q-10-14-15-12-12-2 0 0Zm1-2Q11-17 16-15 13-4 1-2Z"/>
+            </g>
+            <g id="tree" stroke="currentColor" stroke-linecap="round" fill="none">
+              <path d="M2 0Q-2-39 4-82m-3 57-17-23m18 11 20-25M2-48l-15-21m16 9 9-20" stroke-width="2"/>
+              <use href="#leaf" x="-12" y="-43"/><use href="#leaf" x="18" y="-56"/>
+              <use href="#leaf" x="-10" y="-64"/><use href="#leaf" x="5" y="-78"/>
+              <path d="m-15-1 4 24h23l5-24Zm-3-5h37v6h-37Z" fill="var(--paper)" stroke-width="2"/>
+              <path d="m-11 3 3 17m2-17 2 17m2-17 1 17" stroke-width="1"/>
+            </g>
+          </defs>
+          <g stroke="currentColor" fill="none" stroke-linejoin="round">
+            <path d="M31 342q210-3 492 0m-451 7 401 1m-336 6 209 1" opacity=".6"/>
+            <path d="M83 330V69l11-4h366l11 5v261Z" stroke-width="2.8"/>
+            <path d="M76 65h403v9H76zm8-10h386v9H84Z" fill="var(--paper)" stroke-width="2"/>
+            <path d="M94 76h367v57H94Z" stroke-width="2"/>
+            <path d="M101 82h353v44H101Z"/>
+            <text x="277" y="116" fill="currentColor" stroke="none" font-family="Georgia,serif" font-weight="bold" font-size="37" text-anchor="middle" letter-spacing="5">CASA ROSA</text>
+            <path d="m87 137-21 45h420l-19-45Z" fill="url(#awning)" stroke-width="2.6"/>
+            <path d="M66 182v9q8 9 17 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0 9 9 18 0l7-4v-5Z" fill="var(--paper)" stroke-width="2"/>
+            <path d="M98 200h129v109H98zm5 5h119v96H103zm57 0v96m-57-73h119M333 200h121v109H333zm5 5h111v96H338zm56 0v96m-56-73h111" stroke-width="2"/>
+            <path d="M104 206q7 28 23 44l-23 40Zm117 0q-6 28-22 44l22 39Zm118 0q7 28 23 44l-23 40Zm109 0q-6 28-22 44l22 39Z" fill="url(#hatch)"/>
+            <path d="M237 330V199h85v131zm6-4V205h73v121Z" stroke-width="2.5"/>
+            <path d="M250 213h58v75h-58Zm0 84h58v22h-58Z"/>
+            <circle cx="309" cy="292" r="2" fill="currentColor"/>
+            <path d="M96 311h133v6H96zm235 0h125v6H331Z" fill="url(#hatch)"/>
+            <path d="M84 330h390v6H84Z" fill="var(--paper)" stroke-width="2"/>
+            <use href="#tree" transform="translate(77 315) scale(.95)"/>
+            <use href="#tree" transform="translate(480 315) scale(1.12)"/>
+            <g fill="var(--paper)" stroke-width="2.3">
+              <ellipse cx="172" cy="286" rx="33" ry="5"/>
+              <path d="M170 291v35l-13 8m17-43v35l13 8M121 288l4 26h20l5-24m-25 24-3 20m22-20 4 20m-25-34h25M198 289l4 25h19l6-26m-25 26-3 20m21-20 4 20m-24-34h24"/>
+              <path d="M170 283v-10h6v10Zm3-10v-9m0 3-4-5m4 2 4-5"/>
+            </g>
+          </g>
+        </svg>
+        <figcaption>Our little corner of Carroll Gardens</figcaption>
+      </figure>
+    </section>
+
+    <section id="menu" class="menu" aria-labelledby="menu-title">
+      <div class="section-head"><h2 id="menu-title">From the kitchen</h2><span class="label">Dinner menu</span></div>
+      <div class="dishes">
+        <article>
+          <div class="dish-head"><h3>Burrata e pere</h3><span class="price">$18</span></div>
+          <p>Creamy burrata, roasted pears, toasted hazelnuts, and a little chestnut honey.</p>
+        </article>
+        <article>
+          <div class="dish-head"><h3>Rigatoni al ragù</h3><span class="price">$26</span></div>
+          <p>Ridged tubes of fresh pasta with slow-braised beef, tomato, and Parmigiano.</p>
+        </article>
+        <article>
+          <div class="dish-head"><h3>Tiramisù della casa</h3><span class="price">$12</span></div>
+          <p>Espresso-soaked savoiardi layered with mascarpone and finished with bitter cocoa.</p>
+        </article>
+      </div>
+      <details>
+        <summary>More from the menu</summary>
+        <ul>
+          <li><span>Rosemary focaccia</span><span>$8</span></li>
+          <li><span>Chicory salad with lemon and pecorino</span><span>$16</span></li>
+          <li><span>Ricotta ravioli with brown butter and sage</span><span>$25</span></li>
+          <li><span>Affogato with vanilla gelato</span><span>$9</span></li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <h2 id="visit-title">Come on in.</h2>
+      <div><p class="label">Find us</p><p>218 Court Street<br>Brooklyn, NY 11201</p></div>
+      <div><p class="label">Dinner hours</p><p>Tuesday–Thursday &amp; Sunday · 5–9 pm<br>Friday–Saturday · 5–10 pm<br>Walk-ins welcome.</p></div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span class="brand">Casa Rosa</span><small>Buon appetito!</small></div></footer>
+</body>
+</html>

@@ -1,0 +1,372 @@
+Save this as `index.html` and open it in a browser. The sample imagery is generated inside the file, so the gallery works offline. The photographer’s name, project details, and email are sample content.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mara Ellis, freelance photographer working across travel, interiors, and outdoor editorial.">
+<meta name="theme-color" content="#f5f2eb">
+<title>Mara Ellis — Photographer</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f5f2eb;
+    --ink: #242820;
+    --muted: #565b50;
+    --rule: #d6d4c9;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, sans-serif;
+    --gutter: clamp(1.25rem, 5vw, 5rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans); }
+  a { color: inherit; text-underline-offset: .24em; }
+  button { font: inherit; }
+  :focus-visible { outline: 2px solid #a1452a; outline-offset: 5px; }
+  h1, h2, h3, p, figure { margin: 0; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  .wrap { width: min(100%, 98rem); margin-inline: auto; padding-inline: var(--gutter); }
+  .small { font-size: .69rem; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+  .skip { position: absolute; left: 1rem; top: -6rem; z-index: 2; background: var(--paper); padding: .5rem 1rem; }
+  .skip:focus { top: 1rem; }
+  .site-header { min-height: 5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; border-bottom: 1px solid var(--rule); }
+  .brand { font: 1.45rem/1 var(--serif); text-decoration: none; white-space: nowrap; }
+  nav { display: flex; flex-wrap: wrap; gap: .5rem clamp(.85rem, 3vw, 2.5rem); }
+  nav a { text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  .intro { display: grid; grid-template-columns: 1fr minmax(12rem, 20rem); align-items: end; gap: 1.4rem; padding-block: clamp(2.8rem, 7vw, 6.5rem) clamp(1.6rem, 4vw, 3.4rem); }
+  .intro .small { color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: clamp(3.4rem, 8.4vw, 9.1rem); letter-spacing: -.075em; line-height: .9; }
+  h1 em { font-weight: inherit; }
+  .intro > p { color: var(--muted); max-width: 27ch; padding-bottom: .12rem; }
+  canvas { display: block; width: 100%; height: auto; background: #b67852; }
+  .hero canvas { aspect-ratio: 2.4; object-fit: cover; }
+  .hero figcaption { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .4rem 1rem; padding-block: .7rem; color: var(--muted); }
+  .hero a { color: var(--ink); }
+  .work { padding-block: clamp(3.5rem, 8vw, 8rem); }
+  .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; border-bottom: 1px solid var(--rule); padding-bottom: 1rem; margin-bottom: 1.6rem; }
+  h2 { font-size: clamp(2.6rem, 5.4vw, 5.5rem); line-height: 1; letter-spacing: -.055em; }
+  .section-head p { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: 1.16fr 1fr; gap: clamp(1.8rem, 4vw, 4rem) clamp(1rem, 2.8vw, 3rem); }
+  .project { min-width: 0; }
+  .open { width: 100%; display: block; position: relative; border: 0; padding: 0; background: transparent; text-align: left; cursor: zoom-in; }
+  .open canvas { aspect-ratio: 1.46; object-fit: cover; }
+  .open:hover canvas { filter: brightness(1.06); }
+  .open span { position: absolute; right: .7rem; bottom: .7rem; display: grid; place-items: center; border-radius: 50%; width: 2.25rem; height: 2.25rem; background: var(--paper); color: var(--ink); font-size: 1.15rem; }
+  .project figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .2rem .75rem; padding-top: .6rem; }
+  h3 { font-size: clamp(1.42rem, 2.5vw, 2.1rem); line-height: 1.17; letter-spacing: -.035em; }
+  .project .small { color: var(--muted); }
+  .about { border-top: 1px solid var(--rule); padding-block: clamp(2.7rem, 7vw, 6rem); display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem 3rem; }
+  .about p { max-width: 43ch; color: var(--muted); font-size: clamp(1rem, 1.6vw, 1.2rem); }
+  .contact { background: #292f26; color: #f5f2eb; }
+  .contact-inner { padding-block: clamp(2.7rem, 7vw, 6rem) 1.4rem; }
+  .contact h2 { margin: .55rem 0 1rem; }
+  .contact a { overflow-wrap: anywhere; }
+  .footer-line { border-top: 1px solid #666b60; margin-top: clamp(2rem, 6vw, 5rem); padding-top: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; }
+  dialog { border: 0; width: min(58rem, calc(100% - 2rem)); max-height: calc(100% - 2rem); padding: 0; background: var(--paper); color: var(--ink); }
+  dialog::backdrop { background: #171a15dc; }
+  .viewer-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .65rem 1rem; }
+  .viewer-bar button { border: 1px solid var(--rule); color: var(--ink); background: transparent; padding: .35rem .75rem; cursor: pointer; }
+  #viewer-image { max-height: 75vh; object-fit: contain; background: #292f26; }
+  @media (max-width: 650px) {
+    .intro, .about, .grid { grid-template-columns: 1fr; }
+    .hero canvas { aspect-ratio: 1.32; }
+    .site-header { min-height: 4.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<header class="wrap">
+  <div class="site-header">
+    <a class="brand" href="#top">Mara Ellis</a>
+    <nav class="small" aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="small">Independent photographer</p>
+        <h1 id="page-title">A sense <em>of place.</em></h1>
+      </div>
+      <p>Photography for travel, interiors, and stories set outdoors. Based in Santa Fe, New Mexico.</p>
+    </section>
+
+    <figure class="hero">
+      <canvas data-scene="desert" width="1440" height="600" role="img" aria-label="Rust-colored desert ridges beneath a pale evening sky"></canvas>
+      <figcaption class="small">
+        <span>High Desert · New Mexico</span>
+        <a href="#work">Explore selected work ↓</a>
+      </figcaption>
+    </figure>
+
+    <section id="work" class="work" aria-labelledby="work-title">
+      <header class="section-head">
+        <h2 id="work-title">Selected work</h2>
+        <p class="small">Travel, interiors &amp; outdoor editorial</p>
+      </header>
+      <div class="grid">
+        <figure class="project">
+          <button class="open" type="button" aria-label="Enlarge The Pacific Edge">
+            <canvas data-scene="coast" width="820" height="560" role="img" aria-label="A dark coastal headland above a slate-green sea"></canvas>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>The Pacific Edge</h3><span class="small">Travel · Oregon</span></figcaption>
+        </figure>
+        <figure class="project">
+          <button class="open" type="button" aria-label="Enlarge Rooms in the Sun">
+            <canvas data-scene="interior" width="820" height="560" role="img" aria-label="Warm stucco walls, an arched recess, and a terracotta vessel"></canvas>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>Rooms in the Sun</h3><span class="small">Interiors · Santa Fe</span></figcaption>
+        </figure>
+        <figure class="project">
+          <button class="open" type="button" aria-label="Enlarge High Desert">
+            <canvas data-scene="desert" width="820" height="560" role="img" aria-label="Layered sandstone ridges in evening light"></canvas>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>High Desert</h3><span class="small">Editorial · New Mexico</span></figcaption>
+        </figure>
+        <figure class="project">
+          <button class="open" type="button" aria-label="Enlarge Still Water">
+            <canvas data-scene="lake" width="820" height="560" role="img" aria-label="Blue mountain silhouettes reflected in an alpine lake"></canvas>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>Still Water</h3><span class="small">Outdoor · Colorado</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">Behind the camera</h2>
+      <p>I’m Mara, a freelance photographer drawn to the way light changes familiar places. I work with editors, designers, and independent brands on location, with a focus on the American West.</p>
+    </section>
+  </div>
+
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-inner">
+      <p class="small">Assignments &amp; licensing</p>
+      <h2 id="contact-title">Let’s work together.</h2>
+      <a href="mailto:hello@maraellis.example">hello@maraellis.example</a>
+      <footer class="footer-line small"><span>Mara Ellis · Santa Fe, NM</span><a href="#top">Back to top ↑</a></footer>
+    </div>
+  </section>
+</main>
+
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-bar">
+    <h3 id="viewer-title"></h3>
+    <button id="close-viewer" type="button" autofocus>Close</button>
+  </div>
+  <canvas id="viewer-image" role="img"></canvas>
+</dialog>
+
+<script>
+  function paint(canvas) {
+    const context = canvas.getContext("2d");
+    const { width, height } = canvas;
+    context.save();
+    context.scale(width, height);
+    let seed = 31907;
+
+    function random() {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+
+    function gradient(top, bottom, start = 0, end = 1) {
+      const fill = context.createLinearGradient(0, start, 0, end);
+      fill.addColorStop(0, top);
+      fill.addColorStop(1, bottom);
+      return fill;
+    }
+
+    function shape(fill, points) {
+      context.beginPath();
+      points.forEach(([x, y], index) => {
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      });
+      context.closePath();
+      context.fillStyle = fill;
+      context.fill();
+    }
+
+    function ridge(points, fill, texture) {
+      const edge = [];
+      for (let i = 1; i < points.length; i++) {
+        const [left, top] = points[i - 1];
+        const [right, bottom] = points[i];
+        for (let step = 0; step < 24; step++) {
+          const t = step / 24;
+          const x = left + (right - left) * t;
+          const y = top + (bottom - top) * t;
+          edge.push([x, y + Math.sin(Math.PI * t) * (random() - .5) * texture]);
+        }
+      }
+      shape(fill, [...edge, points.at(-1), [1, 1], [0, 1]]);
+    }
+
+    function atmosphere() {
+      for (let i = 0; i < 520; i++) {
+        const y = random() * .59;
+        const x = random();
+        context.fillStyle = i % 2 ? "#fff5db0b" : "#5b51400a";
+        context.fillRect(x, y, .01 + random() * .16, .001 + random() * .007);
+      }
+    }
+
+    function waterLines(top, count) {
+      for (let i = 0; i < count; i++) {
+        const depth = random();
+        const y = top + depth * (1 - top);
+        context.fillStyle = i % 3 ? "#d3e0d325" : "#22383131";
+        context.fillRect(random(), y, random() * (.04 + depth * .12), .0006 + depth * .0012);
+      }
+    }
+
+    switch (canvas.dataset.scene) {
+      case "desert":
+        context.fillStyle = gradient("#8c9a8f", "#e9c09b", 0, .63);
+        context.fillRect(0, 0, 1, 1);
+        atmosphere();
+        ridge([[0,.63],[.11,.52],[.24,.55],[.36,.48],[.51,.54],[.62,.44],[.69,.45],[.77,.53],[.89,.49],[1,.53]], "#977663", .019);
+        ridge([[0,.77],[.12,.68],[.26,.72],[.37,.59],[.52,.57],[.61,.63],[.74,.54],[.82,.57],[.94,.48],[1,.51]], "#b48266", .028);
+        ridge([[0,.69],[.12,.58],[.19,.56],[.25,.44],[.34,.43],[.4,.51],[.46,.52],[.55,.65],[.67,.68],[.8,.82],[1,.8]], gradient("#b57550","#755143", .43, 1), .021);
+        shape("#e0a17a65", [[.04,.67],[.19,.56],[.25,.44],[.34,.43],[.30,.49],[.32,.58],[.27,.66],[.26,.78],[.19,.72],[.14,.81]]);
+        shape("#5a3d374d", [[.34,.43],[.4,.51],[.46,.52],[.55,.65],[.67,.68],[.8,.82],[.51,.78],[.43,.66],[.36,.64],[.37,.56]]);
+        for (let i = 0; i < 230; i++) {
+          const x = random() * .57;
+          const y = .69 + random() * .29;
+          shape(i % 2 ? "#eed0a321" : "#593c342b", [[x,y],[x+.06,y-.008],[x+.11,y-.002],[x+.03,y+.005]]);
+        }
+        ridge([[0,.83],[.15,.85],[.27,.8],[.41,.85],[.54,.76],[.66,.79],[.8,.72],[.92,.66],[1,.62]], gradient("#894d38","#3d3a30", .62, 1), .032);
+        ridge([[0,.96],[.15,.88],[.32,.91],[.5,.95],[.71,.88],[.9,.92],[1,.88]], "#393c32", .02);
+        break;
+
+      case "coast":
+        context.fillStyle = gradient("#778d8c", "#d1cab3", 0, .55);
+        context.fillRect(0, 0, 1, 1);
+        atmosphere();
+        context.fillStyle = gradient("#8fa69c", "#344e49", .43, 1);
+        context.fillRect(0, .43, 1, .57);
+        waterLines(.44, 900);
+        ridge([[0,.25],[.1,.29],[.18,.37],[.29,.41],[.37,.48],[.46,.49],[.52,.58],[.45,.65],[.3,.69],[.17,.78],[0,.81]], "#2d3c32", .04);
+        // The headland ends above the water, keeping the lower frame open.
+        shape("#56604b", [[0,.25],[.1,.29],[.18,.37],[.29,.41],[.37,.48],[.46,.49],[.52,.58],[.38,.53],[.26,.51],[.13,.45],[0,.42]]);
+        shape("#23362f", [[0,.49],[.13,.51],[.21,.56],[.31,.59],[.46,.56],[.52,.58],[.45,.65],[.3,.69],[.17,.78],[0,.81]]);
+        for (let i = 0; i < 145; i++) {
+          const t = random();
+          const x = t * .52;
+          const y = .82 - t * .24 + random() * .055;
+          context.fillStyle = "#e1e1cc55";
+          context.fillRect(x, y, .008 + random() * .032, .002);
+        }
+        break;
+
+      case "interior":
+        context.fillStyle = gradient("#d6a97f", "#e3be95");
+        context.fillRect(0, 0, 1, 1);
+        shape("#b5815f", [[0,.78],[1,.73],[1,1],[0,1]]);
+        shape("#a77655", [[0,0],[.16,0],[.16,.77],[0,.9]]);
+        context.beginPath();
+        context.moveTo(.36,.75);
+        context.lineTo(.36,.34);
+        context.bezierCurveTo(.36,.12,.68,.12,.68,.34);
+        context.lineTo(.68,.75);
+        context.closePath();
+        context.fillStyle = gradient("#79513d", "#b78260", .16, .76);
+        context.fill();
+        shape("#ffe4ae61", [[.72,0],[.86,0],[1,.47],[1,.76],[.76,.74],[.33,0]]);
+        shape("#5a392a3d", [[.39,.79],[.52,.76],[.81,.89],[.73,.91]]);
+        context.beginPath();
+        context.moveTo(.45,.53);
+        context.lineTo(.53,.53);
+        context.bezierCurveTo(.52,.61,.62,.64,.58,.76);
+        context.bezierCurveTo(.55,.83,.43,.82,.41,.76);
+        context.bezierCurveTo(.37,.65,.46,.61,.45,.53);
+        context.fillStyle = gradient("#aa5e44", "#603c33", .54, .81);
+        context.fill();
+        context.beginPath();
+        context.ellipse(.49,.53,.041,.011,0,0,Math.PI * 2);
+        context.fillStyle = "#57372d";
+        context.fill();
+        break;
+
+      case "lake":
+        context.fillStyle = gradient("#809ca5", "#ddd6bb", 0, .55);
+        context.fillRect(0, 0, 1, 1);
+        atmosphere();
+        ridge([[0,.5],[.12,.43],[.22,.25],[.28,.29],[.36,.16],[.47,.35],[.52,.39],[.6,.29],[.7,.32],[.78,.22],[.91,.41],[1,.46]], "#6c8186", .025);
+        shape("#dddccf", [[.22,.25],[.28,.29],[.36,.16],[.47,.35],[.38,.28],[.35,.3],[.33,.24],[.29,.33]]);
+        ridge([[0,.37],[.12,.45],[.23,.51],[.37,.53],[.49,.54],[.64,.52],[.76,.49],[.89,.42],[1,.39]], "#3d5653", .03);
+        context.fillStyle = gradient("#8eaaa4", "#2e5355", .55, 1);
+        context.fillRect(0,.55,1,.45);
+        shape("#344f574f", [[0,.55],[.14,.63],[.36,.85],[.46,.68],[.56,.58],[.75,.71],[.84,.77],[1,.59],[1,.55]]);
+        waterLines(.55, 1100);
+        break;
+    }
+
+    context.restore();
+
+    const pixels = context.getImageData(0, 0, width, height);
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4;
+        const vignette = 17 * ((x / width - .5) ** 2 + (y / height - .5) ** 2);
+        const grain = (random() - .5) * 19 - vignette;
+        pixels.data[index] += grain;
+        pixels.data[index + 1] += grain;
+        pixels.data[index + 2] += grain;
+      }
+    }
+    context.putImageData(pixels, 0, 0);
+  }
+
+  document.querySelectorAll("canvas[data-scene]").forEach(paint);
+
+  const viewer = document.getElementById("viewer");
+  const viewerImage = document.getElementById("viewer-image");
+  const viewerTitle = document.getElementById("viewer-title");
+  let opener;
+
+  document.querySelectorAll(".open").forEach(button => {
+    button.addEventListener("click", () => {
+      const source = button.querySelector("canvas");
+      opener = button;
+      viewerTitle.textContent = button.closest("figure").querySelector("h3").textContent;
+      viewerImage.width = source.width;
+      viewerImage.height = source.height;
+      viewerImage.setAttribute("aria-label", source.getAttribute("aria-label"));
+      viewerImage.getContext("2d").drawImage(source, 0, 0);
+      viewer.showModal();
+    });
+  });
+
+  document.getElementById("close-viewer").addEventListener("click", () => viewer.close());
+  viewer.addEventListener("click", event => {
+    if (event.target === viewer) {
+      const bounds = viewer.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom) {
+        viewer.close();
+      }
+    }
+  });
+  viewer.addEventListener("close", () => opener?.focus());
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,442 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4ec">
+  <title>Bellina — Neighborhood Italian in Brooklyn</title>
+  <meta name="description" content="A little Italian kitchen with a big heart. Join Bellina in Carroll Gardens for handmade pasta, good wine, and dinner that feels like home.">
+  <style>
+    :root {
+      --paper: #f8f4ec;
+      --ink: #27291f;
+      --muted: #68695b;
+      --red: #a9402f;
+      --green: #425b43;
+      --line: #ded8ca;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--red);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    header {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+    .logo {
+      color: var(--red);
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -.06em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a {
+      font-size: .83rem;
+      text-decoration: none;
+    }
+    .nav-links a:hover { color: var(--red); }
+    .nav-links .book-link {
+      padding: 10px 17px;
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .hero {
+      min-height: 660px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 56px;
+      padding: 72px 0 82px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 570px;
+      margin-bottom: 22px;
+      font-family: var(--serif);
+      font-size: clamp(3.6rem, 7vw, 6.4rem);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .97;
+    }
+    h1 em { color: var(--red); font-weight: 400; }
+    .hero-copy > p:not(.eyebrow) {
+      max-width: 430px;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .button {
+      display: inline-block;
+      padding: 14px 22px;
+      background: var(--red);
+      color: #fffaf1;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .button:hover { background: #873426; transform: translateY(-2px); }
+    .hero-note {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: .76rem;
+      letter-spacing: .04em;
+    }
+    .hero-art {
+      position: relative;
+      min-height: 470px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 72% 20%, rgba(248,244,236,.65), transparent 34%),
+        linear-gradient(140deg, #d8a36f 0%, #b8764f 42%, #86513e 100%);
+    }
+    .hero-art::before {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 55px, rgba(80,43,29,.09) 56px 58px);
+      content: "";
+    }
+    .sun {
+      position: absolute;
+      top: 42px;
+      right: 48px;
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      background: #f4d49a;
+      opacity: .85;
+    }
+    .table {
+      position: absolute;
+      right: -10%;
+      bottom: -27%;
+      left: -10%;
+      height: 66%;
+      border-radius: 50% 50% 0 0;
+      background: #a94232;
+      transform: rotate(-5deg);
+    }
+    .plate {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(70%, 350px);
+      aspect-ratio: 1;
+      border: 13px solid #f4ead5;
+      border-radius: 50%;
+      background: #eee2ca;
+      box-shadow: 0 17px 25px rgba(56,31,20,.24), inset 0 0 0 5px #d5c8ac;
+      transform: translate(-50%, -42%) rotate(-12deg);
+    }
+    .pasta {
+      position: absolute;
+      inset: 17%;
+      overflow: hidden;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 30% 40%, #f0c477 0 4%, transparent 5%),
+        radial-gradient(ellipse at 66% 61%, #e2ab5f 0 4%, transparent 5%),
+        radial-gradient(ellipse at 58% 31%, #f0c477 0 4%, transparent 5%),
+        radial-gradient(ellipse at 38% 68%, #e0a85c 0 4%, transparent 5%),
+        radial-gradient(ellipse at 50% 50%, #9f402c 0 55%, #883725 57% 100%);
+    }
+    .pasta::before, .pasta::after {
+      position: absolute;
+      inset: 24% 15%;
+      border: 8px solid #efc777;
+      border-left-color: transparent;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      content: "";
+      transform: rotate(25deg);
+    }
+    .pasta::after {
+      inset: 34% 23%;
+      border-width: 6px;
+      transform: rotate(200deg);
+    }
+    .herb {
+      position: absolute;
+      top: 45%;
+      left: 48%;
+      width: 20px;
+      height: 12px;
+      border-radius: 100% 0 100% 0;
+      background: #71834b;
+      transform: rotate(-20deg);
+      box-shadow: 10px 8px 0 -2px #71834b, -9px 10px 0 -3px #87905b;
+    }
+    .art-caption {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      color: #fff4df;
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    .welcome {
+      padding: 76px 0 82px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+    .welcome h2, .section-title {
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1.08;
+    }
+    .welcome p:last-child {
+      max-width: 580px;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+
+    .menu-section { padding: 88px 0; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .section-head .section-title { margin-bottom: 0; }
+    .text-link {
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--red);
+      color: var(--red);
+      font-size: .82rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .dishes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .dish {
+      min-height: 220px;
+      padding: 27px 26px;
+      border: 1px solid var(--line);
+    }
+    .dish-number {
+      color: var(--red);
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-style: italic;
+    }
+    .dish h3 {
+      margin: 27px 0 8px;
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .dish p { margin: 0; color: var(--muted); font-size: .87rem; }
+    .dish-price { float: right; color: var(--green); font-size: .9rem; }
+
+    .visit {
+      padding: 76px 0;
+      background: var(--green);
+      color: #f8f4ec;
+    }
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+    .visit .eyebrow { color: #e8b774; }
+    .visit h2 {
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1;
+    }
+    .visit p { color: rgba(248,244,236,.78); }
+    .visit .button {
+      margin-top: 10px;
+      background: #f2e6d1;
+      color: var(--green);
+    }
+    .visit .button:hover { background: #fff8eb; }
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-content: center; }
+    .detail { padding-top: 16px; border-top: 1px solid rgba(248,244,236,.28); }
+    .detail h3 {
+      margin-bottom: 8px;
+      color: #e8b774;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .detail p { margin: 0; font-size: .9rem; }
+    .detail a { text-decoration: none; }
+    footer { padding: 22px 0; color: var(--muted); font-size: .75rem; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 36px, 560px); }
+      header { height: 70px; }
+      .nav-links { gap: 16px; }
+      .nav-links a:not(.book-link) { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding: 62px 0; }
+      .hero-art { min-height: 390px; }
+      .welcome { padding: 62px 0; }
+      .menu-section { padding: 66px 0; }
+      .dishes { grid-template-columns: 1fr; gap: 12px; }
+      .dish { min-height: auto; padding: 21px 22px; }
+      .dish h3 { margin-top: 14px; }
+      .section-head { align-items: start; flex-direction: column; }
+      .visit { padding: 62px 0; }
+      .visit-grid { grid-template-columns: 1fr; gap: 42px; }
+    }
+    @media (max-width: 420px) {
+      .details { grid-template-columns: 1fr; gap: 22px; }
+      .hero-art { min-height: 320px; }
+      .footer-inner { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="logo" href="#" aria-label="Bellina home">bellina<span aria-hidden="true">.</span></a>
+      <div class="nav-links">
+        <a href="#story">Our story</a>
+        <a href="#menu">The menu</a>
+        <a href="#visit">Find us</a>
+        <a class="book-link" href="tel:+17185550184">Book a table</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Carroll Gardens · Brooklyn</p>
+        <h1 id="hero-title">A little Italy, <em>close to home.</em></h1>
+        <p>Handmade pasta, a well-loved wine list, and the kind of dinner that turns into one more glass.</p>
+        <a class="button" href="#menu">Come hungry</a>
+        <p class="hero-note">Dinner nightly · Walk-ins always welcome</p>
+      </div>
+      <div class="hero-art" role="img" aria-label="Illustration of a plate of handmade pasta on a warm terracotta table">
+        <span class="sun" aria-hidden="true"></span>
+        <span class="table" aria-hidden="true"></span>
+        <span class="plate" aria-hidden="true"><span class="pasta"><span class="herb"></span></span></span>
+        <span class="art-caption">pasta, amore, repeat</span>
+      </div>
+    </section>
+
+    <section class="welcome" id="story">
+      <div class="wrap">
+        <p class="eyebrow">Made for gathering</p>
+        <h2>Pull up a chair.<br>Stay a little longer.</h2>
+        <p>Bellina is our neighborhood love letter to the Italian table: seasonal ingredients, recipes worth passing down, and a seat saved for you.</p>
+      </div>
+    </section>
+
+    <section class="menu-section wrap" id="menu">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">A few house favorites</p>
+          <h2 class="section-title">Good things<br>from our kitchen.</h2>
+        </div>
+        <a class="text-link" href="mailto:ciao@bellinabrooklyn.com?subject=Bellina%20menu">Ask for the full menu ↗</a>
+      </div>
+      <div class="dishes">
+        <article class="dish">
+          <span class="dish-number">01</span>
+          <h3>Rigatoni alla vodka <span class="dish-price">$24</span></h3>
+          <p>Slow tomato, a little cream, parmesan, and just enough heat.</p>
+        </article>
+        <article class="dish">
+          <span class="dish-number">02</span>
+          <h3>Sunday ragù pappardelle <span class="dish-price">$28</span></h3>
+          <p>Wide ribbons, braised beef, red wine, and a long afternoon.</p>
+        </article>
+        <article class="dish">
+          <span class="dish-number">03</span>
+          <h3>Olive oil cake <span class="dish-price">$12</span></h3>
+          <p>Soft citrus cake, whipped mascarpone, and whatever fruit is good.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="visit" id="visit">
+      <div class="visit-grid wrap">
+        <div>
+          <p class="eyebrow">Your table is waiting</p>
+          <h2>See you<br>around dinner.</h2>
+          <p>Bring your favorite people. We’ll take care of the rest.</p>
+          <a class="button" href="tel:+17185550184">Call to reserve</a>
+        </div>
+        <div class="details">
+          <div class="detail">
+            <h3>Come by</h3>
+            <p>214 Court Street<br>Brooklyn, NY 11201</p>
+          </div>
+          <div class="detail">
+            <h3>Say hello</h3>
+            <p><a href="tel:+17185550184">(718) 555-0184</a><br><a href="mailto:ciao@bellinabrooklyn.com">ciao@bellinabrooklyn.com</a></p>
+          </div>
+          <div class="detail">
+            <h3>Hours</h3>
+            <p>Mon–Thu · 5–10 pm<br>Fri–Sun · 5–11 pm</p>
+          </div>
+          <div class="detail">
+            <h3>A little note</h3>
+            <p>Walk-ins welcome<br>Every night of the week</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner wrap">
+      <span>© 2025 Bellina Italian Kitchen</span>
+      <span>Made with amore in Brooklyn.</span>
+    </div>
+  </footer>
+</body>
+</html>
+```

@@ -1,0 +1,3102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clara Moreau — Freelance Photographer | Editorial, Architecture &amp; Portraiture</title>
+  <meta name="description" content="Portfolio of Clara Moreau, an independent editorial, architectural, and portrait photographer based between Paris and New York." />
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & THEME SYSTEM (Archival Paper vs. Darkroom Mode)
+       ========================================================================== */
+    :root {
+      --bg-primary: #F5F2EB;
+      --bg-secondary: #ECE7DC;
+      --bg-elevated: #FAF8F4;
+      --bg-ink-surface: #161513;
+      --text-primary: #161513;
+      --text-secondary: #615B52;
+      --text-muted: #8C857A;
+      --text-on-dark: #F5F2EB;
+      --border-hairline: #DCD5C7;
+      --border-strong: #BDB4A2;
+      --accent: #B84A2E;
+      --accent-hover: #9B3A21;
+      --accent-soft: rgba(184, 74, 46, 0.1);
+      --contact-bg: #121210;
+      --contact-border: #2B2925;
+
+      --font-serif: "Cormorant Garamond", "Didot", "Bodoni MT", "Times New Roman", Georgia, serif;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --container-max: 1380px;
+      --header-h: 72px;
+    }
+
+    html[data-theme="dark"] {
+      --bg-primary: #0E0E0D;
+      --bg-secondary: #171614;
+      --bg-elevated: #1C1B18;
+      --bg-ink-surface: #F5F2EB;
+      --text-primary: #EFECE6;
+      --text-secondary: #A69F94;
+      --text-muted: #6F695F;
+      --text-on-dark: #141413;
+      --border-hairline: #292723;
+      --border-strong: #423E37;
+      --accent: #D66447;
+      --accent-hover: #E57A5E;
+      --accent-soft: rgba(214, 100, 71, 0.14);
+      --contact-bg: #080807;
+      --contact-border: #24221E;
+    }
+
+    /* ==========================================================================
+       RESET & BASE
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin-inline: auto;
+      padding-inline: clamp(20px, 4vw, 56px);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================================
+       TYPOGRAPHY HELPERS
+       ========================================================================== */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background-color: var(--accent);
+      display: inline-block;
+    }
+
+    .serif-display {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.03;
+    }
+
+    .mono-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       HEADER / NAVIGATION
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      height: var(--header-h);
+      background-color: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: background-color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+    }
+
+    .header-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-loc {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .brand-loc {
+        display: inline-block;
+      }
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 820px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      position: relative;
+      padding-block: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--text-primary);
+    }
+
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      border-radius: 999px;
+      padding: 7px 13px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+      background-color: var(--bg-secondary);
+    }
+
+    .theme-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+      border: 1px solid var(--text-primary);
+      padding: 9px 18px;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      padding: 11px 22px;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--text-primary);
+      background-color: var(--bg-secondary);
+    }
+
+    .mobile-menu-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      cursor: pointer;
+    }
+
+    @media (min-width: 820px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      inset: var(--header-h) 0 0 0;
+      z-index: 55;
+      background-color: var(--bg-primary);
+      padding: 36px 24px;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .mobile-drawer.open {
+      display: flex;
+    }
+
+    .mobile-drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .mobile-drawer-links a {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: 12px;
+    }
+
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
+    .hero {
+      padding-block: clamp(44px, 7vw, 88px);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: end;
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1.05fr 1.15fr;
+      }
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.85rem, 6.2vw, 5.4rem);
+      font-style: normal;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      color: var(--text-secondary);
+      max-width: 44ch;
+      line-height: 1.65;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      padding-top: 6px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-top: 28px;
+      margin-top: 12px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .hero-plate {
+      position: relative;
+    }
+
+    .hero-frame {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-hairline);
+      cursor: zoom-in;
+    }
+
+    .hero-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.9s var(--ease-out);
+    }
+
+    .hero-frame:hover img {
+      transform: scale(1.025);
+    }
+
+    .hero-plate-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-plate-switcher {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .plate-dot-btn {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border-hairline);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .plate-dot-btn.active,
+    .plate-dot-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background-color: var(--accent-soft);
+    }
+
+    /* ==========================================================================
+       PORTFOLIO ARCHIVE (Filter Bar + Grid / Contact Sheet Switcher)
+       ========================================================================== */
+    .section-pad {
+      padding-block: clamp(56px, 8vw, 108px);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: clamp(28px, 4vw, 48px);
+    }
+
+    .section-title {
+      font-size: clamp(2.1rem, 4vw, 3.4rem);
+      margin-top: 10px;
+    }
+
+    .archive-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--text-primary);
+      border-color: var(--text-primary);
+      color: var(--bg-primary);
+    }
+
+    .view-switcher {
+      display: inline-flex;
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-elevated);
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .view-btn.active {
+      background-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    /* Editorial Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: clamp(24px, 3vw, 40px);
+    }
+
+    @media (min-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .photo-card.featured-wide {
+        grid-column: span 2;
+      }
+    }
+
+    .photo-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+    }
+
+    .photo-card.is-hidden {
+      display: none;
+    }
+
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-hairline);
+      cursor: zoom-in;
+      aspect-ratio: 4 / 5;
+    }
+
+    .photo-card.featured-wide .photo-frame {
+      aspect-ratio: 16 / 10;
+    }
+
+    .photo-card.landscape-ratio .photo-frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.75s var(--ease-out), filter 0.5s ease;
+    }
+
+    .photo-frame:hover img {
+      transform: scale(1.035);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(16, 15, 13, 0.78) 0%, rgba(16, 15, 13, 0.12) 45%, transparent 100%);
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      color: #F5F2EB;
+      transition: opacity 0.35s ease;
+    }
+
+    .photo-frame:hover .photo-overlay,
+    .photo-frame:focus-within .photo-overlay {
+      opacity: 1;
+    }
+
+    .overlay-exif {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(245, 242, 235, 0.85);
+      margin-bottom: 4px;
+    }
+
+    .overlay-action {
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .photo-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .photo-title {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 500;
+    }
+
+    .photo-meta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Contact Sheet View */
+    .contact-sheet {
+      background-color: var(--contact-bg);
+      color: #EAE6DF;
+      padding: clamp(20px, 3vw, 36px);
+      border: 1px solid var(--contact-border);
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .contact-sheet {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 960px) {
+      .contact-sheet {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .contact-sheet.is-hidden {
+      display: none;
+    }
+
+    .sheet-header {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed #33302A;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: #D66447;
+      text-transform: uppercase;
+    }
+
+    .sheet-cell {
+      border: 1px solid #2A2824;
+      padding: 12px;
+      background-color: #161614;
+      cursor: zoom-in;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .sheet-cell:hover {
+      border-color: #D66447;
+      transform: translateY(-2px);
+    }
+
+    .sheet-cell.is-hidden {
+      display: none;
+    }
+
+    .sheet-sprockets {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #24221E;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: #9A9388;
+      letter-spacing: 0.1em;
+    }
+
+    .sheet-thumb {
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background-color: #090908;
+      margin-bottom: 10px;
+    }
+
+    .sheet-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sheet-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .sheet-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: #F5F2EB;
+    }
+
+    .sheet-stock {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #D66447;
+      letter-spacing: 0.08em;
+    }
+
+    /* ==========================================================================
+       MONOGRAPHS / CURATED SERIES
+       ========================================================================== */
+    .series-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    @media (min-width: 860px) {
+      .series-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .series-card {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s ease, transform 0.3s var(--ease-out);
+    }
+
+    .series-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+    }
+
+    .series-thumb {
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-hairline);
+      position: relative;
+    }
+
+    .series-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease-out);
+    }
+
+    .series-card:hover .series-thumb img {
+      transform: scale(1.04);
+    }
+
+    .series-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background-color: rgba(18, 17, 15, 0.82);
+      color: #F5F2EB;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .series-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 12px;
+    }
+
+    .series-title {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      line-height: 1.15;
+    }
+
+    .series-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .series-link {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      margin-top: 8px;
+      align-self: flex-start;
+    }
+
+    .series-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       ABOUT & CREDENTIALS
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: start;
+    }
+
+    @media (min-width: 920px) {
+      .about-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+      }
+    }
+
+    .portrait-wrap {
+      position: relative;
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-secondary);
+      padding: 14px;
+    }
+
+    .portrait-wrap img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .portrait-caption {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .about-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .about-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+      line-height: 1.25;
+      font-style: italic;
+    }
+
+    .about-text {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.75;
+    }
+
+    .credentials-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-top: 16px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    @media (min-width: 600px) {
+      .credentials-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .cred-heading {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .cred-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .cred-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .cred-list span:last-child {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       COMMISSIONS, RATES & INQUIRY FORM
+       ========================================================================== */
+    .commission-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 5vw, 64px);
+    }
+
+    @media (min-width: 960px) {
+      .commission-grid {
+        grid-template-columns: 1fr 1.1fr;
+      }
+    }
+
+    .service-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .service-item {
+      border: 1px solid var(--border-hairline);
+      background-color: var(--bg-elevated);
+      padding: 20px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .service-name {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+    }
+
+    .service-desc {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      max-width: 42ch;
+    }
+
+    .service-rate {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .contact-direct {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .copy-email-btn {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      padding: 8px 14px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      transition: all 0.2s ease;
+    }
+
+    .copy-email-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .inquiry-form {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      padding: clamp(24px, 3.5vw, 40px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-hairline);
+      padding: 11px 14px;
+      font-size: 0.92rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .field textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .form-status {
+      display: none;
+      padding: 14px 16px;
+      border: 1px solid var(--accent);
+      background-color: var(--accent-soft);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .form-status.visible {
+      display: block;
+    }
+
+    /* ==========================================================================
+       LIGHTBOX MODAL
+       ========================================================================== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: rgba(12, 11, 10, 0.96);
+      color: #F5F2EB;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(16px, 2.5vw, 32px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lb-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 14px;
+    }
+
+    .lb-counter {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: #B9B2A6;
+    }
+
+    .lb-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lb-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #F5F2EB;
+      padding: 7px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .lb-btn:hover,
+    .lb-btn.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .lb-stage {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: center;
+      gap: 24px;
+      min-height: 0;
+      padding-block: 16px;
+      position: relative;
+    }
+
+    .lb-stage.with-exif {
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 960px) {
+      .lb-stage.with-exif {
+        grid-template-columns: 1fr 320px;
+      }
+    }
+
+    .lb-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .lb-img-wrap img {
+      max-height: 68vh;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    .lb-nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      background: rgba(16, 15, 13, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #F5F2EB;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .lb-nav-arrow:hover {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .lb-prev { left: 10px; }
+    .lb-next { right: 10px; }
+
+    .lb-exif-panel {
+      display: none;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 22px;
+      flex-direction: column;
+      gap: 14px;
+      align-self: stretch;
+      justify-content: center;
+    }
+
+    .lb-stage.with-exif .lb-exif-panel {
+      display: flex;
+    }
+
+    .lb-exif-title {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      line-height: 1.15;
+    }
+
+    .lb-exif-desc {
+      font-size: 0.86rem;
+      color: #C7C1B6;
+      line-height: 1.6;
+    }
+
+    .lb-spec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+
+    .lb-spec-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .lb-spec-list span:first-child {
+      color: #8E877C;
+    }
+
+    .lb-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 12px;
+    }
+
+    .lb-caption-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .lb-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+    }
+
+    .lb-sub {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #B9B2A6;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lb-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .lb-thumb {
+      flex: 0 0 62px;
+      height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      opacity: 0.45;
+      cursor: pointer;
+      overflow: hidden;
+      padding: 0;
+      background: transparent;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+    }
+
+    .lb-thumb.active,
+    .lb-thumb:hover {
+      opacity: 1;
+      border-color: var(--accent);
+    }
+
+    .lb-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .site-footer {
+      padding-block: 36px;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-avail {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #3E8E58;
+      box-shadow: 0 0 0 4px rgba(62, 142, 88, 0.18);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================================================
+       HEADER
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand" aria-label="Clara Moreau Home">
+        <span class="brand-name">Clara Moreau</span>
+        <span class="brand-loc">Paris · New York · <span id="studioClock">14:20 CET</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#archive" class="nav-link">Selected Work</a>
+        <a href="#series" class="nav-link">Monographs</a>
+        <a href="#about" class="nav-link">Practice</a>
+        <a href="#commissions" class="nav-link">Commissions</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle Darkroom Mode">
+          <span class="theme-dot" aria-hidden="true"></span>
+          <span id="themeLabel">Darkroom</span>
+        </button>
+        <a href="#commissions" class="btn-primary">Book a Shoot</a>
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+            <path d="M0 1H18M0 7H18M0 13H18" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="mobile-drawer-links">
+      <a href="#archive" class="mobile-nav-item">Selected Work</a>
+      <a href="#series" class="mobile-nav-item">Monographs</a>
+      <a href="#about" class="mobile-nav-item">Practice</a>
+      <a href="#commissions" class="mobile-nav-item">Commissions</a>
+    </div>
+    <div class="mono-meta" style="color: var(--text-muted);">
+      studio@claramoreau.photo · Paris / NYC
+    </div>
+  </div>
+
+  <main id="top">
+    <!-- ======================================================================
+         HERO
+         ====================================================================== -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Independent Photographer · Est. 2016</span>
+          <h1 class="serif-display hero-title">
+            Quiet permanence in <em>silver</em>, shadow &amp; light.
+          </h1>
+          <p class="hero-lead">
+            Clara Moreau photographs architecture, editorial campaigns, and intimate portraiture on medium-format digital and 35mm film—working with natural light across Europe, North America, and Japan.
+          </p>
+          <div class="hero-cta-row">
+            <a href="#archive" class="btn-primary">Explore the Archive</a>
+            <a href="#commissions" class="btn-outline">Request Availability</a>
+          </div>
+          <div class="hero-stats" aria-label="Portfolio highlights">
+            <div>
+              <div class="stat-num">140+</div>
+              <div class="stat-label">Editorial Commissions</div>
+            </div>
+            <div>
+              <div class="stat-num">12</div>
+              <div class="stat-label">Solo &amp; Group Shows</div>
+            </div>
+            <div>
+              <div class="stat-num">35mm / MF</div>
+              <div class="stat-label">Archival Workflow</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="hero-plate">
+          <div class="hero-frame" id="heroFrame" tabindex="0" role="button" aria-label="Open featured plate in lightbox">
+            <img id="heroImage" src="" alt="Featured photograph by Clara Moreau" />
+          </div>
+          <figcaption class="hero-plate-meta">
+            <span id="heroCaption">Plate 01 — Brumaire, Seine · Leica M11 · 50mm f/1.4</span>
+            <div class="hero-plate-switcher" role="group" aria-label="Select featured hero plate">
+              <button type="button" class="plate-dot-btn active" data-hero-idx="0" aria-label="Featured plate 1">01</button>
+              <button type="button" class="plate-dot-btn" data-hero-idx="1" aria-label="Featured plate 2">02</button>
+              <button type="button" class="plate-dot-btn" data-hero-idx="2" aria-label="Featured plate 3">03</button>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PORTFOLIO ARCHIVE
+         ====================================================================== -->
+    <section id="archive" class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 / Curated Plates</span>
+            <h2 class="serif-display section-title">Selected Works (2022–2026)</h2>
+          </div>
+          <p class="mono-meta" style="color: var(--text-secondary);">
+            Click any plate for full-screen darkroom inspection &amp; EXIF notes
+          </p>
+        </div>
+
+        <div class="archive-controls">
+          <div class="filter-pills" role="tablist" aria-label="Filter photographs by discipline">
+            <button type="button" class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All (12)</button>
+            <button type="button" class="filter-btn" data-filter="Editorial" role="tab" aria-selected="false">Editorial</button>
+            <button type="button" class="filter-btn" data-filter="Architecture" role="tab" aria-selected="false">Architecture</button>
+            <button type="button" class="filter-btn" data-filter="Landscape" role="tab" aria-selected="false">Landscape</button>
+            <button type="button" class="filter-btn" data-filter="Portrait" role="tab" aria-selected="false">Portrait</button>
+          </div>
+
+          <div class="view-switcher" role="group" aria-label="Archive view mode">
+            <button type="button" class="view-btn active" id="viewGridBtn" aria-pressed="true">Gallery Grid</button>
+            <button type="button" class="view-btn" id="viewSheetBtn" aria-pressed="false">Contact Sheet</button>
+          </div>
+        </div>
+
+        <!-- Gallery Grid Container -->
+        <div class="gallery-grid" id="galleryGrid"></div>
+
+        <!-- 35mm Contact Sheet Container -->
+        <div class="contact-sheet is-hidden" id="contactSheet" aria-label="35mm Film Contact Sheet">
+          <div class="sheet-header">
+            <span>CONTACT SHEET NO. CM-26-04 · PROOF PRINT (UNRETouched)</span>
+            <span>KODAK TRI-X 400 / PORTRA 400 / LEICA M6 &amp; M11</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MONOGRAPHS / VISUAL ESSAYS
+         ====================================================================== -->
+    <section id="series" class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">02 / Long-Form Essays</span>
+            <h2 class="serif-display section-title">Monographs &amp; Series</h2>
+          </div>
+          <p class="mono-meta" style="color: var(--text-secondary);">
+            Limited-edition archival pigment &amp; silver-gelatin portfolios
+          </p>
+        </div>
+
+        <div class="series-grid" id="seriesGrid"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         PRACTICE / ABOUT & CREDENTIALS
+         ====================================================================== -->
+    <section id="about" class="section-pad">
+      <div class="container about-grid">
+        <figure class="portrait-wrap">
+          <img id="artistPortrait" src="" alt="Silver-gelatin studio portrait of photographer Clara Moreau" />
+          <figcaption class="portrait-caption">
+            <span>Clara Moreau, Paris Atelier</span>
+            <span>Hasselblad 500C/M · Ilford HP5</span>
+          </figcaption>
+        </figure>
+
+        <div class="about-copy">
+          <span class="eyebrow">03 / Artist Statement</span>
+          <blockquote class="about-quote">
+            “A photograph is never merely what stood before the lens—it is the patience to wait until light reveals the architecture of silence.”
+          </blockquote>
+          <p class="about-text">
+            Trained in fine-art printmaking at École Nationale Supérieure des Beaux-Arts in Paris before spending six years assisting documentary essayists in New York, Clara Moreau builds unhurried visual narratives for publications, architects, and cultural houses.
+          </p>
+          <p class="about-text">
+            Every assignment blends disciplined medium-format precision with analog tactile warmth—resulting in imagery that resists seasonal trends and ages with museum-grade longevity.
+          </p>
+
+          <div class="credentials-grid">
+            <div>
+              <h3 class="cred-heading">Selected Clients</h3>
+              <ul class="cred-list">
+                <li><span>Architectural Digest</span><span>2024–26</span></li>
+                <li><span>Aesop Global Campaigns</span><span>2025</span></li>
+                <li><span>The New York Times Magazine</span><span>2023–26</span></li>
+                <li><span>Kinfolk &amp; Cereal</span><span>2022–25</span></li>
+                <li><span>Leica Fotografie International</span><span>2024</span></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="cred-heading">Exhibitions &amp; Monographs</h3>
+              <ul class="cred-list">
+                <li><span>Fondation Henri Cartier-Bresson (Group)</span><span>Paris, 2025</span></li>
+                <li><span>Les Rencontres d'Arles — Shortlist</span><span>Arles, 2024</span></li>
+                <li><span>Unseen Photo Fair — Solo Booth</span><span>Amsterdam, 2024</span></li>
+                <li><span>Concrete &amp; Fog (Hardcover, 128 pp.)</span><span>Mack Books, 2023</span></li>
+                <li><span>Aperture Emerging Voices Finalist</span><span>NYC, 2022</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         COMMISSIONS & INQUIRY
+         ====================================================================== -->
+    <section id="commissions" class="section-pad">
+      <div class="container commission-grid">
+        <div>
+          <span class="eyebrow">04 / Commissions &amp; Prints</span>
+          <h2 class="serif-display section-title">Work Together</h2>
+          <p class="about-text" style="margin-top: 14px;">
+            Available worldwide for editorial assignments, architectural documentation, lookbooks, and signed museum-grade archival prints.
+          </p>
+
+          <div class="service-cards">
+            <div class="service-item">
+              <div>
+                <div class="service-name">Editorial &amp; Brand Campaigns</div>
+                <p class="service-desc">Full-day location or studio production, art direction collaboration, and high-resolution color grading.</p>
+              </div>
+              <span class="service-rate">From €2,400 / day</span>
+            </div>
+            <div class="service-item">
+              <div>
+                <div class="service-name">Architectural &amp; Spatial</div>
+                <p class="service-desc">Tilt-shift perspective control and dusk-to-dawn light studies for studios, hospitality, and galleries.</p>
+              </div>
+              <span class="service-rate">From €1,950 / project</span>
+            </div>
+            <div class="service-item">
+              <div>
+                <div class="service-name">Signed Archival Editions</div>
+                <p class="service-desc">Hahnemühle Photo Rag Baryta prints, numbered in editions of 15 + 2 AP with certificate of authenticity.</p>
+              </div>
+              <span class="service-rate">From €480 / print</span>
+            </div>
+          </div>
+
+          <div class="contact-direct">
+            <span>Direct Studio Desk:</span>
+            <a href="mailto:studio@claramoreau.photo" style="text-decoration: underline;">studio@claramoreau.photo</a>
+            <button type="button" class="copy-email-btn" id="copyEmailBtn">Copy Email</button>
+          </div>
+        </div>
+
+        <form class="inquiry-form" id="inquiryForm" novalidate>
+          <span class="eyebrow">Commission Brief</span>
+          <div class="form-row">
+            <div class="field">
+              <label for="clientName">Your Name *</label>
+              <input id="clientName" name="name" type="text" placeholder="Camille Laurent" required />
+            </div>
+            <div class="field">
+              <label for="clientEmail">Email Address *</label>
+              <input id="clientEmail" name="email" type="email" placeholder="camille@studio.fr" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="shootType">Commission Type</label>
+              <select id="shootType" name="type">
+                <option value="Editorial / Campaign">Editorial / Campaign</option>
+                <option value="Architecture & Interiors">Architecture &amp; Interiors</option>
+                <option value="Portraiture">Portraiture</option>
+                <option value="Archival Print Acquisition">Archival Print Acquisition</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="shootTimeline">Target Timeline &amp; City</label>
+              <input id="shootTimeline" name="timeline" type="text" placeholder="Spring 2026 · Paris / Zurich" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="shootBrief">Project Notes *</label>
+            <textarea id="shootBrief" name="brief" placeholder="Share scope, deliverables, usage, or specific plate title for print inquiries..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; padding-block: 13px;">
+            Send Studio Inquiry
+          </button>
+
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Clara Moreau Studio. All rights reserved.</span>
+      <span class="footer-avail">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        Booking 2026 Q1–Q3 Commissions
+      </span>
+      <a href="#top">Back to top &uarr;</a>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       LIGHTBOX MODAL
+       ======================================================================== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle" aria-hidden="true">
+    <div class="lb-top">
+      <div class="lb-counter" id="lbCounter">PLATE 01 / 12</div>
+      <div class="lb-actions">
+        <button type="button" class="lb-btn" id="lbExifToggle" aria-pressed="false">EXIF &amp; Notes (I)</button>
+        <button type="button" class="lb-btn" id="lbCloseBtn" aria-label="Close lightbox">Close (Esc)</button>
+      </div>
+    </div>
+
+    <div class="lb-stage" id="lbStage">
+      <div class="lb-img-wrap">
+        <button type="button" class="lb-nav-arrow lb-prev" id="lbPrev" aria-label="Previous photograph">&larr;</button>
+        <img id="lbImage" src="" alt="" />
+        <button type="button" class="lb-nav-arrow lb-next" id="lbNext" aria-label="Next photograph">&rarr;</button>
+      </div>
+
+      <aside class="lb-exif-panel" aria-label="Technical EXIF metadata">
+        <div class="mono-meta" style="color: #D66447;">Darkroom &amp; Camera Log</div>
+        <h3 class="lb-exif-title" id="lbExifTitle"></h3>
+        <p class="lb-exif-desc" id="lbExifDesc"></p>
+        <ul class="lb-spec-list" id="lbSpecList"></ul>
+      </aside>
+    </div>
+
+    <div class="lb-bottom">
+      <div class="lb-caption-bar">
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-sub" id="lbSub"></div>
+      </div>
+      <div class="lb-strip" id="lbStrip" aria-label="Lightbox thumbnail strip"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SELF-CONTAINED PROCEDURAL FINE-ART PHOTOGRAPHY ENGINE & APP LOGIC
+       ======================================================================== -->
+  <script>
+    (() => {
+      "use strict";
+
+      /* --------------------------------------------------------------------
+         1. PHOTOGRAPHY CATALOGUE DATA
+         -------------------------------------------------------------------- */
+      const PHOTOS = [
+        {
+          id: "plate-01",
+          frame: "01A",
+          title: "Brumaire, Seine",
+          category: "Landscape",
+          location: "Paris, France",
+          year: "2025",
+          camera: "Leica M11",
+          lens: "Summilux-M 50mm f/1.4",
+          settings: "f/2.8 · 1/250s · ISO 160",
+          stock: "DIGITAL MONOCHROME",
+          edition: "Edition of 15 (60×80cm)",
+          ratio: "landscape",
+          featuredHero: true,
+          wide: true,
+          note: "Captured at 06:42 as winter river fog lifted beneath Pont Alexandre III, isolating the quiet geometry of stone piers against liquid mercury water.",
+          renderType: "seineMist"
+        },
+        {
+          id: "plate-02",
+          frame: "02A",
+          title: "Concrete Monolith IV",
+          category: "Architecture",
+          location: "Minato-ku, Tokyo",
+          year: "2025",
+          camera: "Hasselblad X2D 100C",
+          lens: "XCD 38mm f/2.5",
+          settings: "f/8.0 · 1/500s · ISO 64",
+          stock: "ILFORD DELTA 100",
+          edition: "Edition of 12 (80×100cm)",
+          ratio: "portrait",
+          featuredHero: true,
+          wide: false,
+          note: "Afternoon sunlight slices across board-formed concrete walls, turning a brutalist courtyard into a stark study of scale and solitary movement.",
+          renderType: "brutalistShadow"
+        },
+        {
+          id: "plate-03",
+          frame: "03A",
+          title: "Atelier Chiaroscuro",
+          category: "Portrait",
+          location: "Le Marais, Paris",
+          year: "2024",
+          camera: "Hasselblad 500C/M",
+          lens: "Planar 80mm f/2.8",
+          settings: "f/2.8 · 1/60s · ISO 400",
+          stock: "KODAK PORTRA 400",
+          edition: "Edition of 10 (50×60cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Single north-facing loft window illumination during a late-autumn rainstorm; zero artificial fill was used to preserve natural skin shadow falloff.",
+          renderType: "chiaroscuroPortrait"
+        },
+        {
+          id: "plate-04",
+          frame: "04A",
+          title: "Atlantic Solstice",
+          category: "Landscape",
+          location: "Finistère, Brittany",
+          year: "2025",
+          camera: "Leica M6",
+          lens: "Summicron 35mm f/2",
+          settings: "f/11 · 4s (ND 3.0) · ISO 100",
+          stock: "KODAK EKTAR 100",
+          edition: "Edition of 15 (70×50cm)",
+          ratio: "landscape",
+          featuredHero: true,
+          wide: false,
+          note: "Four-second exposure dissolving Atlantic swell into an atmospheric gradient where horizon and twilight sky nearly merge.",
+          renderType: "atlanticHorizon"
+        },
+        {
+          id: "plate-05",
+          frame: "05A",
+          title: "Rain on Shinjuku",
+          category: "Editorial",
+          location: "Tokyo, Japan",
+          year: "2024",
+          camera: "Leica M11",
+          lens: "Noctilux 50mm f/1.2",
+          settings: "f/1.4 · 1/125s · ISO 1600",
+          stock: "CINESTILL 800T",
+          edition: "Edition of 20 (60×45cm)",
+          ratio: "landscape",
+          featuredHero: false,
+          wide: false,
+          note: "Commissioned nocturnal street essay exploring neon refraction across rain-slicked asphalt after midnight trains depart.",
+          renderType: "tokyoRainBokeh"
+        },
+        {
+          id: "plate-06",
+          frame: "06A",
+          title: "Pavilion of Light",
+          category: "Architecture",
+          location: "Humlebæk, Denmark",
+          year: "2024",
+          camera: "Cambo WRS-1600",
+          lens: "Rodenstock 40mm HR",
+          settings: "f/11 · 1/15s · ISO 100",
+          stock: "MEDIUM FORMAT RAW",
+          edition: "Edition of 12 (90×70cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Clerestory skylights cast crisp architectural ribs onto travertine limestone inside a silent Nordic gallery wing.",
+          renderType: "nordicPavilion"
+        },
+        {
+          id: "plate-07",
+          frame: "07A",
+          title: "Sahara Wind, Erg Chebbi",
+          category: "Landscape",
+          location: "Merzouga, Morocco",
+          year: "2023",
+          camera: "Hasselblad X2D 100C",
+          lens: "XCD 90mm f/2.5",
+          settings: "f/9.0 · 1/320s · ISO 64",
+          stock: "KODAK PORTRA 160",
+          edition: "Edition of 15 (100×65cm)",
+          ratio: "landscape",
+          featuredHero: false,
+          wide: true,
+          note: "Compressed telephoto perspective bisecting wind-carved dune ridges into warm ochre sunlight and deep cobalt shadow.",
+          renderType: "desertDunes"
+        },
+        {
+          id: "plate-08",
+          frame: "08A",
+          title: "Stillness in Linen",
+          category: "Editorial",
+          location: "Antwerp, Belgium",
+          year: "2025",
+          camera: "Contax 645",
+          lens: "Planar 80mm f/2",
+          settings: "f/4.0 · 1/125s · ISO 400",
+          stock: "KODAK PORTRA 400",
+          edition: "Edition of 15 (50×65cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Tactile study of raw Belgian flax, hand-thrown stoneware, and Venetian blind light bands for an artisanal home monograph.",
+          renderType: "linenStillLife"
+        },
+        {
+          id: "plate-09",
+          frame: "09A",
+          title: "Portrait of M., Antwerp",
+          category: "Portrait",
+          location: "Antwerp, Belgium",
+          year: "2024",
+          camera: "Leica M6",
+          lens: "Summilux 50mm f/1.4",
+          settings: "f/2.0 · 1/250s · ISO 400",
+          stock: "KODAK TRI-X 400",
+          edition: "Edition of 10 (50×60cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Pushed one stop in D-76 developer for expressive silver-halide grain and luminous highlight roll-off.",
+          renderType: "silverPortrait"
+        },
+        {
+          id: "plate-10",
+          frame: "10A",
+          title: "Escalier Hélicoïdal",
+          category: "Architecture",
+          location: "16e Arr., Paris",
+          year: "2023",
+          camera: "Leica SL2-S",
+          lens: "APO-Summicron 28mm",
+          settings: "f/8.0 · 1/30s · ISO 400",
+          stock: "ILFORD HP5 PLUS",
+          edition: "Edition of 15 (70×85cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Vertiginous downward perspective through a 1930s Art Deco limestone stairwell illuminated solely by its glass oculus.",
+          renderType: "spiralStair"
+        },
+        {
+          id: "plate-11",
+          frame: "11A",
+          title: "Kyoto Moss & Rain",
+          category: "Editorial",
+          location: "Arashiyama, Kyoto",
+          year: "2025",
+          camera: "Hasselblad X2D 100C",
+          lens: "XCD 55mm f/2.5",
+          settings: "f/2.5 · 1/160s · ISO 200",
+          stock: "FUJIFILM PRO 400H",
+          edition: "Edition of 20 (60×75cm)",
+          ratio: "portrait",
+          featuredHero: false,
+          wide: false,
+          note: "Photographed during monsoon stillness beneath temple cedars, emphasizing damp jade tonalities and soft specular dew.",
+          renderType: "kyotoMoss"
+        },
+        {
+          id: "plate-12",
+          frame: "12A",
+          title: "Alpine First Light",
+          category: "Landscape",
+          location: "Dolomites, Italy",
+          year: "2026",
+          camera: "Leica M11",
+          lens: "APO-Summicron 90mm",
+          settings: "f/8.0 · 1/500s · ISO 100",
+          stock: "KODAK PORTRA 160",
+          edition: "Edition of 15 (80×60cm)",
+          ratio: "landscape",
+          featuredHero: false,
+          wide: false,
+          note: "Rose-gold alpenglow grazing limestone spires above an inversion sea of morning valley cloud at 2,400 meters.",
+          renderType: "alpineDawn"
+        }
+      ];
+
+      const MONOGRAPHS = [
+        {
+          title: "Concrete & Fog — Tokyo",
+          years: "2023–2025 · 28 Plates",
+          description: "An architectural meditation on post-war Japanese metabolism, rain-washed glass, and human solitude within monumental urban geometry.",
+          leadPhotoId: "plate-02",
+          filterCategory: "Architecture"
+        },
+        {
+          title: "Solstice on the Atlantic",
+          years: "2024–2026 · 18 Plates",
+          description: "Long-exposure coastal horizons from Brittany to the Faroe Islands, reducing sea and sky to tonal studies in silver and slate.",
+          leadPhotoId: "plate-04",
+          filterCategory: "Landscape"
+        },
+        {
+          title: "Studio Chiaroscuro",
+          years: "2022–2025 · 22 Plates",
+          description: "Natural-light portraits of painters, dancers, and sculptors photographed on medium-format film in quiet European ateliers.",
+          leadPhotoId: "plate-03",
+          filterCategory: "Portrait"
+        }
+      ];
+
+      /* --------------------------------------------------------------------
+         2. PROCEDURAL FINE-ART PHOTOGRAPHY ENGINE (100% Self-Contained)
+         Generates realistic atmospheric plates + film grain + optical vignette
+         -------------------------------------------------------------------- */
+      function seededRandom(seed) {
+        let s = seed % 2147483647;
+        if (s <= 0) s += 2147483646;
+        return () => {
+          s = (s * 16807) % 2147483647;
+          return (s - 1) / 2147483646;
+        };
+      }
+
+      function applyFilmGrainAndVignette(ctx, w, h, grainAmount, vignetteStrength, seed) {
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+        let x = seed * 9301 + 49297;
+        for (let i = 0; i < d.length; i += 4) {
+          x = (x * 1664525 + 1013904223) | 0;
+          const n = ((x >>> 24) / 255 - 0.5) * grainAmount;
+          d[i] = Math.max(0, Math.min(255, d[i] + n));
+          d[i + 1] = Math.max(0, Math.min(255, d[i + 1] + n));
+          d[i + 2] = Math.max(0, Math.min(255, d[i + 2] + n));
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        const vig = ctx.createRadialGradient(w * 0.5, h * 0.48, w * 0.22, w * 0.5, h * 0.5, w * 0.78);
+        vig.addColorStop(0, "rgba(0,0,0,0)");
+        vig.addColorStop(1, `rgba(8,7,6,${vignetteStrength})`);
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function renderPhotoToDataURL(type, w, h) {
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+        if (type === "seineMist") {
+          const sky = ctx.createLinearGradient(0, 0, 0, h * 0.58);
+          sky.addColorStop(0, "#D9D4CA");
+          sky.addColorStop(0.55, "#ECE7DD");
+          sky.addColorStop(1, "#F7F4ED");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h);
+
+          // Soft morning sun glow
+          const sun = ctx.createRadialGradient(w * 0.68, h * 0.34, 8, w * 0.68, h * 0.34, w * 0.45);
+          sun.addColorStop(0, "rgba(255,250,240,0.95)");
+          sun.addColorStop(0.35, "rgba(240,232,216,0.45)");
+          sun.addColorStop(1, "rgba(220,214,204,0)");
+          ctx.fillStyle = sun;
+          ctx.fillRect(0, 0, w, h);
+
+          // Distant bridge silhouette & arches
+          const hor = h * 0.54;
+          ctx.fillStyle = "rgba(88, 84, 78, 0.38)";
+          ctx.fillRect(0, hor - h * 0.045, w, h * 0.045);
+          ctx.fillStyle = "#ECE7DD";
+          for (let i = 0; i < 5; i++) {
+            const ax = w * (0.1 + i * 0.2);
+            ctx.beginPath();
+            ctx.ellipse(ax, hor + 2, w * 0.075, h * 0.032, 0, Math.PI, 0);
+            ctx.fill();
+          }
+
+          // Distant buildings faint haze
+          ctx.fillStyle = "rgba(70, 66, 61, 0.16)";
+          [0.06, 0.14, 0.25, 0.72, 0.83].forEach((bx, idx) => {
+            const bh = h * (0.09 + (idx % 3) * 0.04);
+            ctx.fillRect(w * bx, hor - h * 0.045 - bh, w * 0.09, bh);
+          });
+
+          // River water
+          const water = ctx.createLinearGradient(0, hor, 0, h);
+          water.addColorStop(0, "#D8D2C7");
+          water.addColorStop(0.4, "#A7A196");
+          water.addColorStop(1, "#3A3732");
+          ctx.fillStyle = water;
+          ctx.fillRect(0, hor, w, h - hor);
+
+          // Water reflections & ripples
+          const rand = seededRandom(11);
+          for (let i = 0; i < 160; i++) {
+            const ry = hor + Math.pow(rand(), 1.3) * (h - hor);
+            const rw = 24 + rand() * 140;
+            const rx = rand() * (w - rw);
+            ctx.fillStyle = i % 3 === 0 ? "rgba(250,247,240,0.22)" : "rgba(38,35,31,0.18)";
+            ctx.fillRect(rx, ry, rw, 1.5 + rand() * 2);
+          }
+
+          // Foreground stone quay + lone silhouette
+          ctx.fillStyle = "#1D1B18";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.86);
+          ctx.lineTo(w * 0.34, h * 0.77);
+          ctx.lineTo(w * 0.34, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Figure on embankment
+          ctx.fillRect(w * 0.23, h * 0.72, w * 0.016, h * 0.075);
+          ctx.beginPath();
+          ctx.arc(w * 0.238, h * 0.708, w * 0.008, 0, Math.PI * 2);
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 22, 0.36, 101);
+        }
+
+        else if (type === "brutalistShadow") {
+          ctx.fillStyle = "#201F1D";
+          ctx.fillRect(0, 0, w, h);
+
+          // Sunlit angled concrete wall
+          const wallGrad = ctx.createLinearGradient(0, 0, w * 0.85, h);
+          wallGrad.addColorStop(0, "#E7E2D8");
+          wallGrad.addColorStop(0.55, "#B6B0A5");
+          wallGrad.addColorStop(1, "#6A655D");
+          ctx.fillStyle = wallGrad;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.16, 0);
+          ctx.lineTo(w, 0);
+          ctx.lineTo(w, h * 0.74);
+          ctx.lineTo(w * 0.42, h * 0.74);
+          ctx.closePath();
+          ctx.fill();
+
+          // Concrete formwork seams
+          ctx.strokeStyle = "rgba(40,38,34,0.18)";
+          ctx.lineWidth = 1;
+          for (let y = 0; y < h * 0.75; y += h * 0.09) {
+            ctx.beginPath();
+            ctx.moveTo(w * 0.16, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+          }
+
+          // Deep geometric shadow triangle
+          ctx.fillStyle = "#171614";
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w * 0.46, 0);
+          ctx.lineTo(w * 0.18, h * 0.74);
+          ctx.lineTo(0, h * 0.74);
+          ctx.closePath();
+          ctx.fill();
+
+          // Ground plane & light shaft
+          ctx.fillStyle = "#2E2C29";
+          ctx.fillRect(0, h * 0.74, w, h * 0.26);
+          ctx.fillStyle = "#DDD7CB";
+          ctx.beginPath();
+          ctx.moveTo(w * 0.42, h * 0.74);
+          ctx.lineTo(w, h * 0.74);
+          ctx.lineTo(w * 0.78, h);
+          ctx.lineTo(w * 0.14, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Solitary figure & long cast shadow
+          const fx = w * 0.58;
+          const fy = h * 0.74;
+          ctx.fillStyle = "rgba(18,17,15,0.62)";
+          ctx.beginPath();
+          ctx.moveTo(fx, fy);
+          ctx.lineTo(fx + w * 0.015, fy);
+          ctx.lineTo(fx - w * 0.17, h * 0.96);
+          ctx.lineTo(fx - w * 0.19, h * 0.94);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = "#141312";
+          ctx.fillRect(fx - 4, fy - h * 0.11, 9, h * 0.11);
+          ctx.beginPath();
+          ctx.arc(fx + 0.5, fy - h * 0.123, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 24, 0.42, 202);
+        }
+
+        else if (type === "chiaroscuroPortrait") {
+          const bg = ctx.createRadialGradient(w * 0.25, h * 0.28, 20, w * 0.5, h * 0.5, w * 0.9);
+          bg.addColorStop(0, "#4B3B2D");
+          bg.addColorStop(0.5, "#1E1813");
+          bg.addColorStop(1, "#0C0A08");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Soft window light beam
+          const beam = ctx.createLinearGradient(0, 0, w * 0.75, h * 0.85);
+          beam.addColorStop(0, "rgba(246, 224, 194, 0.26)");
+          beam.addColorStop(1, "rgba(246, 224, 194, 0)");
+          ctx.fillStyle = beam;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w * 0.55, 0);
+          ctx.lineTo(w, h * 0.85);
+          ctx.lineTo(0, h * 0.65);
+          ctx.closePath();
+          ctx.fill();
+
+          // Subject silhouette + warm Rembrandt rim highlight
+          const cx = w * 0.54;
+          const cy = h * 0.42;
+          const skinRim = ctx.createRadialGradient(cx - w * 0.08, cy - h * 0.04, 10, cx, cy, w * 0.26);
+          skinRim.addColorStop(0, "#D8AE89");
+          skinRim.addColorStop(0.35, "#78533B");
+          skinRim.addColorStop(0.75, "#231914");
+          skinRim.addColorStop(1, "#120E0C");
+
+          // Shoulders & coat
+          ctx.fillStyle = "#16120F";
+          ctx.beginPath();
+          ctx.ellipse(cx + w * 0.02, h * 0.88, w * 0.36, h * 0.32, 0, Math.PI, 0);
+          ctx.fill();
+
+          // Neck & Head profile
+          ctx.fillStyle = skinRim;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, w * 0.14, h * 0.145, -0.08, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(cx - w * 0.045, cy + h * 0.1, w * 0.095, h * 0.14);
+
+          // Crisp rim light edge
+          ctx.strokeStyle = "rgba(255, 228, 196, 0.55)";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(cx, cy, w * 0.14, Math.PI * 0.82, Math.PI * 1.48);
+          ctx.stroke();
+
+          // Atmospheric dust motes
+          const rand = seededRandom(33);
+          for (let i = 0; i < 45; i++) {
+            ctx.fillStyle = `rgba(255,236,210,${0.08 + rand() * 0.22})`;
+            ctx.beginPath();
+            ctx.arc(rand() * w * 0.7, rand() * h * 0.7, 0.8 + rand() * 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          applyFilmGrainAndVignette(ctx, w, h, 20, 0.52, 303);
+        }
+
+        else if (type === "atlanticHorizon") {
+          const hor = h * 0.52;
+          const sky = ctx.createLinearGradient(0, 0, 0, hor);
+          sky.addColorStop(0, "#2A323B");
+          sky.addColorStop(0.65, "#67727A");
+          sky.addColorStop(0.92, "#B7A697");
+          sky.addColorStop(1, "#D8BEA8");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, hor);
+
+          const sea = ctx.createLinearGradient(0, hor, 0, h);
+          sea.addColorStop(0, "#8B8A88");
+          sea.addColorStop(0.22, "#4B545C");
+          sea.addColorStop(1, "#181D22");
+          ctx.fillStyle = sea;
+          ctx.fillRect(0, hor, w, h - hor);
+
+          // Silky long-exposure mist haze along horizon
+          const mist = ctx.createLinearGradient(0, hor - h * 0.06, 0, hor + h * 0.12);
+          mist.addColorStop(0, "rgba(220,210,198,0)");
+          mist.addColorStop(0.5, "rgba(224,212,200,0.48)");
+          mist.addColorStop(1, "rgba(75,84,92,0)");
+          ctx.fillStyle = mist;
+          ctx.fillRect(0, hor - h * 0.06, w, h * 0.18);
+
+          // Subtle horizontal silk water streaks
+          const rand = seededRandom(44);
+          for (let i = 0; i < 90; i++) {
+            const y = hor + 4 + rand() * (h - hor - 8);
+            ctx.fillStyle = i % 2 === 0 ? "rgba(240,235,228,0.08)" : "rgba(15,20,25,0.12)";
+            ctx.fillRect(rand() * w * 0.4, y, w * (0.25 + rand() * 0.5), 1.5);
+          }
+
+          applyFilmGrainAndVignette(ctx, w, h, 18, 0.34, 404);
+        }
+
+        else if (type === "tokyoRainBokeh") {
+          const bg = ctx.createLinearGradient(0, 0, 0, h);
+          bg.addColorStop(0, "#0A0D14");
+          bg.addColorStop(0.55, "#151924");
+          bg.addColorStop(1, "#090A0F");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Neon bokeh orbs
+          const colors = [
+            "rgba(235, 82, 62, 0.42)",
+            "rgba(66, 198, 224, 0.36)",
+            "rgba(248, 196, 98, 0.44)",
+            "rgba(224, 92, 168, 0.32)"
+          ];
+          const rand = seededRandom(55);
+          for (let i = 0; i < 55; i++) {
+            const bx = rand() * w;
+            const by = rand() * h * 0.65;
+            const br = 8 + rand() * 34;
+            const c = colors[i % colors.length];
+            const g = ctx.createRadialGradient(bx, by, br * 0.15, bx, by, br);
+            g.addColorStop(0, c);
+            g.addColorStop(0.75, c);
+            g.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(bx, by, br, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Vertical wet asphalt reflections
+          for (let i = 0; i < 80; i++) {
+            const rx = rand() * w;
+            const ry = h * 0.55 + rand() * h * 0.42;
+            const c = colors[i % colors.length];
+            ctx.fillStyle = c.replace(/0\.\d+\)/, "0.18)");
+            ctx.fillRect(rx, ry, 2 + rand() * 5, 18 + rand() * 65);
+          }
+
+          // Umbrella silhouettes
+          const umb = (ux, uy, uw) => {
+            ctx.fillStyle = "#08090C";
+            ctx.beginPath();
+            ctx.arc(ux, uy, uw, Math.PI, 0);
+            ctx.fill();
+            ctx.fillRect(ux - uw * 0.22, uy, uw * 0.44, h * 0.26);
+          };
+          umb(w * 0.36, h * 0.58, w * 0.08);
+          umb(w * 0.68, h * 0.62, w * 0.065);
+
+          // Rain streaks
+          ctx.strokeStyle = "rgba(210, 225, 245, 0.16)";
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 120; i++) {
+            const rx = rand() * w;
+            const ry = rand() * h;
+            ctx.beginPath();
+            ctx.moveTo(rx, ry);
+            ctx.lineTo(rx - 4, ry + 22);
+            ctx.stroke();
+          }
+
+          applyFilmGrainAndVignette(ctx, w, h, 26, 0.48, 505);
+        }
+
+        else if (type === "nordicPavilion") {
+          ctx.fillStyle = "#C7C2B8";
+          ctx.fillRect(0, 0, w, h);
+
+          // Soft gallery wall shading
+          const wg = ctx.createLinearGradient(0, 0, w, 0);
+          wg.addColorStop(0, "#9E988E");
+          wg.addColorStop(0.5, "#DEDAD1");
+          wg.addColorStop(1, "#B2ACA2");
+          ctx.fillStyle = wg;
+          ctx.fillRect(0, 0, w, h * 0.72);
+
+          // Travertine floor
+          const fg = ctx.createLinearGradient(0, h * 0.72, 0, h);
+          fg.addColorStop(0, "#B8B1A6");
+          fg.addColorStop(1, "#797369");
+          ctx.fillStyle = fg;
+          ctx.fillRect(0, h * 0.72, w, h * 0.28);
+
+          // Clerestory shafts of light
+          for (let i = 0; i < 4; i++) {
+            const lx = w * (0.12 + i * 0.22);
+            const shaft = ctx.createLinearGradient(lx, 0, lx + w * 0.12, h);
+            shaft.addColorStop(0, "rgba(255,253,248,0.75)");
+            shaft.addColorStop(0.75, "rgba(255,251,242,0.28)");
+            shaft.addColorStop(1, "rgba(255,251,242,0)");
+            ctx.fillStyle = shaft;
+            ctx.beginPath();
+            ctx.moveTo(lx, 0);
+            ctx.lineTo(lx + w * 0.08, 0);
+            ctx.lineTo(lx + w * 0.22, h);
+            ctx.lineTo(lx + w * 0.05, h);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          // Vertical dark architectural columns
+          ctx.fillStyle = "#2F2C28";
+          [0.08, 0.34, 0.62, 0.88].forEach((px) => {
+            ctx.fillRect(w * px, 0, w * 0.032, h * 0.72);
+          });
+
+          applyFilmGrainAndVignette(ctx, w, h, 16, 0.3, 606);
+        }
+
+        else if (type === "desertDunes") {
+          const sky = ctx.createLinearGradient(0, 0, 0, h * 0.45);
+          sky.addColorStop(0, "#46556B");
+          sky.addColorStop(1, "#B89A82");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h * 0.48);
+
+          // Distant ridge
+          ctx.fillStyle = "#8C6D59";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.42);
+          ctx.quadraticCurveTo(w * 0.35, h * 0.34, w * 0.68, h * 0.44);
+          ctx.lineTo(w, h * 0.38);
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Sunlit golden dune face
+          const duneLit = ctx.createLinearGradient(0, h * 0.38, w * 0.65, h);
+          duneLit.addColorStop(0, "#E5AD73");
+          duneLit.addColorStop(0.5, "#C77D46");
+          duneLit.addColorStop(1, "#8A4A24");
+          ctx.fillStyle = duneLit;
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.62);
+          ctx.bezierCurveTo(w * 0.28, h * 0.46, w * 0.56, h * 0.38, w * 0.78, h * 0.32);
+          ctx.lineTo(w, h * 0.42);
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Razor-sharp shadow slope along S-curve spine
+          const duneShad = ctx.createLinearGradient(w * 0.3, h * 0.4, w, h);
+          duneShad.addColorStop(0, "#382E3A");
+          duneShad.addColorStop(1, "#18151D");
+          ctx.fillStyle = duneShad;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.78, h * 0.32);
+          ctx.bezierCurveTo(w * 0.62, h * 0.52, w * 0.54, h * 0.74, w * 0.38, h);
+          ctx.lineTo(w, h);
+          ctx.lineTo(w, h * 0.42);
+          ctx.closePath();
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 20, 0.34, 707);
+        }
+
+        else if (type === "linenStillLife") {
+          const bg = ctx.createLinearGradient(0, 0, w, h);
+          bg.addColorStop(0, "#DDD5C8");
+          bg.addColorStop(1, "#9B9183");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Venetian blind sunlight stripes
+          ctx.fillStyle = "rgba(255, 250, 240, 0.35)";
+          for (let i = 0; i < 9; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, h * (0.05 + i * 0.085));
+            ctx.lineTo(w, h * (0.22 + i * 0.085));
+            ctx.lineTo(w, h * (0.26 + i * 0.085));
+            ctx.lineTo(0, h * (0.09 + i * 0.085));
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          // Plinth table
+          ctx.fillStyle = "#BFB5A6";
+          ctx.fillRect(0, h * 0.72, w, h * 0.28);
+
+          // Linen drapery folds
+          for (let i = 0; i < 6; i++) {
+            const gx = w * (0.08 + i * 0.065);
+            const fold = ctx.createLinearGradient(gx, 0, gx + w * 0.06, 0);
+            fold.addColorStop(0, "rgba(248,244,236,0.65)");
+            fold.addColorStop(0.5, "rgba(182,172,158,0.45)");
+            fold.addColorStop(1, "rgba(110,102,92,0.5)");
+            ctx.fillStyle = fold;
+            ctx.fillRect(gx, h * 0.14, w * 0.06, h * 0.64);
+          }
+
+          // Hand-thrown stoneware ceramic vessel
+          const vx = w * 0.63;
+          const vy = h * 0.72;
+          const vase = ctx.createRadialGradient(vx - w * 0.04, vy - h * 0.14, 6, vx, vy - h * 0.12, w * 0.16);
+          vase.addColorStop(0, "#ECE5D9");
+          vase.addColorStop(0.55, "#A59887");
+          vase.addColorStop(1, "#4B4339");
+          ctx.fillStyle = vase;
+          ctx.beginPath();
+          ctx.moveTo(vx - w * 0.07, vy);
+          ctx.quadraticCurveTo(vx - w * 0.13, vy - h * 0.14, vx - w * 0.045, vy - h * 0.25);
+          ctx.lineTo(vx + w * 0.045, vy - h * 0.25);
+          ctx.quadraticCurveTo(vx + w * 0.13, vy - h * 0.14, vx + w * 0.07, vy);
+          ctx.closePath();
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 18, 0.28, 808);
+        }
+
+        else if (type === "silverPortrait") {
+          const bg = ctx.createRadialGradient(w * 0.42, h * 0.36, 20, w * 0.5, h * 0.5, w * 0.85);
+          bg.addColorStop(0, "#A8A59E");
+          bg.addColorStop(0.55, "#4E4C48");
+          bg.addColorStop(1, "#191816");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Shoulders
+          ctx.fillStyle = "#161514";
+          ctx.beginPath();
+          ctx.ellipse(w * 0.5, h * 0.92, w * 0.34, h * 0.32, 0, Math.PI, 0);
+          ctx.fill();
+
+          // Face / head in silver gelatin contrast
+          const fg = ctx.createRadialGradient(w * 0.44, h * 0.38, 10, w * 0.5, h * 0.42, w * 0.22);
+          fg.addColorStop(0, "#EAE7E0");
+          fg.addColorStop(0.55, "#8E8B84");
+          fg.addColorStop(1, "#262522");
+          ctx.fillStyle = fg;
+          ctx.beginPath();
+          ctx.ellipse(w * 0.5, h * 0.42, w * 0.135, h * 0.155, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(w * 0.455, h * 0.54, w * 0.09, h * 0.12);
+
+          // Hair crown shadow
+          ctx.fillStyle = "#141312";
+          ctx.beginPath();
+          ctx.arc(w * 0.5, h * 0.38, w * 0.142, Math.PI * 0.92, Math.PI * 2.08);
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 30, 0.45, 909);
+        }
+
+        else if (type === "spiralStair") {
+          ctx.fillStyle = "#121110";
+          ctx.fillRect(0, 0, w, h);
+
+          const cx = w * 0.54;
+          const cy = h * 0.46;
+          // Concentric Fibonacci architectural rings
+          for (let r = 14; r >= 1; r--) {
+            const rad = r * (w * 0.048);
+            const shade = Math.round(240 - r * 15);
+            ctx.fillStyle = `rgb(${shade}, ${shade - 4}, ${shade - 9})`;
+            ctx.beginPath();
+            ctx.arc(cx - r * 4, cy + r * 2, rad, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = "rgba(18,17,15,0.45)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+
+          // Bright skylight oculus core
+          const oculus = ctx.createRadialGradient(cx - 4, cy + 2, 2, cx - 4, cy + 2, w * 0.09);
+          oculus.addColorStop(0, "#FFFFFF");
+          oculus.addColorStop(1, "#D5CFC4");
+          ctx.fillStyle = oculus;
+          ctx.beginPath();
+          ctx.arc(cx - 4, cy + 2, w * 0.055, 0, Math.PI * 2);
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 24, 0.46, 1010);
+        }
+
+        else if (type === "kyotoMoss") {
+          const bg = ctx.createLinearGradient(0, 0, 0, h);
+          bg.addColorStop(0, "#1B2922");
+          bg.addColorStop(0.55, "#2C4234");
+          bg.addColorStop(1, "#141D18");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Dappled cedar sunlight
+          const rand = seededRandom(111);
+          for (let i = 0; i < 38; i++) {
+            const gx = rand() * w;
+            const gy = rand() * h;
+            const gr = 20 + rand() * 75;
+            const g = ctx.createRadialGradient(gx, gy, 2, gx, gy, gr);
+            g.addColorStop(0, i % 4 === 0 ? "rgba(195,218,162,0.22)" : "rgba(82,126,88,0.25)");
+            g.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(gx, gy, gr, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Stepping stone in mossy garden
+          ctx.fillStyle = "#3E433E";
+          ctx.beginPath();
+          ctx.ellipse(w * 0.48, h * 0.68, w * 0.18, h * 0.075, -0.1, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Specular water droplets
+          for (let i = 0; i < 28; i++) {
+            ctx.fillStyle = "rgba(235, 248, 232, 0.45)";
+            ctx.beginPath();
+            ctx.arc(rand() * w, rand() * h, 1.2 + rand() * 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          applyFilmGrainAndVignette(ctx, w, h, 19, 0.38, 1111);
+        }
+
+        else if (type === "alpineDawn") {
+          const sky = ctx.createLinearGradient(0, 0, 0, h * 0.56);
+          sky.addColorStop(0, "#2B364B");
+          sky.addColorStop(0.6, "#887A8B");
+          sky.addColorStop(1, "#E5A996");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h);
+
+          // Back mountain ridge
+          ctx.fillStyle = "#5B586B";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.62);
+          ctx.lineTo(w * 0.22, h * 0.36);
+          ctx.lineTo(w * 0.42, h * 0.52);
+          ctx.lineTo(w * 0.66, h * 0.28);
+          ctx.lineTo(w * 0.88, h * 0.48);
+          ctx.lineTo(w, h * 0.42);
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Rose-gold alpenglow peak faces
+          ctx.fillStyle = "#DE9F8D";
+          ctx.beginPath();
+          ctx.moveTo(w * 0.66, h * 0.28);
+          ctx.lineTo(w * 0.78, h * 0.45);
+          ctx.lineTo(w * 0.64, h * 0.52);
+          ctx.closePath();
+          ctx.fill();
+
+          // Cloud inversion sea
+          const cloud = ctx.createLinearGradient(0, h * 0.58, 0, h);
+          cloud.addColorStop(0, "rgba(232, 224, 226, 0.88)");
+          cloud.addColorStop(0.5, "rgba(182, 178, 188, 0.92)");
+          cloud.addColorStop(1, "#2A2B33");
+          ctx.fillStyle = cloud;
+          ctx.fillRect(0, h * 0.6, w, h * 0.4);
+
+          applyFilmGrainAndVignette(ctx, w, h, 18, 0.32, 1212);
+        }
+
+        else if (type === "artistStudio") {
+          const bg = ctx.createLinearGradient(0, 0, w, h);
+          bg.addColorStop(0, "#D8D3C9");
+          bg.addColorStop(0.5, "#948E84");
+          bg.addColorStop(1, "#22201D");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Studio window frame in background
+          ctx.fillStyle = "#F0ECE4";
+          ctx.fillRect(w * 0.1, h * 0.08, w * 0.38, h * 0.55);
+          ctx.strokeStyle = "#48443E";
+          ctx.lineWidth = 6;
+          ctx.strokeRect(w * 0.1, h * 0.08, w * 0.38, h * 0.55);
+          ctx.beginPath();
+          ctx.moveTo(w * 0.29, h * 0.08);
+          ctx.lineTo(w * 0.29, h * 0.63);
+          ctx.moveTo(w * 0.1, h * 0.35);
+          ctx.lineTo(w * 0.48, h * 0.35);
+          ctx.stroke();
+
+          // Photographer silhouette holding camera
+          ctx.fillStyle = "#191816";
+          ctx.beginPath();
+          ctx.ellipse(w * 0.58, h * 0.94, w * 0.32, h * 0.36, 0, Math.PI, 0);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(w * 0.58, h * 0.42, w * 0.115, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Rangefinder camera silhouette
+          ctx.fillStyle = "#2E2C29";
+          ctx.fillRect(w * 0.47, h * 0.43, w * 0.14, h * 0.085);
+          ctx.fillStyle = "#0F0E0D";
+          ctx.beginPath();
+          ctx.arc(w * 0.52, h * 0.475, w * 0.032, 0, Math.PI * 2);
+          ctx.fill();
+
+          applyFilmGrainAndVignette(ctx, w, h, 26, 0.4, 1313);
+        }
+
+        return canvas.toDataURL("image/jpeg", 0.9);
+      }
+
+      /* --------------------------------------------------------------------
+         3. GENERATE IMAGE CACHE & RENDER DOM
+         -------------------------------------------------------------------- */
+      const imageCache = {};
+      PHOTOS.forEach((p) => {
+        const w = p.ratio === "landscape" ? 880 : 680;
+        const h = p.ratio === "landscape" ? 640 : 850;
+        imageCache[p.id] = renderPhotoToDataURL(p.renderType, w, h);
+      });
+      const portraitSrc = renderPhotoToDataURL("artistStudio", 680, 850);
+      document.getElementById("artistPortrait").src = portraitSrc;
+
+      // Render Hero Plates
+      const heroPhotos = PHOTOS.filter((p) => p.featuredHero);
+      let currentHeroIdx = 0;
+      const heroImgEl = document.getElementById("heroImage");
+      const heroCapEl = document.getElementById("heroCaption");
+      const heroDots = document.querySelectorAll("[data-hero-idx]");
+
+      function setHeroPlate(idx) {
+        currentHeroIdx = idx;
+        const photo = heroPhotos[idx];
+        heroImgEl.src = imageCache[photo.id];
+        heroImgEl.alt = `${photo.title} — ${photo.location}`;
+        heroCapEl.textContent = `Plate 0${idx + 1} — ${photo.title} · ${photo.camera} · ${photo.lens}`;
+        heroDots.forEach((btn, i) => btn.classList.toggle("active", i === idx));
+      }
+
+      setHeroPlate(0);
+      heroDots.forEach((btn) => {
+        btn.addEventListener("click", () => setHeroPlate(Number(btn.dataset.heroIdx)));
+      });
+
+      document.getElementById("heroFrame").addEventListener("click", () => {
+        const idx = PHOTOS.findIndex((p) => p.id === heroPhotos[currentHeroIdx].id);
+        openLightbox(idx);
+      });
+      document.getElementById("heroFrame").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const idx = PHOTOS.findIndex((p) => p.id === heroPhotos[currentHeroIdx].id);
+          openLightbox(idx);
+        }
+      });
+
+      // Render Gallery Grid & Contact Sheet
+      const galleryGrid = document.getElementById("galleryGrid");
+      const contactSheet = document.getElementById("contactSheet");
+
+      PHOTOS.forEach((photo, idx) => {
+        // Editorial Grid Card
+        const card = document.createElement("article");
+        card.className = `photo-card${photo.wide ? " featured-wide" : ""}${photo.ratio === "landscape" && !photo.wide ? " landscape-ratio" : ""}`;
+        card.dataset.category = photo.category;
+        card.innerHTML = `
+          <div class="photo-frame" tabindex="0" role="button" aria-label="Inspect ${photo.title} (${photo.category})">
+            <img src="${imageCache[photo.id]}" alt="${photo.title} — ${photo.location}" loading="lazy" />
+            <div class="photo-overlay">
+              <div class="overlay-exif">${photo.camera} · ${photo.settings}</div>
+              <div class="overlay-action">Inspect Plate &rarr;</div>
+            </div>
+          </div>
+          <div class="photo-caption">
+            <h3 class="photo-title">${photo.title}</h3>
+            <span class="photo-meta">${photo.category} · ${photo.year}</span>
+          </div>
+        `;
+        const frame = card.querySelector(".photo-frame");
+        frame.addEventListener("click", () => openLightbox(idx));
+        frame.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(idx);
+          }
+        });
+        galleryGrid.appendChild(card);
+
+        // Contact Sheet Cell
+        const cell = document.createElement("article");
+        cell.className = "sheet-cell";
+        cell.dataset.category = photo.category;
+        cell.setAttribute("tabindex", "0");
+        cell.setAttribute("role", "button");
+        cell.setAttribute("aria-label", `Inspect frame ${photo.frame}: ${photo.title}`);
+        cell.innerHTML = `
+          <div class="sheet-sprockets">
+            <span>&#9646; ${photo.frame}</span>
+            <span>${photo.location}</span>
+          </div>
+          <div class="sheet-thumb">
+            <img src="${imageCache[photo.id]}" alt="${photo.title}" loading="lazy" />
+          </div>
+          <div class="sheet-footer">
+            <span class="sheet-title">${photo.title}</span>
+            <span class="sheet-stock">${photo.stock}</span>
+          </div>
+        `;
+        cell.addEventListener("click", () => openLightbox(idx));
+        cell.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(idx);
+          }
+        });
+        contactSheet.appendChild(cell);
+      });
+
+      // Render Monographs
+      const seriesGrid = document.getElementById("seriesGrid");
+      MONOGRAPHS.forEach((m) => {
+        const card = document.createElement("article");
+        card.className = "series-card";
+        card.innerHTML = `
+          <div class="series-thumb">
+            <img src="${imageCache[m.leadPhotoId]}" alt="${m.title}" loading="lazy" />
+            <span class="series-badge">${m.years}</span>
+          </div>
+          <div class="series-body">
+            <h3 class="series-title">${m.title}</h3>
+            <p class="series-desc">${m.description}</p>
+            <button type="button" class="series-link" data-series-filter="${m.filterCategory}">
+              Filter plates in archive &rarr;
+            </button>
+          </div>
+        `;
+        card.querySelector(".series-link").addEventListener("click", () => {
+          applyCategoryFilter(m.filterCategory);
+          document.getElementById("archive").scrollIntoView({ behavior: "smooth" });
+        });
+        seriesGrid.appendChild(card);
+      });
+
+      /* --------------------------------------------------------------------
+         4. FILTERING & VIEW SWITCHING
+         -------------------------------------------------------------------- */
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      let activeCategory = "all";
+
+      function applyCategoryFilter(category) {
+        activeCategory = category;
+        filterBtns.forEach((btn) => {
+          const isActive = btn.dataset.filter === category;
+          btn.classList.toggle("active", isActive);
+          btn.setAttribute("aria-selected", String(isActive));
+        });
+
+        document.querySelectorAll(".photo-card, .sheet-cell").forEach((el) => {
+          const match = category === "all" || el.dataset.category === category;
+          el.classList.toggle("is-hidden", !match);
+        });
+      }
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => applyCategoryFilter(btn.dataset.filter));
+      });
+
+      const viewGridBtn = document.getElementById("viewGridBtn");
+      const viewSheetBtn = document.getElementById("viewSheetBtn");
+
+      viewGridBtn.addEventListener("click", () => {
+        galleryGrid.classList.remove("is-hidden");
+        contactSheet.classList.add("is-hidden");
+        viewGridBtn.classList.add("active");
+        viewSheetBtn.classList.remove("active");
+        viewGridBtn.setAttribute("aria-pressed", "true");
+        viewSheetBtn.setAttribute("aria-pressed", "false");
+      });
+
+      viewSheetBtn.addEventListener("click", () => {
+        galleryGrid.classList.add("is-hidden");
+        contactSheet.classList.remove("is-hidden");
+        viewSheetBtn.classList.add("active");
+        viewGridBtn.classList.remove("active");
+        viewSheetBtn.setAttribute("aria-pressed", "true");
+        viewGridBtn.setAttribute("aria-pressed", "false");
+      });
+
+      /* --------------------------------------------------------------------
+         5. FULL-SCREEN LIGHTBOX WITH EXIF DRAWER & KEYBOARD NAVIGATION
+         -------------------------------------------------------------------- */
+      const lightbox = document.getElementById("lightbox");
+      const lbStage = document.getElementById("lbStage");
+      const lbImage = document.getElementById("lbImage");
+      const lbCounter = document.getElementById("lbCounter");
+      const lbTitle = document.getElementById("lbTitle");
+      const lbSub = document.getElementById("lbSub");
+      const lbExifTitle = document.getElementById("lbExifTitle");
+      const lbExifDesc = document.getElementById("lbExifDesc");
+      const lbSpecList = document.getElementById("lbSpecList");
+      const lbStrip = document.getElementById("lbStrip");
+      const lbExifToggle = document.getElementById("lbExifToggle");
+
+      let currentLbIdx = 0;
+
+      // Build thumbnail strip
+      PHOTOS.forEach((p, idx) => {
+        const thumbBtn = document.createElement("button");
+        thumbBtn.type = "button";
+        thumbBtn.className = "lb-thumb";
+        thumbBtn.setAttribute("aria-label", `View ${p.title}`);
+        thumbBtn.innerHTML = `<img src="${imageCache[p.id]}" alt="" />`;
+        thumbBtn.addEventListener("click", () => updateLightbox(idx));
+        lbStrip.appendChild(thumbBtn);
+      });
+
+      function updateLightbox(idx) {
+        currentLbIdx = (idx + PHOTOS.length) % PHOTOS.length;
+        const p = PHOTOS[currentLbIdx];
+        lbImage.src = imageCache[p.id];
+        lbImage.alt = `${p.title} — ${p.location}`;
+        lbCounter.textContent = `PLATE ${String(currentLbIdx + 1).padStart(2, "0")} / ${PHOTOS.length}`;
+        lbTitle.textContent = p.title;
+        lbSub.textContent = `${p.location} · ${p.year} · ${p.camera}`;
+        lbExifTitle.textContent = p.title;
+        lbExifDesc.textContent = p.note;
+        lbSpecList.innerHTML = `
+          <li><span>CAMERA</span><span>${p.camera}</span></li>
+          <li><span>OPTICS</span><span>${p.lens}</span></li>
+          <li><span>EXPOSURE</span><span>${p.settings}</span></li>
+          <li><span>EMULSION</span><span>${p.stock}</span></li>
+          <li><span>LOCATION</span><span>${p.location}</span></li>
+          <li><span>ARCHIVAL PRINT</span><span>${p.edition}</span></li>
+        `;
+
+        lbStrip.querySelectorAll(".lb-thumb").forEach((t, i) => {
+          t.classList.toggle("active", i === currentLbIdx);
+        });
+      }
+
+      function openLightbox(idx) {
+        updateLightbox(idx);
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        document.getElementById("lbCloseBtn").focus();
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      document.getElementById("lbCloseBtn").addEventListener("click", closeLightbox);
+      document.getElementById("lbPrev").addEventListener("click", () => updateLightbox(currentLbIdx - 1));
+      document.getElementById("lbNext").addEventListener("click", () => updateLightbox(currentLbIdx + 1));
+
+      lbExifToggle.addEventListener("click", () => {
+        const on = lbStage.classList.toggle("with-exif");
+        lbExifToggle.classList.toggle("active", on);
+        lbExifToggle.setAttribute("aria-pressed", String(on));
+      });
+
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox || e.target === lbStage) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("open")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") updateLightbox(currentLbIdx - 1);
+        if (e.key === "ArrowRight") updateLightbox(currentLbIdx + 1);
+        if (e.key.toLowerCase() === "i") lbExifToggle.click();
+      });
+
+      /* --------------------------------------------------------------------
+         6. THEME TOGGLE, STUDIO CLOCK, MOBILE DRAWER & COMMISSION FORM
+         -------------------------------------------------------------------- */
+      const themeToggle = document.getElementById("themeToggle");
+      const themeLabel = document.getElementById("themeLabel");
+      themeToggle.addEventListener("click", () => {
+        const html = document.documentElement;
+        const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        themeLabel.textContent = next === "dark" ? "Paper" : "Darkroom";
+      });
+
+      function updateClock() {
+        const el = document.getElementById("studioClock");
+        try {
+          const now = new Date();
+          const parisTime = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Europe/Paris",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+          }).format(now);
+          el.textContent = `${parisTime} CET`;
+        } catch {
+          el.textContent = "CET";
+        }
+      }
+      updateClock();
+      setInterval(updateClock, 30000);
+
+      // Mobile drawer
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileDrawer = document.getElementById("mobileDrawer");
+      mobileMenuBtn.addEventListener("click", () => {
+        const open = mobileDrawer.classList.toggle("open");
+        mobileMenuBtn.setAttribute("aria-expanded", String(open));
+        mobileDrawer.setAttribute("aria-hidden", String(!open));
+      });
+      document.querySelectorAll(".mobile-nav-item").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileDrawer.classList.remove("open");
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+          mobileDrawer.setAttribute("aria-hidden", "true");
+        });
+      });
+
+      // Copy email button
+      const copyEmailBtn = document.getElementById("copyEmailBtn");
+      copyEmailBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText("studio@claramoreau.photo");
+          copyEmailBtn.textContent = "Copied!";
+          setTimeout(() => { copyEmailBtn.textContent = "Copy Email"; }, 2200);
+        } catch {
+          copyEmailBtn.textContent = "studio@claramoreau.photo";
+        }
+      });
+
+      // Commission form submission
+      const inquiryForm = document.getElementById("inquiryForm");
+      const formStatus = document.getElementById("formStatus");
+      inquiryForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("clientName").value.trim();
+        const email = document.getElementById("clientEmail").value.trim();
+        const type = document.getElementById("shootType").value;
+        const brief = document.getElementById("shootBrief").value.trim();
+
+        if (!name || !email || !email.includes("@") || !brief) {
+          formStatus.textContent = "Please complete your name, a valid email address, and brief project notes.";
+          formStatus.classList.add("visible");
+          return;
+        }
+
+        formStatus.innerHTML = `Thank you, <strong>${name.replace(/[<>&]/g, "")}</strong>. Your <em>${type}</em> inquiry has been logged for Clara Moreau's studio desk—expect a response within 24 hours.`;
+        formStatus.classList.add("visible");
+        inquiryForm.reset();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docket — one list a week your team will actually read</title>
+<meta name="description" content="Docket replaces your project boards with a single weekly list. What's shipping, who has it, what's stuck.">
+<style>
+  :root {
+    --paper: #f3efe6;
+    --paper-2: #ebe5d8;
+    --card: #fbf9f4;
+    --ink: #1d1b17;
+    --ink-2: #4a463e;
+    --ink-3: #8a8478;
+    --rule: #d6cfbf;
+    --signal: #d9480f;
+    --moss: #4f6b3a;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); font-size: 0.78em; letter-spacing: 0.02em; }
+
+  /* ---------- nav ---------- */
+  header.top {
+    border-bottom: 1px solid var(--rule);
+  }
+  header.top .wrap {
+    display: flex; align-items: center; gap: 32px;
+    height: 64px;
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 24px; font-weight: 700;
+    text-decoration: none; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 2px;
+  }
+  .wordmark i { color: var(--signal); font-style: normal; }
+  nav.links { display: flex; gap: 24px; font-size: 15px; color: var(--ink-2); }
+  nav.links a { text-decoration: none; }
+  nav.links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .top .right { margin-left: auto; display: flex; gap: 18px; align-items: center; font-size: 15px; }
+  .top .right a.signin { text-decoration: none; color: var(--ink-2); }
+
+  .btn {
+    display: inline-block;
+    background: var(--ink); color: var(--paper);
+    padding: 11px 18px;
+    font: 600 15px/1 var(--sans);
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    transition: transform .08s ease, box-shadow .08s ease;
+    box-shadow: 3px 3px 0 var(--signal);
+  }
+  .btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--signal); }
+  .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--signal); }
+  .btn.small { padding: 9px 14px; font-size: 14px; box-shadow: none; }
+  .btn.small:hover { transform: none; box-shadow: none; background: #000; }
+  .btn.ghost { background: transparent; color: var(--ink); box-shadow: none; }
+  .btn.ghost:hover { background: var(--paper-2); transform: none; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 88px; }
+  .hero .wrap {
+    display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: start;
+  }
+  .eyebrow {
+    font-family: var(--mono); font-size: 13px; color: var(--ink-3);
+    margin: 0 0 22px;
+  }
+  .eyebrow b { color: var(--signal); font-weight: 600; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(42px, 5.4vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0 0 26px;
+  }
+  h1 em { font-style: italic; }
+  .hero p.lede { font-size: 19px; color: var(--ink-2); max-width: 30em; margin: 0 0 34px; }
+  .cta-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .fine { font-size: 14px; color: var(--ink-3); margin-top: 18px; }
+
+  /* docket ticket mock */
+  .ticket {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 0 var(--rule), 0 18px 40px -24px rgba(40,30,10,.35);
+    transform: rotate(0.8deg);
+    margin-top: 8px;
+  }
+  .ticket::before, .ticket::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 10px;
+    background: radial-gradient(circle at 7px 5px, var(--paper) 4px, transparent 4.5px) 0 0 / 14px 10px repeat-x;
+  }
+  .ticket::before { top: -5px; }
+  .ticket::after { bottom: -5px; }
+  .ticket-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 22px 24px 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .ticket-head h3 { margin: 0; font: 600 18px/1.2 var(--serif); }
+  .ticket-head .mono { color: var(--ink-3); }
+  .group { padding: 12px 24px 6px; }
+  .group-label {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--ink-3); margin: 4px 0 6px;
+    display: flex; justify-content: space-between;
+  }
+  ul.items { list-style: none; margin: 0; padding: 0; }
+  ul.items li {
+    display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #ece6d8;
+    font-size: 15px;
+  }
+  ul.items li:last-child { border-bottom: 0; }
+  .box {
+    width: 16px; height: 16px; border: 1.5px solid var(--ink-2); border-radius: 2px;
+    cursor: pointer; background: transparent; padding: 0; position: relative;
+  }
+  li.done .box { background: var(--ink); border-color: var(--ink); }
+  li.done .box::after {
+    content: ""; position: absolute; left: 4px; top: 0px; width: 4px; height: 9px;
+    border: solid var(--paper); border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+  li.done .txt { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-3); }
+  .who {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-2);
+    border: 1px solid var(--rule); border-radius: 20px; padding: 2px 7px;
+    white-space: nowrap;
+  }
+  .stamp {
+    display: inline-block; margin-left: 6px;
+    font: 700 10px/1 var(--mono); letter-spacing: .08em;
+    color: var(--signal); border: 1.5px solid var(--signal);
+    padding: 3px 5px 2px; transform: rotate(-3deg); border-radius: 2px;
+    vertical-align: 1px;
+  }
+  .stamp.carried { color: var(--ink-3); border-color: var(--ink-3); }
+  .ticket-foot {
+    padding: 14px 24px 22px; border-top: 1px dashed var(--rule);
+    display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  }
+  .progress { color: var(--ink); }
+
+  .margin-note {
+    font-family: var(--serif); font-style: italic; color: var(--ink-2); font-size: 15px;
+    margin: 26px 0 0 18px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .margin-note svg { flex: none; margin-top: -6px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 96px 0; }
+  .rule-top { border-top: 1px solid var(--rule); }
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(32px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0 0 18px;
+  }
+  .sec-intro { color: var(--ink-2); max-width: 34em; margin: 0 0 52px; font-size: 18px; }
+  .sec-num { font-family: var(--mono); font-size: 13px; color: var(--signal); display: block; margin-bottom: 14px; }
+
+  /* monday timeline */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--ink); }
+  .timeline > div { padding: 22px 24px 0 0; position: relative; }
+  .timeline > div + div { padding-left: 24px; border-left: 1px solid var(--rule); }
+  .timeline time { font-family: var(--mono); font-size: 14px; font-weight: 600; display: block; margin-bottom: 10px; }
+  .timeline h4 { font: 600 17px/1.3 var(--sans); margin: 0 0 8px; }
+  .timeline p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+
+  /* left out on purpose */
+  .omit { background: var(--ink); color: var(--paper); }
+  .omit h2 { color: var(--paper); }
+  .omit .sec-intro { color: #bdb6a6; }
+  .omit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .omit-row {
+    display: grid; grid-template-columns: 1fr; padding: 20px 0; border-top: 1px solid #3a362f;
+  }
+  .omit-row s {
+    font-family: var(--serif); font-size: 26px; text-decoration-color: var(--signal);
+    text-decoration-thickness: 2px; color: #e9e3d4;
+  }
+  .omit-row span { color: #a39d8e; font-size: 15.5px; margin-top: 4px; }
+
+  /* quote */
+  .quote .wrap { display: grid; grid-template-columns: 220px 1fr; gap: 56px; }
+  blockquote { margin: 0; }
+  blockquote p {
+    font-family: var(--serif); font-size: clamp(24px, 2.6vw, 32px); line-height: 1.3;
+    margin: 0 0 24px; letter-spacing: -0.01em;
+  }
+  blockquote footer { font-size: 15px; color: var(--ink-2); }
+  blockquote footer b { color: var(--ink); font-weight: 600; }
+  .stat { border-top: 2px solid var(--ink); padding-top: 14px; }
+  .stat strong { font: 400 56px/1 var(--serif); display: block; letter-spacing: -0.03em; }
+  .stat span { color: var(--ink-2); font-size: 14.5px; display: block; margin-top: 8px; }
+
+  /* pricing */
+  .pricing table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  .pricing th, .pricing td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .pricing thead th { border-bottom: 2px solid var(--ink); padding-bottom: 20px; vertical-align: bottom; }
+  .pricing thead th:first-child { width: 34%; }
+  .plan-name { font: 600 14px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); display: block; margin-bottom: 10px; }
+  .plan-price { font: 400 40px/1 var(--serif); letter-spacing: -0.02em; }
+  .plan-price small { font: 400 15px var(--sans); color: var(--ink-2); letter-spacing: 0; }
+  .pricing td:first-child { color: var(--ink-2); }
+  .yes { color: var(--moss); font-weight: 600; }
+  .no { color: var(--ink-3); }
+  .pricing .col-hl { background: var(--card); }
+  .pricing tfoot td { border-bottom: 0; padding-top: 24px; }
+  .price-note { margin-top: 28px; font-size: 15px; color: var(--ink-2); max-width: 40em; }
+
+  /* changelog */
+  .changelog .wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; }
+  .log { list-style: none; margin: 0; padding: 0; }
+  .log li { display: grid; grid-template-columns: 92px 1fr; gap: 18px; padding: 16px 0; border-top: 1px solid var(--rule); }
+  .log li:last-child { border-bottom: 1px solid var(--rule); }
+  .log time { font-family: var(--mono); font-size: 13px; color: var(--ink-3); padding-top: 2px; }
+  .log b { font-weight: 600; }
+  .log p { margin: 2px 0 0; color: var(--ink-2); font-size: 15.5px; }
+
+  /* closing */
+  .closing { text-align: left; padding: 110px 0; background: var(--paper-2); }
+  .closing h2 { font-size: clamp(36px, 4.6vw, 58px); max-width: 14em; }
+  .closing p { color: var(--ink-2); max-width: 32em; margin: 0 0 34px; font-size: 18px; }
+
+  footer.bottom { padding: 40px 0 56px; font-size: 14px; color: var(--ink-3); }
+  footer.bottom .wrap { display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; }
+  footer.bottom .wordmark { font-size: 18px; color: var(--ink); }
+  footer.bottom nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  footer.bottom a { text-decoration: none; }
+  footer.bottom a:hover { color: var(--ink); }
+  footer.bottom .end { margin-left: auto; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    nav.links { display: none; }
+    .hero .wrap, .quote .wrap, .changelog .wrap { grid-template-columns: 1fr; gap: 48px; }
+    .ticket { transform: none; }
+    .timeline { grid-template-columns: 1fr 1fr; }
+    .timeline > div { padding: 22px 20px 28px 0; }
+    .timeline > div:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); }
+    .timeline > div:nth-child(4) { border-top: 1px solid var(--rule); }
+    .omit-grid { grid-template-columns: 1fr; }
+    .quote .stats { display: flex; gap: 32px; }
+    .quote .stat { flex: 1; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    section { padding: 72px 0; }
+    .hero { padding: 48px 0 64px; }
+    .top .right a.signin { display: none; }
+    .timeline { grid-template-columns: 1fr; }
+    .timeline > div, .timeline > div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); }
+    .timeline > div:first-child { border-top: 0; }
+    .pricing { overflow-x: auto; }
+    .pricing th, .pricing td { padding: 12px 10px; font-size: 14.5px; }
+    .plan-price { font-size: 30px; }
+    .log li { grid-template-columns: 1fr; gap: 4px; }
+    footer.bottom .end { margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a href="#" class="wordmark">Docket<i>.</i></a>
+    <nav class="links" aria-label="Primary">
+      <a href="#monday">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#changelog">Changelog</a>
+    </nav>
+    <div class="right">
+      <a href="#" class="signin">Sign in</a>
+      <a href="#start" class="btn small">Start a docket</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Project management for teams of 4 to 40 · <b>v3.2 out now</b></p>
+        <h1>Fewer boards. <em>One list a week</em> that people actually read.</h1>
+        <p class="lede">Docket replaces your tangle of boards, sprints and status meetings with a single weekly list: what's shipping, who has it, and what's stuck. It drafts itself on Monday morning. You trim it. Everyone gets on with their week.</p>
+        <div class="cta-row">
+          <a href="#start" class="btn">Start your first docket</a>
+          <a href="#monday" class="btn ghost">See how a week runs</a>
+        </div>
+        <p class="fine">Free for teams under 6 people. No card, no sales call.</p>
+      </div>
+
+      <div>
+        <div class="ticket" role="figure" aria-label="Example weekly docket">
+          <div class="ticket-head">
+            <h3>Week 48 — Platform team</h3>
+            <span class="mono">NOV 24 – 28</span>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><span>Shipping</span><span>4</span></div>
+            <ul class="items">
+              <li class="done"><button class="box" aria-label="Toggle done"></button><span class="txt">Move billing webhooks to the new queue</span><span class="who">PR</span></li>
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt">Retry logic for failed exports</span><span class="who">MA</span></li>
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt">Postgres 17 upgrade on staging <span class="stamp carried">CARRIED</span></span><span class="who">JO</span></li>
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt">Drop the legacy /v1/reports endpoint</span><span class="who">PR</span></li>
+            </ul>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><span>Stuck</span><span>1</span></div>
+            <ul class="items">
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt">SSO for Halvorsen account <span class="stamp">WAITING ON THEM</span></span><span class="who">KT</span></li>
+            </ul>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><span>Not this week</span><span>2</span></div>
+            <ul class="items">
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt" style="color:var(--ink-3)">Rewrite the audit log viewer</span><span class="who">—</span></li>
+              <li><button class="box" aria-label="Toggle done"></button><span class="txt" style="color:var(--ink-3)">Look into the Sentry noise</span><span class="who">—</span></li>
+            </ul>
+          </div>
+
+          <div class="ticket-foot">
+            <span class="progress" id="progress">1 of 7 done</span>
+            <span>sent Mon 9:42 to #platform</span>
+          </div>
+        </div>
+        <p class="margin-note">
+          <svg width="34" height="28" viewBox="0 0 34 28" fill="none" aria-hidden="true"><path d="M31 25C22 24 10 19 6 4m0 0L2 10m4-6 5 5" stroke="#4a463e" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Go on, tick a few off. That's roughly the whole app.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="monday" class="rule-top">
+    <div class="wrap">
+      <span class="sec-num">01 — How a week runs</span>
+      <h2>A Monday with Docket</h2>
+      <p class="sec-intro">No grooming session, no hour-long standup. Most teams spend about fifteen minutes on Docket a week, and nearly all of it is on Monday.</p>
+
+      <div class="timeline">
+        <div>
+          <time>8:00</time>
+          <h4>The draft writes itself</h4>
+          <p>Anything unfinished from last week carries over and gets marked. Items from linked GitHub issues and Linear imports drop in underneath.</p>
+        </div>
+        <div>
+          <time>9:15</time>
+          <h4>A lead trims it</h4>
+          <p>Drag things into "Not this week." Assign owners. If a list is longer than one screen, Docket will politely ask whether you're sure.</p>
+        </div>
+        <div>
+          <time>9:40</time>
+          <h4>It goes out</h4>
+          <p>One message to Slack, Teams, or email. Plain text, readable on a phone, no login needed to see it.</p>
+        </div>
+        <div>
+          <time>Fri 4:00</time>
+          <h4>It closes</h4>
+          <p>Whatever's done gets archived into a running log you can search later. Whatever isn't, waits for Monday.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="omit">
+    <div class="wrap">
+      <span class="sec-num">02 — What we didn't build</span>
+      <h2>Left out on purpose</h2>
+      <p class="sec-intro">Every one of these has been requested, more than once. We said no because each one turns a list people read into a system people maintain.</p>
+
+      <div class="omit-grid">
+        <div class="omit-row"><s>Gantt charts</s><span>If your week needs a dependency graph, the week is too big.</span></div>
+        <div class="omit-row"><s>Story points</s><span>An item is either happening this week or it isn't.</span></div>
+        <div class="omit-row"><s>Custom fields</s><span>You get a title, an owner, a link, and a note. That's been enough for six years.</span></div>
+        <div class="omit-row"><s>Burndown charts</s><span>The list is short enough to see whether you're on track.</span></div>
+        <div class="omit-row"><s>Seven kinds of status</s><span>Shipping, stuck, not this week. Done is a checkbox.</span></div>
+        <div class="omit-row"><s>Notifications for everything</s><span>One message on Monday. One on Friday if you want it. That's it.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat">
+          <strong>2,300</strong>
+          <span>teams sending a docket every Monday</span>
+        </div>
+      </div>
+      <blockquote>
+        <p>“We had a Jira board with 412 open tickets and nobody could tell me what was going out that week. Three weeks into Docket our Monday standup went from 50 minutes to 10, and we deleted the board. I don't miss it.”</p>
+        <footer><b>Ines Carvalho</b> — Engineering Manager, Fieldnote (14 engineers)</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="pricing" class="pricing rule-top">
+    <div class="wrap">
+      <span class="sec-num">03 — Pricing</span>
+      <h2>Two plans. That's it.</h2>
+      <p class="sec-intro">Billed per person who owns items. People who only read the docket are always free, so share it with whoever you like.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th><span class="plan-name">Small team</span><span class="plan-price">$0</span></th>
+            <th class="col-hl"><span class="plan-name">Team</span><span class="plan-price">$6 <small>/ owner / month</small></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Item owners</td><td>Up to 5</td><td class="col-hl">Unlimited</td></tr>
+          <tr><td>Readers</td><td>Unlimited</td><td class="col-hl">Unlimited</td></tr>
+          <tr><td>Dockets per workspace</td><td>1</td><td class="col-hl">Unlimited</td></tr>
+          <tr><td>Slack, Teams &amp; email delivery</td><td class="yes">Yes</td><td class="col-hl yes">Yes</td></tr>
+          <tr><td>GitHub &amp; Linear sync</td><td class="no">—</td><td class="col-hl yes">Yes</td></tr>
+          <tr><td>Searchable history</td><td>Last 8 weeks</td><td class="col-hl">Forever</td></tr>
+          <tr><td>SSO &amp; audit log</td><td class="no">—</td><td class="col-hl yes">Yes, no upcharge</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td><a href="#start" class="btn ghost">Start free</a></td>
+            <td class="col-hl"><a href="#start" class="btn">Try Team for 30 days</a></td>
+          </tr>
+        </tfoot>
+      </table>
+      <p class="price-note">Nonprofits and schools get Team for free. Email us from your org address and tell us what you're working on.</p>
+    </div>
+  </section>
+
+  <section id="changelog" class="changelog rule-top">
+    <div class="wrap">
+      <div>
+        <span class="sec-num">04 — Changelog</span>
+        <h2>Recently shipped</h2>
+        <p class="sec-intro" style="margin-bottom:0">We ship small things most weeks. We use Docket to plan Docket, which keeps us honest about adding features.</p>
+      </div>
+      <ul class="log">
+        <li><time>Nov 18</time><div><b>Carried-over items now show how many weeks they've carried.</b><p>Anything past three weeks gets a gentle nudge to move it to "Not this week" or break it up.</p></div></li>
+        <li><time>Nov 04</time><div><b>Microsoft Teams delivery</b><p>Same plain-text docket, now in a Teams channel. Threads replies back into item notes.</p></div></li>
+        <li><time>Oct 21</time><div><b>Keyboard-only trimming</b><p><span class="mono">J</span>/<span class="mono">K</span> to move, <span class="mono">N</span> to push to next week, <span class="mono">A</span> to assign. The whole Monday trim without a mouse.</p></div></li>
+        <li><time>Oct 07</time><div><b>Faster loading on big workspaces</b><p>Workspaces with 50+ dockets open in under 300ms again. Sorry about September.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="start" class="closing">
+    <div class="wrap">
+      <h2>Next Monday could be a short one.</h2>
+      <p>Set up takes about four minutes. Import your open issues or start blank, invite your team, and pick a channel. Your first docket goes out the following Monday.</p>
+      <a href="#" class="btn">Start your first docket</a>
+      <p class="fine">Free for teams under 6 people. Export everything as Markdown whenever you like.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <a href="#" class="wordmark">Docket<i>.</i></a>
+    <nav aria-label="Footer">
+      <a href="#monday">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#">Docs</a>
+      <a href="#">Status</a>
+      <a href="#">Privacy</a>
+    </nav>
+    <span class="end">Made by a small team in Lisbon &amp; Toronto. © 2026</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var items = document.querySelectorAll('.ticket ul.items li');
+    var progress = document.getElementById('progress');
+    function update() {
+      var done = document.querySelectorAll('.ticket li.done').length;
+      progress.textContent = done === items.length
+        ? 'All ' + done + ' done. Go home early.'
+        : done + ' of ' + items.length + ' done';
+    }
+    items.forEach(function (li) {
+      var box = li.querySelector('.box');
+      box.setAttribute('aria-pressed', li.classList.contains('done'));
+      box.addEventListener('click', function () {
+        li.classList.toggle('done');
+        box.setAttribute('aria-pressed', li.classList.contains('done'));
+        update();
+      });
+    });
+    update();
+  })();
+</script>
+</body>
+</html>

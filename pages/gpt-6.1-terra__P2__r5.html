@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f1e8" />
+  <meta name="description" content="A neighborhood Italian restaurant serving handmade pasta, good wine, and a warm welcome." />
+  <title>Casa Lina | Your neighborhood Italian table</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap");
+
+    :root {
+      --cream: #f5f1e8;
+      --paper: #fbf9f3;
+      --ink: #26362b;
+      --muted: #697067;
+      --red: #a94332;
+      --line: #d9d8cb;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { display: block; width: 100%; object-fit: cover; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #d48a53; outline-offset: 4px; }
+    .wrap { width: min(100% - 80px, 1380px); margin: 0 auto; }
+    .eyebrow {
+      margin: 0;
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 0 23px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .11em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background .2s, color .2s;
+    }
+    .button:hover { background: transparent; color: var(--ink); }
+    .button span { font-size: 17px; font-weight: 400; }
+
+    .announcement {
+      padding: 9px 20px;
+      background: var(--ink);
+      color: #f9f7ef;
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: .1em;
+    }
+    .announcement a { text-underline-offset: 3px; }
+    header { background: var(--cream); }
+    .nav {
+      min-height: 87px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-links, .nav-right { display: flex; align-items: center; gap: 30px; }
+    .nav-right { justify-content: flex-end; }
+    .nav-link {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-link:hover { color: var(--red); }
+    .brand {
+      font-family: var(--serif);
+      font-size: 29px;
+      font-weight: 700;
+      letter-spacing: -.06em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .brand span { color: var(--red); }
+    .nav-reserve {
+      padding: 13px 17px;
+      border: 1px solid var(--ink);
+    }
+    .nav-reserve:hover { background: var(--ink); color: white; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 46% 54%;
+      min-height: 620px;
+      background: #e9e6d9;
+    }
+    .hero-copy {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 78px clamp(40px, 7vw, 115px);
+      overflow: hidden;
+    }
+    .hero-copy::after {
+      content: "✳";
+      position: absolute;
+      right: 35px;
+      bottom: 20px;
+      color: #d4d6c4;
+      font-size: 100px;
+      line-height: 1;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 580px;
+      margin: 25px 0 23px;
+      font-family: var(--serif);
+      font-size: clamp(53px, 5.5vw, 83px);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: 1.04;
+    }
+    h1 em, h2 em { color: var(--red); font-weight: 500; }
+    .hero-copy > p:not(.eyebrow) {
+      max-width: 350px;
+      margin-bottom: 31px;
+      color: #626b5f;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .hero-image { position: relative; min-height: 520px; }
+    .hero-image img { height: 100%; position: absolute; inset: 0; }
+    .image-note {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      padding: 10px 13px;
+      background: rgba(251,249,243,.9);
+      color: var(--ink);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .ticker {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      padding: 19px 30px;
+      overflow: hidden;
+      background: #dce0d0;
+      color: #53604e;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .ticker span:nth-child(even) { color: var(--red); }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9%;
+      align-items: center;
+      padding: 125px 0;
+    }
+    .intro-images { position: relative; padding: 0 15% 50px 0; }
+    .intro-main { height: 465px; }
+    .intro-small {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 42%;
+      height: 235px;
+      border: 9px solid var(--cream);
+    }
+    .intro-copy { max-width: 470px; }
+    .section-title {
+      margin: 19px 0 23px;
+      font-family: var(--serif);
+      font-size: clamp(40px, 4.2vw, 62px);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: 1.12;
+    }
+    .body-copy {
+      color: #687168;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .text-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--red);
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .text-link:hover { color: var(--ink); border-color: var(--ink); }
+
+    .menu-section { padding: 100px 0 110px; background: var(--paper); }
+    .menu-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px;
+      margin-bottom: 42px;
+    }
+    .menu-heading .section-title { margin-bottom: 0; }
+    .menu-heading > p { max-width: 310px; margin: 0 0 5px; }
+    .dishes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+    .dish img { height: 310px; }
+    .dish-info { display: flex; justify-content: space-between; gap: 15px; padding-top: 20px; }
+    .dish h3 { margin-bottom: 7px; font-family: var(--serif); font-size: 21px; font-weight: 600; }
+    .dish p { margin-bottom: 0; color: #7b8178; font-size: 12px; line-height: 1.6; }
+    .dish-price { color: var(--red); font-family: var(--serif); font-size: 17px; white-space: nowrap; }
+    .menu-cta { margin-top: 45px; text-align: center; }
+
+    .visit {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 510px;
+      background: #e4e7d9;
+    }
+    .visit-image { min-height: 420px; }
+    .visit-image img { height: 100%; }
+    .visit-copy { align-self: center; padding: 75px clamp(40px, 8vw, 130px); }
+    .visit-copy .section-title { max-width: 450px; }
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 31px 0; }
+    .details h3 {
+      margin-bottom: 9px;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .details p { margin: 0; color: #667065; font-size: 13px; line-height: 1.8; }
+
+    footer { padding: 55px 0 25px; background: var(--ink); color: #f5f1e8; }
+    .footer-top { display: flex; justify-content: space-between; gap: 35px; padding-bottom: 45px; }
+    .footer-brand .brand { display: inline-block; margin-bottom: 11px; font-size: 32px; }
+    .footer-brand p { margin: 0; color: #c2cbbd; font-size: 12px; }
+    .footer-links { display: flex; flex-wrap: wrap; align-items: start; gap: 25px; padding-top: 10px; }
+    .footer-links a { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
+    .footer-links a:hover { color: #e9a08c; }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 22px;
+      border-top: 1px solid #536157;
+      color: #b5c0b3;
+      font-size: 10px;
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 800px) {
+      .wrap { width: min(100% - 40px, 650px); }
+      .nav { min-height: 75px; grid-template-columns: 1fr auto; }
+      .nav-links { display: none; }
+      .nav-right .nav-link:not(.nav-reserve) { display: none; }
+      .brand { font-size: 26px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { min-height: 440px; padding: 65px 30px; }
+      .hero-image { min-height: 390px; }
+      .ticker { justify-content: flex-start; }
+      .intro { grid-template-columns: 1fr; gap: 55px; padding: 80px 0; }
+      .intro-main { height: 390px; }
+      .menu-section { padding: 80px 0; }
+      .menu-heading { display: block; }
+      .menu-heading > p { margin-top: 20px; }
+      .dishes { grid-template-columns: 1fr; gap: 35px; }
+      .dish img { height: 360px; }
+      .visit { grid-template-columns: 1fr; }
+      .visit-image { min-height: 360px; }
+      .visit-copy { padding: 70px 30px; }
+    }
+    @media (max-width: 480px) {
+      .announcement { font-size: 9px; }
+      .hero-copy { min-height: 400px; }
+      .hero-image { min-height: 300px; }
+      .intro-main { height: 320px; }
+      .intro-small { height: 170px; }
+      .dish img { height: 290px; }
+      .footer-top, .footer-bottom { flex-direction: column; }
+      .footer-links { gap: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">A little taste of Italy, right around the corner. &nbsp; <a href="#visit">Come find us &rarr;</a></div>
+
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <div class="nav-links">
+        <a class="nav-link" href="#story">Our story</a>
+        <a class="nav-link" href="#menu">The menu</a>
+        <a class="nav-link" href="#visit">Visit us</a>
+      </div>
+      <a class="brand" href="#" aria-label="Casa Lina home">casa lina<span>.</span></a>
+      <div class="nav-right">
+        <a class="nav-link" href="tel:+12125550148">(212) 555-0148</a>
+        <a class="nav-link nav-reserve" href="tel:+12125550148">Book a table</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A neighborhood trattoria &nbsp; / &nbsp; Est. 2012</p>
+        <h1 id="hero-title">Come hungry.<br />Leave <em>happy.</em></h1>
+        <p>Handmade pasta, generous pours, and a seat at the table for everyone. This is Italian food the way we love it.</p>
+        <a class="button" href="tel:+12125550148">Book your table <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1400&q=85" alt="A plate of pasta with tomatoes and fresh herbs" />
+        <span class="image-note">Made with love, always</span>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <span>Good food</span><span>✳</span><span>Good company</span><span>✳</span><span>Good wine</span><span>✳</span><span>See you at the table</span><span>✳</span>
+    </div>
+
+    <section class="intro wrap" id="story">
+      <div class="intro-images">
+        <img class="intro-main" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=85" alt="A warmly lit restaurant ready for guests" loading="lazy" />
+        <img class="intro-small" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=85" alt="Fresh pasta served at the table" loading="lazy" />
+      </div>
+      <div class="intro-copy">
+        <p class="eyebrow">A little about us</p>
+        <h2 class="section-title">Pull up a chair.<br />Stay <em>a while.</em></h2>
+        <p class="body-copy">Casa Lina is the kind of place where one more glass turns into one more story. Inspired by the long, lively meals we grew up with, we make honest Italian food for the people and neighborhood we love.</p>
+        <p class="body-copy">There’s always room at our table. Especially if you’re sharing.</p>
+        <a class="text-link" href="#visit">Get to know us &nbsp; &rarr;</a>
+      </div>
+    </section>
+
+    <section class="menu-section" id="menu">
+      <div class="wrap">
+        <div class="menu-heading">
+          <div>
+            <p class="eyebrow">From our kitchen</p>
+            <h2 class="section-title">A few house <em>favorites.</em></h2>
+          </div>
+          <p class="body-copy">Simple ingredients, a little patience, and plenty of love. Here’s a taste of what’s cooking.</p>
+        </div>
+        <div class="dishes">
+          <article class="dish">
+            <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=85" alt="Pasta with tomato sauce and basil" loading="lazy" />
+            <div class="dish-info">
+              <div><h3>Rigatoni alla Vodka</h3><p>Tomato, cream, basil, parmigiano</p></div>
+              <span class="dish-price">$24</span>
+            </div>
+          </article>
+          <article class="dish">
+            <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=85" alt="A freshly baked margherita pizza" loading="lazy" />
+            <div class="dish-info">
+              <div><h3>Margherita Pizza</h3><p>San Marzano tomato, mozzarella, basil</p></div>
+              <span class="dish-price">$21</span>
+            </div>
+          </article>
+          <article class="dish">
+            <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=800&q=85" alt="A serving of tiramisu dusted with cocoa" loading="lazy" />
+            <div class="dish-info">
+              <div><h3>Nonna’s Tiramisù</h3><p>Espresso, mascarpone, cocoa</p></div>
+              <span class="dish-price">$12</span>
+            </div>
+          </article>
+        </div>
+        <div class="menu-cta"><a class="button" href="tel:+12125550148">Ask about our menu <span aria-hidden="true">&rarr;</span></a></div>
+      </div>
+    </section>
+
+    <section class="visit" id="visit">
+      <div class="visit-image">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85" alt="A welcoming neighborhood restaurant interior" loading="lazy" />
+      </div>
+      <div class="visit-copy">
+        <p class="eyebrow">Find your way to us</p>
+        <h2 class="section-title">There’s a place for you <em>here.</em></h2>
+        <p class="body-copy">Date night, family dinner, or just because it’s Tuesday. We can’t wait to welcome you in.</p>
+        <div class="details">
+          <div><h3>Find us</h3><p>123 Olive Street<br />New York, NY 10012</p></div>
+          <div><h3>Opening hours</h3><p>Tuesday–Sunday<br />5:00 pm–10:00 pm</p></div>
+        </div>
+        <a class="button" href="tel:+12125550148">Call to reserve <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#">casa lina<span>.</span></a>
+          <p>Good food. Good people. Always.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#story">Our story</a>
+          <a href="#menu">Menu</a>
+          <a href="#visit">Visit</a>
+          <a href="tel:+12125550148">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Casa Lina. All rights reserved.</span>
+        <span>Made for slow meals and good company.</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docket — Project planning without the theatre</title>
+  <meta name="description" content="A calm, keyboard-first project ledger for small and mid-sized teams. Scoped cycles, pinned decisions, and zero notification theatre." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #F6F4EF;
+      --paper-deep: #ECE8DF;
+      --surface: #FFFFFF;
+      --surface-muted: #FAF9F6;
+      --ink: #171715;
+      --ink-2: #524F48;
+      --ink-3: #7D786E;
+      --rule: #DAD4C8;
+      --rule-strong: #BEB6A6;
+      --signal: #D14622;
+      --signal-hover: #B63817;
+      --signal-soft: #FBECE8;
+      --sage: #245D44;
+      --sage-soft: #E8F2ED;
+      --amber: #9E6312;
+      --amber-soft: #FAF1DF;
+      --serif: 'Newsreader', 'Georgia', 'Times New Roman', serif;
+      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --radius: 4px;
+      --max-w: 1160px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: var(--paper);
+      color: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      background-color: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 244, 239, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border: 1.5px solid var(--ink);
+      border-radius: 3px;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .nav-links a {
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover {
+      background: #2B2A26;
+    }
+
+    .btn-signal {
+      background: var(--signal);
+      color: #FFFFFF;
+      border-color: var(--signal);
+    }
+
+    .btn-signal:hover {
+      background: var(--signal-hover);
+      border-color: var(--signal-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+      border-color: transparent;
+    }
+
+    .btn-ghost:hover {
+      color: var(--ink);
+      background: var(--paper-deep);
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--rule-strong);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--ink);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .mobile-drawer {
+      display: none;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+      padding: 16px 24px 20px;
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer a {
+      display: block;
+      padding: 10px 0;
+      font-size: 15px;
+      color: var(--ink-2);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .mobile-drawer a:last-of-type {
+      border-bottom: none;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 68px 0 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 44px;
+    }
+
+    .hero-meta-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+
+    .dot-live {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--signal);
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 5vw, 3.85rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--signal);
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-lead {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-2);
+    }
+
+    .hero-form {
+      display: flex;
+      gap: 8px;
+      max-width: 440px;
+    }
+
+    .hero-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 13px;
+      font-size: 14px;
+      background: var(--surface);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+    }
+
+    .hero-form input::placeholder {
+      color: var(--ink-3);
+    }
+
+    .hero-footnote {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* Interactive Product Workbench */
+    .workbench {
+      background: var(--surface);
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      box-shadow: 0 12px 32px rgba(23, 23, 21, 0.06), 4px 4px 0 var(--paper-deep);
+      overflow: hidden;
+    }
+
+    .wb-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--surface-muted);
+      border-bottom: 1px solid var(--rule);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wb-workspace-id {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .wb-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--paper-deep);
+      color: var(--ink-2);
+    }
+
+    .wb-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--paper);
+      padding: 3px;
+      border-radius: 4px;
+      border: 1px solid var(--rule);
+    }
+
+    .wb-tab {
+      border: none;
+      background: transparent;
+      padding: 5px 12px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .wb-tab[aria-selected="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .wb-hint {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .wb-body {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      min-height: 410px;
+    }
+
+    .wb-main {
+      padding: 18px 20px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .wb-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .wb-filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 3px;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+      color: var(--ink-2);
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    .cycle-meter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-2);
+    }
+
+    .meter-track {
+      width: 96px;
+      height: 6px;
+      background: var(--paper-deep);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: var(--sage);
+      transition: width 0.25s ease;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--rule);
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 24px 72px 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background-color 0.1s ease;
+    }
+
+    .task-row:hover {
+      background: var(--surface-muted);
+    }
+
+    .task-row.selected {
+      background: #F4F1EA;
+    }
+
+    .task-check {
+      width: 17px;
+      height: 17px;
+      border-radius: 3px;
+      border: 1.5px solid var(--rule-strong);
+      background: var(--surface);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+      color: transparent;
+      transition: all 0.12s ease;
+    }
+
+    .task-check.checked {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: #FFFFFF;
+    }
+
+    .task-id {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-row.is-done .task-title {
+      text-decoration: line-through;
+      color: var(--ink-3);
+    }
+
+    .status-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .status-progress { background: var(--amber-soft); color: var(--amber); }
+    .status-blocked { background: var(--signal-soft); color: var(--signal); }
+    .status-done { background: var(--sage-soft); color: var(--sage); }
+    .status-queued { background: var(--paper-deep); color: var(--ink-2); }
+
+    .avatar-chip {
+      width: 24px;
+      height: 24px;
+      border-radius: 3px;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+
+    .quick-add-row {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .quick-add-row input {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 13px;
+      border: 1px dashed var(--rule-strong);
+      border-radius: var(--radius);
+      background: var(--surface-muted);
+      color: var(--ink);
+    }
+
+    .quick-add-row input:focus {
+      border-style: solid;
+      border-color: var(--ink);
+      background: var(--surface);
+      outline: none;
+    }
+
+    /* Inspector Pane */
+    .wb-inspector {
+      padding: 18px 20px;
+      background: var(--surface-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .inspector-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .inspector-meta {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 8px 12px;
+      font-size: 12.5px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .inspector-meta dt {
+      color: var(--ink-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      align-self: center;
+    }
+
+    .inspector-meta dd {
+      margin: 0;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .status-select {
+      padding: 4px 8px;
+      font-size: 12px;
+      border: 1px solid var(--rule-strong);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--mono);
+      cursor: pointer;
+    }
+
+    .decision-pin {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--signal);
+      border-radius: 3px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .decision-pin-label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--signal);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    /* Timeline View */
+    .timeline-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .timeline-header {
+      display: grid;
+      grid-template-columns: 180px repeat(10, 1fr);
+      gap: 4px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      min-width: 560px;
+    }
+
+    .timeline-day {
+      text-align: center;
+      padding: 2px 0;
+    }
+
+    .timeline-day.today {
+      color: var(--signal);
+      font-weight: 600;
+      border-bottom: 2px solid var(--signal);
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 180px repeat(10, 1fr);
+      align-items: center;
+      gap: 4px;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--rule);
+      min-width: 560px;
+    }
+
+    .timeline-label {
+      font-size: 13px;
+      font-weight: 500;
+      padding-right: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gantt-bar {
+      height: 24px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .gantt-sage { background: var(--sage-soft); color: var(--sage); border-color: #BBD8C9; }
+    .gantt-amber { background: var(--amber-soft); color: var(--amber); border-color: #E7D2AE; }
+    .gantt-signal { background: var(--signal-soft); color: var(--signal); border-color: #EEC2B5; }
+
+    /* Decisions View */
+    .decision-ledger {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .decision-card {
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 14px 16px;
+      background: var(--surface);
+    }
+
+    .decision-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .decision-card h4 {
+      margin: 0;
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .decision-card p {
+      margin: 0 0 8px;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+
+    .decision-rejected {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Editorial Sections */
+    .section {
+      padding: 84px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 40px;
+      margin-bottom: 52px;
+      align-items: end;
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.9rem, 3.2vw, 2.65rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 10px 0 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      font-size: 16.5px;
+      color: var(--ink-2);
+      max-width: 48ch;
+    }
+
+    /* 3 Habits Ledger */
+    .habits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ink);
+    }
+
+    .habit-item {
+      padding: 28px 28px 28px 0;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .habit-item:not(:first-child) {
+      padding-left: 28px;
+    }
+
+    .habit-item:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .habit-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--signal);
+      font-weight: 500;
+    }
+
+    .habit-item h3 {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .habit-item p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    .habit-contrast {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px dashed var(--rule);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Anatomy Split Feature */
+    .anatomy-wrap {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    .anatomy-nav {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--rule);
+    }
+
+    .anatomy-btn {
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--rule);
+      padding: 18px 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .anatomy-btn:hover {
+      background: var(--paper-deep);
+    }
+
+    .anatomy-btn[aria-selected="true"] {
+      background: var(--surface);
+      box-shadow: inset 3px 0 0 var(--signal);
+    }
+
+    .anatomy-btn-title {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .anatomy-btn-desc {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.45;
+    }
+
+    .anatomy-stage {
+      background: var(--surface);
+      border: 1px solid var(--rule-strong);
+      border-radius: 6px;
+      padding: 28px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .scope-bar-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .scope-track {
+      height: 28px;
+      background: var(--paper-deep);
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--rule);
+    }
+
+    .scope-seg-core { background: var(--ink); }
+    .scope-seg-nice { background: #8A8478; }
+    .scope-seg-over { background: var(--signal); }
+
+    .digest-card {
+      border: 1px solid var(--rule);
+      background: var(--surface-muted);
+      padding: 20px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .digest-card h4 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .digest-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .digest-list li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      font-size: 13.5px;
+      color: var(--ink-2);
+    }
+
+    /* Spec Sheet */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .spec-quote {
+      font-family: var(--serif);
+      font-size: 26px;
+      line-height: 1.3;
+      margin: 0 0 18px;
+      letter-spacing: -0.015em;
+    }
+
+    .spec-author {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-top: 1px solid var(--ink);
+    }
+
+    .spec-table tr {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .spec-table td {
+      padding: 13px 0;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    .spec-table td:first-child {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      width: 36%;
+      padding-right: 16px;
+    }
+
+    .spec-table td:last-child {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Pricing */
+    .pricing-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--rule-strong);
+      border-radius: 6px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .price-card.featured {
+      border-color: var(--ink);
+      box-shadow: 4px 4px 0 var(--paper-deep);
+    }
+
+    .price-figure {
+      font-family: var(--serif);
+      font-size: 44px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .price-unit {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .price-features {
+      list-style: none;
+      padding: 16px 0 0;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .price-features li::before {
+      content: "— ";
+      color: var(--ink-3);
+      font-family: var(--mono);
+    }
+
+    .calc-box {
+      background: var(--surface-muted);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .calc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--signal);
+      cursor: pointer;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid var(--rule-strong);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .billing-toggle button {
+      border: none;
+      background: transparent;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-2);
+      cursor: pointer;
+    }
+
+    .billing-toggle button.active {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    /* Changelog + CTA */
+    .changelog-list {
+      border-top: 1px solid var(--rule);
+    }
+
+    .changelog-row {
+      display: grid;
+      grid-template-columns: 120px 180px 1fr;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 14px;
+      align-items: baseline;
+    }
+
+    .cta-banner {
+      padding: 72px 0;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+
+    .cta-banner p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 16px;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--rule);
+      padding: 40px 0 56px;
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .footer-cols {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .footer-col h5 {
+      margin: 0 0 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+
+    .footer-col a {
+      display: block;
+      padding: 3px 0;
+      color: var(--ink-2);
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(23, 23, 21, 0.45);
+      display: none;
+      place-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      padding: 26px;
+      box-shadow: 6px 6px 0 rgba(23, 23, 21, 0.18);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .modal-close {
+      background: none;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      color: var(--ink-2);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-2);
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--rule-strong);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .slug-preview {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-top: 5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .section-head,
+      .anatomy-wrap,
+      .spec-grid,
+      .pricing-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .wb-body {
+        grid-template-columns: 1fr;
+      }
+
+      .wb-main {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .habits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .habit-item {
+        padding: 24px 0;
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .habit-item:not(:first-child) {
+        padding-left: 0;
+      }
+
+      .habit-item:last-child {
+        border-bottom: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links,
+      .header-actions .btn-ghost {
+        display: none;
+      }
+
+      .mobile-toggle {
+        display: inline-flex;
+      }
+
+      .hero {
+        padding: 44px 0 36px;
+      }
+
+      .hero-form {
+        flex-direction: column;
+      }
+
+      .task-row {
+        grid-template-columns: 22px 1fr auto;
+      }
+
+      .task-id,
+      .avatar-chip {
+        display: none;
+      }
+
+      .changelog-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .wb-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Docket home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square">
+            <path d="M2.5 7.5L5.5 10.5L11.5 3.5" />
+          </svg>
+        </span>
+        <span>Docket</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#habits">Approach</a>
+        <a href="#anatomy">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#changelog">Changelog</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-ghost" type="button" data-open-modal="signin">Sign in</button>
+        <button class="btn btn-primary" type="button" data-open-modal="create">Start a workspace</button>
+        <button class="mobile-toggle" type="button" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileDrawer">Menu</button>
+      </div>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <a href="#habits">Approach</a>
+      <a href="#anatomy">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#changelog">Changelog</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-meta-strip">
+              <span class="dot-live" aria-hidden="true"></span>
+              <span>RELEASE 2.4 &middot; MAC, WEB &amp; LINUX &middot; 48MS SYNC</span>
+            </div>
+            <h1>Projects stall in the <em>handoff</em>, not the kickoff.</h1>
+          </div>
+
+          <div class="hero-right">
+            <p class="hero-lead">
+              Docket is a quiet ledger for 4&ndash;40 person product teams. Scope two-week cycles, keep decisions pinned directly to the work, and drop the status-meeting theatre.
+            </p>
+            <form class="hero-form" id="heroForm">
+              <input type="email" id="heroEmail" placeholder="you@company.com" aria-label="Work email" required />
+              <button type="submit" class="btn btn-signal">Create workspace</button>
+            </form>
+            <div class="hero-footnote">
+              <span>Free up to 5 seats</span>
+              <span>&middot;</span>
+              <span>No credit card required</span>
+              <span>&middot;</span>
+              <span>Full CSV &amp; Markdown export</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Workbench Preview -->
+        <div class="workbench" id="workbench" aria-label="Interactive Docket preview">
+          <div class="wb-topbar">
+            <div class="wb-workspace-id">
+              <span>Northwind Hardware</span>
+              <span class="wb-badge">Cycle 14 &middot; Nov 16&ndash;27</span>
+            </div>
+
+            <div class="wb-tabs" role="tablist" aria-label="Workspace view">
+              <button class="wb-tab" role="tab" aria-selected="true" data-view="cycle">Active Cycle</button>
+              <button class="wb-tab" role="tab" aria-selected="false" data-view="timeline">Timeline</button>
+              <button class="wb-tab" role="tab" aria-selected="false" data-view="decisions">Decision Log</button>
+            </div>
+
+            <span class="wb-hint">Try clicking rows, checkboxes, or adding a task</span>
+          </div>
+
+          <div class="wb-body">
+            <!-- Left Main Pane -->
+            <div class="wb-main" id="wbMain">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Right Inspector Pane -->
+            <aside class="wb-inspector" id="wbInspector" aria-label="Task inspector">
+              <!-- Populated by JS -->
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="habits">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 / The Diagnosis</span>
+            <h2>Most trackers reward busywork instead of clarity.</h2>
+          </div>
+          <p>
+            When every minor adjustment triggers a Slack ping and a comment thread disappears into a closed ticket, teams spend Tuesday mornings reconstructing Monday's context.
+          </p>
+        </div>
+
+        <div class="habits-grid">
+          <article class="habit-item">
+            <span class="habit-num">HABIT 01</span>
+            <h3>Orphaned decisions</h3>
+            <p>
+              Three months after launch, nobody remembers why billing retries happen at 48 hours instead of 24. The answer is buried in a 90-message Slack channel.
+            </p>
+            <div class="habit-contrast">Docket fix: Pin a 2-line Decision Note directly to the task ID.</div>
+          </article>
+
+          <article class="habit-item">
+            <span class="habit-num">HABIT 02</span>
+            <h3>Unbounded backlogs</h3>
+            <p>
+              A backlog with 420 items isn't a plan; it's a museum of guilt. People stop trusting the list and keep personal sticky notes on their monitors.
+            </p>
+            <div class="habit-contrast">Docket fix: Unstarted work auto-archives after 6 weeks unless renewed.</div>
+          </article>
+
+          <article class="habit-item">
+            <span class="habit-num">HABIT 03</span>
+            <h3>Perpetual badge anxiety</h3>
+            <p>
+              Real-time red dots turn deep work into customer support. Good software waits until you open it, or sends one calm summary at the end of the week.
+            </p>
+            <div class="habit-contrast">Docket fix: Zero unread counters. One Friday 16:00 digest.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="anatomy">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">02 / Mechanics</span>
+            <h2>Built like an accounting ledger, not a social feed.</h2>
+          </div>
+          <p>
+            Every screen fits on a single mental model. Switch between capacity planning, pinned context, and weekly reporting without configuring twenty custom fields.
+          </p>
+        </div>
+
+        <div class="anatomy-wrap">
+          <div class="anatomy-nav" role="tablist" aria-label="Feature anatomy">
+            <button class="anatomy-btn" role="tab" aria-selected="true" data-anatomy="scope">
+              <span class="anatomy-btn-title">Honest cycle capacity</span>
+              <span class="anatomy-btn-desc">See when a two-week sprint crosses 100% capacity before Monday starts.</span>
+            </button>
+            <button class="anatomy-btn" role="tab" aria-selected="false" data-anatomy="decisions">
+              <span class="anatomy-btn-title">Permanent decision trail</span>
+              <span class="anatomy-btn-desc">Record what you chose, what you rejected, and who signed off in 20 seconds.</span>
+            </button>
+            <button class="anatomy-btn" role="tab" aria-selected="false" data-anatomy="digest">
+              <span class="anatomy-btn-title">The Friday 16:00 digest</span>
+              <span class="anatomy-btn-desc">Replace the Monday standup with an automatic, readable summary of shipped work.</span>
+            </button>
+          </div>
+
+          <div class="anatomy-stage" id="anatomyStage">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="spec-grid">
+          <div>
+            <span class="eyebrow">03 / Architecture</span>
+            <p class="spec-quote" style="margin-top: 14px;">
+              &ldquo;We moved 19 engineers and designers off Jira in an afternoon. Not because Docket has more features, but because it has fewer places to hide.&rdquo;
+            </p>
+            <div class="spec-author">MARCUS LINDQVIST &middot; HEAD OF PRODUCT, KESTREL TELEMETRY</div>
+          </div>
+
+          <table class="spec-table" aria-label="Technical specifications">
+            <tbody>
+              <tr>
+                <td>LOCAL CACHE</td>
+                <td>IndexedDB replica — works offline on flights and syncs deltas cleanly</td>
+              </tr>
+              <tr>
+                <td>KEYBOARD SPEED</td>
+                <td>Full command palette (`Cmd+K`), `J/K` traversal, single-key status changes</td>
+              </tr>
+              <tr>
+                <td>DATA PORTABILITY</td>
+                <td>One-click ZIP of clean Markdown files, JSON schema, and flat CSV</td>
+              </tr>
+              <tr>
+                <td>PERMISSIONS</td>
+                <td>Two roles only: Member and Admin. No labyrinthine permission matrices</td>
+              </tr>
+              <tr>
+                <td>INTEGRATIONS</td>
+                <td>GitHub PR auto-close, Linear/Jira one-time importer, Webhook events</td>
+              </tr>
+              <tr>
+                <td>UPTIME &amp; HOSTING</td>
+                <td>EU (Frankfurt) or US (Virginia) residency, 99.98% trailing 12-month uptime</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">04 / Pricing</span>
+            <h2>Simple rates, with a hard ceiling.</h2>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px; align-items:flex-start;">
+            <p>
+              Small crews stay free forever. Growing companies never get penalized with runaway per-seat bills once they pass 40 people.
+            </p>
+            <div class="billing-toggle" role="group" aria-label="Billing interval">
+              <button type="button" class="active" data-billing="monthly">Monthly</button>
+              <button type="button" data-billing="annual">Annual (2 months free)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pricing-layout">
+          <div class="price-card">
+            <div>
+              <span class="eyebrow">Studio</span>
+              <div class="price-figure" style="margin-top:10px;">$0</div>
+              <div class="price-unit">Up to 5 active seats &middot; forever</div>
+            </div>
+            <p style="margin:0; font-size:14.5px; color:var(--ink-2);">
+              Everything in Docket for founders, consultancies, and small product squads.
+            </p>
+            <button type="button" class="btn btn-outline" data-open-modal="create">Start free studio</button>
+            <ul class="price-features">
+              <li>Unlimited cycles, tasks, and decision logs</li>
+              <li>GitHub PR linking &amp; Friday email digests</li>
+              <li>Desktop apps for macOS and Linux</li>
+              <li>Full Markdown &amp; CSV export anytime</li>
+            </ul>
+          </div>
+
+          <div class="price-card featured">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+              <div>
+                <span class="eyebrow">Company</span>
+                <div class="price-figure" style="margin-top:10px;" id="calcTotal">$108</div>
+                <div class="price-unit" id="calcSubtitle">12 seats &middot; $9 / person / month</div>
+              </div>
+              <span class="wb-badge" id="capBadge">Capped at $360/mo</span>
+            </div>
+
+            <div class="calc-box">
+              <div class="calc-top">
+                <label for="teamSlider">Team size: <span id="teamCountLabel" class="mono">12 people</span></label>
+                <span class="mono" style="font-size:11.5px; color:var(--ink-3);" id="calcRateNote">$9/seat</span>
+              </div>
+              <input type="range" id="teamSlider" min="1" max="60" value="12" />
+              <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+                <span>1</span>
+                <span>20</span>
+                <span>40 (cap starts)</span>
+                <span>60+</span>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" data-open-modal="create">Start 30-day trial</button>
+
+            <ul class="price-features">
+              <li>Everything in Studio, plus unlimited seats above cap</li>
+              <li>SAML SSO &amp; EU/US data residency selection</li>
+              <li>Audit log &amp; automated weekly S3 backups</li>
+              <li>Direct email support from the people who built it</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="changelog">
+      <div class="container">
+        <div class="section-head" style="margin-bottom: 32px;">
+          <div>
+            <span class="eyebrow">05 / Recent Shipments</span>
+            <h2>Public changelog</h2>
+          </div>
+          <p>We ship small, predictable releases every second Tuesday. No quiet feature removals.</p>
+        </div>
+
+        <div class="changelog-list">
+          <div class="changelog-row">
+            <span class="mono" style="color:var(--ink-3); font-size:12.5px;">2026-11-18</span>
+            <strong>Release 2.4</strong>
+            <span style="color:var(--ink-2);">Added round-trip CSV imports preserving decision IDs and cycle rollover counts.</span>
+          </div>
+          <div class="changelog-row">
+            <span class="mono" style="color:var(--ink-3); font-size:12.5px;">2026-11-04</span>
+            <strong>Release 2.3</strong>
+            <span style="color:var(--ink-2);">Offline mutation queue for macOS &amp; Linux clients with deterministic conflict banners.</span>
+          </div>
+          <div class="changelog-row">
+            <span class="mono" style="color:var(--ink-3); font-size:12.5px;">2026-10-21</span>
+            <strong>Release 2.2</strong>
+            <span style="color:var(--ink-2);">Auto-archive threshold for untouched backlog items (configurable 4, 6, or 8 weeks).</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>Give your next two-week cycle a calmer home.</h2>
+          <p>Takes 40 seconds to open a workspace. Bring an existing CSV or start from a blank sheet.</p>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-signal" data-open-modal="create">Create workspace</button>
+          <a href="#workbench" class="btn btn-outline">Explore live ledger</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="brand" style="margin-bottom:8px; color:var(--ink);">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" />
+            </svg>
+          </span>
+          <span>Docket</span>
+        </div>
+        <div>Built in Copenhagen &amp; Portland.</div>
+        <div class="mono" style="margin-top:4px; font-size:11.5px;">hello@docket.work &middot; Status: 99.98%</div>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Product</h5>
+          <a href="#workbench">Interactive demo</a>
+          <a href="#anatomy">Cycle planning</a>
+          <a href="#pricing">Pricing &amp; cap</a>
+          <a href="#changelog">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a href="#habits">Manifesto</a>
+          <a href="#pricing" data-open-modal="create">Security &amp; SOC2</a>
+          <a href="#pricing" data-open-modal="create">Export guarantee</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Workspace Setup Modal -->
+  <div class="modal-backdrop" id="workspaceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Open a Docket workspace</h3>
+        <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="modalForm">
+        <div class="field">
+          <label for="modalEmail">Work email</label>
+          <input type="email" id="modalEmail" placeholder="you@company.com" required />
+        </div>
+        <div class="field">
+          <label for="modalTeam">Team or project name</label>
+          <input type="text" id="modalTeam" placeholder="Northwind Hardware" value="Northwind Hardware" required />
+          <div class="slug-preview">docket.work/<span id="slugOut">northwind-hardware</span></div>
+        </div>
+        <button type="submit" class="btn btn-signal" style="width:100%; margin-top:6px;">Continue to workspace</button>
+      </form>
+
+      <div id="modalConfirmation" style="display:none; padding: 10px 0 4px;">
+        <div class="decision-pin" style="border-left-color: var(--sage); margin-bottom:14px;">
+          <span class="decision-pin-label" style="color:var(--sage);">Workspace reserved</span>
+          <strong id="confirmSlug">docket.work/northwind-hardware</strong> is ready in preview mode. We sent a magic link to <span id="confirmEmail" class="mono"></span>.
+        </div>
+        <button type="button" class="btn btn-primary" style="width:100%;" id="modalDoneBtn">Back to page</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // --- State for Interactive Workbench ---
+      const tasks = [
+        {
+          id: 'DOC-41',
+          title: 'Migrate webhook retries to exponential backoff',
+          status: 'done',
+          owner: 'MK',
+          ownerName: 'Maya Kapoor',
+          due: 'Nov 19',
+          estimate: '6h',
+          decisionId: 'DEC-014',
+          decisionNote: 'Cap retry window at 48h instead of 72h so dead-letter alerts fire within two business days.'
+        },
+        {
+          id: 'DOC-42',
+          title: 'Ship CSV round-trip importer with ID preservation',
+          status: 'progress',
+          owner: 'JL',
+          ownerName: 'Jonas Lind',
+          due: 'Nov 22',
+          estimate: '12h',
+          decisionId: 'DEC-013',
+          decisionNote: 'Reject malformed UTF-8 rows up front rather than silently coercing characters.'
+        },
+        {
+          id: 'DOC-43',
+          title: 'Resolve Safari IndexedDB quota prompt on private tabs',
+          status: 'blocked',
+          owner: 'SR',
+          ownerName: 'Sora Takahashi',
+          due: 'Nov 24',
+          estimate: '4h',
+          decisionId: 'DEC-012',
+          decisionNote: 'Fall back to in-memory store with a single footer warning banner when storage is ephemeral.'
+        },
+        {
+          id: 'DOC-44',
+          title: 'Draft Friday 16:00 digest plain-text email template',
+          status: 'done',
+          owner: 'AL',
+          ownerName: 'Anna Lindqvist',
+          due: 'Nov 20',
+          estimate: '3h',
+          decisionId: 'DEC-011',
+          decisionNote: 'Send plain-text multipart first; avoid heavy HTML tables that break in Apple Mail dark mode.'
+        },
+        {
+          id: 'DOC-45',
+          title: 'Audit keyboard focus order across cycle rollover modal',
+          status: 'progress',
+          owner: 'MK',
+          ownerName: 'Maya Kapoor',
+          due: 'Nov 25',
+          estimate: '5h',
+          decisionId: 'DEC-014',
+          decisionNote: 'Return focus to the invoking trigger button when Escape closes any overlay.'
+        },
+        {
+          id: 'DOC-46',
+          title: 'Benchmark 10k-row ledger filter on 8GB laptops',
+          status: 'queued',
+          owner: 'JL',
+          ownerName: 'Jonas Lind',
+          due: 'Nov 27',
+          estimate: '8h',
+          decisionId: 'DEC-010',
+          decisionNote: 'Target sub-16ms keystroke latency without virtualizing below 500 rows.'
+        }
+      ];
+
+      const decisions = [
+        {
+          id: 'DEC-014',
+          date: 'Nov 18',
+          author: 'Maya Kapoor',
+          title: 'Cap webhook retry window at 48 hours',
+          body: 'Operators prefer knowing a customer endpoint is broken on Thursday rather than discovering silent failures after the weekend.',
+          rejected: 'Rejected: 72-hour window (delays dead-letter visibility); 12-hour window (too noisy during deploy windows).'
+        },
+        {
+          id: 'DEC-013',
+          date: 'Nov 14',
+          author: 'Jonas Lind',
+          title: 'Strict UTF-8 validation on CSV imports',
+          body: 'Show exact line and column errors before writing any records, keeping imported Decision IDs intact.',
+          rejected: 'Rejected: Best-effort Latin-1 fallback (corrupts non-ASCII names).'
+        },
+        {
+          id: 'DEC-012',
+          date: 'Nov 11',
+          author: 'Sora Takahashi',
+          title: 'Ephemeral memory fallback in Private Browsing',
+          body: 'Allow read/write inspection in Safari private windows without blocking the UI, surfacing one subtle export reminder.',
+          rejected: 'Rejected: Blocking modal on load.'
+        }
+      ];
+
+      let currentView = 'cycle';
+      let currentFilter = 'all';
+      let selectedTaskId = 'DOC-42';
+
+      const wbMain = document.getElementById('wbMain');
+      const wbInspector = document.getElementById('wbInspector');
+      const tabButtons = document.querySelectorAll('.wb-tab');
+
+      const statusLabel = {
+        progress: 'In Progress',
+        blocked: 'Blocked',
+        done: 'Done',
+        queued: 'Queued'
+      };
+
+      const statusClass = {
+        progress: 'status-progress',
+        blocked: 'status-blocked',
+        done: 'status-done',
+        queued: 'status-queued'
+      };
+
+      function renderInspector() {
+        const task = tasks.find(t => t.id === selectedTaskId) || tasks[0];
+        if (!task) return;
+
+        wbInspector.innerHTML = `
+          <div class="inspector-head">
+            <span>${task.id} &middot; INSPECTOR</span>
+            <span>EST. ${task.estimate}</span>
+          </div>
+          <h3 class="inspector-title">${escapeHtml(task.title)}</h3>
+          <dl class="inspector-meta">
+            <dt>STATUS</dt>
+            <dd>
+              <select class="status-select" id="inspectorStatusSelect" aria-label="Change task status">
+                <option value="queued" ${task.status === 'queued' ? 'selected' : ''}>Queued</option>
+                <option value="progress" ${task.status === 'progress' ? 'selected' : ''}>In Progress</option>
+                <option value="blocked" ${task.status === 'blocked' ? 'selected' : ''}>Blocked</option>
+                <option value="done" ${task.status === 'done' ? 'selected' : ''}>Done</option>
+              </select>
+            </dd>
+            <dt>OWNER</dt>
+            <dd>${escapeHtml(task.ownerName)}</dd>
+            <dt>TARGET</dt>
+            <dd>${escapeHtml(task.due)}</dd>
+          </dl>
+          <div class="decision-pin">
+            <span class="decision-pin-label">Pinned Decision &middot; ${task.decisionId}</span>
+            ${escapeHtml(task.decisionNote)}
+          </div>
+          <div style="margin-top:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+            Changes sync across Cycle, Timeline &amp; Digest.
+          </div>
+        `;
+
+        const select = document.getElementById('inspectorStatusSelect');
+        select.addEventListener('change', (e) => {
+          task.status = e.target.value;
+          renderWorkbench();
+        });
+      }
+
+      function renderCycleView() {
+        const doneCount = tasks.filter(t => t.status === 'done').length;
+        const pct = Math.round((doneCount / tasks.length) * 100);
+
+        const filtered = tasks.filter(t => {
+          if (currentFilter === 'all') return true;
+          return t.status === currentFilter;
+        });
+
+        wbMain.innerHTML = `
+          <div class="wb-toolbar">
+            <div class="wb-filters">
+              <button type="button" class="filter-pill ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">All (${tasks.length})</button>
+              <button type="button" class="filter-pill ${currentFilter === 'progress' ? 'active' : ''}" data-filter="progress">In Progress</button>
+              <button type="button" class="filter-pill ${currentFilter === 'blocked' ? 'active' : ''}" data-filter="blocked">Blocked</button>
+              <button type="button" class="filter-pill ${currentFilter === 'done' ? 'active' : ''}" data-filter="done">Done</button>
+            </div>
+            <div class="cycle-meter">
+              <span>${doneCount}/${tasks.length} shipped</span>
+              <div class="meter-track"><div class="meter-fill" style="width:${pct}%"></div></div>
+            </div>
+          </div>
+
+          <div class="task-list">
+            ${filtered.map(t => `
+              <div class="task-row ${t.id === selectedTaskId ? 'selected' : ''} ${t.status === 'done' ? 'is-done' : ''}" data-task-id="${t.id}">
+                <button type="button" class="task-check ${t.status === 'done' ? 'checked' : ''}" data-toggle-id="${t.id}" aria-label="Toggle ${escapeHtml(t.title)}">
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+                    <path d="M2 6.5L4.5 9L10 3" />
+                  </svg>
+                </button>
+                <span class="task-id">${t.id}</span>
+                <span class="task-title">${escapeHtml(t.title)}</span>
+                <span class="status-tag ${statusClass[t.status]}">${statusLabel[t.status]}</span>
+                <span class="avatar-chip" title="${escapeHtml(t.ownerName)}">${t.owner}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <form class="quick-add-row" id="quickAddForm">
+            <input type="text" id="quickAddInput" placeholder="+ Add a deliverable to Cycle 14 and press Enter..." maxlength="80" />
+            <button type="submit" class="btn btn-outline" style="padding:7px 12px; font-size:12.5px;">Add</button>
+          </form>
+        `;
+
+        wbMain.querySelectorAll('[data-filter]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentFilter = btn.dataset.filter;
+            renderCycleView();
+          });
+        });
+
+        wbMain.querySelectorAll('.task-row').forEach(row => {
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('[data-toggle-id]')) return;
+            selectedTaskId = row.dataset.taskId;
+            renderWorkbench();
+          });
+        });
+
+        wbMain.querySelectorAll('[data-toggle-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const target = tasks.find(t => t.id === btn.dataset.toggleId);
+            if (!target) return;
+            target.status = target.status === 'done' ? 'progress' : 'done';
+            selectedTaskId = target.id;
+            renderWorkbench();
+          });
+        });
+
+        const quickForm = document.getElementById('quickAddForm');
+        quickForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const input = document.getElementById('quickAddInput');
+          const val = input.value.trim();
+          if (!val) return;
+          const nextNum = 41 + tasks.length;
+          const newTask = {
+            id: `DOC-${nextNum}`,
+            title: val,
+            status: 'queued',
+            owner: 'YO',
+            ownerName: 'You (Preview)',
+            due: 'Nov 27',
+            estimate: '4h',
+            decisionId: 'DEC-014',
+            decisionNote: 'Added directly from the interactive cycle ledger.'
+          };
+          tasks.push(newTask);
+          currentFilter = 'all';
+          selectedTaskId = newTask.id;
+          renderWorkbench();
+        });
+      }
+
+      function renderTimelineView() {
+        const bars = [
+          { id: 'DOC-41', start: 2, span: 3, style: 'gantt-sage' },
+          { id: 'DOC-42', start: 3, span: 4, style: 'gantt-amber' },
+          { id: 'DOC-43', start: 5, span: 3, style: 'gantt-signal' },
+          { id: 'DOC-44', start: 2, span: 2, style: 'gantt-sage' },
+          { id: 'DOC-45', start: 6, span: 3, style: 'gantt-amber' },
+          { id: 'DOC-46', start: 8, span: 3, style: 'gantt-amber' }
+        ];
+
+        wbMain.innerHTML = `
+          <div class="wb-toolbar">
+            <span class="eyebrow">2-Week Schedule &middot; Today is Thu Nov 19</span>
+            <span class="mono" style="font-size:11.5px; color:var(--ink-3);">Click any bar to inspect</span>
+          </div>
+          <div class="timeline-grid">
+            <div class="timeline-header">
+              <span>DELIVERABLE</span>
+              <span class="timeline-day">M 16</span>
+              <span class="timeline-day">T 17</span>
+              <span class="timeline-day">W 18</span>
+              <span class="timeline-day today">T 19</span>
+              <span class="timeline-day">F 20</span>
+              <span class="timeline-day">M 23</span>
+              <span class="timeline-day">T 24</span>
+              <span class="timeline-day">W 25</span>
+              <span class="timeline-day">T 26</span>
+              <span class="timeline-day">F 27</span>
+            </div>
+            ${bars.map(b => {
+              const t = tasks.find(x => x.id === b.id);
+              if (!t) return '';
+              return `
+                <div class="timeline-row">
+                  <span class="timeline-label">${t.id} ${escapeHtml(t.title)}</span>
+                  <div class="gantt-bar ${b.style}" data-gantt-id="${t.id}" style="grid-column: ${b.start} / span ${b.span};">
+                    ${t.owner} &middot; ${t.estimate}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+
+        wbMain.querySelectorAll('[data-gantt-id]').forEach(bar => {
+          bar.addEventListener('click', () => {
+            selectedTaskId = bar.dataset.ganttId;
+            renderInspector();
+          });
+        });
+      }
+
+      function renderDecisionsView() {
+        wbMain.innerHTML = `
+          <div class="wb-toolbar">
+            <span class="eyebrow">Architectural &amp; Product Decisions</span>
+            <span class="mono" style="font-size:11.5px; color:var(--ink-3);">${decisions.length} recorded this cycle</span>
+          </div>
+          <div class="decision-ledger">
+            ${decisions.map(d => `
+              <article class="decision-card">
+                <div class="decision-card-head">
+                  <h4>${escapeHtml(d.title)}</h4>
+                  <span class="mono" style="font-size:11.5px; color:var(--ink-3);">${d.id} &middot; ${d.date}</span>
+                </div>
+                <p>${escapeHtml(d.body)}</p>
+                <div class="decision-rejected">${escapeHtml(d.rejected)}</div>
+              </article>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function renderWorkbench() {
+        if (currentView === 'cycle') renderCycleView();
+        else if (currentView === 'timeline') renderTimelineView();
+        else renderDecisionsView();
+        renderInspector();
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.setAttribute('aria-selected', 'false'));
+          btn.setAttribute('aria-selected', 'true');
+          currentView = btn.dataset.view;
+          renderWorkbench();
+        });
+      });
+
+      renderWorkbench();
+
+      // --- Anatomy Feature Switcher ---
+      const anatomyStage = document.getElementById('anatomyStage');
+      const anatomyBtns = document.querySelectorAll('.anatomy-btn');
+
+      const anatomyViews = {
+        scope: `
+          <div>
+            <span class="eyebrow">Capacity Guardrail &middot; Cycle 14</span>
+            <h3 style="font-family:var(--serif); font-size:26px; font-weight:400; margin:8px 0 10px;">118% allocated &mdash; 14 hours over budget</h3>
+            <p style="margin:0; font-size:14.5px; color:var(--ink-2);">
+              Docket totals task estimates against your team's actual available days (accounting for holidays and on-call rotation) and highlights overflow in vermilion before kickoff.
+            </p>
+          </div>
+          <div class="scope-bar-demo">
+            <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:12px;">
+              <span>Committed: 94h / 80h available</span>
+              <span style="color:var(--signal); font-weight:500;">+14h overflow</span>
+            </div>
+            <div class="scope-track" aria-label="Capacity bar">
+              <div class="scope-seg-core" style="width:62%" title="Core deliverables: 56h"></div>
+              <div class="scope-seg-nice" style="width:23%" title="Maintenance: 24h"></div>
+              <div class="scope-seg-over" style="width:15%" title="Over capacity: 14h"></div>
+            </div>
+            <div style="display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:11.5px; color:var(--ink-2);">
+              <span>&#9632; Core deliverables (56h)</span>
+              <span style="color:#6D685E;">&#9632; Bug &amp; maintenance (24h)</span>
+              <span style="color:var(--signal);">&#9632; Needs trim (14h)</span>
+            </div>
+          </div>
+        `,
+        decisions: `
+          <div>
+            <span class="eyebrow">Context Preservation</span>
+            <h3 style="font-family:var(--serif); font-size:26px; font-weight:400; margin:8px 0 10px;">Every trade-off lives next to the deliverable</h3>
+            <p style="margin:0; font-size:14.5px; color:var(--ink-2);">
+              Instead of scattering rationale across chat threads and docs, attach a structured two-line Decision Note directly to any task ID.
+            </p>
+          </div>
+          <div class="decision-card" style="background:var(--surface-muted);">
+            <div class="decision-card-head">
+              <h4>DEC-014 &middot; Cap webhook retry window at 48h</h4>
+              <span class="mono" style="font-size:11.5px; color:var(--ink-3);">Linked to DOC-41, DOC-45</span>
+            </div>
+            <p>Operators need dead-letter alerts inside two business days rather than discovering silent failures after the weekend.</p>
+            <div class="decision-rejected">Rejected alternatives: 72h window (hides outages), 12h window (alerts during planned maintenance).</div>
+          </div>
+        `,
+        digest: `
+          <div>
+            <span class="eyebrow">Calm Cadence</span>
+            <h3 style="font-family:var(--serif); font-size:26px; font-weight:400; margin:8px 0 10px;">One plain-text digest every Friday at 16:00</h3>
+            <p style="margin:0; font-size:14.5px; color:var(--ink-2);">
+              Stakeholders get a clean summary of shipped items, blocked risks, and updated decisions without asking engineers to write slide decks.
+            </p>
+          </div>
+          <div class="digest-card">
+            <h4>Northwind Hardware &mdash; Week of Nov 16</h4>
+            <ul class="digest-list">
+              <li><span class="status-tag status-done">SHIPPED</span><span><strong>DOC-41</strong> Webhook backoff migration &amp; <strong>DOC-44</strong> Digest template</span></li>
+              <li><span class="status-tag status-progress">ACTIVE</span><span><strong>DOC-42</strong> CSV importer (80% complete, target Tue Nov 22)</span></li>
+              <li><span class="status-tag status-blocked">BLOCKED</span><span><strong>DOC-43</strong> Safari private-mode quota test (awaiting iOS 19 device check)</span></li>
+            </ul>
+          </div>
+        `
+      };
+
+      function setAnatomy(key) {
+        anatomyStage.innerHTML = anatomyViews[key];
+      }
+
+      anatomyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          anatomyBtns.forEach(b => b.setAttribute('aria-selected', 'false'));
+          btn.setAttribute('aria-selected', 'true');
+          setAnatomy(btn.dataset.anatomy);
+        });
+      });
+
+      setAnatomy('scope');
+
+      // --- Pricing Calculator ---
+      let billingMode = 'monthly';
+      const slider = document.getElementById('teamSlider');
+      const teamCountLabel = document.getElementById('teamCountLabel');
+      const calcTotal = document.getElementById('calcTotal');
+      const calcSubtitle = document.getElementById('calcSubtitle');
+      const calcRateNote = document.getElementById('calcRateNote');
+      const capBadge = document.getElementById('capBadge');
+      const billingBtns = document.querySelectorAll('[data-billing]');
+
+      function updatePricing() {
+        const seats = parseInt(slider.value, 10);
+        const rate = billingMode === 'monthly' ? 9 : 7.5;
+        const cap = billingMode === 'monthly' ? 360 : 300;
+        const seatWord = seats === 1 ? 'person' : 'people';
+        teamCountLabel.textContent = `${seats} ${seatWord}`;
+        capBadge.textContent = `Capped at $${cap}/mo`;
+
+        if (seats <= 5) {
+          calcTotal.textContent = '$0';
+          calcSubtitle.textContent = `${seats} ${seatWord} · covered by free Studio tier`;
+          calcRateNote.textContent = 'Free ≤ 5';
+        } else {
+          const raw = seats * rate;
+          const total = Math.min(raw, cap);
+          const formatted = Number.isInteger(total) ? `$${total}` : `$${total.toFixed(0)}`;
+          calcTotal.textContent = formatted;
+          if (raw >= cap) {
+            calcSubtitle.textContent = `${seats} seats · price cap active (save $${Math.round(raw - cap)}/mo)`;
+            calcRateNote.textContent = 'Cap reached';
+          } else {
+            calcSubtitle.textContent = `${seats} seats · $${rate} / person / month`;
+            calcRateNote.textContent = `$${rate}/seat`;
+          }
+        }
+      }
+
+      slider.addEventListener('input', updatePricing);
+      billingBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          billingBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          billingMode = btn.dataset.billing;
+          updatePricing();
+        });
+      });
+      updatePricing();
+
+      // --- Mobile Drawer ---
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = mobileDrawer.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+      mobileDrawer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // --- Modal & Hero Form ---
+      const modal = document.getElementById('workspaceModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalForm = document.getElementById('modalForm');
+      const modalEmail = document.getElementById('modalEmail');
+      const modalTeam = document.getElementById('modalTeam');
+      const slugOut = document.getElementById('slugOut');
+      const modalConfirmation = document.getElementById('modalConfirmation');
+      const confirmSlug = document.getElementById('confirmSlug');
+      const confirmEmail = document.getElementById('confirmEmail');
+
+      function toSlug(val) {
+        return val.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'your-team';
+      }
+
+      modalTeam.addEventListener('input', () => {
+        slugOut.textContent = toSlug(modalTeam.value);
+      });
+
+      function openModal(mode, prefillEmail) {
+        modalTitle.textContent = mode === 'signin' ? 'Sign in to Docket' : 'Open a Docket workspace';
+        modalForm.style.display = 'block';
+        modalConfirmation.style.display = 'none';
+        if (prefillEmail) modalEmail.value = prefillEmail;
+        modal.classList.add('open');
+        modalEmail.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+      }
+
+      document.querySelectorAll('[data-open-modal]').forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          openModal(trigger.dataset.openModal);
+        });
+      });
+
+      document.getElementById('heroForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const emailVal = document.getElementById('heroEmail').value.trim();
+        openModal('create', emailVal);
+      });
+
+      modalForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        confirmSlug.textContent = `docket.work/${toSlug(modalTeam.value)}`;
+        confirmEmail.textContent = modalEmail.value.trim();
+        modalForm.style.display = 'none';
+        modalConfirmation.style.display = 'block';
+      });
+
+      document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+      document.getElementById('modalDoneBtn').addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+Save as `index.html` and open it in a browser. The interactive board uses sample projects and keeps task changes for the current page session.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f7f3">
+<title>Margin — A little room to work</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f8f7f3;
+    --ink: #232320;
+    --muted: #605f58;
+    --line: #dcdad2;
+    --purple: #dfd8fa;
+    --orange: #f7a06f;
+    --sans: Arial, Helvetica, sans-serif;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--sans); }
+  a { color: inherit; text-decoration: none; }
+  button, select { font: inherit; color: inherit; }
+  button, select, summary { cursor: pointer; }
+  :focus-visible { outline: 2px solid #6742ab; outline-offset: 4px; }
+  .wrap { width: min(1200px, calc(100% - 80px)); margin-inline: auto; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 80px; border-bottom: 1px solid var(--line); }
+  .brand { display: inline-flex; align-items: center; gap: 9px; font: bold 26px/1 var(--sans); letter-spacing: -.065em; }
+  .mark { width: 23px; height: 23px; position: relative; flex: none; border: 1px solid currentColor; border-radius: 50%; background: var(--orange); }
+  .mark::before, .mark::after { content: ""; position: absolute; top: 4px; bottom: 4px; width: 1px; background: currentColor; transform: rotate(25deg); }
+  .mark::before { left: 8px; }
+  .mark::after { left: 13px; }
+  nav { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+  nav a:not(.button):hover, footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .button { display: inline-flex; align-items: center; justify-content: center; gap: 22px; padding: 12px 18px; border: 1px solid var(--ink); border-radius: 5px; background: var(--ink); color: white; font-size: 14px; font-weight: 700; }
+  .button:hover { background: #42423a; }
+  .button.outline { background: transparent; color: var(--ink); }
+  .button.outline:hover { background: var(--purple); }
+  .arrow { font-size: 18px; line-height: 1; }
+
+  .hero { display: grid; grid-template-columns: minmax(310px, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(30px, 5vw, 76px); padding-block: 87px 90px; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.065em; }
+  h1 { font-size: clamp(64px, 7.4vw, 111px); line-height: .94; }
+  h1 em { font-weight: 400; }
+  .intro > p { color: var(--muted); max-width: 33ch; font-size: 18px; margin-block: 25px 27px; }
+  .caption { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 13px; color: var(--muted); font-size: 12px; }
+  .caption span:last-child { text-align: right; }
+
+  .stage { background: var(--purple); border: 1px solid #d1c9ed; border-radius: 9px; padding: clamp(14px, 3vw, 39px); }
+  .app { background: #fffefa; border: 1px solid #36322e; border-radius: 7px; box-shadow: 5px 6px 0 #b7a9db; }
+  .appbar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 11px; }
+  .appbar .mark { width: 15px; height: 15px; }
+  .appbar .mark::before, .appbar .mark::after { top: 2px; bottom: 2px; }
+  .appbar .mark::before { left: 5px; }
+  .appbar .mark::after { left: 8px; }
+  .appbar label { margin-left: auto; }
+  .appbar select { max-width: 53%; background: #fffefa; border: 1px solid var(--line); border-radius: 4px; padding: 4px; }
+  .board { padding: clamp(12px, 2vw, 24px); }
+  .board-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; }
+  .project { font: 400 clamp(22px, 2.3vw, 31px)/1.1 var(--serif); letter-spacing: -.045em; }
+  .avatars { display: flex; padding-left: 5px; }
+  .avatar { display: grid; place-items: center; width: 25px; height: 25px; margin-left: -5px; border: 2px solid #fffefa; border-radius: 50%; color: #312b28; font-size: 9px; font-weight: bold; }
+  .peach { background: #f5c0a7; }
+  .green { background: #dbe5c6; }
+  .lavender { background: #e5dcf8; }
+  .tabs { display: flex; gap: 16px; border-bottom: 1px solid var(--line); margin-bottom: 13px; }
+  .tabs button { border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 3px 0 6px; font-size: 11px; color: var(--muted); }
+  .tabs button[aria-pressed="true"] { border-bottom-color: #34302c; color: var(--ink); font-weight: bold; }
+
+  .columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .lane { min-width: 0; min-height: 167px; background: #f4f2ed; border-radius: 4px; padding: 6px; }
+  .lane h3 { display: flex; align-items: center; gap: 5px; margin: 2px 0 8px; font-size: 10px; }
+  .lane h3::before { content: ""; width: 6px; height: 6px; flex: none; border-radius: 50%; background: #928d82; }
+  .lane:nth-child(2) h3::before { background: #b76536; }
+  .lane:nth-child(3) h3::before { background: #64784f; }
+  .count { color: var(--muted); font-weight: normal; margin-left: auto; }
+  .task { margin-bottom: 5px; border: 1px solid #dedbd3; border-radius: 4px; background: #fffefa; }
+  .task summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 5px 3px; min-height: 53px; padding: 7px; list-style: none; font-size: 11px; font-weight: bold; line-height: 1.3; overflow-wrap: anywhere; }
+  .task summary::-webkit-details-marker { display: none; }
+  .task summary:hover { background: #f8f5ff; }
+  .task summary::before { content: "+"; grid-column: 2; grid-row: 1; color: var(--muted); }
+  .task[open] summary::before { content: "−"; }
+  .task-name { grid-column: 1; grid-row: 1; }
+  .tag { grid-column: 1 / -1; justify-self: start; border-radius: 3px; padding: 2px 4px; font-size: 9px; font-weight: normal; }
+  .task label { display: block; padding: 0 7px 7px; font-size: 10px; }
+  .task select { display: block; width: 100%; margin-top: 2px; background: var(--paper); border: 1px solid var(--line); border-radius: 3px; }
+  .task-list .task summary { grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; }
+  .task-list .tag { grid-column: 2; grid-row: 1; }
+  .task-list .task summary::before { grid-column: 3; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  .features { display: grid; grid-template-columns: 1.3fr repeat(2, 1fr); gap: 28px; border-top: 1px solid var(--line); padding-block: 36px 43px; }
+  .features h2 { font-size: clamp(33px, 4vw, 54px); line-height: .98; max-width: 12ch; }
+  .features article { padding-left: 24px; border-left: 1px solid var(--line); }
+  .features h3 { font-size: 16px; margin-bottom: 7px; }
+  .features p { color: var(--muted); font-size: 14px; max-width: 29ch; }
+  .bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line); padding-block: 22px 28px; font-size: 13px; color: var(--muted); }
+  .bottom .brand { color: var(--ink); font-size: 20px; }
+  .bottom .mark { transform: scale(.8); }
+
+  @media (max-width: 900px) {
+    .wrap { width: min(100% - 40px, 650px); }
+    .hero { grid-template-columns: 1fr; gap: 38px; padding-block: 56px; }
+    h1 { font-size: clamp(60px, 12vw, 89px); }
+  }
+
+  @media (max-width: 525px) {
+    nav { gap: 12px; }
+    nav .button { padding: 8px 10px; }
+    .top { min-height: 65px; }
+    .stage { padding: 10px 13px 14px 10px; }
+    .features { grid-template-columns: 1fr; gap: 20px; }
+    .features h2 { max-width: none; }
+    .features article { padding-left: 13px; }
+    .board { padding-inline: 9px; }
+    .task summary { padding-inline: 4px; }
+    .lane { padding-inline: 4px; }
+    .columns { gap: 4px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body id="top">
+  <header class="wrap top">
+    <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span>Margin</a>
+    <nav aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a class="button outline" href="#demo">Try the demo</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-labelledby="headline">
+      <div class="intro">
+        <h1 id="headline">A little room<br>to <em>work.</em></h1>
+        <p>Give every project a place to live. Plan the work, see who’s doing what, and know what’s ready to ship.</p>
+        <a class="button" href="#demo">Explore the board <span class="arrow" aria-hidden="true">↘</span></a>
+      </div>
+
+      <figure id="demo" style="margin:0" aria-label="Interactive Margin demo">
+        <div class="stage">
+          <div class="app">
+            <div class="appbar">
+              <span class="mark" aria-hidden="true"></span>
+              <strong>Studio North</strong>
+              <label class="sr-only" for="project-picker">Sample project</label>
+              <select id="project-picker">
+                <option value="website">Website refresh</option>
+                <option value="newsletter">Spring newsletter</option>
+              </select>
+            </div>
+            <div class="board">
+              <div class="board-heading">
+                <h2 class="project" id="project-title">Website refresh</h2>
+                <div class="avatars" aria-label="Team members Sam, Lee, and Alex" role="img">
+                  <span class="avatar peach" aria-hidden="true">S</span>
+                  <span class="avatar green" aria-hidden="true">L</span>
+                  <span class="avatar lavender" aria-hidden="true">A</span>
+                </div>
+              </div>
+              <div class="tabs" role="group" aria-label="Project view">
+                <button type="button" data-view="board" aria-pressed="true">Board</button>
+                <button type="button" data-view="list" aria-pressed="false">List</button>
+              </div>
+              <div id="tasks"></div>
+              <div class="sr-only" id="announcement" role="status"></div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="caption">
+          <span>Sample workspace</span>
+          <span>Open a task to change its status.</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="features" id="features" aria-labelledby="features-title">
+      <h2 id="features-title">The whole project, in view.</h2>
+      <article>
+        <h3>See what’s moving</h3>
+        <p>Follow the work from to-do to done. The board makes it easy to spot what’s underway and what’s still waiting.</p>
+      </article>
+      <article>
+        <h3>Switch to a list</h3>
+        <p>Run through every task in one column when you’re checking details or reviewing what’s left.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="wrap bottom">
+    <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span>Margin</a>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+<script>
+  const projects = {
+    website: [
+      { title: 'Write homepage copy', tag: 'Content', color: 'peach', status: 0 },
+      { title: 'Audit mobile layouts', tag: 'Design', color: 'lavender', status: 0 },
+      { title: 'Build pricing page', tag: 'Development', color: 'green', status: 1 },
+      { title: 'Approve color palette', tag: 'Design', color: 'lavender', status: 2 }
+    ],
+    newsletter: [
+      { title: 'Pull reader questions', tag: 'Research', color: 'green', status: 0 },
+      { title: 'Edit the lead story', tag: 'Content', color: 'peach', status: 1 },
+      { title: 'Draw the header', tag: 'Design', color: 'lavender', status: 1 },
+      { title: 'Choose the send date', tag: 'Planning', color: 'green', status: 2 }
+    ]
+  };
+
+  const statuses = ['To do', 'In progress', 'Done'];
+  const picker = document.querySelector('#project-picker');
+  const title = document.querySelector('#project-title');
+  const tasks = document.querySelector('#tasks');
+  const announcement = document.querySelector('#announcement');
+  const viewButtons = document.querySelectorAll('[data-view]');
+  let view = 'board';
+
+  function makeTask(task, index) {
+    const card = document.createElement('details');
+    card.className = 'task';
+    card.dataset.task = index;
+
+    const summary = document.createElement('summary');
+    const name = document.createElement('span');
+    name.className = 'task-name';
+    name.textContent = task.title;
+    const tag = document.createElement('span');
+    tag.className = `tag ${task.color}`;
+    tag.textContent = view === 'list' ? `${task.tag} · ${statuses[task.status]}` : task.tag;
+    summary.append(name, tag);
+
+    const label = document.createElement('label');
+    label.textContent = 'Status';
+    const select = document.createElement('select');
+    select.setAttribute('aria-label', `Status for ${task.title}`);
+    statuses.forEach((status, value) => select.add(new Option(status, value)));
+    select.value = task.status;
+    select.addEventListener('change', () => {
+      task.status = Number(select.value);
+      render();
+      tasks.querySelector(`[data-task="${index}"] summary`).focus();
+      announcement.textContent = `${task.title} moved to ${statuses[task.status]}.`;
+    });
+
+    label.append(select);
+    card.append(summary, label);
+    return card;
+  }
+
+  function render() {
+    const project = projects[picker.value];
+    title.textContent = picker.selectedOptions[0].textContent;
+    tasks.className = view === 'board' ? 'columns' : 'task-list';
+    tasks.replaceChildren();
+
+    if (view === 'list') {
+      project.forEach((task, index) => tasks.append(makeTask(task, index)));
+      return;
+    }
+
+    statuses.forEach((status, value) => {
+      const lane = document.createElement('section');
+      lane.className = 'lane';
+      const heading = document.createElement('h3');
+      heading.textContent = status;
+      const count = document.createElement('span');
+      count.className = 'count';
+      count.textContent = project.filter(task => task.status === value).length;
+      heading.append(count);
+      lane.append(heading);
+      project.forEach((task, index) => {
+        if (task.status === value) lane.append(makeTask(task, index));
+      });
+      tasks.append(lane);
+    });
+  }
+
+  picker.addEventListener('change', render);
+  viewButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      view = button.dataset.view;
+      viewButtons.forEach(item => item.setAttribute('aria-pressed', item === button));
+      render();
+    });
+  });
+  render();
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,297 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#37262c">
+  <meta name="description" content="Meet Alder & Vale, a small law firm focused on estate planning, business law, and real estate.">
+  <title>Alder & Vale | Attorneys at Law</title>
+  <style>
+    :root {
+      --paper: #f6f2e9;
+      --ink: #30292a;
+      --wine: #4b2834;
+      --muted: #635b57;
+      --line: #c9bfb1;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 1rem/1.6 var(--sans);
+    }
+    a { color: inherit; text-underline-offset: .22em; }
+    a:focus-visible, summary:focus-visible {
+      outline: 3px solid #a66a39;
+      outline-offset: 5px;
+    }
+    .skip { position: absolute; left: 1rem; top: -6rem; z-index: 5; }
+    .skip:focus { top: 1rem; background: white; padding: .6rem; }
+    .wrap { width: min(90%, 1320px); margin-inline: auto; }
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      width: fit-content;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .brand strong { font: 500 1.85rem/1 var(--serif); letter-spacing: -.065em; }
+    .brand small { margin-top: .46rem; font-size: .56rem; letter-spacing: .25em; text-transform: uppercase; }
+    header .wrap {
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      border-bottom: 1px solid var(--line);
+    }
+    nav { display: flex; gap: clamp(1rem, 3vw, 3rem); align-items: center; }
+    nav a { font-size: .85rem; text-decoration: none; }
+    nav a:hover, footer a:hover { text-decoration: underline; }
+    .contact-link { border: 1px solid var(--ink); padding: .55rem 1.05rem; }
+    .arrow { margin-left: .65em; font-family: Arial, sans-serif; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: center;
+      gap: clamp(2rem, 5vw, 6rem);
+      padding-block: clamp(2.5rem, 5vw, 5rem);
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin: 0 0 1.5rem;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 2rem; height: 1px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    h1 {
+      margin-bottom: 1.5rem;
+      font-size: clamp(3.65rem, 6.7vw, 6.9rem);
+      line-height: .98;
+      letter-spacing: -.065em;
+    }
+    h1 em { color: var(--wine); font-weight: 400; }
+    .intro { max-width: 34rem; margin-bottom: 2rem; color: var(--muted); font-size: 1.06rem; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .95rem 1.3rem;
+      background: var(--wine);
+      color: white;
+      font-size: .87rem;
+      text-decoration: none;
+    }
+    .button:hover { background: #663849; }
+    /* An engraved architectural study, drawn entirely with CSS. */
+    .folio {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      aspect-ratio: 1.08;
+      background: radial-gradient(ellipse at 65% 35%, #67414b, #422a34 65%, #33232a);
+      color: #ddc7a3;
+    }
+    .folio::before {
+      content: "";
+      position: absolute;
+      inset: 4%;
+      border: 1px solid #ddc7a34d;
+      background: repeating-linear-gradient(0deg, transparent 0 31px, #e8cfa40a 31px 32px),
+                  repeating-linear-gradient(90deg, transparent 0 31px, #e8cfa40a 31px 32px);
+    }
+    .temple {
+      position: absolute;
+      left: 13%;
+      right: 13%;
+      top: 18%;
+      bottom: 16%;
+      filter: drop-shadow(5px 8px 0 #271b2338);
+    }
+    .pediment {
+      position: absolute;
+      inset: 0 0 65%;
+      background: #ccb48e;
+      clip-path: polygon(50% 0, 100% 90%, 100% 100%, 0 100%, 0 90%);
+    }
+    .pediment::before, .pediment::after {
+      content: "";
+      position: absolute;
+      inset: 7% 3% 11%;
+      background: #513740;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+    .pediment::after {
+      inset: 15% 8% 16%;
+      background: repeating-linear-gradient(115deg, #cdb28a 0 1px, transparent 1px 4px);
+    }
+    .beam, .steps {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: repeating-linear-gradient(0deg, #d2b894 0 1px, #513a40 1px 4px);
+      border-block: 2px solid #d2b894;
+    }
+    .beam { top: 35%; height: 7%; }
+    .columns {
+      position: absolute;
+      inset: 42% 4% 13%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .column {
+      position: relative;
+      width: 10%;
+      border-block: 5px double #d4bb97;
+      background: repeating-linear-gradient(90deg, #e0c6a0 0 1px, #59414a 1px 4px, #ad9379 4px 5px);
+      clip-path: polygon(0 0,100% 0,100% 5%,85% 9%,91% 94%,100% 96%,100% 100%,0 100%,0 96%,9% 94%,15% 9%,0 5%);
+    }
+    .steps {
+      bottom: 0;
+      height: 13%;
+      clip-path: polygon(6% 0,94% 0,94% 30%,97% 30%,97% 64%,100% 64%,100% 100%,0 100%,0 64%,3% 64%,3% 30%,6% 30%);
+    }
+    .practice { border-top: 1px solid var(--line); padding-block: 3.5rem 4.5rem; }
+    h2 { font-size: clamp(2.4rem, 4vw, 4rem); line-height: 1.05; letter-spacing: -.055em; }
+    .practice h2 { margin-bottom: 2rem; }
+    .practice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; align-items: start; }
+    details { border-top: 2px solid var(--wine); padding-top: 1.15rem; }
+    summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    summary::-webkit-details-marker { display: none; }
+    summary h3 { margin: 0; font-size: 1.65rem; letter-spacing: -.04em; }
+    summary::after { content: "+"; color: var(--wine); font-size: 1.4rem; }
+    details[open] summary::after { content: "−"; }
+    details p { margin: .85rem 0 0; color: var(--muted); }
+    .firm {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 3rem;
+      padding-block: 3.3rem;
+      border-top: 1px solid var(--line);
+      align-items: start;
+    }
+    .firm h2, .firm p { margin-bottom: 0; }
+    .firm p { max-width: 40rem; color: var(--muted); }
+    .contact { background: var(--wine); color: var(--paper); }
+    .contact .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding-block: 3.5rem;
+    }
+    .contact h2 { margin-bottom: .7rem; }
+    .contact p { margin: 0; }
+    .contact .button { background: var(--paper); color: var(--wine); white-space: nowrap; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; color: var(--muted); font-size: .78rem; }
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; }
+      .folio { aspect-ratio: 1.6; }
+      .temple { left: 23%; right: 23%; top: 12%; bottom: 12%; }
+      .practice-grid, .firm { grid-template-columns: 1fr; gap: 1.4rem; }
+      .contact .wrap { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      header .wrap { flex-wrap: wrap; padding-block: 1.1rem .8rem; gap: 1rem; }
+      nav { width: 100%; justify-content: space-between; }
+      .contact-link { padding: .3rem .65rem; }
+      h1 { font-size: clamp(3.1rem, 13vw, 3.9rem); }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Alder & Vale home">
+        <strong>Alder &amp; Vale</strong>
+        <small>Attorneys at Law</small>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#practice">Practice areas</a>
+        <a href="#firm">Our firm</a>
+        <a class="contact-link" href="#contact">Get in touch <span aria-hidden="true" class="arrow">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Independent law firm</p>
+        <h1 id="hero-title">Clear counsel.<br><em>Personal attention.</em></h1>
+        <p class="intro">Buying property, building a business, or planning for family takes care. We help you understand your options and decide what comes next.</p>
+        <a class="button" href="#contact">Request a consultation <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="folio" aria-hidden="true">
+        <div class="temple">
+          <div class="pediment"></div>
+          <div class="beam"></div>
+          <div class="columns">
+            <i class="column"></i><i class="column"></i><i class="column"></i>
+            <i class="column"></i><i class="column"></i><i class="column"></i>
+          </div>
+          <div class="steps"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="practice" class="practice wrap" aria-labelledby="practice-title">
+      <h2 id="practice-title">Practice areas</h2>
+      <div class="practice-grid">
+        <details>
+          <summary><h3>Estate planning</h3></summary>
+          <p>We help you prepare wills, trusts, and powers of attorney so the people you choose can carry out your wishes.</p>
+        </details>
+        <details>
+          <summary><h3>Business law</h3></summary>
+          <p>From choosing a business structure to reviewing a contract, we help owners understand their obligations before they sign.</p>
+        </details>
+        <details>
+          <summary><h3>Real estate</h3></summary>
+          <p>We review purchase agreements, leases, and closing documents with you, giving you time to resolve questions before a transaction moves forward.</p>
+        </details>
+      </div>
+    </section>
+
+    <section id="firm" class="firm wrap" aria-labelledby="firm-title">
+      <h2 id="firm-title">Our firm</h2>
+      <p>At Alder &amp; Vale, you work directly with the attorney handling your matter. We start by listening, explain the choices in plain language, and discuss the scope and fees before work begins.</p>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div>
+          <h2 id="contact-title">Let’s talk.</h2>
+          <p>Email us with the general topic and a convenient time to reach you.</p>
+        </div>
+        <!-- Fictional firm. Replace the example address with the firm's inbox before publishing. -->
+        <a class="button" href="mailto:hello@alderandvale.example?subject=Consultation%20request">Email the firm <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Alder &amp; Vale · Attorneys at Law</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
+```

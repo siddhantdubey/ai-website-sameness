@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e9">
+  <title>Casa Lucia — Neighborhood Italian</title>
+  <style>
+    :root {
+      --cream: #f7f2e9;
+      --paper: #fffdf8;
+      --ink: #25251f;
+      --muted: #706e63;
+      --tomato: #b84632;
+      --tomato-dark: #963626;
+      --olive: #66704d;
+      --line: #e5ded1;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+
+    .announcement {
+      padding: 9px 16px;
+      color: var(--paper);
+      background: var(--olive);
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: .09em;
+    }
+    .announcement span { color: #e6c47c; }
+
+    header {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      background: rgba(247, 242, 233, .94);
+      border-bottom: 1px solid rgba(37, 37, 31, .08);
+      backdrop-filter: blur(12px);
+    }
+    .nav {
+      display: flex;
+      min-height: 76px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: -.04em;
+    }
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      color: var(--paper);
+      background: var(--tomato);
+      border-radius: 50%;
+      font-family: var(--serif);
+      font-size: 17px;
+      font-style: italic;
+    }
+    .nav-links { display: flex; align-items: center; gap: 31px; }
+    .nav-links a {
+      color: #4e4c43;
+      font-size: 13px;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--tomato); }
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 21px;
+      border: 1px solid var(--tomato);
+      border-radius: 3px;
+      color: white;
+      background: var(--tomato);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); background: var(--tomato-dark); }
+    .button.outline { color: var(--tomato); background: transparent; }
+    .button.outline:hover { color: white; background: var(--tomato); }
+    .button svg { width: 16px; height: 16px; }
+
+    .hero { padding: 48px 0 74px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.06fr;
+      align-items: center;
+      gap: clamp(38px, 7vw, 96px);
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 20px;
+      color: var(--tomato);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { width: 26px; height: 1px; content: ""; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 560px;
+      margin-bottom: 21px;
+      font-family: var(--serif);
+      font-size: clamp(52px, 6vw, 82px);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .99;
+    }
+    h1 em { color: var(--tomato); font-weight: 400; }
+    .hero-copy {
+      max-width: 440px;
+      margin-bottom: 29px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 31px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .stars { color: #c18a39; letter-spacing: .1em; }
+    .hero-art {
+      position: relative;
+      min-height: 485px;
+      overflow: hidden;
+      border-radius: 48% 48% 4px 4px;
+      background:
+        radial-gradient(ellipse at 51% 44%, rgba(255,255,255,.45) 0 17%, transparent 17.5%),
+        linear-gradient(155deg, #d4a87d, #a97c58 58%, #79543d);
+      box-shadow: 0 25px 55px rgba(79, 57, 40, .14);
+    }
+    .hero-art::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background: linear-gradient(90deg, rgba(24,24,18,.05), transparent 50%, rgba(255,255,255,.12));
+    }
+    .window {
+      position: absolute;
+      top: 0;
+      right: 12%;
+      width: 29%;
+      height: 45%;
+      border: 9px solid #f1dfbd;
+      border-top: 0;
+      border-radius: 0 0 90px 90px;
+      background:
+        linear-gradient(90deg, transparent 48%, rgba(241,223,189,.9) 49% 53%, transparent 54%),
+        linear-gradient(#a9b38d, #d2c493);
+      box-shadow: inset 0 0 30px rgba(58, 66, 44, .16);
+    }
+    .window::after {
+      position: absolute;
+      right: -22px;
+      bottom: -17px;
+      left: -22px;
+      height: 20px;
+      content: "";
+      border-radius: 50%;
+      background: #f1dfbd;
+    }
+    .art-label {
+      position: absolute;
+      top: 27%;
+      left: 9%;
+      color: rgba(255, 245, 224, .9);
+      font-family: var(--serif);
+      font-size: clamp(20px, 3vw, 35px);
+      font-style: italic;
+      transform: rotate(-8deg);
+    }
+    .table {
+      position: absolute;
+      right: -13%;
+      bottom: 7%;
+      left: -13%;
+      height: 45%;
+      border-radius: 50% 50% 0 0;
+      background:
+        radial-gradient(ellipse at 52% 0, #b94a30 0 13%, #f2cf89 13.2% 15%, #f4e9d2 15.2% 28%, #b98b62 28.2% 29%, transparent 29.3%),
+        linear-gradient(#6c4531, #493127);
+      box-shadow: inset 0 15px 25px rgba(39, 24, 17, .2);
+    }
+    .plate {
+      position: absolute;
+      z-index: 1;
+      right: 20%;
+      bottom: 28%;
+      width: 44%;
+      aspect-ratio: 1;
+      border: 10px solid #fff8e9;
+      border-radius: 50%;
+      background: #f5e5c6;
+      box-shadow: 0 12px 22px rgba(45, 26, 15, .23), inset 0 0 0 3px #e8d5b5;
+    }
+    .pasta {
+      position: absolute;
+      inset: 15%;
+      overflow: hidden;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 47% 46%, #e8bd6f 0 7%, transparent 7.4%),
+        radial-gradient(ellipse at 57% 53%, #e6b664 0 9%, transparent 9.4%),
+        radial-gradient(ellipse at 40% 58%, #f3ce7d 0 8%, transparent 8.4%),
+        radial-gradient(ellipse at 56% 36%, #f0ca79 0 8%, transparent 8.4%),
+        repeating-conic-gradient(from 20deg at 50% 50%, #dca653 0 8deg, #f5d78e 9deg 17deg, #bd7c36 18deg 21deg);
+      box-shadow: inset 0 0 0 13px #ce8f44, inset 0 0 0 17px #f2d38d;
+    }
+    .basil {
+      position: absolute;
+      z-index: 2;
+      top: 30%;
+      left: 40%;
+      width: 35px;
+      height: 19px;
+      border-radius: 100% 0 100% 0;
+      background: #627747;
+      transform: rotate(-25deg);
+    }
+    .basil::after {
+      position: absolute;
+      top: 13px;
+      left: 19px;
+      width: 25px;
+      height: 14px;
+      content: "";
+      border-radius: 100% 0 100% 0;
+      background: #728453;
+      transform: rotate(40deg);
+    }
+    .glass {
+      position: absolute;
+      z-index: 2;
+      bottom: 30%;
+      left: 15%;
+      width: 53px;
+      height: 81px;
+      border: 4px solid rgba(255, 243, 216, .88);
+      border-top: 0;
+      border-radius: 5px 5px 23px 23px;
+      background: linear-gradient(transparent 27%, rgba(162, 56, 38, .82) 28% 72%, transparent 73%);
+      transform: rotate(-8deg);
+    }
+    .glass::before {
+      position: absolute;
+      top: 100%;
+      left: 22px;
+      width: 4px;
+      height: 26px;
+      content: "";
+      background: #fff3d8;
+    }
+    .glass::after {
+      position: absolute;
+      top: calc(100% + 24px);
+      left: 9px;
+      width: 30px;
+      height: 4px;
+      content: "";
+      border-radius: 50%;
+      background: #fff3d8;
+    }
+    .floating-card {
+      position: absolute;
+      right: -18px;
+      bottom: 33px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 19px;
+      background: var(--paper);
+      box-shadow: 0 10px 30px rgba(43, 31, 20, .12);
+      transform: rotate(2deg);
+    }
+    .floating-card .seal {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      place-items: center;
+      border: 1px solid #c6aa70;
+      border-radius: 50%;
+      color: var(--tomato);
+      font-family: var(--serif);
+      font-size: 19px;
+      font-style: italic;
+    }
+    .floating-card strong { display: block; font-family: var(--serif); font-size: 15px; }
+    .floating-card small { color: var(--muted); font-size: 10px; }
+
+    .welcome {
+      padding: 65px 0 69px;
+      background: var(--paper);
+    }
+    .welcome-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      align-items: center;
+      gap: 70px;
+    }
+    .welcome-mark {
+      display: grid;
+      min-height: 225px;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: repeating-linear-gradient(45deg, transparent 0 12px, rgba(102,112,77,.045) 12px 13px);
+    }
+    .welcome-mark-inner { text-align: center; }
+    .welcome-mark .brand-mark { width: 52px; height: 52px; margin: 0 auto 12px; font-size: 24px; }
+    .welcome-mark strong { display: block; font-family: var(--serif); font-size: 23px; }
+    .welcome-mark small { color: var(--muted); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+    h2 {
+      margin-bottom: 17px;
+      font-family: var(--serif);
+      font-size: clamp(35px, 4vw, 49px);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 1.08;
+    }
+    .welcome-copy > p:last-of-type { max-width: 530px; margin-bottom: 21px; color: var(--muted); font-size: 14px; }
+
+    .menu-section { padding: 76px 0 85px; }
+    .section-heading { margin-bottom: 37px; text-align: center; }
+    .section-heading .eyebrow { justify-content: center; }
+    .section-heading h2 { margin-bottom: 10px; }
+    .section-heading > p:last-child { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 19px; }
+    .menu-card {
+      min-height: 202px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255,253,248,.62);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .menu-card:hover { transform: translateY(-4px); box-shadow: 0 15px 28px rgba(55, 43, 28, .07); }
+    .menu-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .menu-card h3 { margin-bottom: 7px; font-family: var(--serif); font-size: 22px; font-weight: 400; }
+    .price { flex: none; color: var(--tomato); font-family: var(--serif); font-size: 19px; }
+    .menu-card p { margin-bottom: 16px; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 20px;
+      color: var(--olive);
+      background: #edf0e7;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .menu-cta { margin-top: 28px; text-align: center; }
+
+    .visit {
+      padding: 68px 0;
+      color: var(--paper);
+      background: #3d4435;
+    }
+    .visit-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 75px; align-items: center; }
+    .visit .eyebrow { color: #e1c47e; }
+    .visit h2 { max-width: 450px; margin-bottom: 15px; }
+    .visit-copy { max-width: 470px; margin-bottom: 23px; color: #d1d2c7; font-size: 14px; }
+    .visit .button { border-color: #d2b977; color: #25251f; background: #e2c783; }
+    .visit .button:hover { background: #f1d99a; }
+    .details { display: grid; gap: 21px; }
+    .detail { display: grid; grid-template-columns: 37px 1fr; gap: 12px; }
+    .detail-icon {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      color: #e2c783;
+    }
+    .detail-icon svg { width: 17px; height: 17px; }
+    .detail strong { display: block; margin: 1px 0 3px; font-family: var(--serif); font-size: 16px; font-weight: 400; }
+    .detail span { color: #d1d2c7; font-size: 12px; }
+
+    footer { padding: 22px 0; background: #30362b; color: #c8c9bf; font-size: 11px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .footer-inner a { color: #e2c783; }
+    .footer-brand { font-family: var(--serif); color: var(--paper); font-size: 15px; }
+
+    @media (max-width: 780px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 34px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 37px; }
+      .hero-art { width: min(100%, 530px); min-height: 420px; margin-inline: auto; }
+      .floating-card { right: 8px; }
+      .welcome-grid { grid-template-columns: 1fr; gap: 33px; }
+      .welcome-mark { min-height: 180px; }
+      .menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .visit-grid { grid-template-columns: 1fr; gap: 38px; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: min(100% - 34px, 1160px); }
+      .nav { min-height: 66px; }
+      .brand { font-size: 20px; }
+      .nav > .button { min-height: 40px; padding: 0 13px; font-size: 11px; }
+      .hero-art { min-height: 340px; }
+      .plate { right: 19%; bottom: 27%; width: 49%; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .menu-card { min-height: auto; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">A little taste of Italy, right around the corner <span>✦</span> Open for dinner tonight</div>
+
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Casa Lucia home">
+        <span class="brand-mark">L</span> Casa Lucia
+      </a>
+      <div class="nav-links">
+        <a href="#story">Our story</a>
+        <a href="#menu">The menu</a>
+        <a href="#visit">Find us</a>
+      </div>
+      <a class="button" href="#visit">Book a table <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-grid wrap">
+        <div>
+          <p class="eyebrow">Your neighborhood trattoria</p>
+          <h1>Come hungry.<br>Leave <em>family.</em></h1>
+          <p class="hero-copy">Hand-rolled pasta, slow Sunday sauces, and one more glass of wine. Pull up a chair — there’s always room at our table.</p>
+          <div class="hero-actions">
+            <a class="button" href="#menu">Explore the menu <span aria-hidden="true">→</span></a>
+            <a class="button outline" href="#visit">Come visit us</a>
+          </div>
+          <div class="hero-note"><span class="stars" aria-label="Five stars">★★★★★</span> <span>Good food, good neighbors, since 1987</span></div>
+        </div>
+
+        <div class="hero-art" role="img" aria-label="Illustration of fresh pasta and wine at a cozy Italian restaurant">
+          <div class="window"></div>
+          <div class="art-label">sempre a tavola</div>
+          <div class="table"></div>
+          <div class="plate"><div class="pasta"></div><div class="basil"></div></div>
+          <div class="glass"></div>
+          <div class="floating-card">
+            <span class="seal">Buono</span>
+            <span><strong>Made with amore</strong><small>From our kitchen to your table</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="welcome" id="story">
+      <div class="welcome-grid wrap">
+        <div class="welcome-mark">
+          <div class="welcome-mark-inner">
+            <span class="brand-mark">L</span>
+            <strong>Casa Lucia</strong>
+            <small>Un posto a tavola per tutti</small>
+          </div>
+        </div>
+        <div class="welcome-copy">
+          <p class="eyebrow">A table with a story</p>
+          <h2>Recipes passed down.<br>Stories made here.</h2>
+          <p>Lucia brought her little red recipe book across the ocean and opened these doors with one idea: good food is better when you share it. Nearly forty years later, we still make pasta by hand, let the sauce take its time, and know our regulars by name.</p>
+          <a class="button outline" href="#visit">A little more about us <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu-section" id="menu">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">Straight from our kitchen</p>
+          <h2>The favorites around here</h2>
+          <p>Simple ingredients, a little patience, and a lot of love.</p>
+        </div>
+        <div class="menu-grid">
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Nonna’s Sunday Ragù</h3><span class="price">$24</span></div>
+            <p>Slow-braised short rib, San Marzano tomato, fresh pappardelle, parmesan.</p>
+            <span class="tag">A house favorite</span>
+          </article>
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Ricotta Gnocchi</h3><span class="price">$22</span></div>
+            <p>Pillowy ricotta gnocchi, brown butter, crispy sage, a little lemon.</p>
+            <span class="tag">Made by hand</span>
+          </article>
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Margherita, Sempre</h3><span class="price">$19</span></div>
+            <p>Wood-fired crust, sweet tomato, fior di latte, basil from the garden.</p>
+            <span class="tag">Wood-fired</span>
+          </article>
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Chicken Parm</h3><span class="price">$23</span></div>
+            <p>Sunday-table comfort: crispy chicken, tomato, mozzarella, spaghetti.</p>
+            <span class="tag">A neighborhood classic</span>
+          </article>
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Burrata & Peaches</h3><span class="price">$16</span></div>
+            <p>Cool, creamy burrata with ripe peaches, basil, and grilled sourdough.</p>
+            <span class="tag">Seasonal</span>
+          </article>
+          <article class="menu-card">
+            <div class="menu-card-top"><h3>Tiramisu della Casa</h3><span class="price">$11</span></div>
+            <p>Espresso-soaked ladyfingers, mascarpone cream, cocoa. Made every morning.</p>
+            <span class="tag">Save a little room</span>
+          </article>
+        </div>
+        <div class="menu-cta"><a class="button outline" href="#visit">See what’s cooking tonight <span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+
+    <section class="visit" id="visit">
+      <div class="visit-grid wrap">
+        <div>
+          <p class="eyebrow">Your table is waiting</p>
+          <h2>There’s always room for one more.</h2>
+          <p class="visit-copy">Join us for a weeknight pasta or make a long evening of it. Walk-ins are always welcome, and reservations make us happy.</p>
+          <a class="button" href="tel:+15550148722">Call to reserve <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="details">
+          <div class="detail">
+            <span class="detail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </span>
+            <div><strong>Find us on the corner</strong><span>214 Maple Street, Brooklyn, NY 11222</span></div>
+          </div>
+          <div class="detail">
+            <span class="detail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+            </span>
+            <div><strong>Come by for dinner</strong><span>Tue–Sun, 5:00–10:00 pm · Closed Mondays</span></div>
+          </div>
+          <div class="detail">
+            <span class="detail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16v12H8l-4 3V5Z"/><path d="M8 9h8M8 13h5"/></svg>
+            </span>
+            <div><strong>Give us a ring</strong><span><a href="tel:+15550148722">(555) 014-8722</a> · <a href="mailto:ciao@casalucia.example">ciao@casalucia.example</a></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner wrap">
+      <span class="footer-brand">Casa Lucia</span>
+      <span>Made with amore in the neighborhood · <a href="mailto:ciao@casalucia.example">Say ciao</a></span>
+      <span>© 2025 Casa Lucia</span>
+    </div>
+  </footer>
+</body>
+</html>

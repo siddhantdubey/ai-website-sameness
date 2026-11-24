@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hartwell & Okafor LLP — Counsel for Small Businesses, Families & Property</title>
+<meta name="description" content="Hartwell & Okafor is a small law firm offering direct, plain-spoken counsel in business law, real estate, estate planning, and employment matters.">
+<style>
+  :root{
+    --paper:#f6f1e7;
+    --paper-2:#ede6d6;
+    --ink:#16241f;
+    --ink-soft:#43524c;
+    --green:#1d3a31;
+    --green-2:#2a5245;
+    --brass:#a8782c;
+    --brass-dk:#7f5718;
+    --line:#d8cfba;
+    --white:#fffdf8;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;
+    --max:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+  h1{font-size:clamp(2.4rem,5.5vw,4.1rem)}
+  h2{font-size:clamp(1.8rem,3.4vw,2.5rem)}
+  h3{font-size:1.3rem}
+  p{margin:0 0 1em}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-dk);font-weight:600;margin-bottom:14px;display:block}
+  :focus-visible{outline:3px solid var(--brass);outline-offset:3px}
+  .skip{position:absolute;left:-999px;top:8px;background:var(--green);color:#fff;padding:8px 14px;z-index:99}
+  .skip:focus{left:8px}
+
+  /* header */
+  header.site{position:sticky;top:0;z-index:20;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{font-family:var(--serif);font-size:1.25rem;font-weight:700;text-decoration:none;color:var(--green);display:flex;align-items:center;gap:10px}
+  .logo i{display:inline-grid;place-items:center;width:34px;height:34px;border:1.5px solid var(--brass);color:var(--brass-dk);font-style:normal;font-size:1rem}
+  nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
+  nav a{text-decoration:none;font-size:.95rem;color:var(--ink-soft)}
+  nav a:hover{color:var(--green)}
+  .btn{display:inline-block;background:var(--green);color:var(--white);padding:14px 26px;text-decoration:none;font-weight:600;font-size:.95rem;border:0;cursor:pointer;font-family:var(--sans);transition:background .2s}
+  .btn:hover{background:var(--green-2)}
+  .btn.brass{background:var(--brass);color:#fff}
+  .btn.brass:hover{background:var(--brass-dk)}
+  .btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green)}
+  .btn.ghost:hover{background:var(--green);color:#fff}
+  nav .btn{padding:10px 18px;color:#fff}
+  nav a.btn:hover{color:#fff}
+
+  /* hero */
+  .hero{padding:96px 0 88px;position:relative;overflow:hidden}
+  .hero .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:64px;align-items:center}
+  .hero h1 em{font-style:italic;color:var(--brass-dk)}
+  .hero p.lead{font-size:1.2rem;color:var(--ink-soft);max-width:34em}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+  .card-note{background:var(--green);color:var(--paper);padding:36px 34px;position:relative}
+  .card-note::before{content:"";position:absolute;inset:8px;border:1px solid rgba(168,120,44,.7);pointer-events:none}
+  .card-note h2{font-size:1.3rem;color:#fff}
+  .card-note dl{margin:0}
+  .card-note dt{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#d9b36b;margin-top:18px}
+  .card-note dd{margin:2px 0 0;font-size:1.05rem}
+  .card-note a{text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35)}
+
+  /* trust strip */
+  .strip{background:var(--green);color:var(--paper)}
+  .strip .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding-top:34px;padding-bottom:34px}
+  .strip b{display:block;font-family:var(--serif);font-size:2rem;color:#e2bf7f;font-weight:600;line-height:1.1}
+  .strip span{font-size:.9rem;opacity:.85}
+
+  section{padding:92px 0}
+  .head{max-width:640px;margin-bottom:48px}
+  .head p{color:var(--ink-soft)}
+
+  /* practice */
+  .areas{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .area{background:var(--white);padding:34px 30px;transition:background .2s}
+  .area:hover{background:#fff}
+  .area .n{font-family:var(--serif);color:var(--brass);font-size:.95rem;display:block;margin-bottom:14px}
+  .area p{color:var(--ink-soft);font-size:.97rem;margin:0}
+
+  /* approach */
+  .approach{background:var(--paper-2)}
+  .approach .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:72px}
+  .steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  .steps li{counter-increment:s;padding:0 0 28px 64px;position:relative}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:42px;height:42px;border:1.5px solid var(--brass);border-radius:50%;display:grid;place-items:center;font-family:var(--serif);color:var(--brass-dk);font-size:1.1rem}
+  .steps li:not(:last-child)::after{content:"";position:absolute;left:21px;top:44px;bottom:6px;width:1px;background:var(--line)}
+  .steps h3{margin-bottom:.2em}
+  .steps p{color:var(--ink-soft);margin:0}
+  .fees{margin-top:8px;padding:20px 22px;border-left:3px solid var(--brass);background:var(--white);font-size:.97rem}
+
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(2,1fr);gap:40px}
+  .person{display:grid;grid-template-columns:140px 1fr;gap:26px;align-items:start}
+  .avatar{aspect-ratio:4/5;background:linear-gradient(160deg,var(--green-2),var(--green));display:grid;place-items:center;font-family:var(--serif);font-size:2.6rem;color:#e2bf7f}
+  .person .role{color:var(--brass-dk);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:10px;display:block}
+  .person p{color:var(--ink-soft);font-size:.97rem}
+
+  /* quote */
+  .quote{background:var(--green);color:var(--paper);text-align:center}
+  .quote blockquote{margin:0 auto;max-width:760px;font-family:var(--serif);font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.4}
+  .quote cite{display:block;margin-top:22px;font-family:var(--sans);font-style:normal;font-size:.9rem;color:#d9b36b;letter-spacing:.06em}
+
+  /* faq */
+  .faq{max-width:780px}
+  details{border-bottom:1px solid var(--line);padding:20px 0}
+  details:first-of-type{border-top:1px solid var(--line)}
+  summary{cursor:pointer;font-family:var(--serif);font-size:1.15rem;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:20px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--brass);font-size:1.5rem;line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{margin:14px 0 0;color:var(--ink-soft)}
+
+  /* contact */
+  .contact{background:var(--paper-2)}
+  .contact .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:72px}
+  .contact ul{list-style:none;padding:0;margin:28px 0 0}
+  .contact li{margin-bottom:16px;color:var(--ink-soft)}
+  .contact li b{display:block;color:var(--ink);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+  form{background:var(--white);padding:36px;border:1px solid var(--line)}
+  label{display:block;font-size:.88rem;font-weight:600;margin-bottom:6px}
+  input,select,textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid #bfb49a;background:#fff;color:var(--ink);border-radius:0;margin-bottom:18px}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .fine{font-size:.82rem;color:var(--ink-soft);margin:0 0 18px}
+  #ok{display:none;padding:16px;background:#e6efe9;border-left:3px solid var(--green);margin-top:18px}
+
+  footer{background:#0f1b17;color:#b9c3be;padding:48px 0 36px;font-size:.85rem}
+  footer .top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:28px}
+  footer .logo{color:#fff}
+  footer p{max-width:780px;opacity:.8}
+
+  @media (max-width:900px){
+    .hero .grid,.approach .grid,.contact .grid{grid-template-columns:1fr;gap:44px}
+    .areas{grid-template-columns:1fr 1fr}
+    .strip .wrap{grid-template-columns:1fr 1fr}
+    .team{grid-template-columns:1fr}
+    nav ul li:not(:last-child){display:none}
+    section{padding:68px 0}
+  }
+  @media (max-width:560px){
+    .areas{grid-template-columns:1fr}
+    .person{grid-template-columns:100px 1fr}
+    .row{grid-template-columns:1fr}
+    form{padding:24px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Hartwell & Okafor LLP home"><i>H</i> Hartwell &amp; Okafor</a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#approach">Approach</a></li>
+        <li><a href="#team">Attorneys</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a class="btn" href="#contact">Book a consult</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div id="top" class="hero">
+    <div class="wrap grid">
+      <div>
+        <span class="eyebrow">Small firm · Direct counsel</span>
+        <h1>Legal advice from the lawyer <em>you actually hire.</em></h1>
+        <p class="lead">We represent owners, families, and landlords who want clear answers, honest estimates, and a partner who returns the call. No handoffs to a junior associate you've never met.</p>
+        <div class="cta">
+          <a class="btn brass" href="#contact">Schedule a free 20-minute call</a>
+          <a class="btn ghost" href="#practice">See how we can help</a>
+        </div>
+      </div>
+      <aside class="card-note" aria-label="Contact summary">
+        <h2>Talk to us this week</h2>
+        <dl>
+          <dt>Phone</dt><dd><a href="tel:+15555550142">(555) 555-0142</a></dd>
+          <dt>Office hours</dt><dd>Mon–Fri, 8:30 am – 5:30 pm</dd>
+          <dt>Office</dt><dd>214 Marlowe Street, Suite 300<br>Your City, ST 00000</dd>
+          <dt>Response time</dt><dd>Within one business day</dd>
+        </dl>
+      </aside>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><b>2</b><span>Attorneys, both hands-on</span></div>
+      <div><b>30+</b><span>Years combined experience</span></div>
+      <div><b>24 hr</b><span>Typical reply to new inquiries</span></div>
+      <div><b>Flat fee</b><span>Options for most routine work</span></div>
+    </div>
+  </div>
+
+  <section id="practice">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Practice areas</span>
+        <h2>Focused on the matters that shape a life or a livelihood.</h2>
+        <p>We keep our practice narrow so we can do it well. If your matter belongs elsewhere, we'll say so and point you to someone we trust.</p>
+      </div>
+      <div class="areas">
+        <article class="area"><span class="n">01</span><h3>Business formation &amp; contracts</h3><p>Entity selection, operating agreements, vendor and client contracts, and the day-to-day questions that come with running a company.</p></article>
+        <article class="area"><span class="n">02</span><h3>Real estate</h3><p>Purchases, sales, commercial leases, landlord–tenant issues, and title or boundary disputes.</p></article>
+        <article class="area"><span class="n">03</span><h3>Estate planning &amp; probate</h3><p>Wills, trusts, powers of attorney, and guidance for families settling an estate.</p></article>
+        <article class="area"><span class="n">04</span><h3>Employment</h3><p>Handbooks, offer letters, separation agreements, and compliance advice for employers.</p></article>
+        <article class="area"><span class="n">05</span><h3>Dispute resolution</h3><p>Negotiation and mediation first, litigation when it's truly needed, always with a candid view of cost.</p></article>
+        <article class="area"><span class="n">06</span><h3>Business sales &amp; succession</h3><p>Buying, selling, or handing off a closely held company with the tax and family pieces considered together.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="approach">
+    <div class="wrap grid">
+      <div>
+        <span class="eyebrow">How we work</span>
+        <h2>Plain steps, plain language, no surprises on the bill.</h2>
+        <p>Legal work feels easier when you know what comes next. Here is what to expect from the first call onward.</p>
+        <div class="fees"><strong>On fees:</strong> we quote flat fees for defined projects and give written hourly estimates for everything else. You'll never be billed for the intro call.</div>
+      </div>
+      <ol class="steps">
+        <li><h3>A short, free conversation</h3><p>Tell us what's going on. We'll tell you whether we're the right fit and what the realistic options look like.</p></li>
+        <li><h3>A written scope and price</h3><p>If we proceed, you receive a clear engagement letter covering what we'll do, who does it, and what it costs.</p></li>
+        <li><h3>Steady updates</h3><p>You'll hear from us at each milestone, and your questions get answered by an attorney, not a ticket queue.</p></li>
+        <li><h3>A clean finish</h3><p>We close out with a summary of what was done, your documents in order, and guidance on what to do next.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Attorneys</span>
+        <h2>Two lawyers. One standard.</h2>
+      </div>
+      <div class="team">
+        <article class="person">
+          <div class="avatar" role="img" aria-label="Portrait placeholder">EH</div>
+          <div>
+            <h3>Eleanor Hartwell</h3>
+            <span class="role">Managing Partner</span>
+            <p>Eleanor advises owners on formation, contracts, and sales of closely held businesses. Previously at a regional firm and in-house counsel for a manufacturer. [Replace with real bio and bar admissions.]</p>
+          </div>
+        </article>
+        <article class="person">
+          <div class="avatar" role="img" aria-label="Portrait placeholder">CO</div>
+          <div>
+            <h3>Chidi Okafor</h3>
+            <span class="role">Partner</span>
+            <p>Chidi leads the real estate and estate planning practice, helping families and landlords protect what they've built. [Replace with real bio and bar admissions.]</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote" aria-label="Client testimonial">
+    <div class="wrap">
+      <blockquote>“They explained every step in words I could follow, and the final bill matched the quote to the dollar.”
+        <cite>— Placeholder testimonial · Replace with a real, permitted client quote</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Common questions</span>
+        <h2>Before you call</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Is the first consultation really free?</summary><p>Yes. The initial 20-minute call is free and carries no obligation. It helps us understand your situation and decide together whether to work together.</p></details>
+        <details><summary>What should I prepare for our first meeting?</summary><p>A short summary of what happened and what outcome you want, plus any relevant documents such as contracts, notices, or correspondence.</p></details>
+        <details><summary>Do you offer flat fees?</summary><p>For many defined projects, such as entity formation, wills, and lease reviews, we do. Otherwise we provide a written estimate before work begins.</p></details>
+        <details><summary>Do you meet remotely?</summary><p>Yes. We meet by phone, video, or in person at our office, whichever suits you.</p></details>
+        <details><summary>Is what I tell you confidential?</summary><p>Communications with a prospective client are treated as confidential. Please avoid including sensitive details in the web form; save them for a call.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap grid">
+      <div>
+        <span class="eyebrow">Get in touch</span>
+        <h2>Tell us what you're facing.</h2>
+        <p>Send a short note and we'll reply within one business day to set up a time to talk.</p>
+        <ul>
+          <li><b>Phone</b><a href="tel:+15555550142">(555) 555-0142</a></li>
+          <li><b>Email</b><a href="mailto:hello@example-lawfirm.com">hello@example-lawfirm.com</a></li>
+          <li><b>Office</b>214 Marlowe Street, Suite 300<br>Your City, ST 00000</li>
+        </ul>
+      </div>
+      <form id="f" novalidate>
+        <div class="row">
+          <div><label for="name">Name</label><input id="name" name="name" autocomplete="name" required></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <label for="topic">Matter type</label>
+        <select id="topic" name="topic">
+          <option>Business formation &amp; contracts</option>
+          <option>Real estate</option>
+          <option>Estate planning &amp; probate</option>
+          <option>Employment</option>
+          <option>Dispute resolution</option>
+          <option>Something else</option>
+        </select>
+        <label for="msg">Brief description</label>
+        <textarea id="msg" name="msg" placeholder="A few sentences is plenty. Please don't include confidential details."></textarea>
+        <p class="fine">Submitting this form does not create an attorney–client relationship.</p>
+        <button class="btn" type="submit">Request a call</button>
+        <div id="ok" role="status">Thank you. We'll be in touch within one business day.</div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="#top"><i>H</i> Hartwell &amp; Okafor LLP</a>
+      <div>© <span id="yr">2026</span> Hartwell &amp; Okafor LLP. All rights reserved.</div>
+    </div>
+    <p><strong>Attorney advertising.</strong> The information on this site is general and not legal advice. Viewing it or contacting us does not create an attorney–client relationship. Prior results do not guarantee a similar outcome. [Add jurisdiction-specific disclosures required by your state bar.]</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  // Demo handler: replace with a real endpoint (e.g. fetch POST to your form service) before launch.
+  document.getElementById('f').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(!f.name.value.trim() || !/^\S+@\S+\.\S+$/.test(f.email.value)){
+      (f.name.value.trim() ? f.email : f.name).focus();
+      return;
+    }
+    document.getElementById('ok').style.display = 'block';
+    f.reset();
+  });
+</script>
+</body>
+</html>

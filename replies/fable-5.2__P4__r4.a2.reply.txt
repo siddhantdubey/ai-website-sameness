@@ -1,0 +1,559 @@
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whitlock &amp; Varga LLP — Wills, Property, Small Business, Family Law</title>
+<meta name="description" content="Whitlock & Varga is a two-lawyer firm handling wills and estates, home closings, small business matters and family law. Flat fees, published up front.">
+<style>
+  :root {
+    --desk: #dcdfd8;
+    --paper: #f7f6f1;
+    --ink: #17231d;
+    --ink-soft: #4a564f;
+    --line: #cfd3ca;
+    --accent: #8a2432;
+    --accent-pale: #e9b3b0;
+    --gutter: 64px;
+    --pad: 44px;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--desk);
+    color: var(--ink);
+    font: 17px/1.6 var(--sans);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .skip {
+    position: absolute; left: -999px; top: 0;
+    background: var(--ink); color: var(--paper); padding: 10px 16px; z-index: 10;
+  }
+  .skip:focus { left: 0; }
+
+  /* The sheet: a page with a pleading-paper margin rule */
+  .page {
+    position: relative;
+    max-width: 1240px;
+    margin: 0 auto;
+    background: var(--paper);
+    box-shadow: 0 0 0 1px rgba(23, 35, 29, .06), 0 20px 60px rgba(23, 35, 29, .08);
+  }
+  .page::before {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: var(--gutter);
+    width: 5px;
+    border-left: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    opacity: .55;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .inner {
+    padding-left: calc(var(--gutter) + var(--pad));
+    padding-right: var(--pad);
+  }
+
+  .label {
+    font: 600 12px/1.3 var(--sans);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* Header */
+  header.inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding-top: 26px; padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  .wordmark {
+    font: 400 23px/1 var(--serif);
+    letter-spacing: .01em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .wordmark span { color: var(--accent); font-style: italic; padding: 0 .08em; }
+  nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
+  nav a { text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  .phone {
+    font: 600 15px/1 var(--sans);
+    text-decoration: none; white-space: nowrap;
+    border: 1px solid var(--ink); padding: 11px 16px; border-radius: 2px;
+  }
+  .phone:hover { background: var(--ink); color: var(--paper); }
+
+  /* Hero */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr);
+    gap: 64px; align-items: end;
+    padding-top: 96px; padding-bottom: 96px;
+  }
+  h1 {
+    font: 400 clamp(38px, 5.4vw, 68px)/1.06 var(--serif);
+    letter-spacing: -.015em;
+    margin: 18px 0 28px;
+    text-wrap: balance;
+  }
+  h1 em { color: var(--accent); }
+  .lede { font-size: 19px; max-width: 34em; color: var(--ink-soft); margin: 0 0 36px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; }
+  .btn {
+    display: inline-block;
+    background: var(--ink); color: var(--paper);
+    font: 600 16px/1 var(--sans);
+    padding: 17px 26px; border-radius: 2px; border: 1px solid var(--ink);
+    text-decoration: none; cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+  .docket { border-top: 3px solid var(--ink); margin: 0; }
+  .docket div {
+    display: flex; justify-content: space-between; gap: 20px;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .docket dt { color: var(--ink-soft); }
+  .docket dd { margin: 0; text-align: right; font-weight: 600; }
+
+  /* Sections */
+  section { position: relative; padding-top: 88px; padding-bottom: 88px; border-top: 1px solid var(--line); }
+  .sec-no {
+    position: absolute; left: 0; top: 92px; width: var(--gutter);
+    text-align: center;
+    font: italic 400 19px/1 var(--serif);
+    color: var(--accent);
+  }
+  h2 {
+    font: 400 clamp(29px, 3.4vw, 42px)/1.12 var(--serif);
+    letter-spacing: -.01em;
+    margin: 0 0 14px; max-width: 20em;
+    text-wrap: balance;
+  }
+  .sec-intro { color: var(--ink-soft); max-width: 38em; margin: 0 0 48px; }
+
+  /* Practice rows */
+  .practice { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .practice li {
+    display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 36px;
+    padding: 30px 0; border-bottom: 1px solid var(--line);
+  }
+  .practice h3 { font: 400 26px/1.15 var(--serif); margin: 0; }
+  .practice p { margin: 0; }
+  .practice .matters { font-size: 14.5px; color: var(--ink-soft); line-height: 1.75; }
+
+  /* Process + fees */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; }
+  .steps { list-style: none; counter-reset: step; margin: 0; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    display: grid; grid-template-columns: 44px 1fr; gap: 6px;
+    padding: 0 0 28px;
+  }
+  .steps li::before {
+    content: counter(step) ".";
+    font: italic 400 26px/1.15 var(--serif); color: var(--accent);
+  }
+  .steps h3 { font: 600 17px/1.4 var(--sans); margin: 3px 0 4px; }
+  .steps p { margin: 0; color: var(--ink-soft); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  caption { text-align: left; padding-bottom: 12px; }
+  th, td { text-align: left; padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 400; vertical-align: top; }
+  thead th { border-bottom: 1px solid var(--ink); font-size: 13px; color: var(--ink-soft); padding: 0 0 8px; }
+  td:last-child, thead th:last-child { text-align: right; white-space: nowrap; padding-left: 20px; }
+  tbody td:last-child { font: 400 19px/1.3 var(--serif); }
+  .fine { font-size: 14px; color: var(--ink-soft); margin: 16px 0 0; }
+
+  /* People */
+  .people { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  .person { display: grid; grid-template-columns: 92px 1fr; gap: 26px; }
+  .mono {
+    width: 92px; height: 116px;
+    display: grid; place-items: center;
+    background: var(--ink); color: var(--paper);
+    font: italic 400 38px/1 var(--serif);
+    border-radius: 2px;
+  }
+  .person h3 { font: 400 26px/1.15 var(--serif); margin: 0 0 4px; }
+  .person .label { display: block; margin-bottom: 14px; }
+  .person p { margin: 0 0 12px; }
+  .person .creds { font-size: 14.5px; color: var(--ink-soft); }
+
+  blockquote {
+    margin: 72px 0 0; padding: 0; max-width: 30em;
+    font: italic 400 clamp(22px, 2.5vw, 29px)/1.4 var(--serif);
+  }
+  blockquote footer { font: 400 15px/1.5 var(--sans); color: var(--ink-soft); margin-top: 16px; }
+
+  /* FAQ */
+  .faq { max-width: 46em; border-top: 1px solid var(--ink); }
+  details { border-bottom: 1px solid var(--line); }
+  summary {
+    cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; gap: 24px; align-items: baseline;
+    padding: 20px 0;
+    font: 400 21px/1.3 var(--serif);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font: 400 24px/1 var(--sans); color: var(--accent); }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 0 0 22px; color: var(--ink-soft); max-width: 40em; }
+
+  /* Contact */
+  .contact { background: var(--ink); color: var(--paper); border-top: 0; }
+  .contact .sec-no, .contact a:hover { color: var(--accent-pale); }
+  .contact .sec-intro, .contact .label { color: #b4bfb7; }
+  .contact :focus-visible { outline-color: var(--accent-pale); }
+  form { display: grid; gap: 18px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  label { display: block; font-size: 14px; margin-bottom: 6px; color: #d5dcd6; }
+  input, select, textarea {
+    width: 100%; font: inherit; font-size: 16px;
+    color: var(--paper); background: transparent;
+    border: 1px solid #5d6b63; border-radius: 2px; padding: 12px 14px;
+  }
+  select option { color: var(--ink); background: var(--paper); }
+  textarea { min-height: 120px; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 0; border-color: var(--accent-pale); }
+  .contact .btn { background: var(--paper); color: var(--ink); border-color: var(--paper); justify-self: start; }
+  .contact .btn:hover { background: var(--accent-pale); border-color: var(--accent-pale); color: var(--ink); }
+  .form-note { font-size: 13.5px; color: #b4bfb7; margin: 0; }
+
+  address { font-style: normal; }
+  .office-block { margin-bottom: 30px; }
+  .office-block .label { display: block; margin-bottom: 8px; }
+  .office-block p { margin: 0; }
+  .big-phone { font: 400 34px/1.2 var(--serif); text-decoration: none; }
+
+  /* Footer */
+  footer.inner {
+    padding-top: 30px; padding-bottom: 38px;
+    font-size: 13.5px; color: var(--ink-soft);
+    display: grid; grid-template-columns: auto 1fr; gap: 12px 48px;
+  }
+  footer.inner p { margin: 0; }
+
+  @media (max-width: 960px) {
+    nav { display: none; }
+    .hero, .split, .people { grid-template-columns: 1fr; }
+    .hero { gap: 48px; padding-top: 64px; padding-bottom: 64px; }
+    .split { gap: 56px; }
+    .practice li { grid-template-columns: 1fr; gap: 10px; padding: 26px 0; }
+    footer.inner { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    :root { --gutter: 12px; --pad: 20px; }
+    body { font-size: 16px; }
+    header.inner { padding-top: 18px; padding-bottom: 18px; }
+    .wordmark { font-size: 19px; }
+    .phone { padding: 9px 11px; font-size: 14px; }
+    section { padding-top: 60px; padding-bottom: 60px; }
+    .sec-no { position: static; display: block; width: auto; text-align: left; margin-bottom: 12px; }
+    .row { grid-template-columns: 1fr; }
+    .person { grid-template-columns: 64px 1fr; gap: 18px; }
+    .mono { width: 64px; height: 80px; font-size: 26px; }
+    .big-phone { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="page">
+
+  <header class="inner">
+    <a class="wordmark" href="#" aria-label="Whitlock and Varga LLP, home">Whitlock <span>&amp;</span> Varga</a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#practice">Practice areas</a></li>
+        <li><a href="#fees">How we work</a></li>
+        <li><a href="#people">Attorneys</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="phone" href="tel:+15550140142">(555) 014-0142</a>
+  </header>
+
+  <main id="main">
+
+    <div class="hero inner">
+      <div>
+        <span class="label">Attorneys at law · Est. 2009</span>
+        <h1>Legal work for ordinary life, done by the people whose <em>names are on the door.</em></h1>
+        <p class="lede">We are a two-lawyer firm. We write wills, close on houses, set up and look after small businesses, and help families through separations. You will always know who is handling your matter and what it will cost.</p>
+        <div class="actions">
+          <a class="btn" href="#contact">Book a free first consultation</a>
+          <a href="#fees">See our fees</a>
+        </div>
+      </div>
+
+      <dl class="docket" aria-label="Office details">
+        <div><dt>First consultation</dt><dd>30 minutes, no charge</dd></div>
+        <div><dt>Office hours</dt><dd>Mon–Fri, 8:30–5:30</dd></div>
+        <div><dt>Evening appointments</dt><dd>Tuesdays until 8:00</dd></div>
+        <div><dt>Calls returned</dt><dd>Within one business day</dd></div>
+        <div><dt>Office</dt><dd>214 Mercer Street, Suite 3</dd></div>
+      </dl>
+    </div>
+
+    <section id="practice" class="inner">
+      <span class="sec-no" aria-hidden="true">§ 1</span>
+      <h2>Four kinds of work, and we do them every week.</h2>
+      <p class="sec-intro">We stay within what we know well. If your matter falls outside it, we will say so at the first meeting and refer you to someone we trust.</p>
+
+      <ul class="practice">
+        <li>
+          <h3>Wills &amp; estates</h3>
+          <p>Documents that say who inherits, who decides if you cannot, and who looks after your children. When someone has died, we take the estate through probate.</p>
+          <p class="matters">Wills and trusts<br>Powers of attorney<br>Health care directives<br>Probate and administration</p>
+        </li>
+        <li>
+          <h3>Home &amp; property</h3>
+          <p>We represent buyers and sellers from contract to closing, and landlords and tenants when a lease needs writing or has gone wrong.</p>
+          <p class="matters">Purchases and sales<br>Title review<br>Residential and commercial leases<br>Boundary and easement disputes</p>
+        </li>
+        <li>
+          <h3>Small business</h3>
+          <p>Setting up a company properly, then being the lawyer you call before signing something. Most of our business clients have under twenty employees.</p>
+          <p class="matters">LLC and corporate formation<br>Contracts and vendor terms<br>Partner agreements and buyouts<br>Selling or closing a business</p>
+        </li>
+        <li>
+          <h3>Family law</h3>
+          <p>Separation, custody and support, handled with as little conflict as the situation allows. We settle where we can and go to court where we must.</p>
+          <p class="matters">Divorce and separation<br>Custody and parenting plans<br>Child and spousal support<br>Prenuptial agreements</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="fees" class="inner">
+      <span class="sec-no" aria-hidden="true">§ 2</span>
+      <h2>How we work, and what it costs.</h2>
+      <p class="sec-intro">Most of what we do has a flat fee, quoted in writing before we start. Where a matter has to be billed hourly, you get an estimate first and a statement every month.</p>
+
+      <div class="split">
+        <ol class="steps">
+          <li>
+            <div>
+              <h3>A free half-hour conversation</h3>
+              <p>In person, by phone or by video. You explain the situation; we tell you whether you need a lawyer at all, and if so, what we would do.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>A written scope and fee</h3>
+              <p>One page setting out the work, the price, and the expected timeline. Nothing begins until you have signed it.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h3>The work, with one point of contact</h3>
+              <p>The attorney you met is the attorney who does the work. You have a direct line and email, and we return messages within one business day.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div>
+          <table>
+            <caption class="label">Common flat fees</caption>
+            <thead>
+              <tr><th scope="col">Matter</th><th scope="col">Fee</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Simple will</td><td>$450</td></tr>
+              <tr><td>Will, power of attorney and health care directive</td><td>$900</td></tr>
+              <tr><td>Residential purchase or sale, contract to closing</td><td>$1,350</td></tr>
+              <tr><td>LLC formation with operating agreement</td><td>$1,200</td></tr>
+              <tr><td>Uncontested divorce</td><td>$2,400</td></tr>
+              <tr><td>Hourly matters</td><td>$285 / hr</td></tr>
+            </tbody>
+          </table>
+          <p class="fine">Court and government filing fees are extra and passed through at cost. Complicated matters may be quoted differently; you will know before we begin.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="people" class="inner">
+      <span class="sec-no" aria-hidden="true">§ 3</span>
+      <h2>The attorneys.</h2>
+      <p class="sec-intro">Two partners and a paralegal, in the same office since 2009.</p>
+
+      <div class="people">
+        <article class="person">
+          <div class="mono" aria-hidden="true">DW</div>
+          <div>
+            <h3>Dana Whitlock</h3>
+            <span class="label">Partner · Estates and family law</span>
+            <p>Dana spent eight years as a court-appointed guardian's counsel before co-founding the firm, and now handles most of our estate planning, probate and family matters.</p>
+            <p class="creds">J.D., State University School of Law, 2001<br>Admitted to the state bar, 2001<br>Certified family mediator</p>
+          </div>
+        </article>
+
+        <article class="person">
+          <div class="mono" aria-hidden="true">IV</div>
+          <div>
+            <h3>Imre Varga</h3>
+            <span class="label">Partner · Property and business</span>
+            <p>Imre worked in-house for a regional title company before private practice, has closed more than 1,400 residential transactions, and advises about sixty local businesses.</p>
+            <p class="creds">J.D., City College of Law, 2004<br>Admitted to the state bar, 2004<br>Member, County Bar real property section</p>
+          </div>
+        </article>
+      </div>
+
+      <blockquote>
+        “We met Dana the week after my father died. She told us which three things had to happen that month and which could wait. That was the first time any of it felt manageable.”
+        <footer>— Estate client, 2025</footer>
+      </blockquote>
+    </section>
+
+    <section id="questions" class="inner">
+      <span class="sec-no" aria-hidden="true">§ 4</span>
+      <h2>Questions people ask before they call.</h2>
+      <p class="sec-intro">If yours is not here, ask it at the consultation.</p>
+
+      <div class="faq">
+        <details>
+          <summary>Is the first consultation really free?</summary>
+          <p>Yes. Thirty minutes, with an attorney, at no charge and with no obligation to hire us. If we run long because the conversation is useful, we do not start a clock.</p>
+        </details>
+        <details>
+          <summary>What should I bring?</summary>
+          <p>Any documents you already have: a contract, a letter you received, an existing will, a court notice. If you have nothing on paper yet, come anyway. A short written timeline of what has happened is always helpful.</p>
+        </details>
+        <details>
+          <summary>Will what I tell you be kept confidential?</summary>
+          <p>Yes. What you tell us in a consultation is confidential even if you decide not to hire us. Please do not send sensitive details through the website form, though; save them for the conversation.</p>
+        </details>
+        <details>
+          <summary>Do you take cases outside your four practice areas?</summary>
+          <p>No. We do not handle criminal defense, personal injury, immigration or bankruptcy. We keep a list of lawyers we know and trust in each of those fields and are glad to refer you.</p>
+        </details>
+        <details>
+          <summary>Can I pay in installments?</summary>
+          <p>For flat-fee work over $1,000, yes: half at signing and the balance over up to three months, without interest.</p>
+        </details>
+      </div>
+    </section>
+
+    <section id="contact" class="inner contact">
+      <span class="sec-no" aria-hidden="true">§ 5</span>
+      <h2>Tell us briefly what is going on.</h2>
+      <p class="sec-intro">We will call or write back within one business day to arrange your consultation.</p>
+
+      <div class="split">
+        <form id="inquiry" novalidate>
+          <div class="row">
+            <div>
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div>
+              <label for="reach">Phone or email</label>
+              <input id="reach" name="reach" type="text" autocomplete="tel" required>
+            </div>
+          </div>
+          <div>
+            <label for="area">What is it about?</label>
+            <select id="area" name="area">
+              <option>Wills &amp; estates</option>
+              <option>Home &amp; property</option>
+              <option>Small business</option>
+              <option>Family law</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+          <div>
+            <label for="msg">A sentence or two (optional)</label>
+            <textarea id="msg" name="msg"></textarea>
+          </div>
+          <button class="btn" type="submit">Request a consultation</button>
+          <p class="form-note" id="form-note" role="status">This opens a pre-filled message in your email program. Sending it does not create an attorney–client relationship.</p>
+        </form>
+
+        <address>
+          <div class="office-block">
+            <span class="label">Telephone</span>
+            <a class="big-phone" href="tel:+15550140142">(555) 014-0142</a>
+          </div>
+          <div class="office-block">
+            <span class="label">Email</span>
+            <p><a href="mailto:office@whitlockvarga.example">office@whitlockvarga.example</a></p>
+          </div>
+          <div class="office-block">
+            <span class="label">Office</span>
+            <p>214 Mercer Street, Suite 3<br>Port Hadley<br>Second floor, above the pharmacy. Lift access from the side entrance; parking behind the building.</p>
+          </div>
+          <div class="office-block">
+            <span class="label">Hours</span>
+            <p>Monday to Friday, 8:30–5:30<br>Tuesdays until 8:00 by appointment</p>
+          </div>
+        </address>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="inner">
+    <p>© <span id="year">2026</span> Whitlock &amp; Varga LLP</p>
+    <p>Attorney advertising. The information on this page is general and is not legal advice. Contacting the firm does not create an attorney–client relationship. Prior results do not guarantee a similar outcome.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  document.getElementById('inquiry').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target;
+    var note = document.getElementById('form-note');
+    var name = f.name.value.trim();
+    var reach = f.reach.value.trim();
+
+    if (!name || !reach) {
+      note.textContent = 'Please add your name and a phone number or email so we can reach you.';
+      (name ? f.reach : f.name).focus();
+      return;
+    }
+
+    var body = 'Name: ' + name + '\n' +
+               'Contact: ' + reach + '\n' +
+               'Regarding: ' + f.area.value + '\n\n' +
+               f.msg.value.trim();
+
+    window.location.href = 'mailto:office@whitlockvarga.example' +
+      '?subject=' + encodeURIComponent('Consultation request: ' + f.area.value) +
+      '&body=' + encodeURIComponent(body);
+
+    note.textContent = 'Your email program should now be open with the message ready to send. If nothing happened, call us on (555) 014-0142.';
+  });
+</script>
+</body>
+</html>
+````
+
+This is the complete landing page as one HTML file with no external fonts, images or scripts; I haven't opened it in a browser, so give it a quick look at desktop and phone widths. Save it as `index.html` — I returned it inline and did not write it to disk.
+
+The firm is invented: "Whitlock & Varga LLP", a two-lawyer practice covering wills and estates, property, small business and family law. The page runs from a hero with office details through practice areas, process and flat fees, attorney bios, questions and a contact section. The design is a paper sheet with a red double margin rule, borrowed from pleading paper, with section marks (§ 1–5) in the margin.
+
+Before this goes live:
+
+- **Placeholder content:** the names, bios, credentials, fees, address, phone number, email and the client quote are all made up. Replace the quote with a real one or remove it.
+- **Contact form:** it has no backend. Submitting opens the visitor's email program with a pre-filled message to the placeholder address, so swap in a real address or connect a form service.
+- **Footer disclaimer:** the attorney-advertising wording is generic. Check it against your state bar's rules.

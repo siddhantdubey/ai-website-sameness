@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f0e6">
+<title>Trattoria Rosa — Your table in the neighborhood</title>
+<style>
+:root{--paper:#f5f0e6;--ink:#293b2b;--red:#ac3929;--line:#293b2b33;--serif:Georgia,'Times New Roman',serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:25px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,input,select{font:inherit}
+a{color:inherit;text-decoration:none}
+button,a,input,select{ -webkit-tap-highlight-color:transparent}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--red);outline-offset:5px}
+.wrap{max-width:1320px;margin:auto;padding:0 5%}
+.announcement{padding:11px 20px;text-align:center;background:var(--ink);color:var(--paper);font-size:11px;letter-spacing:1.7px;text-transform:uppercase}
+header{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:108px;border-bottom:1px solid var(--line)}
+.brand{display:flex;flex-direction:column;align-items:center;line-height:.85;font-family:var(--serif);font-size:30px;font-weight:bold;letter-spacing:-1.5px}
+.brand small{font:9px Arial,sans-serif;letter-spacing:4.2px;margin:10px 0 0 5px;text-transform:uppercase}
+nav{display:flex;align-items:center;gap:32px;font-size:12px}
+nav>a:not(.button){padding:8px 0;border-bottom:1px solid transparent}
+nav>a:hover{border-color:var(--ink)}
+.button{display:inline-flex;justify-content:center;align-items:center;gap:25px;min-height:48px;padding:14px 24px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .2s}
+.button:hover{background:#40543e;transform:translateY(-2px)}
+.button.outline{background:transparent;color:var(--ink)}
+.button.outline:hover{background:#e8e5d7}
+.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:6%;padding:65px 0 55px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:10px;font-weight:bold;letter-spacing:2px;text-transform:uppercase}
+.eyebrow:before{content:"";width:29px;height:1px;background:currentColor}
+h1{font:normal clamp(62px,6.7vw,94px)/.99 var(--serif);letter-spacing:-4px;margin:27px 0}
+h1 em{font-weight:normal;color:var(--red)}
+.hero p{max-width:350px;font-size:14px;line-height:1.9;color:#596052}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin:29px 0}
+.hero-note{font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-top:35px;display:flex;gap:12px;align-items:center}
+.hero-note span{color:var(--red);font-size:20px}
+.art{position:relative}
+.art-frame{overflow:hidden;border-radius:240px 240px 5px 5px;background:#df9a69}
+.art svg{display:block;width:100%;height:auto}
+.stamp{position:absolute;right:-18px;top:25px;width:100px;height:100px;border-radius:50%;background:var(--red);color:var(--paper);border:5px solid var(--paper);display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(12deg);font:italic 19px/1.1 var(--serif)}
+.art-caption{display:flex;justify-content:space-between;margin-top:15px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
+.ticker{display:flex;justify-content:space-around;gap:25px;padding:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font:italic 21px var(--serif)}
+.ticker span:nth-child(even){color:var(--red)}
+.section{padding:80px 0}
+.section-heading{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:32px}
+h2{font:normal clamp(34px,4vw,51px)/1.1 var(--serif);letter-spacing:-1.5px;margin:14px 0 0}
+.text-link{font-size:11px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--ink);padding-bottom:7px;white-space:nowrap}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.dish{border-top:1px solid var(--ink);padding-top:22px}
+.dish-number{font:italic 14px var(--serif);color:var(--red)}
+.dish-title{display:flex;justify-content:space-between;align-items:baseline;gap:15px;margin:18px 0 10px}
+h3{font:normal 25px var(--serif);margin:0}
+.price{font-size:13px}
+.dish p{font-size:12px;line-height:1.8;color:#626657;max-width:280px}
+.dish-tag{display:inline-block;margin-top:15px;font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--red)}
+.story{display:grid;grid-template-columns:.9fr 1.1fr;background:#e6e7d9;min-height:390px}
+.story-art{display:flex;align-items:center;justify-content:center;padding:40px;background:#d9decc;overflow:hidden}
+.story-art svg{width:100%;max-width:360px;height:auto;transform:rotate(-5deg)}
+.story-copy{padding:55px 12%}
+.story-copy p{font-size:13px;line-height:1.9;max-width:400px;color:#58604f}
+.signature{font:italic 25px var(--serif);color:var(--red);margin-top:24px}
+.visit{display:grid;grid-template-columns:1.15fr 1fr;gap:9%;align-items:start}
+.visit-intro>p{font-size:14px;line-height:1.8;max-width:360px;margin:23px 0 28px}
+.visit-details{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding-top:9px}
+.detail{border-top:1px solid var(--line);padding-top:20px}
+.detail h3{font:10px Arial,sans-serif;font-weight:bold;letter-spacing:1.7px;text-transform:uppercase;margin-bottom:17px}
+.detail p{font-size:12px;line-height:1.9;margin:0}
+.detail small{display:block;margin-top:15px;font-size:10px;color:#65705f}
+footer{border-top:1px solid var(--line);padding:27px 0;display:flex;justify-content:space-between;gap:20px;font-size:10px;color:#626657}
+footer span:first-child{font-family:var(--serif);font-size:17px;color:var(--ink)}
+dialog{width:min(460px,calc(100% - 32px));border:1px solid var(--ink);background:var(--paper);color:var(--ink);padding:35px}
+dialog::backdrop{background:#142015aa;backdrop-filter:blur(4px)}
+dialog h2{font-size:36px;margin:0 25px 15px 0}
+dialog p{font-size:13px;line-height:1.7}
+.close{position:absolute;right:14px;top:10px;border:0;background:none;color:var(--ink);font-size:28px;cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+label{display:block;font-size:11px;margin:18px 0}
+input,select{display:block;width:100%;border:1px solid #9ba28f;background:transparent;color:var(--ink);padding:12px 8px;margin-top:7px;min-height:43px}
+form .button{width:100%;margin-top:8px}
+.form-note{color:#626657;font-size:11px!important}
+@media(min-width:1400px){h1{font-size:94px}}
+@media(max-width:800px){
+.wrap{padding:0 6%}header{min-height:90px}nav{gap:20px}nav .nav-story{display:none}
+.hero{gap:5%;padding-top:45px}h1{font-size:64px;letter-spacing:-3px}.hero p{font-size:13px}
+.stamp{width:80px;height:80px;right:-10px;font-size:16px}.hero-note{font-size:8px}
+.actions .button{padding:14px 17px;gap:12px}.ticker{font-size:18px}
+.story-copy{padding:40px 9%}.visit{gap:6%}.visit-details{gap:20px}
+}
+@media(max-width:580px){
+.announcement{font-size:9px;letter-spacing:1.2px}header{gap:10px}.brand{font-size:25px}
+nav{gap:15px}nav>a:not(.button){display:none}nav .button{font-size:9px;min-height:40px;padding:12px 14px}
+.hero{grid-template-columns:1fr;padding:38px 0}.hero h1{font-size:70px;margin:23px 0}.hero p{max-width:310px}
+.hero-note{margin-top:22px;font-size:9px}.art{margin:30px 12px 0}.art-frame{max-height:440px}.art svg{margin-top:-12px}
+.stamp{width:88px;height:88px;right:-15px}.ticker{gap:10px;flex-wrap:wrap;font-size:16px;padding:18px 0}.ticker span:nth-child(4){display:none}
+.section{padding:52px 0}.section-heading{align-items:start}.section-heading .text-link{margin-top:40px;font-size:9px}
+.menu-grid{grid-template-columns:1fr;gap:25px}.dish{padding-top:16px}.dish-title{margin-top:10px}.dish p{max-width:none;margin-bottom:0}.dish-tag{margin-top:12px}
+.story{grid-template-columns:1fr}.story-art{padding:25px;height:240px}.story-art svg{max-width:270px}
+.story-copy{padding:35px 8%}.visit{grid-template-columns:1fr;gap:35px}.visit-details{gap:28px}
+footer{flex-wrap:wrap;align-items:center}footer span:first-child{width:100%}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="announcement">A little Italy. A lot of heart. · Dinner Tuesday–Sunday</div>
+<div class="wrap">
+<header>
+  <a class="brand" href="#" aria-label="Trattoria Rosa home">rosa<span><small>Trattoria di quartiere</small></span></a>
+  <nav aria-label="Main navigation">
+    <a href="#menu">The menu</a>
+    <a class="nav-story" href="#story">Our story</a>
+    <a href="#visit">Find us</a>
+    <button class="button" data-reserve>Book a table <span aria-hidden="true">↗</span></button>
+  </nav>
+</header>
+<main>
+<section class="hero" aria-labelledby="hero-title">
+  <div>
+    <div class="eyebrow">Your neighborhood trattoria</div>
+    <h1 id="hero-title">Good food.<br>Better <em>company.</em></h1>
+    <p>Handmade pasta, a second glass of wine, and a table that feels like yours. Come on in. You’re practically family.</p>
+    <div class="actions">
+      <button class="button" data-reserve>Pull up a chair <span aria-hidden="true">↗</span></button>
+      <a class="button outline" href="#menu">Explore the menu</a>
+    </div>
+    <div class="hero-note"><span aria-hidden="true">✳</span> Made by hand. Shared with love. Since 1987.</div>
+  </div>
+  <div class="art">
+    <div class="art-frame">
+      <svg viewBox="0 0 520 560" role="img" aria-labelledby="pasta-title">
+        <title id="pasta-title">An illustrated plate of tomato pasta on a sunny trattoria table</title>
+        <defs>
+          <pattern id="cloth" width="52" height="52" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">
+            <rect width="52" height="52" fill="#c56543"/>
+            <rect width="26" height="52" fill="#e6a17b"/>
+            <rect width="52" height="26" fill="#f3c39a" opacity=".48"/>
+          </pattern>
+          <radialGradient id="plate"><stop stop-color="#f7eed9"/><stop offset=".76" stop-color="#f9f0dc"/><stop offset=".8" stop-color="#ded3b8"/><stop offset=".83" stop-color="#fff8e6"/><stop offset="1" stop-color="#e8ddc4"/></radialGradient>
+          <filter id="shadow"><feDropShadow dx="6" dy="12" stdDeviation="10" flood-color="#512e1f" flood-opacity=".25"/></filter>
+        </defs>
+        <rect width="520" height="560" fill="#e4a276"/>
+        <path d="M0 147 520 55V560H0Z" fill="url(#cloth)"/>
+        <ellipse cx="275" cy="325" rx="194" ry="183" fill="#723e28" opacity=".15"/>
+        <circle cx="260" cy="302" r="198" fill="url(#plate)" filter="url(#shadow)"/>
+        <circle cx="260" cy="302" r="177" fill="none" stroke="#596a4d" stroke-width="2"/>
+        <circle cx="260" cy="302" r="165" fill="none" stroke="#596a4d" stroke-width="1"/>
+        <path d="M142 278Q158 208 240 193Q333 177 375 261Q405 341 335 392Q251 440 176 378Q125 337 142 278" fill="#b94426"/>
+        <g fill="none" stroke-linecap="round">
+          <path d="M173 282C287 180 368 271 276 292S143 344 233 365S369 302 319 246S200 214 178 320S315 401 344 324" stroke="#eaa84d" stroke-width="15"/>
+          <path d="M193 237C143 329 304 244 330 286S249 335 211 311S254 233 301 257S359 354 271 376" stroke="#f5bd62" stroke-width="13"/>
+          <path d="M165 322C216 388 355 358 348 290S225 204 207 267S324 320 288 343S192 345 190 293" stroke="#dd8a37" stroke-width="12"/>
+          <path d="M172 279C227 232 302 218 326 261M216 361C257 378 319 353 327 320M194 301C220 275 273 278 288 286" stroke="#ffce77" stroke-width="4"/>
+        </g>
+        <g fill="#a12d1e">
+          <path d="M192 266q15-15 30 1l-4 22-26-4z"/><path d="m303 324 20-7 14 13-11 18-21-5z"/>
+          <path d="m248 216 23-2 8 17-22 10z"/><path d="m215 351 16-8 15 14-10 13z"/>
+        </g>
+        <g fill="#46643b">
+          <path d="M266 284Q224 248 244 226Q281 229 266 284"/>
+          <path d="M267 285Q279 234 309 245Q315 277 267 285"/>
+          <path d="M265 282Q244 306 228 291Q233 271 265 282"/>
+        </g>
+        <g fill="#fff0cb" transform="rotate(13 260 300)">
+          <rect x="188" y="237" width="14" height="3"/><rect x="302" y="293" width="18" height="4"/>
+          <rect x="241" y="326" width="14" height="4"/><rect x="286" y="368" width="13" height="3"/>
+          <rect x="183" y="336" width="10" height="4"/><rect x="333" y="271" width="10" height="3"/>
+          <rect x="239" y="249" width="11" height="3"/><rect x="275" y="305" width="9" height="3"/>
+        </g>
+        <g transform="translate(438 212) rotate(15)" fill="#dfd6bb" stroke="#7d755e" stroke-width="1.5">
+          <path d="M0 0h5v48h5V0h5v48h5V0h5v48h5V0h5v54q0 13-12 17v165q0 9-6 9t-6-9V71Q0 66 0 54Z"/>
+        </g>
+        <g transform="translate(85 55) rotate(-14)">
+          <ellipse cy="15" rx="30" ry="13" fill="#f4d2a6" opacity=".6"/>
+          <path d="M-30 15q0 60 30 64 30-4 30-64" fill="#efe3c5" opacity=".55" stroke="#fff1d9" stroke-width="2"/>
+          <path d="M-25 35q5 37 25 40 20-3 25-40Z" fill="#872e2e" opacity=".9"/>
+          <path d="M0 79v45m-25 0h50" stroke="#f9e7c6" stroke-width="3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="stamp" aria-hidden="true">Pasta fatta<br>a mano ♡</div>
+    <div class="art-caption"><span>A little taste of la dolce vita</span><span>Est. 1987</span></div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Our ingredients and traditions">
+  <span>Pasta, made daily</span><span aria-hidden="true">✳</span>
+  <span>Wine, poured generously</span><span aria-hidden="true">✳</span>
+  <span>Everyone, welcome</span>
+</div>
+
+<section class="section" id="menu" aria-labelledby="menu-heading">
+  <div class="section-heading">
+    <div><div class="eyebrow">From our kitchen</div><h2 id="menu-heading">Simple things. Done beautifully.</h2></div>
+    <a class="text-link" href="#visit">Come hungry ↗</a>
+  </div>
+  <div class="menu-grid">
+    <article class="dish">
+      <span class="dish-number">01 / To begin</span>
+      <div class="dish-title"><h3>Burrata e pomodori</h3><span class="price">$16</span></div>
+      <p>Creamy burrata, seasonal tomatoes, fresh basil, and the good olive oil. Bread for every last drop.</p>
+      <span class="dish-tag">A lovely place to start</span>
+    </article>
+    <article class="dish">
+      <span class="dish-number">02 / The house favorite</span>
+      <div class="dish-title"><h3>Rigatoni alla Rosa</h3><span class="price">$24</span></div>
+      <p>Our handmade rigatoni, slow-simmered tomato sauce, a little cream, and a generous snowfall of Parmigiano.</p>
+      <span class="dish-tag">On the menu since day one</span>
+    </article>
+    <article class="dish">
+      <span class="dish-number">03 / Save a little room</span>
+      <div class="dish-title"><h3>Tiramisù della casa</h3><span class="price">$11</span></div>
+      <p>Espresso-soaked ladyfingers, whipped mascarpone, and cocoa. Two spoons are always a good idea.</p>
+      <span class="dish-tag">Nonna would approve</span>
+    </article>
+  </div>
+</section>
+
+<section class="story" id="story" aria-labelledby="story-heading">
+  <div class="story-art">
+    <svg viewBox="0 0 370 280" role="img" aria-label="Illustration of the original Rosa neighborhood restaurant">
+      <rect x="24" y="20" width="322" height="240" fill="#f5f0e6"/>
+      <rect x="39" y="35" width="292" height="210" fill="#e5b991"/>
+      <path d="M55 113V54h260v59" fill="#f2dfbd"/>
+      <text x="185" y="91" text-anchor="middle" fill="#923e2c" font-family="Georgia,serif" font-size="39">rosa</text>
+      <rect x="64" y="137" width="88" height="108" fill="#53634b"/>
+      <path d="M77 236v-81h62v81M108 155v81" fill="none" stroke="#d9d3ae" stroke-width="3"/>
+      <path d="M183 245v-87q0-34 40-34t40 34v87" fill="#53634b"/>
+      <path d="M195 235v-77q0-22 28-22t28 22v77M223 136v99" fill="none" stroke="#d9d3ae" stroke-width="3"/>
+      <path d="m49 111-9 29h290l-13-29" fill="#f4ead3"/>
+      <path d="m62 111-7 29h23l4-29m24 0-2 29h23v-29m24 0 2 29h23l-4-29m24 0 6 29h23l-8-29m24 0 10 29h23l-12-29m24 0 14 29h23l-16-29" fill="#a14a37"/>
+      <g fill="#3b5536"><ellipse cx="59" cy="213" rx="19" ry="28"/><ellipse cx="292" cy="213" rx="18" ry="31"/></g>
+      <g fill="#af5c3e"><path d="m44 229 5 16h20l5-16z"/><path d="m277 229 5 16h20l5-16z"/></g>
+      <path d="M24 260h322v14H24z" fill="#f5f0e6"/>
+      <text x="185" y="271" text-anchor="middle" fill="#6a725e" font-family="Georgia,serif" font-size="9" letter-spacing="2">OUR LITTLE CORNER, SINCE 1987</text>
+    </svg>
+  </div>
+  <div class="story-copy">
+    <div class="eyebrow">A family thing</div>
+    <h2 id="story-heading">Some traditions<br>are worth keeping.</h2>
+    <p>Rosa started with a few tables, our grandmother’s recipes, and a simple idea: feed the neighborhood like family.</p>
+    <p>Almost forty years later, we’re still rolling pasta every morning and getting to know the people across the table. There’s always room for one more.</p>
+    <div class="signature">Con amore, the Rosa family</div>
+  </div>
+</section>
+
+<section class="section visit" id="visit" aria-labelledby="visit-heading">
+  <div class="visit-intro">
+    <div class="eyebrow">See you around the table</div>
+    <h2 id="visit-heading">Your evening,<br>with an Italian accent.</h2>
+    <p>A date night, a family celebration, or just a Tuesday. We’ll put the water on.</p>
+    <button class="button" data-reserve>Plan your visit <span aria-hidden="true">↗</span></button>
+  </div>
+  <div class="visit-details">
+    <div class="detail">
+      <h3>Our little corner</h3>
+      <p>42 Olive Street<br>Brooklyn, NY 11201</p>
+      <small>Look for the striped awning.</small>
+    </div>
+    <div class="detail">
+      <h3>When we’re cooking</h3>
+      <p>Tuesday–Thursday · 5–9 pm<br>Friday–Saturday · 5–10 pm<br>Sunday · 4–9 pm<br>Monday · Taking a little rest</p>
+    </div>
+    <div class="detail">
+      <h3>Come as you are</h3>
+      <p>Walk-ins always welcome.<br>Little ones, too.</p>
+    </div>
+    <div class="detail">
+      <h3>A table for everyone</h3>
+      <p>Vegetarian options available.<br>Tell us about any allergies when arranging your visit.</p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <span>rosa. A seat for you, always.</span>
+  <span>© <span id="year">2026</span> Trattoria Rosa</span>
+  <a href="#hero-title">Back to top ↑</a>
+</footer>
+</div>
+
+<dialog id="reservation" aria-labelledby="reservation-title">
+  <button class="close" aria-label="Close reservation form">×</button>
+  <h2 id="reservation-title">A table for you.</h2>
+  <p>Choose your evening and we’ll prepare a reservation request for you to email.</p>
+  <form id="reservation-form">
+    <label>Your name<input name="guest" autocomplete="name" required maxlength="80"></label>
+    <div class="form-row">
+      <label>Date<input type="date" name="date" id="date" required></label>
+      <label>Party size
+        <select name="party"><option>2 guests</option><option>1 guest</option><option>3 guests</option><option>4 guests</option><option>5 guests</option><option>6 guests</option></select>
+      </label>
+    </div>
+    <label>Preferred time
+      <select name="time" id="time" required></select>
+    </label>
+    <button class="button" type="submit">Prepare email request ↗</button>
+    <p class="form-note">This demo opens an email draft to reservations@rosa.example. It does not make a booking. Restaurant details are illustrative.</p>
+  </form>
+  <p id="request-status" role="status" hidden></p>
+</dialog>
+<script>
+const dialog=document.querySelector('#reservation');
+const dateInput=document.querySelector('#date');
+const timeInput=document.querySelector('#time');
+const localDate=new Date();
+const today=[localDate.getFullYear(),String(localDate.getMonth()+1).padStart(2,'0'),String(localDate.getDate()).padStart(2,'0')].join('-');
+dateInput.min=today;
+dateInput.value=today;
+document.querySelector('#year').textContent=localDate.getFullYear();
+
+function updateTimes(){
+  const date=new Date(dateInput.value+'T12:00:00');
+  const day=date.getDay();
+  dateInput.setCustomValidity(day===1?'We’re closed on Mondays. Please choose another day.':'');
+  timeInput.replaceChildren();
+  const start=day===0?16:17;
+  const end=day===5||day===6?21:20;
+  for(let hour=start;hour<=end;hour++){
+    for(const minutes of [0,30]){
+      const option=document.createElement('option');
+      option.value=`${hour}:${String(minutes).padStart(2,'0')}`;
+      option.textContent=`${hour>12?hour-12:hour}:${String(minutes).padStart(2,'0')} pm`;
+      timeInput.append(option);
+    }
+  }
+}
+updateTimes();
+dateInput.addEventListener('change',updateTimes);
+document.querySelectorAll('[data-reserve]').forEach(button=>button.addEventListener('click',()=>dialog.showModal()));
+document.querySelector('.close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',event=>{
+  if(event.target===dialog){
+    const bounds=dialog.getBoundingClientRect();
+    if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)dialog.close();
+  }
+});
+document.querySelector('#reservation-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  const data=new FormData(event.target);
+  const body=`Hello Rosa,\n\nI’d like to request a table for ${data.get('party')} on ${data.get('date')} at ${timeInput.selectedOptions[0].textContent}.\n\nName: ${data.get('guest')}\n\nPlease let me know if you have availability. Thank you!`;
+  const status=document.querySelector('#request-status');
+  status.hidden=false;
+  status.textContent='Your email draft is ready to open. This is a demonstration address; no reservation has been submitted.';
+  window.location.href='mailto:reservations@rosa.example?subject='+encodeURIComponent('Table reservation request')+'&body='+encodeURIComponent(body);
+});
+</script>
+</body>
+</html>

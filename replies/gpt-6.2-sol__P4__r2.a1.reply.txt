@@ -1,0 +1,181 @@
+Save this as `index.html`. It includes all styling and requires no external assets. The firm name, address, and contact details are placeholders.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A small law firm focused on estate planning, small business counsel, and real estate.">
+  <title>Hale &amp; Mercer Law | Portland, Oregon</title>
+  <style>
+    :root {
+      --paper: #f7f4ed;
+      --ink: #252b24;
+      --forest: #243c34;
+      --muted: #50594f;
+      --line: #d5d5c8;
+      --gold: #dfbb83;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.65 var(--sans); }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; }
+    a { color: inherit; text-underline-offset: .25em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    .wrap { width: min(100% - 3rem, 72rem); margin-inline: auto; }
+    .skip { position: absolute; top: .75rem; left: .75rem; z-index: 2; padding: .6rem 1rem; background: var(--paper); transform: translateY(-200%); }
+    .skip:focus { transform: none; }
+    .eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 1rem; min-height: 3.25rem; padding: .65rem 1.1rem; background: var(--gold); color: #272820; font-size: .88rem; font-weight: 700; text-decoration: none; }
+    .button:hover { background: #efd2a4; }
+
+    .header-inner { display: flex; justify-content: space-between; align-items: center; gap: .8rem 2rem; flex-wrap: wrap; min-height: 5.25rem; padding-block: .85rem; }
+    .brand { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; font: 1.25rem/1 var(--serif); }
+    .monogram { display: grid; place-items: center; width: 2.35rem; aspect-ratio: 1; border: 1px solid currentColor; font-size: .8rem; }
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1.4rem; }
+    .nav a { padding-block: .4rem; font-size: .85rem; font-weight: 600; text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    .nav .nav-contact { padding-inline: .85rem; border: 1px solid #929b8f; }
+
+    .hero { background: var(--forest); color: var(--paper); }
+    .hero-inner { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(3rem, 7vw, 6rem); }
+    .hero .eyebrow { color: var(--gold); margin-bottom: 1.15rem; }
+    h1 { max-width: 12ch; font-size: clamp(3.25rem, 7.25vw, 6.1rem); letter-spacing: -.06em; }
+    .hero-copy > p:not(.eyebrow) { max-width: 39ch; margin-block: 1.4rem 1.7rem; color: #e0e5dc; }
+    .art { position: relative; isolation: isolate; overflow: hidden; min-height: 23rem; aspect-ratio: 1.14; border: 1px solid #b4ac8e; background: linear-gradient(145deg, #d3c7a8 0%, #aaa287 53%, #605e4c 100%); }
+    .art::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: repeating-linear-gradient(118deg, #39372a22 0 1px, transparent 1px 4px); opacity: .35; }
+    .arch { position: absolute; inset: 9% 17% -30% 13%; border: clamp(1.4rem, 4vw, 3.75rem) solid #c6b99b; border-right-color: #a09174; border-radius: 50% 50% 0 0 / 38% 38% 0 0; background: linear-gradient(115deg, #3f4b40 0%, #657361 47%, #a3a58b 100%); box-shadow: 1.1rem .6rem 2.4rem #34342966, inset .8rem .25rem 1.75rem #222a2280; }
+    .arch::after { content: ""; position: absolute; inset: 25% 16% -5% 28%; border-radius: 48% 48% 0 0 / 35% 35% 0 0; background: linear-gradient(120deg, #d4c7a6, #868771); box-shadow: -.55rem 0 #c1b395, -1rem 0 1.25rem #30392f70; }
+    .art-frame { position: absolute; z-index: 2; inset: .65rem; border: 1px solid #f1e7d0a0; pointer-events: none; }
+
+    section[id] { scroll-margin-top: 1rem; }
+    .section { padding-block: clamp(3rem, 7vw, 6rem); }
+    .section .eyebrow { margin-bottom: .6rem; color: #4e6254; }
+    h2 { font-size: clamp(2.25rem, 4.6vw, 3.65rem); letter-spacing: -.045em; }
+    .practices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 1.8rem; border-block: 1px solid var(--line); }
+    .practice { padding: 1.6rem 1.25rem 1.7rem; }
+    .practice:first-child { padding-left: 0; }
+    .practice + .practice { border-left: 1px solid var(--line); }
+    h3 { font-size: 1.55rem; margin-bottom: .65rem; }
+    .practice p, .about p:not(.eyebrow) { color: var(--muted); }
+    .about { background: #e8ebe1; }
+    .about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem 4rem; align-items: start; }
+    .about-copy p + p { margin-top: 1rem; }
+    .contact-inner { display: grid; grid-template-columns: 1.3fr .7fr; gap: 1.5rem 4rem; align-items: start; }
+    .contact-copy > p:not(.eyebrow) { max-width: 48ch; margin-block: 1rem 1.3rem; color: var(--muted); }
+    .contact address { padding: 1.5rem; border: 1px solid var(--line); font-style: normal; overflow-wrap: anywhere; }
+    .contact address p + p { margin-top: .8rem; }
+    footer { background: var(--forest); color: #e0e5dc; padding-block: 1.5rem; font-size: .8rem; }
+    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.5rem; }
+
+    @media (max-width: 44rem) {
+      .hero-inner, .about-inner, .contact-inner { grid-template-columns: 1fr; }
+      .art { min-height: 0; aspect-ratio: 1.55; }
+      .practices { grid-template-columns: 1fr; }
+      .practice { padding: 1.25rem 0; }
+      .practice + .practice { border-left: 0; border-top: 1px solid var(--line); }
+    }
+
+    @media (max-width: 25rem) {
+      .wrap { width: calc(100% - 2rem); }
+      h1 { font-size: 2.8rem; }
+      .nav { column-gap: .9rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap header-inner">
+      <a class="brand" href="#" aria-label="Hale and Mercer Law home">
+        <span class="monogram" aria-hidden="true">HM</span>
+        <span>Hale &amp; Mercer Law</span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#practice">Practice areas</a>
+        <a href="#firm">Our firm</a>
+        <a class="nav-contact" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Portland, Oregon</p>
+          <h1 id="hero-title">Clear advice for important decisions.</h1>
+          <p>We help individuals, families, and small businesses plan ahead, review agreements, and make sense of their legal options.</p>
+          <a class="button" href="#contact">Request a consultation <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="art" aria-hidden="true">
+          <div class="arch"></div>
+          <div class="art-frame"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="practice" aria-labelledby="practice-title">
+      <div class="wrap">
+        <h2 id="practice-title">How we can help</h2>
+        <div class="practices">
+          <article class="practice">
+            <h3>Estate planning</h3>
+            <p>Put your wishes in writing with wills, trusts, powers of attorney, and advance directives.</p>
+          </article>
+          <article class="practice">
+            <h3>Small business counsel</h3>
+            <p>Get help choosing a business structure, drafting agreements, and reviewing contracts before you sign.</p>
+          </article>
+          <article class="practice">
+            <h3>Real estate</h3>
+            <p>Understand the terms of a purchase, sale, or lease and address questions about property ownership.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about" id="firm" aria-labelledby="firm-title">
+      <div class="wrap about-inner">
+        <div>
+          <p class="eyebrow">Our firm</p>
+          <h2 id="firm-title">Work directly with your attorney.</h2>
+        </div>
+        <div class="about-copy">
+          <p>We start by asking what you want to accomplish and what’s on your mind. Then we walk through your options in plain language, including the trade-offs and timing.</p>
+          <p>Before work begins, we discuss scope and fees so you know what to expect and can decide how to proceed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap contact-inner">
+        <div class="contact-copy">
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Tell us how we can help.</h2>
+          <p>Call or email to request a consultation. A brief description of your matter and any upcoming deadline will help us respond. Please save confidential details for your consultation.</p>
+          <a class="button" href="mailto:hello@halemercer.example?subject=Consultation%20request">Email the firm <span aria-hidden="true">→</span></a>
+        </div>
+        <address>
+          <p><strong>Hale &amp; Mercer Law</strong><br>100 Example Avenue, Suite 200<br>Portland, OR 97204</p>
+          <p><a href="tel:+15035550142">(503) 555-0142</a><br><a href="mailto:hello@halemercer.example">hello@halemercer.example</a></p>
+          <p>Office visits by appointment</p>
+        </address>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p>© Hale &amp; Mercer Law</p>
+      <p>This website provides general information. Contacting the firm does not create an attorney-client relationship.</p>
+    </div>
+  </footer>
+</body>
+</html>
+```

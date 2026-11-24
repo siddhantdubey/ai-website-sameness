@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f2">
+  <title>Relay — Project management for small teams</title>
+  <style>
+    :root{--paper:#f8f7f2;--ink:#24271f;--muted:#62665d;--line:#d8dad0;--lime:#d8f58b;--purple:#ded6ff}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "DM Sans",Arial,sans-serif}
+    button,input,select{font:inherit;color:inherit}
+    button,a{touch-action:manipulation}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:3px solid #7051bb;outline-offset:4px}
+    .wrap{width:min(1320px,92%);margin:auto}
+    header,nav,.brand,.actions,.board-head,.stage-title,.card-foot,footer{display:flex;align-items:center}
+    header{min-height:82px;border-bottom:1px solid var(--line);justify-content:space-between;gap:24px}
+    .brand{font-weight:800;font-size:30px;letter-spacing:-2px;gap:8px}
+    .mark{display:inline-flex;gap:3px;transform:skew(-25deg);margin:0 5px}
+    .mark i{width:7px;height:23px;background:currentColor}
+    .mark i:nth-child(2){transform:translateY(-4px)}
+    nav,.actions{gap:26px}
+    nav a,header button{font-size:14px;font-weight:600}
+    nav a:hover,footer a:hover{text-decoration:underline}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:18px;border:1px solid var(--ink);border-radius:8px;background:var(--ink);color:white;padding:12px 19px;font-weight:650}
+    .btn:hover{background:#454a3a}
+    .hero{padding:72px 0 62px;display:grid;grid-template-columns:1fr .65fr;align-items:end;gap:32px}
+    h1,h2,h3,p{margin:0}
+    h1{font-size:clamp(64px,7.7vw,116px);letter-spacing:-.082em;line-height:.94;font-weight:600}
+    h1 em{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-.085em}
+    .intro{max-width:390px;padding-bottom:4px}
+    .intro p{font-size:clamp(17px,1.45vw,22px);line-height:1.48;color:#505449;margin-bottom:22px}
+    .actions{gap:17px;flex-wrap:wrap}
+    .actions a{font-size:14px;border-bottom:1px solid}
+    .showcase{background:#c6b9ee;border:1px solid #b2a4d7;border-radius:20px;padding:34px clamp(15px,4vw,64px) 0;overflow:hidden;position:relative;isolation:isolate}
+    .showcase:before,.showcase:after{content:"";position:absolute;width:440px;height:440px;z-index:-1;border:55px solid #aa96d8;border-radius:50%;left:-310px;top:35px}
+    .showcase:after{left:auto;right:-290px;top:-280px;border-color:#d9cff6}
+    .app{display:grid;grid-template-columns:172px 1fr;background:#fff;border:1px solid #938ba2;border-bottom:0;border-radius:12px 12px 0 0;box-shadow:0 8px 30px #45365a24;min-height:364px}
+    aside{padding:21px 13px;background:#f6f6f1;border-radius:12px 0 0;border-right:1px solid var(--line);font-size:13px}
+    .studio{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:30px}
+    .studio b{background:var(--lime);border:1px solid #c1d789;border-radius:7px;width:28px;height:28px;display:grid;place-items:center}
+    .side-label,.tag,.stage-title,.eyebrow{font:600 10px/1.4 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+    .side-label{color:var(--muted);padding-left:8px}
+    .project{display:block;margin:8px 0;padding:8px;border-radius:5px}
+    .project.active{background:#e6e7df;font-weight:650}
+    .board{padding:24px;min-width:0}
+    .board-head{justify-content:space-between;gap:10px;margin-bottom:17px}
+    .board-head h2{font-size:25px;letter-spacing:-1.3px}
+    .add{background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px}
+    .add:hover{background:var(--paper)}
+    .view{font-size:12px;font-weight:650;border-bottom:1px solid var(--line);padding-bottom:9px}
+    .columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+    .stage{background:#f6f6f2;border-radius:8px;padding:8px;min-width:0}
+    .stage-title{gap:6px;margin:3px 0 12px;font-size:10px}
+    .dot{width:8px;height:8px;border-radius:50%;background:#a79ac6}
+    .stage:nth-child(2) .dot{background:#e8ad5a}
+    .stage:nth-child(3) .dot{background:#80a568}
+    .count{color:var(--muted);margin-left:auto}
+    .card{background:white;border:1px solid #dedfd6;box-shadow:0 2px 2px #282e2010;border-radius:6px;padding:11px;margin-top:7px}
+    .tag{display:inline-block;border-radius:4px;font-size:9px;padding:3px 6px;background:var(--purple)}
+    .tag.content{background:#f6d6ab}.tag.strategy{background:#dcebc1}
+    .card h3{font-size:14px;line-height:1.32;letter-spacing:-.025em;margin:8px 0 12px;overflow-wrap:anywhere}
+    .card-foot{justify-content:space-between;font-size:10px;color:var(--muted)}
+    .avatar{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#ebe4f8;color:#423d4d;font-weight:700}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:54px 0}
+    .features article{border-top:1px solid var(--line);padding-top:18px}
+    .features h2{font-size:22px;letter-spacing:-1px;margin-bottom:6px}
+    .features p,footer{color:var(--muted);font-size:14px}
+    footer{border-top:1px solid var(--line);padding:20px 0;justify-content:space-between}
+    dialog{border:1px solid var(--line);border-radius:14px;padding:24px;width:min(380px,92vw);background:var(--paper);color:var(--ink)}
+    dialog::backdrop{background:#22251d70}
+    dialog h2{letter-spacing:-1px}
+    label{display:block;font-size:14px;margin:16px 0}
+    input,select{display:block;width:100%;padding:10px;margin-top:5px;border:1px solid #aeb1a5;border-radius:6px;background:white}
+    .form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}
+    @media(max-width:900px){.app{grid-template-columns:1fr}aside{display:none}.hero{grid-template-columns:1.2fr 1fr;padding:52px 0}.board{padding:18px}}
+    @media(max-width:650px){header{min-height:66px}.brand{font-size:26px}nav{display:none}.hero{grid-template-columns:1fr;gap:22px;padding:38px 0}.intro{max-width:100%}.hero h1{font-size:clamp(61px,13vw,82px)}.showcase{padding:16px 10px 0}.board{padding:12px}.board-head h2{font-size:21px}.columns{grid-template-columns:1fr}.stage{padding:8px}.stage-title{margin:2px 0 6px}.card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px}.card .tag{justify-self:start}.card h3{grid-row:2;margin:0}.card-foot{grid-column:2;grid-row:1/3;gap:6px}.features{grid-template-columns:1fr;gap:22px;padding:34px 0}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="#" aria-label="Relay home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Relay</a>
+      <nav aria-label="Main navigation"><a href="#workspace">Workspace</a><a href="#features">Features</a></nav>
+      <button class="btn new-task">Try Relay <span aria-hidden="true">↗</span></button>
+    </header>
+    <main>
+      <section class="hero">
+        <h1>Big plans.<br><em>Clear next steps.</em></h1>
+        <div class="intro">
+          <p>A shared workspace for small teams to plan projects, track tasks, and see what needs their attention next.</p>
+          <div class="actions"><button class="btn new-task">Create a task <span aria-hidden="true">↗</span></button><a href="#workspace">Explore the board ↓</a></div>
+        </div>
+      </section>
+      <section class="showcase" id="workspace" aria-label="Interactive project workspace">
+        <div class="app">
+          <aside><div class="studio"><b aria-hidden="true">✳</b> Studio North</div><div class="side-label">Projects</div><span class="project active">◈ &nbsp; Brand launch</span></aside>
+          <div class="board">
+            <div class="board-head"><div><span class="eyebrow">Studio North / Projects</span><h2>Brand launch</h2></div><button class="add new-task">+ Add task</button></div>
+            <div class="view">▦ &nbsp; Board view</div>
+            <div class="columns" id="columns"></div>
+          </div>
+        </div>
+      </section>
+      <section class="features" id="features" aria-label="Workspace features">
+        <article><h2>One project, one view.</h2><p>Keep the brief, the work in progress, and the finishing touches on the same board.</p></article>
+        <article><h2>Ownership at a glance.</h2><p>See who’s taking the lead on each task and when it’s due.</p></article>
+        <article><h2>Room for the next idea.</h2><p>Add a task as soon as it comes up and give it a place in the plan.</p></article>
+      </section>
+    </main>
+    <footer><span>Relay</span><a href="#">Back to top ↑</a></footer>
+  </div>
+  <dialog id="task-dialog">
+    <form id="task-form">
+      <h2>Add a task</h2>
+      <label>Task name<input name="title" required maxlength="90" placeholder="Review the launch checklist" autofocus></label>
+      <label>Status<select name="stage"><option>To do</option><option>In progress</option><option>Done</option></select></label>
+      <label>Category<select name="category"><option>Design</option><option>Content</option><option>Strategy</option></select></label>
+      <div class="form-actions"><button class="add" type="button" id="cancel">Cancel</button><button class="btn">Add task</button></div>
+    </form>
+  </dialog>
+  <script>
+    const stages = ["To do","In progress","Done"];
+    const tasks = [
+      ["To do","Design","Explore campaign visuals","May 16","AL"],
+      ["To do","Content","Draft launch email","May 17","JK"],
+      ["In progress","Design","Build the brand kit","May 14","MR"],
+      ["In progress","Content","Write homepage copy","May 15","JK"],
+      ["Done","Strategy","Define the audience","May 10","SD"],
+      ["Done","Strategy","Align on launch goals","May 11","AL"]
+    ];
+    const saved = [];
+    try {
+      const items = JSON.parse(localStorage.getItem("relay-tasks") || "[]");
+      if (Array.isArray(items)) saved.push(...items.filter(item =>
+        Array.isArray(item) && item.length === 5 && item.every(value => typeof value === "string") && stages.includes(item[0])
+      ));
+    } catch {}
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text) node.textContent = text;
+      return node;
+    }
+    function render() {
+      const columns = document.querySelector("#columns");
+      columns.replaceChildren();
+      for (const stage of stages) {
+        const items = [...saved,...tasks].filter(task => task[0] === stage);
+        const column = element("section","stage");
+        const heading = element("h3","stage-title");
+        heading.append(element("span","dot"),stage,element("span","count",String(items.length)));
+        column.append(heading);
+        for (const [,category,title,date,owner] of items) {
+          const card = element("article","card");
+          const foot = element("div","card-foot");
+          foot.append(element("span","",date),element("span","avatar",owner));
+          card.append(element("span","tag "+category.toLowerCase(),category),element("h3","",title),foot);
+          column.append(card);
+        }
+        columns.append(column);
+      }
+    }
+    const dialog = document.querySelector("#task-dialog");
+    const form = document.querySelector("#task-form");
+    document.querySelectorAll(".new-task").forEach(button => button.addEventListener("click",() => dialog.showModal()));
+    document.querySelector("#cancel").onclick = () => dialog.close();
+    form.onsubmit = event => {
+      event.preventDefault();
+      const fields = new FormData(form);
+      const title = fields.get("title").trim();
+      if (!title) {form.elements.title.value = ""; form.reportValidity(); return;}
+      saved.unshift([fields.get("stage"),fields.get("category"),title,"No due date","You"]);
+      try {localStorage.setItem("relay-tasks",JSON.stringify(saved));} catch {}
+      render();
+      dialog.close();
+      form.reset();
+      document.querySelector("#workspace").scrollIntoView();
+    };
+    render();
+  </script>
+</body>
+</html>

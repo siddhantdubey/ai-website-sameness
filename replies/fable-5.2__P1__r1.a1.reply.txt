@@ -1,0 +1,39 @@
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/pilot/work/fable-5.2__P1__r1.a1.1ia8ya8l && python3 - <<'EOF'
+p='index.html'; s=open(p).read()
+a="  .tl { position: relative; --lab: 230px; }"
+assert a in s
+s=s.replace(a,"  .tl { position: relative; --lab: 230px; padding-top: 26px; }")
+b="    .plumb-tag { top: -2px; }\n"
+assert b in s
+s=s.replace(b,"")
+open(p,'w').write(s)
+EOF
+B=~/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell
+timeout 60 $B --no-sandbox --disable-gpu --hide-scrollbars --allow-file-access-from-files --window-size=600,1500 --virtual-time-budget=3000 --screenshot=/tmp/plumb_m.png file:///tmp/plumbtest/w.html 2>&1 | grep -i error | head -3
+timeout 60 $B --no-sandbox --disable-gpu --hide-scrollbars --window-size=1360,1400 --virtual-time-budget=3000 --screenshot=/tmp/plumb_d.png file://$PWD/index.html 2>&1 | grep -i error | head -3
+python3 -c "
+from PIL import Image
+Image.open('/tmp/plumb_m.png').crop((0,700,390,1400)).save('/tmp/c1.png')
+Image.open('/tmp/plumb_d.png').crop((0,620,1360,1300)).save('/tmp/c2.png')"</parameter>
+</invoke>
+<invoke name="Read">
+<parameter name="file_path">/tmp/c1.png</parameter>
+</invoke>
+<invoke name="Read">
+<parameter name="file_path">/tmp/c2.png</parameter>
+</invoke>
+Output from command in shell:
+[image]
+[image]
+The landing page is in `index.html` in the working directory: one file with inline CSS, JS and SVG, and no external requests.
+
+I rendered it in headless Chromium at 1360px and 390px wide. The layout holds at both, with no horizontal overflow on mobile. I did not click through the interactive parts in a browser; the script only passed a syntax check.
+
+The product is a fictional app called Plumb, aimed at teams of 5 to 50, and all names, prices, stats and the customer quote are invented placeholders.
+
+- **Hero demo:** a project of eight tasks that you can view as a timeline, board or list. Clicking a task moves it forward, and reopening a finished one marks it as behind.
+- **Other sections:** four features with small diagrams, a customer quote with stats, pricing with a yearly/monthly toggle, FAQ, and a sign-up call to action with footer.
+- **Sign-up form:** it validates the email and shows a confirmation message, but it is not connected to any backend.
+- **Links:** the footer links and "Sign in" point to `#`.

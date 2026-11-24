@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn — Project management that marks the path</title>
+<meta name="description" content="Cairn is project management for teams who'd rather ship than shuffle tickets. Milestones you can see, progress you can feel.">
+<style>
+  :root {
+    --paper: #f4efe6;
+    --paper-2: #ebe4d6;
+    --ink: #1f1d1a;
+    --ink-soft: #5a554c;
+    --line: #d6cdbb;
+    --rust: #b8532f;
+    --rust-deep: #8f3d20;
+    --moss: #4f6b4a;
+    --stone-1: #8a8478;
+    --stone-2: #a59e90;
+    --stone-3: #6f6a60;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --radius: 6px;
+    --max: 1160px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    /* faint paper grain */
+    background-image:
+      radial-gradient(rgba(31,29,26,.035) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+  a { color: inherit; }
+  img, svg { display: block; }
+  :focus-visible { outline: 2px solid var(--rust); outline-offset: 3px; border-radius: 3px; }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--rust);
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -.01em; margin: 0; }
+  h2 { font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; }
+  h3 { font-size: 22px; line-height: 1.25; }
+  p { margin: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 600 15px/1 var(--sans);
+    padding: 15px 22px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--rust); }
+  .btn-primary:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--rust); }
+  .btn-ghost { background: transparent; color: var(--ink); }
+  .btn-ghost:hover { background: var(--paper-2); }
+
+  /* ---------- Nav ---------- */
+  header.nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(244,239,230,.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--serif); font-size: 24px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
+  .nav-links a { text-decoration: none; color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { display: flex; gap: 12px; align-items: center; }
+  .nav-cta .signin { font-size: 15px; text-decoration: none; color: var(--ink-soft); }
+  .nav-cta .btn { padding: 11px 16px; font-size: 14px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 88px 0 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+  .hero h1 {
+    font-size: clamp(44px, 6.4vw, 80px);
+    line-height: .98;
+    margin: 18px 0 26px;
+  }
+  .hero h1 em { font-style: italic; color: var(--rust); }
+  .hero .lede { font-size: 20px; color: var(--ink-soft); max-width: 30em; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-note { margin-top: 22px; font-size: 14px; color: var(--ink-soft); }
+
+  /* Demo card */
+  .demo {
+    background: #fbf8f2;
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    box-shadow: 8px 8px 0 var(--ink);
+    overflow: hidden;
+  }
+  .demo-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1.5px solid var(--ink);
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+  }
+  .demo-bar .dots { display: flex; gap: 6px; }
+  .demo-bar .dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink); display: block; }
+  .demo-body { display: grid; grid-template-columns: 1.25fr 1fr; }
+  .tasks { padding: 20px 18px; border-right: 1.5px dashed var(--line); }
+  .tasks h4 { margin: 0 0 4px; font-family: var(--serif); font-weight: 500; font-size: 19px; }
+  .tasks .sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+  .task {
+    display: flex; align-items: flex-start; gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: none; border: 0;
+    padding: 9px 6px;
+    border-radius: 5px;
+    font: inherit; font-size: 14.5px; color: var(--ink);
+    cursor: pointer;
+    line-height: 1.35;
+  }
+  .task:hover { background: var(--paper-2); }
+  .task .box {
+    flex: none; width: 18px; height: 18px; margin-top: 1px;
+    border: 1.5px solid var(--ink); border-radius: 4px;
+    display: grid; place-items: center;
+    transition: background .15s ease;
+  }
+  .task .box svg { opacity: 0; transform: scale(.5); transition: all .18s ease; }
+  .task[aria-pressed="true"] .box { background: var(--moss); border-color: var(--moss); }
+  .task[aria-pressed="true"] .box svg { opacity: 1; transform: scale(1); }
+  .task[aria-pressed="true"] .label { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--rust); }
+  .task .who { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); padding-top: 2px; }
+
+  .cairn-panel { padding: 20px 18px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: var(--paper); }
+  .cairn-panel .meta { width: 100%; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; }
+  #cairn { width: 100%; max-width: 200px; height: 220px; overflow: visible; }
+  #cairn .stone { animation: drop .5s cubic-bezier(.3,1.4,.6,1) both; transform-box: fill-box; transform-origin: center; }
+  @keyframes drop { from { transform: translateY(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .progress-label { font-family: var(--serif); font-size: 15px; text-align: center; min-height: 2.6em; }
+  .progress-label strong { color: var(--rust); font-weight: 600; }
+
+  /* ---------- Logos ---------- */
+  .trust { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 0; }
+  .trust-inner { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; justify-content: space-between; }
+  .trust p { font-size: 13px; color: var(--ink-soft); font-family: var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .trust ul { display: flex; gap: 44px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; font-family: var(--serif); font-size: 21px; color: var(--stone-3); }
+  .trust li:nth-child(2) { font-style: italic; }
+  .trust li:nth-child(3) { font-family: var(--sans); font-weight: 800; letter-spacing: -.03em; font-size: 19px; }
+  .trust li:nth-child(4) { font-family: var(--mono); font-size: 17px; }
+
+  /* ---------- Method ---------- */
+  section { padding: 110px 0; }
+  .section-head { max-width: 640px; margin-bottom: 60px; }
+  .section-head h2 { margin-top: 14px; }
+  .section-head p { margin-top: 18px; color: var(--ink-soft); font-size: 18px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1.5px solid var(--ink); }
+  .step { padding: 32px 32px 0 0; position: relative; }
+  .step + .step { padding-left: 32px; border-left: 1px solid var(--line); }
+  .step .num { font-family: var(--serif); font-size: 64px; line-height: 1; color: var(--rust); font-style: italic; margin-bottom: 18px; }
+  .step h3 { margin-bottom: 10px; }
+  .step p { color: var(--ink-soft); }
+
+  /* ---------- Features ---------- */
+  .features { background: var(--ink); color: var(--paper); }
+  .features .eyebrow { color: #e08a63; }
+  .features .section-head p { color: #b9b2a5; }
+  .feat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  .feat {
+    border: 1px solid #3b3833;
+    border-radius: 10px;
+    padding: 28px;
+    background: #26241f;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .feat p { color: #b9b2a5; font-size: 15.5px; }
+  .feat-a { grid-column: span 4; }
+  .feat-b { grid-column: span 2; }
+  .feat-c, .feat-d, .feat-e { grid-column: span 2; }
+  .viz { margin-top: auto; padding-top: 10px; }
+
+  /* timeline viz */
+  .tl { position: relative; height: 120px; }
+  .tl-row { position: absolute; left: 0; right: 0; height: 22px; border-radius: 4px; }
+  .tl-bar { position: absolute; height: 22px; border-radius: 4px; font: 11px/22px var(--mono); padding: 0 8px; color: var(--ink); white-space: nowrap; overflow: hidden; }
+  .tl-grid { position: absolute; inset: 0; background-image: linear-gradient(90deg, #3b3833 1px, transparent 1px); background-size: 12.5% 100%; }
+  .tl-today { position: absolute; top: -6px; bottom: -6px; left: 58%; width: 2px; background: #e08a63; }
+  .tl-today::after { content: "today"; position: absolute; top: -18px; left: -14px; font: 10px var(--mono); color: #e08a63; }
+
+  .pulse-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13.5px; }
+  .pulse-list li { display: flex; gap: 10px; align-items: center; color: #d8d1c3; }
+  .pulse-list .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+
+  .kbd-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  kbd { font: 12px var(--mono); padding: 5px 9px; border: 1px solid #4a463f; border-bottom-width: 3px; border-radius: 5px; color: #e9e2d4; background: #2e2b26; }
+
+  .meter { display: grid; gap: 10px; }
+  .meter div { display: grid; grid-template-columns: 70px 1fr 34px; gap: 10px; align-items: center; font: 12px var(--mono); color: #b9b2a5; }
+  .meter span.track { height: 8px; background: #3b3833; border-radius: 4px; overflow: hidden; }
+  .meter span.fill { display: block; height: 100%; background: var(--paper); border-radius: 4px; }
+
+  /* ---------- Quote ---------- */
+  .quote { text-align: center; }
+  .quote blockquote { margin: 0 auto; max-width: 880px; font-family: var(--serif); font-size: clamp(26px, 3.4vw, 40px); line-height: 1.25; }
+  .quote blockquote::before { content: "“"; display: block; font-size: 90px; line-height: .6; color: var(--rust); margin-bottom: 10px; }
+  .quote figcaption { margin-top: 30px; font-size: 15px; color: var(--ink-soft); }
+  .quote figcaption strong { color: var(--ink); font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 72px; border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--line); }
+  .stats div { padding: 28px 10px; }
+  .stats div + div { border-left: 1px solid var(--line); }
+  .stats b { display: block; font-family: var(--serif); font-weight: 500; font-size: 48px; line-height: 1; }
+  .stats span { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- Pricing ---------- */
+  .pricing { background: var(--paper-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .billing { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 3px; margin-top: 26px; background: var(--paper); }
+  .billing button { font: 600 13px var(--sans); border: 0; background: none; padding: 8px 16px; border-radius: 999px; cursor: pointer; color: var(--ink-soft); }
+  .billing button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+  .plan { background: var(--paper); border: 1.5px solid var(--line); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; }
+  .plan.featured { border-color: var(--ink); box-shadow: 6px 6px 0 var(--rust); position: relative; }
+  .plan.featured .tag { position: absolute; top: -12px; left: 32px; background: var(--rust); color: #fff; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
+  .plan h3 { margin-bottom: 6px; }
+  .plan .for { font-size: 14.5px; color: var(--ink-soft); min-height: 3em; }
+  .price { margin: 22px 0 6px; display: flex; align-items: baseline; gap: 6px; }
+  .price b { font-family: var(--serif); font-weight: 500; font-size: 52px; line-height: 1; }
+  .price span { color: var(--ink-soft); font-size: 14px; }
+  .price-note { font-size: 13px; color: var(--ink-soft); min-height: 1.4em; margin-bottom: 22px; }
+  .plan ul { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 10px; font-size: 15px; }
+  .plan li { display: flex; gap: 10px; }
+  .plan li::before { content: ""; flex: none; width: 10px; height: 7px; margin-top: 9px; border-radius: 50%; background: var(--stone-1); }
+  .plan .btn { margin-top: auto; justify-content: center; }
+
+  /* ---------- FAQ ---------- */
+  .faq-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 64px; }
+  details { border-top: 1px solid var(--line); padding: 20px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; list-style: none; font-family: var(--serif); font-size: 21px; display: flex; justify-content: space-between; gap: 20px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--sans); font-weight: 300; font-size: 26px; line-height: 1; color: var(--rust); transition: transform .2s ease; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin-top: 12px; color: var(--ink-soft); max-width: 40em; }
+
+  /* ---------- CTA ---------- */
+  .cta { padding: 120px 0; text-align: center; position: relative; overflow: hidden; }
+  .cta h2 { font-size: clamp(40px, 6vw, 72px); max-width: 14ch; margin: 0 auto 22px; }
+  .cta p { color: var(--ink-soft); font-size: 19px; margin-bottom: 36px; }
+  .signup { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .signup input {
+    font: 16px var(--sans);
+    padding: 14px 16px;
+    min-width: 290px;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    background: #fbf8f2;
+    color: var(--ink);
+  }
+  .signup-msg { margin-top: 16px; font-size: 15px; color: var(--moss); min-height: 1.5em; }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1.5px solid var(--ink); padding: 56px 0 40px; font-size: 14.5px; }
+  .foot-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
+  .foot-grid h5 { font: 600 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 14px; }
+  .foot-grid ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .foot-grid a { text-decoration: none; color: var(--ink); }
+  .foot-grid a:hover { color: var(--rust); }
+  .foot-blurb { color: var(--ink-soft); max-width: 28em; margin-top: 14px; }
+  .foot-bottom { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--ink-soft); font-size: 13px; flex-wrap: wrap; gap: 10px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .hero-grid, .faq-grid { grid-template-columns: 1fr; gap: 48px; }
+    .feat-a, .feat-b, .feat-c, .feat-d, .feat-e { grid-column: span 6; }
+    .plans { grid-template-columns: 1fr; max-width: 480px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 720px) {
+    section { padding: 80px 0; }
+    .steps, .stats { grid-template-columns: 1fr; }
+    .step, .step + .step { padding: 28px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .stats div + div { border-left: 0; border-top: 1px solid var(--line); }
+    .demo-body { grid-template-columns: 1fr; }
+    .tasks { border-right: 0; border-bottom: 1.5px dashed var(--line); }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .nav-cta .signin { display: none; }
+    .signup input { min-width: 0; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo" aria-label="Cairn home">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <ellipse cx="13" cy="22" rx="11" ry="3.4" fill="#1f1d1a"/>
+        <ellipse cx="13.6" cy="15.6" rx="8" ry="3" fill="#6f6a60"/>
+        <ellipse cx="12.6" cy="10" rx="5.6" ry="2.6" fill="#a59e90"/>
+        <ellipse cx="13.2" cy="5" rx="3.2" ry="2" fill="#b8532f"/>
+      </svg>
+      Cairn
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#method">Method</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="signin">Sign in</a>
+      <a href="#start" class="btn btn-primary">Start free</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Project management, unbloated</span>
+        <h1 id="hero-title">Every finished task <em>marks the path.</em></h1>
+        <p class="lede">Cairn turns your team's work into milestones you can actually see stacking up. Fewer status meetings, fewer orphaned tickets, more things shipped.</p>
+        <div class="hero-actions">
+          <a href="#start" class="btn btn-primary">Start your first project
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#method" class="btn btn-ghost">See how it works</a>
+        </div>
+        <p class="hero-note">Free for teams up to 5 · No credit card · Imports from Jira, Linear &amp; Trello</p>
+      </div>
+
+      <div class="demo" aria-label="Interactive demo">
+        <div class="demo-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>launch / spring-release</span>
+          <span id="pct">0%</span>
+        </div>
+        <div class="demo-body">
+          <div class="tasks">
+            <h4>Spring release</h4>
+            <p class="sub">Try it — check off a few tasks.</p>
+            <div id="task-list" role="group" aria-label="Tasks"></div>
+          </div>
+          <div class="cairn-panel">
+            <div class="meta"><span>MILESTONE</span><span id="count">0 / 6</span></div>
+            <svg id="cairn" viewBox="0 0 200 220" role="img" aria-label="Cairn of completed tasks">
+              <line x1="10" y1="206" x2="190" y2="206" stroke="#d6cdbb" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <g id="stones"></g>
+            </svg>
+            <p class="progress-label" id="progress-label" aria-live="polite">Nothing stacked yet.<br>Every cairn starts with one stone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <div class="trust">
+    <div class="wrap trust-inner">
+      <p>Trusted by 4,000+ teams</p>
+      <ul aria-label="Customer logos">
+        <li>Northwind</li>
+        <li>Halcyon &amp; Co.</li>
+        <li>FERNLY</li>
+        <li>quarry.io</li>
+        <li>Moorland</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Method -->
+  <section id="method" aria-labelledby="method-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The method</span>
+        <h2 id="method-title">Hikers don't track every step. They watch for the next marker.</h2>
+        <p>Most tools drown you in tickets. Cairn organizes work around the milestones that matter, so everyone always knows where the path goes next.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">i.</div>
+          <h3>Mark the destination</h3>
+          <p>Set a milestone in plain language. Cairn suggests the tasks it'll take, based on how your team has worked before.</p>
+        </div>
+        <div class="step">
+          <div class="num">ii.</div>
+          <h3>Stack the stones</h3>
+          <p>Each finished task adds to the milestone. Progress is visible at a glance — no spreadsheet archaeology required.</p>
+        </div>
+        <div class="step">
+          <div class="num">iii.</div>
+          <h3>Leave a trail</h3>
+          <p>Completed milestones become a readable history. New teammates see not just what shipped, but why and how.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2 id="features-title">Everything you need. Nothing you'll have to train people on.</h2>
+        <p>Built for teams of 3 to 300 who'd rather do the work than manage the tool.</p>
+      </div>
+
+      <div class="feat-grid">
+        <article class="feat feat-a">
+          <h3>Timelines that tell the truth</h3>
+          <p>Dependencies update themselves. When one task slips, you see the ripple before it becomes a flood — and Cairn suggests what to move.</p>
+          <div class="viz">
+            <div class="tl" aria-hidden="true">
+              <div class="tl-grid"></div>
+              <div class="tl-bar" style="top:4px;left:0;width:34%;background:#a59e90">Research</div>
+              <div class="tl-bar" style="top:34px;left:22%;width:40%;background:#e08a63">Design system</div>
+              <div class="tl-bar" style="top:64px;left:48%;width:30%;background:#8fa88a">Build</div>
+              <div class="tl-bar" style="top:94px;left:74%;width:26%;background:#f4efe6">Launch</div>
+              <div class="tl-today"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="feat feat-b">
+          <h3>Weekly pulse</h3>
+          <p>A two-minute summary lands every Friday. No standup required.</p>
+          <div class="viz">
+            <ul class="pulse-list">
+              <li><span class="dot" style="background:#8fa88a"></span>14 tasks shipped</li>
+              <li><span class="dot" style="background:#e08a63"></span>2 blockers need you</li>
+              <li><span class="dot" style="background:#a59e90"></span>Launch on track for Apr 18</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="feat feat-c">
+          <h3>Fast as a text editor</h3>
+          <p>Every action has a shortcut. Create, assign, and move work without touching the mouse.</p>
+          <div class="viz kbd-row" aria-hidden="true">
+            <kbd>C</kbd><kbd>⌘ K</kbd><kbd>A</kbd><kbd>⇧ M</kbd><kbd>/</kbd>
+          </div>
+        </article>
+
+        <article class="feat feat-d">
+          <h3>Honest workload</h3>
+          <p>See who's stretched thin before burnout shows up in a resignation letter.</p>
+          <div class="viz meter" aria-hidden="true">
+            <div>Priya <span class="track"><span class="fill" style="width:62%"></span></span>62%</div>
+            <div>Marco <span class="track"><span class="fill" style="width:94%;background:#e08a63"></span></span>94%</div>
+            <div>Jun <span class="track"><span class="fill" style="width:48%"></span></span>48%</div>
+          </div>
+        </article>
+
+        <article class="feat feat-e">
+          <h3>Plays well with others</h3>
+          <p>GitHub, Slack, Figma, Google Calendar and 60+ more. Pull requests close tasks automatically.</p>
+          <div class="viz kbd-row" aria-hidden="true">
+            <kbd>GitHub</kbd><kbd>Slack</kbd><kbd>Figma</kbd><kbd>+60</kbd>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote -->
+  <section class="quote" aria-label="Customer story">
+    <div class="wrap">
+      <figure style="margin:0">
+        <blockquote>We cut our Monday status meeting entirely. Everyone just opens Cairn and can see exactly how close we are.</blockquote>
+        <figcaption><strong>Dana Okafor</strong> · Head of Product, Fernly</figcaption>
+      </figure>
+      <div class="stats">
+        <div><b>31%</b><span>fewer missed deadlines</span></div>
+        <div><b>4.2 hrs</b><span>saved per person, per week</span></div>
+        <div><b>11 min</b><span>median time to onboard</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="pricing" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Pricing</span>
+        <h2 id="pricing-title">Simple plans. Per person, no surprises.</h2>
+        <div class="billing" role="group" aria-label="Billing period">
+          <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+          <button type="button" data-period="yearly" aria-pressed="true">Yearly · save 20%</button>
+        </div>
+      </div>
+
+      <div class="plans">
+        <div class="plan">
+          <h3>Trailhead</h3>
+          <p class="for">For small teams finding their footing.</p>
+          <div class="price"><b>$0</b><span>forever</span></div>
+          <p class="price-note">Up to 5 people</p>
+          <ul>
+            <li>Unlimited tasks &amp; milestones</li>
+            <li>3 active projects</li>
+            <li>Core integrations</li>
+            <li>7-day activity history</li>
+          </ul>
+          <a href="#start" class="btn btn-ghost">Start free</a>
+        </div>
+
+        <div class="plan featured">
+          <span class="tag">Most teams</span>
+          <h3>Ridge</h3>
+          <p class="for">For growing teams shipping on a schedule.</p>
+          <div class="price"><b data-monthly="10" data-yearly="8">$8</b><span>/ person / mo</span></div>
+          <p class="price-note" data-monthly="Billed monthly" data-yearly="Billed annually">Billed annually</p>
+          <ul>
+            <li>Everything in Trailhead</li>
+            <li>Unlimited projects</li>
+            <li>Timelines &amp; dependencies</li>
+            <li>Weekly pulse reports</li>
+            <li>Workload view</li>
+          </ul>
+          <a href="#start" class="btn btn-primary">Try Ridge free for 14 days</a>
+        </div>
+
+        <div class="plan">
+          <h3>Summit</h3>
+          <p class="for">For organizations with many teams and real compliance needs.</p>
+          <div class="price"><b data-monthly="18" data-yearly="15">$15</b><span>/ person / mo</span></div>
+          <p class="price-note" data-monthly="Billed monthly" data-yearly="Billed annually">Billed annually</p>
+          <ul>
+            <li>Everything in Ridge</li>
+            <li>SSO &amp; SCIM provisioning</li>
+            <li>Audit logs &amp; data residency</li>
+            <li>Portfolio views across teams</li>
+            <li>Dedicated success manager</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-title">
+    <div class="wrap faq-grid">
+      <div class="section-head" style="margin:0">
+        <span class="eyebrow">Questions</span>
+        <h2 id="faq-title">Before you pack your bags.</h2>
+        <p>Can't find what you need? Our support team is made of humans, and they answer within a few hours.</p>
+      </div>
+      <div>
+        <details open>
+          <summary>How hard is it to switch from our current tool?</summary>
+          <p>Not very. One-click importers bring over projects, tasks, assignees and comments from Jira, Linear, Asana, Trello and CSV. Most teams are fully moved in an afternoon.</p>
+        </details>
+        <details>
+          <summary>Is Cairn only for software teams?</summary>
+          <p>No. Engineering teams love the GitHub integration, but marketing, design, ops and agency teams use Cairn for anything with a deadline and more than one person involved.</p>
+        </details>
+        <details>
+          <summary>What happens when we outgrow the free plan?</summary>
+          <p>Nothing disappears. You'll get a heads-up when you hit the limit, and your existing projects stay fully accessible whether or not you upgrade.</p>
+        </details>
+        <details>
+          <summary>Where is our data stored?</summary>
+          <p>Data is encrypted in transit and at rest, hosted in the US or EU — your choice. Summit plans add data residency controls and a signed DPA.</p>
+        </details>
+        <details>
+          <summary>Can we cancel anytime?</summary>
+          <p>Yes. Monthly plans cancel at the end of the cycle; yearly plans are refunded pro-rata. You can export everything at any time.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="start" class="cta" aria-labelledby="cta-title">
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 id="cta-title" style="margin-top:14px">Place your first stone today.</h2>
+      <p>Set up a project in under five minutes. Free for small teams, forever.</p>
+      <form class="signup" id="signup" novalidate>
+        <label for="email" class="visually-hidden" style="position:absolute;left:-9999px">Work email</label>
+        <input id="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+        <button class="btn btn-primary" type="submit">Create workspace</button>
+      </form>
+      <p class="signup-msg" id="signup-msg" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" aria-label="Cairn home">
+          <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true">
+            <ellipse cx="13" cy="22" rx="11" ry="3.4" fill="#1f1d1a"/>
+            <ellipse cx="13.6" cy="15.6" rx="8" ry="3" fill="#6f6a60"/>
+            <ellipse cx="12.6" cy="10" rx="5.6" ry="2.6" fill="#a59e90"/>
+            <ellipse cx="13.2" cy="5" rx="3.2" ry="2" fill="#b8532f"/>
+          </svg>
+          Cairn
+        </a>
+        <p class="foot-blurb">Project management that marks the path. Made by a small, remote team that uses it every day.</p>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li><li><a href="#">Integrations</a></li></ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <ul><li><a href="#">Help center</a></li><li><a href="#">Guides</a></li><li><a href="#">Security</a></li><li><a href="#">Status</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Cairn Labs, Inc.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ----- Interactive cairn demo -----
+  const tasks = [
+    { label: "Finalize pricing copy", who: "DO" },
+    { label: "QA checkout flow on mobile", who: "MR" },
+    { label: "Record product walkthrough", who: "PS" },
+    { label: "Migrate onboarding emails", who: "JL" },
+    { label: "Ship changelog post", who: "DO" },
+    { label: "Flip the feature flag", who: "MR" }
+  ];
+  const messages = [
+    "Nothing stacked yet.<br>Every cairn starts with one stone.",
+    "<strong>First stone down.</strong><br>The path is marked.",
+    "Two in. Momentum<br>is a real thing.",
+    "<strong>Halfway there.</strong><br>Your team can see it too.",
+    "Four stones.<br>The summit's in view.",
+    "One more and<br>it's out the door.",
+    "<strong>Milestone reached.</strong><br>Spring release shipped. 🎉"
+  ];
+  const stoneColors = ["#3a3732", "#6f6a60", "#8a8478", "#a59e90", "#7d776b", "#b8532f"];
+  const list = document.getElementById("task-list");
+  const stonesG = document.getElementById("stones");
+  const done = new Array(tasks.length).fill(false);
+
+  const check = '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.6 2.5L10 3.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  tasks.forEach((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "task";
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<span class="box">${check}</span><span class="label">${t.label}</span><span class="who" aria-label="assigned to ${t.who}">${t.who}</span>`;
+    b.addEventListener("click", () => {
+      done[i] = !done[i];
+      b.setAttribute("aria-pressed", String(done[i]));
+      render();
+    });
+    list.appendChild(b);
+  });
+
+  let prevCount = 0;
+  function render() {
+    const n = done.filter(Boolean).length;
+    // Rebuild stone stack; only the newly added top stone animates.
+    stonesG.innerHTML = "";
+    let y = 206;
+    for (let k = 0; k < n; k++) {
+      const rx = 74 - k * 10.5;
+      const ry = 15 - k * 1.3;
+      const cx = 100 + (k % 2 ? 4 : -3) * (k ? 1 : 0);
+      y -= ry;
+      const e = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      e.setAttribute("cx", cx);
+      e.setAttribute("cy", y);
+      e.setAttribute("rx", rx);
+      e.setAttribute("ry", ry);
+      e.setAttribute("fill", stoneColors[k]);
+      e.setAttribute("stroke", "#1f1d1a");
+      e.setAttribute("stroke-width", "1.5");
+      if (k === n - 1 && n > prevCount) e.classList.add("stone");
+      stonesG.appendChild(e);
+      y -= ry - 2; // slight overlap so stones nest
+    }
+    prevCount = n;
+    document.getElementById("count").textContent = `${n} / ${tasks.length}`;
+    document.getElementById("pct").textContent = Math.round((n / tasks.length) * 100) + "%";
+    document.getElementById("progress-label").innerHTML = messages[n];
+  }
+
+  // Pre-check two tasks so the demo isn't empty on first view
+  [0, 1].forEach(i => list.children[i].click());
+
+  // ----- Billing toggle -----
+  const billingBtns = document.querySelectorAll(".billing button");
+  billingBtns.forEach(btn => btn.addEventListener("click", () => {
+    const period = btn.dataset.period;
+    billingBtns.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    document.querySelectorAll(".price b[data-monthly]").forEach(el => {
+      el.textContent = "$" + el.dataset[period];
+    });
+    document.querySelectorAll(".price-note[data-monthly]").forEach(el => {
+      el.textContent = el.dataset[period];
+    });
+  }));
+
+  // ----- Signup (demo only) -----
+  const form = document.getElementById("signup");
+  const msg = document.getElementById("signup-msg");
+  const input = document.getElementById("email");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!input.checkValidity() || !input.value) {
+      msg.style.color = "var(--rust-deep)";
+      msg.textContent = "That email doesn't look quite right — mind checking it?";
+      input.focus();
+      return;
+    }
+    msg.style.color = "var(--moss)";
+    msg.textContent = "Your workspace is being prepared. Check your inbox for a sign-in link.";
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

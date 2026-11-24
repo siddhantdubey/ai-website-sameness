@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8ef">
+  <title>Relay — Project management for teams</title>
+  <style>
+    :root {
+      --paper: #f8f8ef;
+      --ink: #172e26;
+      --forest: #183e32;
+      --lime: #def789;
+      --line: #cbd1bf;
+      --muted: #516258;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", Arial, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid #ac653d;
+      outline-offset: 4px;
+    }
+    .wrap { width: min(1240px, 90%); margin: auto; }
+    header { border-bottom: 1px solid var(--line); }
+    nav, .brand, .actions, .board-head, .column-head, footer .wrap {
+      display: flex;
+      align-items: center;
+    }
+    nav { min-height: 78px; gap: 34px; }
+    .brand { gap: 9px; font-size: 28px; font-weight: 750; letter-spacing: -1.7px; }
+    .mark { display: inline-flex; gap: 3px; transform: skew(-22deg); margin: 0 5px; }
+    .mark i { width: 6px; height: 23px; background: currentColor; }
+    nav .brand { margin-right: auto; }
+    nav > a:not(.brand) { font-size: 14px; font-weight: 600; }
+    nav > a:hover, footer a:hover { text-decoration: underline; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 18px;
+      border: 1px solid var(--ink); background: var(--ink); color: white;
+      padding: 15px 21px; border-radius: 7px; font-weight: 650; font-size: 15px;
+    }
+    .button:hover { background: #315743; }
+    nav .button { padding: 10px 15px; }
+    .hero {
+      display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+      gap: clamp(30px, 5vw, 88px); padding-block: clamp(48px, 6vw, 94px);
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2 { font-weight: 550; letter-spacing: -.066em; line-height: .99; }
+    h1 { font-size: clamp(61px, 6.7vw, 100px); }
+    .hero p { max-width: 460px; font-size: 19px; line-height: 1.55; color: var(--muted); margin: 25px 0 30px; }
+    .actions { gap: 22px; flex-wrap: wrap; }
+    .text-link { border-bottom: 1px solid currentColor; padding-bottom: 3px; font-size: 15px; font-weight: 600; }
+    .track { width: 100%; height: auto; display: block; border-radius: 18px; }
+    .workspace { border-top: 1px solid var(--line); padding: 48px 0 70px; }
+    .board-head { justify-content: space-between; gap: 20px; margin-bottom: 23px; }
+    h2 { font-size: clamp(36px, 4vw, 58px); }
+    .board-head p, .features p { color: var(--muted); line-height: 1.55; }
+    .board-head p { margin-top: 10px; }
+    .light { background: transparent; color: var(--ink); white-space: nowrap; }
+    .light:hover { background: #e9eddc; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .column { border: 1px solid var(--line); background: #eeefe4; border-radius: 12px; padding: 16px; }
+    .column-head { gap: 8px; margin-bottom: 15px; font-weight: 650; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #9585ba; }
+    .column:nth-child(2) .dot { background: #d39050; }
+    .column:nth-child(3) .dot { background: #73925c; }
+    .count { margin-left: auto; font: 12px monospace; }
+    .task {
+      display: block; width: 100%; text-align: left; color: var(--ink);
+      border: 1px solid #d9dece; border-radius: 8px; background: #fffef9;
+      padding: 16px; margin-top: 9px;
+    }
+    .task:hover { border-color: #89977b; }
+    .tag { display: table; font: 11px monospace; background: #e6dff3; border-radius: 4px; padding: 4px 7px; }
+    .task strong { display: block; margin: 13px 0 15px; font-size: 16px; }
+    .owner { font: 12px monospace; color: var(--muted); }
+    .features { background: var(--forest); color: var(--paper); padding: 60px 0; }
+    .features .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .features h2 { color: var(--lime); }
+    .features p { color: #e3e9da; font-size: 18px; max-width: 490px; }
+    footer .wrap { padding-block: 26px; justify-content: space-between; }
+    footer a:last-child { font-size: 14px; }
+    dialog { width: min(400px, 90vw); background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+    dialog::backdrop { background: #152d2580; }
+    dialog h3 { font-size: 26px; margin-bottom: 16px; }
+    input, select { display: block; width: 100%; margin: 7px 0 18px; padding: 12px; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+    @media (max-width: 760px) {
+      nav { gap: 16px; min-height: 66px; }
+      nav .workflow-link { display: none; }
+      .hero, .features .wrap { grid-template-columns: 1fr; }
+      .hero { gap: 34px; }
+      .track { max-height: 380px; background: var(--forest); }
+      .board { grid-template-columns: 1fr; }
+      .board-head { align-items: flex-start; }
+      .features .wrap { gap: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body id="top">
+  <header>
+    <nav class="wrap" aria-label="Main navigation">
+      <a href="#top" class="brand"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Relay</a>
+      <a class="workflow-link" href="#workflow">How it works</a>
+      <a href="#workspace" class="button">Try the board <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <h1>Every project<br>in stride.</h1>
+        <p>Give every task an owner and every handoff a home. Relay brings your team’s plans and progress together on one shared board.</p>
+        <div class="actions">
+          <a href="#workspace" class="button">Explore the board <span aria-hidden="true">↓</span></a>
+          <a href="#workflow" class="text-link">How it works</a>
+        </div>
+      </div>
+      <svg class="track" viewBox="0 0 560 450" role="img" aria-label="An illustrated running track with sweeping lime lanes and a checkered finish line">
+        <defs>
+          <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+            <path d="M28 0H0V28" fill="none" stroke="#72927b" stroke-opacity=".23"/>
+          </pattern>
+          <pattern id="checks" width="20" height="20" patternUnits="userSpaceOnUse">
+            <rect width="20" height="20" fill="#f5f5e8"/><path d="M0 0h10v10H0zm10 10h10v10H10z" fill="#233c30"/>
+          </pattern>
+          <path id="lane" d="M-175 330H272a104 104 0 0 0 0-208H171a46 46 0 0 1 0-92h480"/>
+        </defs>
+        <rect width="560" height="450" fill="#183e32"/>
+        <rect width="560" height="450" fill="url(#grid)"/>
+        <g transform="rotate(-28 280 225)" fill="none">
+          <use href="#lane" stroke="#101f19" stroke-width="88" transform="translate(0 9)"/>
+          <use href="#lane" stroke="#def789" stroke-width="86"/>
+          <use href="#lane" stroke="#637b40" stroke-width="56"/>
+          <use href="#lane" stroke="#def789" stroke-width="53"/>
+          <use href="#lane" stroke="#637b40" stroke-width="24"/>
+          <use href="#lane" stroke="#def789" stroke-width="21"/>
+          <rect x="98" y="287" width="21" height="86" fill="url(#checks)"/>
+          <path d="m188 315 17 15-17 15m23-30 17 15-17 15" stroke="#334a29" stroke-width="5"/>
+        </g>
+        <g fill="#ddedc8" font-family="monospace" font-size="12" letter-spacing="2">
+          <text x="24" y="33">RELAY / TRACK CLUB</text>
+          <text x="536" y="427" text-anchor="end">FIG. 01</text>
+        </g>
+      </svg>
+    </section>
+
+    <section class="workspace wrap" id="workspace" aria-labelledby="board-title">
+      <div class="board-head">
+        <div><h2 id="board-title">Launch board</h2><p>Try it out. Select a task to update its status.</p></div>
+        <button class="button light" id="add">+ Add task</button>
+      </div>
+      <div class="board" id="board"></div>
+      <span role="status" id="status"></span>
+    </section>
+
+    <section class="features" id="workflow">
+      <div class="wrap">
+        <h2>Make the handoff.</h2>
+        <p>Add a task, assign an owner, and move it across the board as work progresses. Your demo board saves automatically in this browser when local storage is available.</p>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><a class="brand" href="#top">Relay</a><a href="#top">Back to top ↑</a></div></footer>
+
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="form">
+      <h3 id="editor-title">Add task</h3>
+      <label>Task name<input id="task-name" required maxlength="100"></label>
+      <label>Owner<input id="owner" required maxlength="50"></label>
+      <label>Status<select id="stage"><option>To do</option><option>In progress</option><option>Done</option></select></label>
+      <div class="actions"><button class="button" type="submit">Save task</button><button class="button light" type="button" id="cancel">Cancel</button></div>
+    </form>
+  </dialog>
+
+  <script>
+    const stages = ['To do', 'In progress', 'Done'];
+    const seeds = [
+      ['Draft launch notes', 'Maya', 'Writing', 'To do'],
+      ['Review mobile layouts', 'Jules', 'Design', 'In progress'],
+      ['Approve project brief', 'Sam', 'Planning', 'Done']
+    ];
+    const key = 'relay-launch-board-v1';
+    let tasks = seeds;
+    try {
+      const saved = JSON.parse(localStorage.getItem(key));
+      if (Array.isArray(saved) && saved.every(t => Array.isArray(t) && t.length === 4 &&
+          t.every(v => typeof v === 'string') && stages.includes(t[3]))) tasks = saved;
+    } catch {}
+    const get = id => document.getElementById(id);
+    const dialog = get('editor');
+    let editing = -1;
+    function element(tag, className, value) {
+      const node = document.createElement(tag);
+      node.className = className;
+      node.textContent = value;
+      return node;
+    }
+    function openEditor(index) {
+      editing = index;
+      const task = tasks[index] || ['', '', 'Task', stages[0]];
+      get('editor-title').textContent = index < 0 ? 'Add task' : 'Edit task';
+      get('task-name').value = task[0];
+      get('owner').value = task[1];
+      get('stage').value = task[3];
+      dialog.showModal();
+    }
+    function render() {
+      const board = get('board');
+      board.replaceChildren();
+      for (const stage of stages) {
+        const column = element('section', 'column', '');
+        const head = element('h3', 'column-head', '');
+        head.append(element('span', 'dot', ''), stage,
+          element('span', 'count', tasks.filter(task => task[3] === stage).length));
+        column.append(head);
+        tasks.forEach(([title, owner, tag, status], index) => {
+          if (status !== stage) return;
+          const card = element('button', 'task', '');
+          card.dataset.index = index;
+          card.append(element('span', 'tag', tag), element('strong', '', title), element('span', 'owner', owner));
+          card.onclick = () => openEditor(index);
+          column.append(card);
+        });
+        board.append(column);
+      }
+    }
+    get('add').onclick = () => openEditor(-1);
+    get('cancel').onclick = () => dialog.close();
+    get('form').onsubmit = event => {
+      event.preventDefault();
+      const title = get('task-name').value.trim();
+      const owner = get('owner').value.trim();
+      if (!title || !owner) {
+        const field = get(!title ? 'task-name' : 'owner');
+        field.value = '';
+        field.reportValidity();
+        return;
+      }
+      const index = editing < 0 ? tasks.length : editing;
+      tasks[index] = [title, owner, tasks[index]?.[2] || 'Task', get('stage').value];
+      try { localStorage.setItem(key, JSON.stringify(tasks)); }
+      catch { get('status').textContent = 'Changes are available for this visit only.'; }
+      dialog.close();
+      render();
+      document.querySelector(`[data-index="${index}"]`).focus();
+    };
+    render();
+  </script>
+</body>
+</html>

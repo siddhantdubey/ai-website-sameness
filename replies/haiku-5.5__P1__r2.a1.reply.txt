@@ -1,0 +1,817 @@
+
+<invoke/>
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/haiku-5.5__P1__r2.a1._efe7low/index.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taskflow — Project management that gets out of your way</title>
+<meta name="description" content="Taskflow helps teams plan, track, and ship work with boards, timelines, and automations that keep everyone aligned.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f8fb;
+    --text: #0f172a;
+    --muted: #5b6475;
+    --border: #e4e7ee;
+    --brand: #5b5bf6;
+    --brand-dark: #4747e0;
+    --brand-soft: #eeeefe;
+    --accent: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --max: 1160px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 96px 0; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 14px;
+  }
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 800; }
+  h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 800; }
+  h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .lead { font-size: clamp(17px, 2vw, 20px); color: var(--muted); max-width: 620px; }
+  .section-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+  .section-head .lead { margin: 16px auto 0; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 24px; border-radius: 10px; font-weight: 600; font-size: 16px;
+    border: 1px solid transparent; cursor: pointer; transition: all .2s ease;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 6px 18px rgba(91, 91, 246, .3); }
+  .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--bg-alt); }
+  .btn-light { background: #fff; color: var(--brand-dark); }
+  .btn-light:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-sm { padding: 9px 16px; font-size: 14px; }
+
+  /* Nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, .85);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; letter-spacing: -0.02em; }
+  .logo-mark {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--brand), #8b5cf6);
+    display: grid; place-items: center;
+  }
+  .nav-links { display: flex; gap: 32px; font-size: 15px; font-weight: 500; color: var(--muted); }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 12px; align-items: center; }
+  .menu-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 40px;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(91,91,246,.14), transparent 60%),
+      radial-gradient(700px 400px at -10% 10%, rgba(16,185,129,.10), transparent 60%),
+      var(--bg);
+    overflow: hidden;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+  .hero h1 span { background: linear-gradient(90deg, var(--brand), #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .lead { margin: 24px 0 36px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-note { margin-top: 18px; font-size: 14px; color: var(--muted); }
+  .hero-note strong { color: var(--text); }
+
+  /* Mock app */
+  .mock {
+    background: #fff; border: 1px solid var(--border); border-radius: 18px;
+    box-shadow: 0 30px 80px rgba(15,23,42,.15); overflow: hidden;
+  }
+  .mock-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--bg-alt); border-bottom: 1px solid var(--border); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .mock-title { margin-left: 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; }
+  .col { background: var(--bg-alt); border-radius: 12px; padding: 12px; }
+  .col-head { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px; margin-bottom: 10px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,.03);
+  }
+  .card .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; }
+  .tag-brand { background: var(--brand-soft); color: var(--brand-dark); }
+  .tag-green { background: #d1fae5; color: #047857; }
+  .tag-warn { background: #fef3c7; color: #b45309; }
+  .tag-red { background: #fee2e2; color: #b91c1c; }
+  .card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: var(--muted); font-size: 12px; }
+  .avatar { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; color: #fff; font-size: 10px; font-weight: 700; }
+  .progress { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+  .progress > div { height: 100%; background: var(--accent); border-radius: 999px; }
+  .floating {
+    position: absolute; background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: var(--shadow); padding: 12px 14px; font-size: 13px; display: flex; gap: 10px; align-items: center;
+  }
+  .hero-visual { position: relative; }
+  .float-1 { left: -28px; bottom: 40px; animation: bob 5s ease-in-out infinite; }
+  .float-2 { right: -20px; top: 30px; animation: bob 6s ease-in-out infinite reverse; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  /* Logos */
+  .logos { padding: 40px 0; border-bottom: 1px solid var(--border); }
+  .logos p { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+  .logos-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 28px 40px; opacity: .6; }
+  .logos-row span { font-weight: 800; font-size: 19px; letter-spacing: -0.02em; color: #334155; }
+
+  /* Features */
+  .features { background: var(--bg-alt); }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature {
+    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 32px; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .feature:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .icon {
+    width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+    background: var(--brand-soft); color: var(--brand); margin-bottom: 20px;
+  }
+  .feature p { color: var(--muted); margin-top: 10px; font-size: 15px; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; counter-reset: step; }
+  .step { position: relative; padding-top: 24px; border-top: 2px solid var(--border); }
+  .step::before {
+    counter-increment: step; content: "0" counter(step);
+    position: absolute; top: -16px; left: 0; background: var(--bg); padding-right: 12px;
+    font-weight: 800; font-size: 14px; color: var(--brand); letter-spacing: .05em;
+  }
+  .step h3 { margin-bottom: 8px; }
+  .step p { color: var(--muted); font-size: 15px; }
+
+  /* Views */
+  .views { background: linear-gradient(180deg, var(--bg), var(--bg-alt)); }
+  .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
+  .tab {
+    padding: 10px 20px; border-radius: 999px; border: 1px solid var(--border); background: #fff;
+    font: inherit; font-weight: 600; font-size: 14px; cursor: pointer; color: var(--muted);
+  }
+  .tab[aria-selected="true"] { background: var(--text); color: #fff; border-color: var(--text); }
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+  .timeline-row { display: grid; grid-template-columns: 160px 1fr; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .timeline-row:last-child { border: 0; }
+  .bar-track { position: relative; height: 28px; background: var(--bg-alt); border-radius: 8px; }
+  .bar { position: absolute; top: 0; height: 100%; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 600; padding: 6px 10px; white-space: nowrap; overflow: hidden; }
+  .list-row { display: grid; grid-template-columns: 1fr 140px 120px 40px; gap: 12px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .list-row.head { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; background: var(--bg-alt); }
+  .check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 5px; display: inline-block; vertical-align: middle; margin-right: 10px; }
+  .check.done { background: var(--accent); border-color: var(--accent); }
+  .showcase { background: #fff; border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); padding: 28px; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .cal-day { min-height: 110px; border: 1px solid var(--border); border-radius: 10px; padding: 8px; font-size: 12px; background: #fff; }
+  .cal-day .n { color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .chip { display: block; font-size: 11px; font-weight: 600; padding: 4px 6px; border-radius: 6px; margin-bottom: 4px; color: #fff; }
+
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .quote { border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; background: #fff; display: flex; flex-direction: column; }
+  .stars { color: var(--warn); letter-spacing: 2px; margin-bottom: 16px; }
+  .quote blockquote { font-size: 16px; color: var(--text); flex: 1; }
+  .quote-author { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+  .quote-author .avatar { width: 40px; height: 40px; font-size: 14px; }
+  .quote-author small { display: block; color: var(--muted); font-size: 13px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 72px; text-align: center; }
+  .stat-num { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; color: var(--brand); }
+  .stat-label { color: var(--muted); font-size: 15px; }
+
+  /* Pricing */
+  .pricing { background: var(--bg-alt); }
+  .toggle { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 44px; font-size: 15px; font-weight: 600; color: var(--muted); }
+  .switch { position: relative; width: 52px; height: 30px; background: var(--border); border-radius: 999px; border: 0; cursor: pointer; transition: background .2s; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .switch[aria-checked="true"] { background: var(--brand); }
+  .switch[aria-checked="true"]::after { transform: translateX(22px); }
+  .save { font-size: 12px; background: #d1fae5; color: #047857; padding: 3px 8px; border-radius: 999px; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
+  .plan { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 36px 32px; display: flex; flex-direction: column; }
+  .plan.featured { border: 2px solid var(--brand); box-shadow: 0 24px 60px rgba(91,91,246,.18); position: relative; }
+  .plan .badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #fff; font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 999px; }
+  .plan-name { font-weight: 700; font-size: 18px; }
+  .plan-desc { color: var(--muted); font-size: 14px; margin-top: 4px; min-height: 42px; }
+  .price { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; margin: 24px 0 4px; }
+  .price small { font-size: 16px; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  .plan-billing { font-size: 13px; color: var(--muted); min-height: 20px; }
+  .plan ul { list-style: none; margin: 28px 0 32px; display: grid; gap: 12px; font-size: 15px; flex: 1; }
+  .plan li::before { content: "✓"; color: var(--accent); font-weight: 800; margin-right: 10px; }
+  .plan .btn { width: 100%; }
+
+  /* FAQ */
+  .faq { max-width: 760px; margin: 0 auto; }
+  details { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  details summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: "+"; font-size: 24px; color: var(--muted); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { color: var(--muted); margin-top: 12px; font-size: 15px; }
+
+  /* CTA */
+  .cta {
+    background: linear-gradient(135deg, var(--brand), #8b5cf6);
+    color: #fff; border-radius: 28px; padding: 72px 40px; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta h2 { color: #fff; }
+  .cta p { opacity: .9; margin: 16px auto 32px; max-width: 540px; font-size: 18px; }
+  .cta form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .cta input {
+    padding: 14px 18px; border-radius: 10px; border: 0; font: inherit; font-size: 16px; min-width: 280px; color: var(--text);
+  }
+  .cta input:focus { outline: 3px solid rgba(255,255,255,.5); }
+  .cta .fine { font-size: 14px; margin-top: 16px; opacity: .8; }
+
+  /* Footer */
+  footer { padding: 64px 0 36px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  .footer-grid h4 { color: var(--text); font-size: 14px; margin-bottom: 14px; }
+  .footer-grid ul { list-style: none; display: grid; gap: 10px; }
+  .footer-grid a:hover { color: var(--text); }
+  .footer-bottom { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 620px; margin: 0 auto; width: 100%; }
+    .float-1 { left: 8px; }
+    .float-2 { right: 8px; }
+    .grid-3, .quotes, .plans { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .steps { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .menu-toggle { display: block; }
+    .nav-cta .btn-ghost { display: none; }
+    .cal { grid-template-columns: 1fr; }
+    .cal-day { min-height: auto; }
+    .list-row { grid-template-columns: 1fr 100px; }
+    .list-row > :nth-child(3), .list-row > :nth-child(4) { display: none; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 72px 0; }
+    .board { grid-template-columns: 1fr; }
+    .board .col:nth-child(n+3) { display: none; }
+    .timeline-row { grid-template-columns: 1fr; gap: 8px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .cta { padding: 52px 24px; }
+    .cta input { min-width: 0; width: 100%; }
+    .nav-inner .btn { padding: 9px 14px; font-size: 14px; }
+    .mobile-open .nav-links {
+      display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0;
+      background: #fff; padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 18px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="top">
+  <div class="container nav-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+      </span>
+      Taskflow
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#views">Views</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="#start" class="btn btn-primary btn-sm">Start free</a>
+      <button class="menu-toggle" aria-label="Toggle menu" onclick="document.body.classList.toggle('mobile-open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Project management for modern teams</span>
+      <h1>Plan less. <span>Ship more.</span></h1>
+      <p class="lead">Taskflow brings your boards, timelines, and docs into one calm workspace, so your team spends its time building instead of chasing status updates.</p>
+      <div class="hero-actions">
+        <a href="#start" class="btn btn-primary">Start for free
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#views" class="btn btn-ghost">See it in action</a>
+      </div>
+      <p class="hero-note"><strong>Free forever</strong> for teams up to 10 · No credit card required</p>
+    </div>
+
+    <div class="hero-visual">
+      <div class="mock" role="img" aria-label="Preview of the Taskflow board with three columns of tasks">
+        <div class="mock-bar">
+          <span class="dot" style="background:#fca5a5"></span>
+          <span class="dot" style="background:#fcd34d"></span>
+          <span class="dot" style="background:#86efac"></span>
+          <span class="mock-title">Website Relaunch · Board</span>
+        </div>
+        <div class="board">
+          <div class="col">
+            <div class="col-head"><span>To do</span><span>3</span></div>
+            <div class="card"><span class="tag tag-brand">Design</span><div>Homepage hero concepts</div>
+              <div class="card-foot"><span class="avatar" style="background:#8b5cf6">MA</span><span>Mar 14</span></div></div>
+            <div class="card"><span class="tag tag-warn">Copy</span><div>Pricing page wording</div>
+              <div class="card-foot"><span class="avatar" style="background:#f59e0b">JL</span><span>Mar 16</span></div></div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span>In progress</span><span>2</span></div>
+            <div class="card"><span class="tag tag-brand">Frontend</span><div>Responsive nav and footer</div>
+              <div class="progress"><div style="width:65%"></div></div>
+              <div class="card-foot"><span class="avatar" style="background:#10b981">SK</span><span>65%</span></div></div>
+            <div class="card"><span class="tag tag-red">Blocked</span><div>Analytics script review</div>
+              <div class="card-foot"><span class="avatar" style="background:#ef4444">RT</span><span>Mar 12</span></div></div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span>Done</span><span>4</span></div>
+            <div class="card"><span class="tag tag-green">Shipped</span><div>Brand color system</div>
+              <div class="card-foot"><span class="avatar" style="background:#5b5bf6">AD</span><span>Mar 9</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="floating float-1">
+        <span style="font-size:20px">🎉</span>
+        <div><strong>Milestone hit</strong><div style="color:var(--muted);font-size:12px">Beta sign-off complete</div></div>
+      </div>
+      <div class="floating float-2">
+        <span class="avatar" style="background:#8b5cf6;width:32px;height:32px;font-size:12px">MA</span>
+        <div><strong>Mia commented</strong><div style="color:var(--muted);font-size:12px">"Looks great, ship it!"</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos">
+  <div class="container">
+    <p>Trusted by 4,000+ teams who ship on schedule</p>
+    <div class="logos-row">
+      <span>Northwind</span><span>Lumen</span><span>Parallel</span><span>Acme Co.</span><span>Helix</span><span>Brightpath</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2>Everything your team needs. Nothing it doesn't.</h2>
+      <p class="lead">Taskflow replaces the spreadsheets, sticky notes, and endless status meetings with one shared source of truth.</p>
+    </div>
+    <div class="grid-3">
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="6" height="18" rx="2"/><rect x="11" y="3" width="6" height="11" rx="2"/><rect x="19" y="3" width="2" height="7" rx="1"/></svg>
+        </div>
+        <h3>Kanban boards</h3>
+        <p>Drag tasks across columns that match how your team actually works. Set WIP limits so nothing quietly stalls.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h9M3 12h13M3 18h6"/><path d="M16 6l2 2 4-4"/></svg>
+        </div>
+        <h3>Timelines &amp; roadmaps</h3>
+        <p>See dependencies, milestones, and overlaps at a glance. Shift one date and watch the rest of the plan adjust.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+        </div>
+        <h3>Automations</h3>
+        <p>Auto-assign reviewers, move finished work to Done, and nudge owners before deadlines. No code required.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.3 3.3-5 6.5-5s5.7 1.7 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 15c2.6 0 4.6 1.4 5.5 4"/></svg>
+        </div>
+        <h3>Real-time collaboration</h3>
+        <p>Comment on tasks, @mention teammates, and see live cursors in shared docs. Everyone stays in sync without a meeting.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        </div>
+        <h3>Reports that matter</h3>
+        <p>Burndown charts, workload heatmaps, and velocity trends update automatically. Export to PDF or share a live link.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h3>Enterprise-grade security</h3>
+        <p>SSO, SAML, role-based permissions, audit logs, and SOC 2 Type II compliance. Built for teams that take data seriously.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>From blank page to shipped in three steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <h3>Set up in minutes</h3>
+        <p>Pick a template for software, marketing, design, or operations, or start from scratch. Invite your team with one link.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Plan together</h3>
+        <p>Break work into tasks, assign owners, and set dates. Taskflow turns your plan into a timeline you can actually trust.</p>
+      </div>
+      <div class="step reveal">
+        <h3>Track &amp; ship</h3>
+        <p>Follow progress live, let automations handle the busywork, and celebrate each release with a clear record of what got done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIEWS -->
+<section class="views" id="views">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Views</span>
+      <h2>See your work the way you think about it</h2>
+      <p class="lead">Switch between views instantly. Your data stays in one place, so every view is always up to date.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Project views">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="v-board" data-tab="v-board">Board</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="v-timeline" data-tab="v-timeline">Timeline</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="v-list" data-tab="v-list">List</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="v-calendar" data-tab="v-calendar">Calendar</button>
+    </div>
+
+    <div class="showcase">
+      <div id="v-board" class="view-panel active" role="tabpanel">
+        <div class="board">
+          <div class="col">
+            <div class="col-head"><span>Backlog</span><span>4</span></div>
+            <div class="card"><span class="tag tag-brand">Feature</span><div>Bulk task editing</div></div>
+            <div class="card"><span class="tag tag-warn">Bug</span><div>Date picker timezone issue</div></div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span>Doing</span><span>2</span></div>
+            <div class="card"><span class="tag tag-brand">Feature</span><div>Guest access permissions</div>
+              <div class="progress"><div style="width:40%"></div></div></div>
+          </div>
+          <div class="col">
+            <div class="col-head"><span>Review</span><span>1</span></div>
+            <div class="card"><span class="tag tag-green">Ready</span><div>Export to CSV</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="v-timeline" class="view-panel" role="tabpanel">
+        <div class="timeline-row"><span>Discovery</span><div class="bar-track"><div class="bar" style="left:0;width:22%;background:#8b5cf6">Research</div></div></div>
+        <div class="timeline-row"><span>Design</span><div class="bar-track"><div class="bar" style="left:15%;width:30%;background:#5b5bf6">Mockups &amp; review</div></div></div>
+        <div class="timeline-row"><span>Build</span><div class="bar-track"><div class="bar" style="left:38%;width:42%;background:#10b981">Core features</div></div></div>
+        <div class="timeline-row"><span>QA</span><div class="bar-track"><div class="bar" style="left:72%;width:16%;background:#f59e0b">Testing</div></div></div>
+        <div class="timeline-row"><span>Launch</span><div class="bar-track"><div class="bar" style="left:88%;width:12%;background:#ef4444">Ship 🚀</div></div></div>
+      </div>
+
+      <div id="v-list" class="view-panel" role="tabpanel">
+        <div class="list-row head"><span>Task</span><span>Owner</span><span>Due</span><span></span></div>
+        <div class="list-row"><span><span class="check done"></span>Write onboarding emails</span><span>Mia A.</span><span>Mar 14</span><span>●</span></div>
+        <div class="list-row"><span><span class="check done"></span>Set up SSO provider</span><span>Sam K.</span><span>Mar 15</span><span>●</span></div>
+        <div class="list-row"><span><span class="check"></span>Review pricing copy</span><span>Jordan L.</span><span>Mar 16</span><span>●</span></div>
+        <div class="list-row"><span><span class="check"></span>Final QA pass</span><span>Riley T.</span><span>Mar 18</span><span>●</span></div>
+      </div>
+
+      <div id="v-calendar" class="view-panel" role="tabpanel">
+        <div class="cal">
+          <div class="cal-day"><div class="n">Mon 9</div><span class="chip" style="background:#5b5bf6">Design review</span></div>
+          <div class="cal-day"><div class="n">Tue 10</div><span class="chip" style="background:#10b981">Sprint planning</span></div>
+          <div class="cal-day"><div class="n">Wed 11</div><span class="chip" style="background:#f59e0b">Copy due</span></div>
+          <div class="cal-day"><div class="n">Thu 12</div><span class="chip" style="background:#8b5cf6">Client demo</span></div>
+          <div class="cal-day"><div class="n">Fri 13</div><span class="chip" style="background:#ef4444">Beta freeze</span></div>
+          <div class="cal-day"><div class="n">Sat 14</div></div>
+          <div class="cal-day"><div class="n">Sun 15</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Loved by teams</span>
+      <h2>Teams that switched don't go back</h2>
+    </div>
+    <div class="quotes">
+      <figure class="quote reveal">
+        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>"We cut our weekly status meetings in half within the first month. Taskflow is the first tool my engineers actually open voluntarily."</blockquote>
+        <figcaption class="quote-author">
+          <span class="avatar" style="background:#8b5cf6">PN</span>
+          <div>Priya N.<small>Head of Engineering, Northwind</small></div>
+        </figcaption>
+      </figure>
+      <figure class="quote reveal">
+        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>"The timeline view finally shows me what will slip before it slips. Our launches have been on schedule for six straight quarters."</blockquote>
+        <figcaption class="quote-author">
+          <span class="avatar" style="background:#10b981">DO</span>
+          <div>Daniel O.<small>Product Director, Lumen</small></div>
+        </figcaption>
+      </figure>
+      <figure class="quote reveal">
+        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <blockquote>"Setup took twenty minutes, and our agency clients now get their own read-only boards. It's the cleanest tool we've used in a decade."</blockquote>
+        <figcaption class="quote-author">
+          <span class="avatar" style="background:#f59e0b">AG</span>
+          <div>Ana G.<small>Operations Lead, Parallel</small></div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="stats">
+      <div class="reveal"><div class="stat-num">4,000+</div><div class="stat-label">Teams using Taskflow</div></div>
+      <div class="reveal"><div class="stat-num">38%</div><div class="stat-label">Fewer status meetings</div></div>
+      <div class="reveal"><div class="stat-num">99.99%</div><div class="stat-label">Uptime, last 12 months</div></div>
+      <div class="reveal"><div class="stat-num">2 min</div><div class="stat-label">Average time to first board</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>Simple plans that grow with you</h2>
+      <p class="lead">Start free and upgrade when you need more. Cancel anytime.</p>
+    </div>
+
+    <div class="toggle">
+      <span>Monthly</span>
+      <button class="switch" role="switch" aria-checked="false" aria-label="Toggle annual billing" id="billing-switch"></button>
+      <span>Annual <span class="save">Save 20%</span></span>
+    </div>
+
+    <div class="plans">
+      <div class="plan reveal">
+        <div class="plan-name">Free</div>
+        <div class="plan-desc">For small teams getting organized.</div>
+        <div class="price"><span data-price="0">$0</span><small>/ user / mo</small></div>
+        <div class="plan-billing">Free forever</div>
+        <ul>
+          <li>Up to 10 team members</li>
+          <li>Unlimited boards and tasks</li>
+          <li>Board and list views</li>
+          <li>2 GB file storage</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#start" class="btn btn-ghost">Get started free</a>
+      </div>
+
+      <div class="plan featured reveal">
+        <span class="badge">Most popular</span>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">For growing teams that need timelines and automation.</div>
+        <div class="price"><span data-price="12" data-price-annual="10">$12</span><small>/ user / mo</small></div>
+        <div class="plan-billing" data-billing>Billed monthly</div>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Timelines, calendar &amp; reports</li>
+          <li>Unlimited automations</li>
+          <li>Guest access &amp; client boards</li>
+          <li>50 GB storage &amp; priority support</li>
+        </ul>
+        <a href="#start" class="btn btn-primary">Start 14-day trial</a>
+      </div>
+
+      <div class="plan reveal">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-desc">For organizations with advanced security needs.</div>
+        <div class="price"><span>Custom</span></div>
+        <div class="plan-billing">Tailored to your organization</div>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>SSO / SAML &amp; SCIM provisioning</li>
+          <li>Audit logs &amp; data residency</li>
+          <li>Dedicated success manager</li>
+          <li>99.99% uptime SLA</li>
+        </ul>
+        <a href="#start" class="btn btn-ghost">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Questions, answered</h2>
+    </div>
+    <div class="faq reveal">
+      <details open>
+        <summary>Is there a free plan?</summary>
+        <p>Yes. The Free plan includes unlimited boards and tasks for teams of up to 10 people, with no time limit and no credit card required.</p>
+      </details>
+      <details>
+        <summary>Can I import my existing projects?</summary>
+        <p>Taskflow imports from Trello, Asana, Jira, and CSV files. Your tasks, owners, due dates, and attachments come along with them.</p>
+      </details>
+      <details>
+        <summary>How does the 14-day trial work?</summary>
+        <p>Start a Pro trial with no commitment. You'll have access to every Pro feature. We'll remind you before it ends, and you can downgrade to Free at any time.</p>
+      </details>
+      <details>
+        <summary>Is my data secure?</summary>
+        <p>All data is encrypted in transit and at rest. We're SOC 2 Type II certified, and Enterprise plans include SSO, audit logs, and data residency options.</p>
+      </details>
+      <details>
+        <summary>Can clients or external partners join?</summary>
+        <p>Yes. Invite guests with view-only or comment-only access to specific boards, without exposing the rest of your workspace.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / SIGNUP -->
+<section id="start" style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <h2>Ready to get your team moving?</h2>
+      <p>Join thousands of teams that plan, track, and ship with Taskflow. Set up your first board in under two minutes.</p>
+      <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='You\'re on the list ✓'; this.querySelector('button').disabled=true;">
+        <input type="email" placeholder="Enter your work email" required aria-label="Work email">
+        <button type="submit" class="btn btn-light">Start free</button>
+      </form>
+      <p class="fine">Free forever for small teams · No credit card required</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="logo" style="color:var(--text);margin-bottom:14px;display:inline-flex">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+          </span>
+          Taskflow
+        </a>
+        <p style="max-width:300px">Project management that gets out of your team's way.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#views">Views</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#">Integrations</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#faq">Help center</a></li>
+          <li><a href="#">API docs</a></li>
+          <li><a href="#">Status</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Taskflow, Inc. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Cookies</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // View tabs
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      document.querySelectorAll('.view-panel').forEach((p) => p.classList.remove('active'));
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Billing toggle
+  const sw = document.getElementById('billing-switch');
+  sw.addEventListener('click', () => {
+    const annual = sw.getAttribute('aria-checked') !== 'true';
+    sw.setAttribute('aria-checked', String(annual));
+    document.querySelectorAll('[data-price]').forEach((el) => {
+      const monthly = el.dataset.price;
+      el.textContent = '$' + (annual && el.dataset.priceAnnual ? el.dataset.priceAnnual : monthly);
+    });
+    document.querySelectorAll('[data-billing]').forEach((el) => {
+      el.textContent = annual ? 'Billed annually' : 'Billed monthly';
+    });
+  });
+
+  // Close mobile menu when a link is tapped
+  document.querySelectorAll('.nav-links a').forEach((a) => {
+    a.addEventListener('click', () => document.body.classList.remove('mobile-open'));
+  });
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+
+<tool_result>
+Written to /data/scratch/ai-sameness/main/work/haiku-5.5__P1__r2.a1._efe7low/index.html
+</tool_result>
+
+
+Your landing page is at `index.html` in the working directory: a single self-contained file with inline CSS and JavaScript and no external dependencies.
+
+It's built around a placeholder product called **Taskflow**. I picked that name and the copy, stats, testimonials, and customer logos are all invented, so swap them for your real product details before launch.
+
+**What's on the page**
+- Sticky nav with a mobile menu
+- Hero with a mock Kanban board preview
+- Logo strip, six-feature grid, and a three-step "how it works" section
+- Tabbed views (Board, Timeline, List, Calendar) that switch with no page reload
+- Testimonials and stats
+- Pricing with a monthly/annual toggle that updates the prices
+- FAQ built on native `<details>` elements, so it works without JavaScript
+- Email signup form (it only shows a confirmation message; it doesn't submit anywhere yet)
+- Footer
+
+**Notes**
+- It's responsive down to phone widths and respects `prefers-reduced-motion`.
+- I haven't rendered it in a browser, so it's worth a quick visual check at desktop and mobile widths.
+- The signup form and footer links are placeholders. Wire the form to your email provider or backend, and point the `#` links at real pages.

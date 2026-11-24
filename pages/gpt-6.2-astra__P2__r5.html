@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3e6">
+  <title>Casa Pina | Neighborhood Trattoria</title>
+  <style>
+    :root {
+      --paper: #f7f3e6;
+      --ink: #203f32;
+      --red: #b73523;
+      --line: #c3c6b4;
+      --serif: "Baskerville", "Palatino Linotype", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-underline-offset: .25em; }
+    a:focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+    .wrap { width: min(90%, 1250px); margin-inline: auto; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 23px; border-bottom: 1px solid var(--ink); }
+    .brand { font: bold 32px/.95 var(--serif); letter-spacing: -2px; text-decoration: none; }
+    nav { display: flex; gap: clamp(16px, 3vw, 46px); align-items: center; }
+    nav a, .button, .label { font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    nav a { text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: clamp(45px, 7vw, 100px) 0; gap: 3%; }
+    .label { display: flex; align-items: center; gap: 12px; }
+    .label::before { content: ""; width: 30px; border-top: 2px solid currentColor; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { margin: 22px 0; font: normal clamp(70px, 8.6vw, 132px)/.89 var(--serif); letter-spacing: -.075em; }
+    h1 em { color: var(--red); font-weight: normal; }
+    .intro { max-width: 375px; font: 19px/1.5 var(--serif); }
+    .button { display: inline-flex; align-items: center; gap: 25px; background: var(--red); color: white; text-decoration: none; padding: 16px 20px; margin-top: 27px; }
+    .button:hover { background: #982919; }
+    .button span { font-size: 18px; line-height: 1; }
+    .art { width: 100%; display: block; }
+    .checks { height: 14px; background: conic-gradient(var(--red) 25%, transparent 0 50%, var(--red) 0 75%, transparent 0) 0 0 / 14px 14px; }
+    section { scroll-margin-top: 20px; }
+    .menu { padding-block: 54px 64px; }
+    h2 { font: normal clamp(40px, 5vw, 68px)/1.1 var(--serif); letter-spacing: -.055em; }
+    .dishes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4%; margin-top: 30px; }
+    article { border-top: 1px solid var(--line); padding-top: 18px; }
+    .dish { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    h3 { font: normal 25px/1.2 var(--serif); letter-spacing: -.035em; }
+    .price { color: var(--red); font: italic 19px var(--serif); }
+    article p, footer p { font-size: 15px; line-height: 1.6; margin-top: 9px; }
+    footer { background: var(--ink); color: var(--paper); padding: 45px 0; }
+    .visit { display: flex; justify-content: space-between; align-items: start; gap: 30px; }
+    footer .label { margin-bottom: 12px; }
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; padding-block: 40px 24px; }
+      .art { max-width: 430px; margin: 10px auto 0; }
+      .dishes { grid-template-columns: 1fr; gap: 24px; }
+      .visit { flex-wrap: wrap; }
+      .visit h2 { width: 100%; }
+      header { padding-block: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <a class="brand" href="#" aria-label="Casa Pina home">Casa Pina</a>
+    <nav aria-label="Main navigation"><a href="#menu">Menu</a><a href="#visit">Visit us ↗</a></nav>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="welcome">
+      <div>
+        <p class="label">Neighborhood trattoria</p>
+        <h1 id="welcome">Dinner at<br><em>Casa Pina.</em></h1>
+        <p class="intro">Pull up a chair for hand-cut pasta, a glass of house red, and whatever’s simmering on the stove.</p>
+        <a class="button" href="#menu">Explore the menu <span aria-hidden="true">↓</span></a>
+      </div>
+      <svg class="art" viewBox="0 0 540 450" role="img" aria-labelledby="art-title">
+        <title id="art-title">Two ripe tomatoes on a vine, illustrated in red and green ink</title>
+        <defs>
+          <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(26)">
+            <path d="M1 0v7" stroke="#902d21" stroke-width="1.8"/>
+          </pattern>
+          <pattern id="dots" width="9" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r=".95" fill="#822d20"/>
+            <circle cx="7" cy="6" r=".65" fill="#822d20"/>
+          </pattern>
+          <g id="tomato">
+            <path d="M0-65C-34-96-87-80-103-41c-19 45 1 107 47 130 23 12 41 9 56 13 39 8 93-24 106-75 16-61-27-124-75-105Z" fill="#ce452d" stroke="#983824" stroke-width="2"/>
+            <path d="M-98-40c-17 69 27 128 76 134-35-18-60-69-59-110-5 55 25 107 76 116 52 4 100-38 111-87-28 44-60 61-86 60C-45 69-86 22-98-40Z" fill="url(#hatch)"/>
+            <path d="M-89-31c15-42 41-52 70-42m-61 52c7-28 21-37 32-43" fill="none" stroke="#f0a073" stroke-width="4" stroke-linecap="round"/>
+            <path d="M-90-40c3 95 69 146 132 120 39-18 64-63 61-97-21 40-50 72-99 66-46-5-73-43-94-89Z" fill="url(#dots)"/>
+            <path d="M4-63c-17-12-34-14-56-7l38 10c-16 5-25 17-31 30 18-12 34-19 49-22 13 10 24 22 27 36 4-18-1-31-10-42 17-1 34 1 51 9-12-15-28-21-50-23l19-17-36 16Z" fill="#284b36"/>
+          </g>
+        </defs>
+        <g transform="rotate(-12 270 225)">
+          <use href="#tomato" transform="translate(348 166) rotate(25) scale(.97)"/>
+          <use href="#tomato" transform="translate(201 270) rotate(-15) scale(1.24)"/>
+          <g fill="none" stroke="#284b36" stroke-linecap="round">
+            <path d="M179 198c16-38 65-53 80-85 17-38 14-67 45-91" stroke-width="8"/>
+            <path d="M254 124c27-29 62-31 107-16" stroke-width="6"/>
+          </g>
+          <path d="M263 105c-6-39-43-62-79-65l19 18-16-1 24 17-12-1c21 21 39 28 64 32Zm12-39c24-30 56-31 81-24l-19 8 9 3-24 7 9 3c-19 8-39 10-56 3Z" fill="#36533a"/>
+          <path d="M199 48l57 51m27-36 58-19" stroke="#c0bf92" fill="none" stroke-width="2"/>
+        </g>
+      </svg>
+    </section>
+    <div class="checks" aria-hidden="true"></div>
+    <section class="menu wrap" id="menu" aria-labelledby="menu-title">
+      <h2 id="menu-title">On the menu</h2>
+      <div class="dishes">
+        <article><div class="dish"><h3>Burrata e pomodori</h3><span class="price">$16</span></div><p>Soft burrata, marinated tomatoes, basil, and grilled sourdough.</p></article>
+        <article><div class="dish"><h3>Tagliatelle al ragù</h3><span class="price">$24</span></div><p>Hand-cut ribbons with slow-cooked beef ragù and Parmigiano.</p></article>
+        <article><div class="dish"><h3>Tiramisù della casa</h3><span class="price">$10</span></div><p>Espresso-soaked savoiardi, mascarpone, and a generous dusting of cocoa.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer id="visit">
+    <div class="visit wrap">
+      <h2>Come by for dinner.</h2>
+      <div><div class="label">Find us</div><p>18 Olive Street<br>Brooklyn, NY</p></div>
+      <div><div class="label">Our hours</div><p>Tuesday–Sunday · 5–10 pm<br>Walk-ins welcome</p></div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,458 @@
+Here's a single-file portfolio site. It has no external dependencies, so it works offline. The gallery uses gradient placeholders, which you can swap for real photos.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name · Photography</title>
+<meta name="description" content="Freelance photographer specializing in portraits, landscapes, and events.">
+<style>
+  :root{
+    --bg:#0e0e0f; --fg:#f2f0ec; --muted:#9a9790; --accent:#d4b483;
+    --card:#17171a; --line:#2a2a2e; --max:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  img{display:block;max-width:100%}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:.01em}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  section{padding:110px 0}
+  .eyebrow{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .section-head{margin-bottom:48px}
+  .section-head h2{font-size:clamp(2rem,4vw,3rem);margin-top:8px}
+
+  /* ---------- Navigation ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(14,14,15,.85);backdrop-filter:blur(10px);border-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{font-family:Georgia,serif;font-size:1.25rem;text-decoration:none}
+  .nav ul{display:flex;gap:32px;list-style:none}
+  .nav ul a{text-decoration:none;font-size:.9rem;color:var(--muted);transition:color .2s}
+  .nav ul a:hover{color:var(--fg)}
+  .menu-btn{display:none;background:none;border:0;color:var(--fg);font-size:1.6rem;cursor:pointer}
+  @media (max-width:760px){
+    .nav ul{position:fixed;top:72px;left:0;right:0;flex-direction:column;align-items:center;gap:24px;background:var(--bg);padding:32px 0;border-bottom:1px solid var(--line);transform:translateY(-130%);transition:transform .3s}
+    .nav ul.open{transform:none}
+    .menu-btn{display:block}
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-block;padding:14px 28px;border:1px solid var(--accent);color:var(--fg);text-decoration:none;font:inherit;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;background:transparent;cursor:pointer;transition:all .2s}
+  .btn:hover{background:var(--accent);color:var(--bg)}
+  .btn.solid{background:var(--accent);color:var(--bg)}
+  .btn.solid:hover{background:var(--fg);border-color:var(--fg)}
+
+  /* ---------- Hero ---------- */
+  .hero{min-height:100vh;display:flex;align-items:flex-end;padding-bottom:12vh;position:relative;
+    background:
+      radial-gradient(circle at 72% 32%, rgba(212,180,131,.28), transparent 45%),
+      linear-gradient(160deg,#2b2a33 0%,#16151a 55%,#0e0e0f 100%);}
+  .hero h1{font-size:clamp(3rem,9vw,7.5rem);line-height:1;margin:16px 0 24px}
+  .hero p.lead{max-width:520px;color:var(--muted);font-size:1.1rem;margin-bottom:36px}
+  .hero .cta{display:flex;gap:16px;flex-wrap:wrap}
+
+  /* ---------- Work / Gallery ---------- */
+  .filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px}
+  .filters button{background:none;border:1px solid var(--line);color:var(--muted);padding:8px 18px;border-radius:999px;cursor:pointer;font:inherit;font-size:.85rem;transition:all .2s}
+  .filters button:hover,.filters button[aria-pressed="true"]{color:var(--fg);border-color:var(--accent)}
+  .grid{columns:3 280px;column-gap:20px}
+  .shot{position:relative;display:block;width:100%;margin:0 0 20px;padding:0;border:0;background:none;cursor:zoom-in;overflow:hidden;border-radius:4px;break-inside:avoid}
+  .shot .art{width:100%;aspect-ratio:var(--ar);background:linear-gradient(135deg,var(--a),var(--b));transition:transform .6s ease}
+  .shot:hover .art{transform:scale(1.04)}
+  .shot .cap{position:absolute;inset:auto 0 0 0;padding:20px;text-align:left;color:var(--fg);background:linear-gradient(transparent,rgba(0,0,0,.75));opacity:0;transform:translateY(8px);transition:all .3s}
+  .shot:hover .cap,.shot:focus-visible .cap{opacity:1;transform:none}
+  .shot .cap small{display:block;color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:.7rem}
+  .shot.hidden{display:none}
+  .shot:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* ---------- Lightbox ---------- */
+  .lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.94);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+  .lb.open{display:flex}
+  .lb-img{height:min(76vh,900px);max-width:90vw;aspect-ratio:var(--ar);background:linear-gradient(135deg,var(--a),var(--b));border-radius:4px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .lb-caption{margin-top:20px;text-align:center}
+  .lb-caption small{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:.7rem}
+  .lb-btn{position:absolute;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--fg);width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:grid;place-items:center;transition:background .2s}
+  .lb-btn:hover{background:rgba(255,255,255,.15)}
+  .lb-close{top:20px;right:20px}
+  .lb-prev{left:20px;top:50%;transform:translateY(-50%)}
+  .lb-next{right:20px;top:50%;transform:translateY(-50%)}
+  @media (max-width:600px){.lb-prev,.lb-next{top:auto;bottom:24px;transform:none}}
+
+  /* ---------- About ---------- */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .portrait{aspect-ratio:4/5;background:linear-gradient(200deg,#5b4a3c,#1d1a17);border-radius:4px}
+  .about p{color:#cfccc6;margin-bottom:18px}
+  .stats{display:flex;gap:40px;margin-top:36px;flex-wrap:wrap}
+  .stats strong{display:block;font-family:Georgia,serif;font-size:2.2rem;font-weight:400;color:var(--accent)}
+  .stats span{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+  @media (max-width:860px){.about{grid-template-columns:1fr;gap:40px}}
+
+  /* ---------- Services ---------- */
+  .services{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+  .card{background:var(--bg);border:1px solid var(--line);padding:40px 32px;transition:border-color .3s,transform .3s}
+  .card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .card h3{font-size:1.5rem;margin-bottom:12px}
+  .card .price{font-family:Georgia,serif;font-size:2rem;color:var(--accent);margin:16px 0}
+  .card ul{list-style:none;color:var(--muted);font-size:.95rem}
+  .card li{padding:6px 0;border-top:1px solid var(--line)}
+  .card li:first-child{border-top:0}
+
+  /* ---------- Contact ---------- */
+  .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:72px}
+  .contact p{color:var(--muted);margin-bottom:24px}
+  .contact .info a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent)}
+  form{display:grid;gap:18px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  label{display:grid;gap:6px;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  input,select,textarea{font:inherit;font-size:1rem;color:var(--fg);background:var(--card);border:1px solid var(--line);padding:14px 16px;border-radius:2px;text-transform:none;letter-spacing:normal}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  textarea{min-height:150px;resize:vertical}
+  @media (max-width:860px){.contact{grid-template-columns:1fr;gap:40px}.row{grid-template-columns:1fr}}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:36px 0;color:var(--muted);font-size:.85rem}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--fg)}
+
+  /* ---------- Reveal on scroll ---------- */
+  .js .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+    .js .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<header id="top-bar">
+  <div class="wrap nav">
+    <a href="#home" class="logo">Your Name</a>
+    <button class="menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">☰</button>
+    <ul id="menu">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" id="home" style="padding-top:0">
+    <div class="wrap reveal">
+      <p class="eyebrow">Freelance Photographer</p>
+      <h1>Stories in<br>natural light.</h1>
+      <p class="lead">Portraits, landscapes, and events, captured with an eye for honest moments and quiet detail.</p>
+      <div class="cta">
+        <a class="btn solid" href="#work">View Work</a>
+        <a class="btn" href="#contact">Book a Session</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Selected Work</p>
+        <h2>Recent frames</h2>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter work by category">
+        <button aria-pressed="true" data-filter="all">All</button>
+        <button aria-pressed="false" data-filter="portraits">Portraits</button>
+        <button aria-pressed="false" data-filter="landscapes">Landscapes</button>
+        <button aria-pressed="false" data-filter="street">Street</button>
+        <button aria-pressed="false" data-filter="events">Events</button>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lb-btn lb-close" aria-label="Close">✕</button>
+    <button class="lb-btn lb-prev" aria-label="Previous image">←</button>
+    <div>
+      <div class="lb-img" id="lb-img"></div>
+      <div class="lb-caption">
+        <small id="lb-cat"></small>
+        <h3 id="lb-title"></h3>
+      </div>
+    </div>
+    <button class="lb-btn lb-next" aria-label="Next image">→</button>
+  </div>
+
+  <!-- About -->
+  <section id="about">
+    <div class="wrap about">
+      <div class="reveal">
+        <div class="portrait" role="img" aria-label="Photographer portrait placeholder"></div>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">About</p>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);margin:8px 0 24px">Patient light,<br>honest moments.</h2>
+        <p>I'm a freelance photographer based in your city, working with individuals, couples, small businesses, and event organizers. I believe the best images happen when people relax and the light does the work.</p>
+        <p>My approach is unhurried: a short conversation before every shoot, a clear sense of what you need, and a final gallery delivered with careful edits that still look like you.</p>
+        <div class="stats">
+          <div><strong>8+</strong><span>Years shooting</span></div>
+          <div><strong>300+</strong><span>Sessions</span></div>
+          <div><strong>40</strong><span>Publications</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Services</p>
+        <h2>How we can work together</h2>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <h3>Portraits</h3>
+          <div class="price">from $450</div>
+          <ul>
+            <li>2-hour session</li>
+            <li>On location or studio</li>
+            <li>30+ edited images</li>
+            <li>Online gallery & print rights</li>
+          </ul>
+        </article>
+        <article class="card reveal">
+          <h3>Events</h3>
+          <div class="price">from $1,200</div>
+          <ul>
+            <li>Up to 8 hours coverage</li>
+            <li>Second shooter available</li>
+            <li>Same-week preview</li>
+            <li>Full edited gallery</li>
+          </ul>
+        </article>
+        <article class="card reveal">
+          <h3>Commercial</h3>
+          <div class="price">Custom quote</div>
+          <ul>
+            <li>Brand & product imagery</li>
+            <li>Licensing options</li>
+            <li>Creative direction</li>
+            <li>Usage-based pricing</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="wrap contact">
+      <div class="reveal info">
+        <p class="eyebrow">Contact</p>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);margin:8px 0 24px">Let's make something.</h2>
+        <p>Tell me about your project, timeline, and location. I usually reply within two business days.</p>
+        <p>Email: <a href="mailto:hello@example.com">hello@example.com</a></p>
+        <p>Based in: Your City, Country</p>
+      </div>
+      <form class="reveal" id="contact-form">
+        <div class="row">
+          <label>Name <input name="name" required autocomplete="name"></label>
+          <label>Email <input name="email" type="email" required autocomplete="email"></label>
+        </div>
+        <label>Service
+          <select name="service">
+            <option>Portraits</option>
+            <option>Events</option>
+            <option>Commercial</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Date (optional) <input name="date" type="date"></label>
+        <label>Message <textarea name="message" required></textarea></label>
+        <button class="btn solid" type="submit" style="justify-self:start">Send Inquiry</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> Your Name Photography</span>
+    <span>
+      <a href="#">Instagram</a> &nbsp;·&nbsp; <a href="#">Behance</a> &nbsp;·&nbsp; <a href="#">Email</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  /* ----- Gallery data (replace the gradients with real images) ----- */
+  const works = [
+    { title: "Golden Hour, Ridge Line",   cat: "landscapes", ar: "4/3",  a: "#f0b36a", b: "#3b2a4a" },
+    { title: "Quiet Study",               cat: "portraits",  ar: "3/4",  a: "#8a7a6a", b: "#1d1a17" },
+    { title: "Market Morning",            cat: "street",     ar: "4/5",  a: "#5f8fa6", b: "#1b2a33" },
+    { title: "Wedding in Blue",           cat: "events",     ar: "1/1",  a: "#7f9cc7", b: "#1a2238" },
+    { title: "Salt Flats, Dawn",          cat: "landscapes", ar: "16/10",a: "#e8d5b5", b: "#6b5b73" },
+    { title: "Portrait in Rain",          cat: "portraits",  ar: "3/4",  a: "#a3988f", b: "#2a2622" },
+    { title: "Late Train",                cat: "street",     ar: "4/3",  a: "#d98b6a", b: "#2e1a1a" },
+    { title: "Founders' Dinner",          cat: "events",     ar: "4/5",  a: "#c9a86b", b: "#2b1f14" },
+    { title: "Pine & Mist",               cat: "landscapes", ar: "3/4",  a: "#9bb7a0", b: "#1c2a22" },
+    { title: "Studio, Soft Light",        cat: "portraits",  ar: "1/1",  a: "#d8c3b0", b: "#4a3f38" },
+    { title: "Crosswalk",                 cat: "street",     ar: "3/4",  a: "#7a8ea8", b: "#151b26" },
+    { title: "First Dance",               cat: "events",     ar: "4/3",  a: "#e6a6a0", b: "#3a2226" },
+  ];
+
+  const grid = document.getElementById("grid");
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lb-img");
+  const lbTitle = document.getElementById("lb-title");
+  const lbCat = document.getElementById("lb-cat");
+  let visible = [];   // currently filtered works
+  let current = 0;
+  let lastFocus = null;
+
+  function render(filter = "all") {
+    grid.innerHTML = "";
+    visible = works.filter(w => filter === "all" || w.cat === filter);
+    visible.forEach((w, i) => {
+      const btn = document.createElement("button");
+      btn.className = "shot";
+      btn.style.setProperty("--ar", w.ar);
+      btn.style.setProperty("--a", w.a);
+      btn.style.setProperty("--b", w.b);
+      btn.setAttribute("aria-label", `View ${w.title}`);
+      btn.innerHTML = `
+        <div class="art"></div>
+        <div class="cap"><small>${w.cat}</small>${w.title}</div>`;
+      btn.addEventListener("click", () => openLightbox(i, btn));
+      grid.appendChild(btn);
+    });
+  }
+
+  function setLightbox(i) {
+    current = (i + visible.length) % visible.length;
+    const w = visible[current];
+    lbImg.style.setProperty("--ar", w.ar);
+    lbImg.style.setProperty("--a", w.a);
+    lbImg.style.setProperty("--b", w.b);
+    lbTitle.textContent = w.title;
+    lbCat.textContent = w.cat;
+  }
+
+  function openLightbox(i, trigger) {
+    lastFocus = trigger;
+    setLightbox(i);
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+    lb.querySelector(".lb-close").focus();
+  }
+
+  function closeLightbox() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+
+  lb.querySelector(".lb-close").addEventListener("click", closeLightbox);
+  lb.querySelector(".lb-prev").addEventListener("click", () => setLightbox(current - 1));
+  lb.querySelector(".lb-next").addEventListener("click", () => setLightbox(current + 1));
+  lb.addEventListener("click", e => { if (e.target === lb) closeLightbox(); });
+
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") setLightbox(current - 1);
+    if (e.key === "ArrowRight") setLightbox(current + 1);
+  });
+
+  // Touch swipe in lightbox
+  let touchX = null;
+  lb.addEventListener("touchstart", e => touchX = e.touches[0].clientX, { passive: true });
+  lb.addEventListener("touchend", e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) setLightbox(current + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+
+  // Filters
+  document.querySelectorAll(".filters button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      render(btn.dataset.filter);
+    });
+  });
+
+  render();
+
+  /* ----- Mobile menu ----- */
+  const menuBtn = document.querySelector(".menu-btn");
+  const menu = document.getElementById("menu");
+  menuBtn.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(open));
+  });
+  menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+    menu.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }));
+
+  /* ----- Header background on scroll ----- */
+  const header = document.getElementById("top-bar");
+  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 40);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ----- Reveal on scroll ----- */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  /* ----- Contact form: opens the visitor's email client (no backend needed) ----- */
+  document.getElementById("contact-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const subject = `Inquiry: ${f.get("service")} — ${f.get("name")}`;
+    const body = [
+      `Name: ${f.get("name")}`,
+      `Email: ${f.get("email")}`,
+      `Service: ${f.get("service")}`,
+      `Preferred date: ${f.get("date") || "Flexible"}`,
+      "",
+      f.get("message")
+    ].join("\n");
+    window.location.href = `mailto:hello@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
+```
+
+**Choices I made:**
+- **Gallery:** Twelve gradient placeholders with category filtering, masonry layout, and a lightbox with keyboard and swipe navigation.
+- **Contact form:** Opens the visitor's email client via `mailto:` so no backend is needed. If you'd rather collect submissions on a server, swap the submit handler for a fetch call to a form service such as Formspree or Netlify Forms.
+
+**To customize:**
+1. Replace "Your Name", "Your City", the email address, and the social links.
+2. Replace the gallery entries with real photos. Set `.art` and `.lb-img` to `background-image` with a data URI, or change the `<div>`s to `<img>` tags pointing at your hosted images. Use small thumbnails for the grid and full-size images for the lightbox.
+3. Update the prices and service lists in the Services section.
+4. Replace the About portrait placeholder with a photo of yourself.

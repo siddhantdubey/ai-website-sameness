@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trattoria Lucciola · Fresh pasta on Alder Street since 1994</title>
+<meta name="description" content="Trattoria Lucciola is a family-run neighborhood Italian restaurant on Alder Street. Pasta rolled every morning, Sunday supper at four, walk-ins welcome at the bar.">
+<style>
+  :root {
+    --green: #1c3a2a;
+    --green-deep: #142b1f;
+    --butter: #f6e7b8;
+    --paper: #f8f0dc;
+    --paper-edge: #eadfc2;
+    --tomato: #c8391f;
+    --tomato-dark: #a52c16;
+    --pink: #f3b8ad;
+    --ink: #24201a;
+    --glow: #ffd96a;
+    --display: "Bodoni 72", "Bodoni MT", Didot, "Playfair Display", "Libre Bodoni", "Times New Roman", serif;
+    --body: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --label: "Gill Sans", "Gill Sans MT", "Avenir Next", "Trebuchet MS", Verdana, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--green);
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { max-width: 100%; display: block; }
+  a { color: inherit; }
+  h1, h2, h3, p { margin: 0; }
+
+  .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+
+  .label {
+    font-family: var(--label);
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--glow);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-light :focus-visible { outline-color: var(--tomato); }
+
+  .skip {
+    position: absolute; left: -999px; top: 0;
+    background: var(--butter); color: var(--ink);
+    padding: 0.6rem 1rem; z-index: 10;
+  }
+  .skip:focus { left: 0.5rem; top: 0.5rem; }
+
+  /* ---------- Awning ---------- */
+  .awning {
+    --stripe: 44px;
+    background: repeating-linear-gradient(90deg,
+      var(--tomato) 0 var(--stripe),
+      var(--paper) var(--stripe) calc(var(--stripe) * 2));
+    height: 34px;
+    position: relative;
+    box-shadow: inset 0 -6px 8px -6px rgba(0,0,0,.35);
+  }
+  .awning::after {
+    content: "";
+    position: absolute; left: 0; right: 0; top: 100%;
+    height: 22px;
+    background: inherit;
+    -webkit-mask: radial-gradient(circle at 22px 0, #000 21.5px, transparent 22px) 0 0 / 44px 22px repeat-x;
+            mask: radial-gradient(circle at 22px 0, #000 21.5px, transparent 22px) 0 0 / 44px 22px repeat-x;
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,.25));
+  }
+
+  /* ---------- Header ---------- */
+  .site-head {
+    color: var(--butter);
+    padding: 2.6rem 0 0;
+  }
+  .site-head .wrap {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 1.5rem;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.55rem;
+  }
+  .brand i {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 10px 3px rgba(255, 217, 106, .65);
+  }
+  .nav { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
+  .nav a { text-decoration: none; padding: 0.4rem 0; }
+  .nav a:not(.btn) { border-bottom: 1px solid transparent; }
+  .nav a:not(.btn):hover { border-bottom-color: var(--butter); }
+
+  .btn {
+    display: inline-block;
+    font-family: var(--label);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.95rem 1.5rem;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: transform .15s ease, background-color .15s ease, color .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--tomato); color: #fff6e0; }
+  .btn-primary:hover { background: var(--tomato-dark); }
+  .btn-ghost { border-color: currentColor; color: var(--butter); background: transparent; }
+  .btn-ghost:hover { background: var(--butter); color: var(--green); border-color: var(--butter); }
+  .nav .btn { padding: 0.7rem 1.2rem; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    color: var(--butter);
+    padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(3.5rem, 8vw, 6.5rem);
+    overflow: hidden;
+  }
+  .hero .wrap {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(3.4rem, 10.5vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    margin: 1.1rem 0 1.6rem;
+  }
+  .hero h1 em {
+    display: block;
+    font-size: 0.42em;
+    letter-spacing: 0;
+    margin-bottom: 0.25em;
+    color: var(--pink);
+  }
+  .hero .lede {
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+    max-width: 33em;
+    color: #efe3bf;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 2.2rem; }
+
+  .status {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    margin-top: 2rem;
+    font-family: var(--label);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: #efe3bf;
+  }
+  .status .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #8f9c8f;
+    flex: none;
+  }
+  .status.open .dot {
+    background: var(--glow);
+    box-shadow: 0 0 0 4px rgba(255, 217, 106, .2), 0 0 12px 3px rgba(255, 217, 106, .6);
+  }
+
+  .plate { width: min(100%, 440px); margin-inline: auto; }
+  .plate .ring { transform-box: fill-box; transform-origin: center; animation: spin 70s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .fireflies { position: absolute; inset: 0; pointer-events: none; }
+  .fireflies span {
+    position: absolute;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 9px 3px rgba(255, 217, 106, .55);
+    opacity: 0;
+    animation: twinkle 6s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: translate(0, 0); }
+    40%      { opacity: .9; }
+    60%      { opacity: .5; transform: translate(10px, -14px); }
+  }
+
+  /* ---------- Three facts ---------- */
+  .facts {
+    border-top: 1px solid rgba(246, 231, 184, .25);
+    color: var(--butter);
+    padding: 2.2rem 0 3.2rem;
+  }
+  .facts ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+  }
+  .facts strong {
+    display: block;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.45rem;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+  .facts span { color: #d9cfae; font-size: 0.98rem; }
+
+  /* ---------- Menu ---------- */
+  .menu {
+    background: var(--paper);
+    background-image: radial-gradient(rgba(36, 32, 26, .05) 1px, transparent 1px);
+    background-size: 5px 5px;
+    padding: clamp(3.5rem, 8vw, 6.5rem) 0;
+  }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  }
+  .section-head .label { color: var(--tomato); }
+  h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-top: 0.6rem;
+  }
+  h2 em { color: var(--tomato); }
+
+  .veg-toggle {
+    font-family: var(--label);
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    background: transparent; color: var(--green);
+    border: 1.5px solid var(--green);
+    border-radius: 999px;
+    padding: 0.7rem 1.1rem;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .veg-toggle[aria-pressed="true"] { background: var(--green); color: var(--butter); }
+  .leaf {
+    display: inline-block; width: 0.7em; height: 0.7em;
+    background: #3f7d4d;
+    border-radius: 0 70% 0 70%;
+    flex: none;
+  }
+  .veg-toggle[aria-pressed="true"] .leaf { background: #9fd19c; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem clamp(2.5rem, 6vw, 5rem);
+  }
+  .course h3 {
+    font-family: var(--label);
+    font-size: 0.85rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--green);
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--green);
+    margin-bottom: 1.2rem;
+    display: flex; justify-content: space-between;
+  }
+  .course h3 span { font-family: var(--display); font-style: italic; letter-spacing: 0; text-transform: none; font-size: 1.05rem; font-weight: 400; color: var(--tomato); }
+  .course ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.15rem; }
+  .dish { transition: opacity .25s ease; }
+  .dish-top { display: flex; align-items: baseline; gap: 0.6rem; }
+  .dish-name {
+    font-family: var(--display);
+    font-size: 1.32rem;
+    line-height: 1.2;
+  }
+  .dish-name .leaf { margin-left: 0.35rem; vertical-align: 0.05em; }
+  .dots { flex: 1; border-bottom: 2px dotted rgba(36, 32, 26, .35); transform: translateY(-0.25em); min-width: 1.5rem; }
+  .price { font-family: var(--label); font-weight: 600; font-size: 0.98rem; }
+  .dish p { font-size: 0.97rem; color: #57503f; max-width: 34em; }
+  .veg-only .dish:not([data-veg]) { opacity: .22; }
+
+  .board {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    background: var(--green);
+    color: var(--butter);
+    border: 10px solid #6b4a2b;
+    border-radius: 6px;
+    padding: clamp(1.5rem, 4vw, 2.4rem);
+    display: grid; grid-template-columns: auto 1fr auto; gap: 1.2rem 2.2rem; align-items: center;
+    box-shadow: 0 14px 30px -14px rgba(36, 32, 26, .55);
+  }
+  .board .label { color: var(--pink); }
+  .board-dish {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1.15;
+  }
+  .board-note { color: #d9cfae; font-size: 0.98rem; margin-top: 0.3rem; }
+  .board-price {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    transform: rotate(-4deg);
+    color: var(--glow);
+  }
+  .menu-foot { margin-top: 1.6rem; font-size: 0.93rem; color: #57503f; font-style: italic; }
+
+  /* ---------- Story ---------- */
+  .story {
+    background: var(--pink);
+    padding: clamp(3.5rem, 8vw, 6.5rem) 0;
+  }
+  .story .wrap {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .story .label { color: var(--tomato-dark); }
+  .story h2 em { color: var(--green); }
+  .story-body p + p { margin-top: 1.1rem; }
+  .story-body p:first-child::first-letter {
+    font-family: var(--display);
+    font-size: 3.9em;
+    float: left;
+    line-height: 0.82;
+    padding: 0.08em 0.1em 0 0;
+    color: var(--tomato-dark);
+  }
+  blockquote {
+    margin: 2rem 0 0;
+    padding-left: 1.3rem;
+    border-left: 3px solid var(--green);
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    line-height: 1.3;
+    color: var(--green-deep);
+  }
+  blockquote footer {
+    font-family: var(--label);
+    font-style: normal;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 0.8rem;
+    color: var(--ink);
+  }
+
+  /* ---------- Visit ---------- */
+  .visit {
+    background: var(--paper);
+    padding: clamp(3.5rem, 8vw, 6.5rem) 0;
+  }
+  .visit-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .hours { width: 100%; border-collapse: collapse; margin-top: 0.4rem; }
+  .hours th, .hours td {
+    text-align: left; font-weight: 400;
+    padding: 0.62rem 0.6rem;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .hours td { text-align: right; font-family: var(--label); font-size: 0.95rem; }
+  .hours tr.today th, .hours tr.today td { background: var(--butter); font-weight: 700; }
+  .hours tr.today th::after {
+    content: "today";
+    font-family: var(--label); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--tomato-dark); margin-left: 0.6rem; font-weight: 600;
+  }
+  .hours .closed td { color: #7d745f; font-style: italic; font-family: var(--body); }
+
+  .address { margin-top: 2rem; font-style: normal; display: grid; gap: 0.25rem; }
+  .address strong { font-family: var(--display); font-size: 1.45rem; font-weight: 400; }
+  .address a { text-decoration-color: var(--tomato); text-underline-offset: 3px; }
+  .map {
+    margin-top: 1.6rem;
+    border: 1.5px solid var(--green);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .book {
+    background: var(--green);
+    color: var(--butter);
+    border-radius: 10px;
+    padding: clamp(1.5rem, 4vw, 2.6rem);
+  }
+  .book h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+    line-height: 1.1;
+  }
+  .book > p { color: #d9cfae; margin-top: 0.5rem; font-size: 0.98rem; }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.6rem; }
+  .field { display: grid; gap: 0.35rem; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-family: var(--label);
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600;
+    color: var(--pink);
+  }
+  input, select, textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid transparent;
+    border-radius: 6px;
+    padding: 0.72rem 0.8rem;
+    width: 100%;
+    min-height: 3rem;
+  }
+  textarea { resize: vertical; min-height: 5.2rem; }
+  form .btn { grid-column: 1 / -1; justify-self: start; }
+  .form-msg {
+    grid-column: 1 / -1;
+    font-size: 1rem;
+    min-height: 1.6em;
+    color: var(--glow);
+  }
+  .form-msg.error { color: var(--pink); }
+
+  /* ---------- Footer ---------- */
+  .site-foot {
+    color: #d9cfae;
+    padding: 3rem 0 3.5rem;
+    font-size: 0.95rem;
+  }
+  .site-foot .wrap {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 1rem 2rem; flex-wrap: wrap;
+  }
+  .site-foot .brand { color: var(--butter); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .hero .wrap, .story .wrap, .visit-grid, .menu-grid { grid-template-columns: 1fr; }
+    .plate { width: min(78%, 360px); }
+    .facts ul { grid-template-columns: 1fr; gap: 1.3rem; }
+    .board { grid-template-columns: 1fr; }
+    .board-price { justify-self: start; }
+  }
+  @media (max-width: 560px) {
+    .nav a:not(.btn) { display: none; }
+    form { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .plate .ring, .fireflies span { animation: none; }
+    .fireflies span { opacity: .6; }
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="awning" aria-hidden="true"></div>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Trattoria Lucciola, home"><i aria-hidden="true"></i>Lucciola</a>
+    <nav class="nav label" aria-label="Main">
+      <a href="#menu">Menu</a>
+      <a href="#story">Our story</a>
+      <a href="#visit">Hours &amp; location</a>
+      <a class="btn btn-primary" href="#book">Book a table</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="fireflies" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <p class="label">214 Alder Street · Since 1994</p>
+        <h1><em>Trattoria</em>Lucciola</h1>
+        <p class="lede">Pasta rolled every morning, sauce that starts before you wake up, and a table by the window that half the block considers theirs. Come as you are. We'll find you a chair.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#book">Reserve a table</a>
+          <a class="btn btn-ghost" href="#menu">See the menu</a>
+        </div>
+        <p class="status" id="status" role="status">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="status-text">Dinner Tuesday to Sunday · closed Mondays</span>
+        </p>
+      </div>
+
+      <svg class="plate" viewBox="0 0 400 400" role="img" aria-label="A plate of tagliatelle with tomato sauce and basil">
+        <defs>
+          <path id="ringpath" d="M200,200 m-178,0 a178,178 0 1,1 356,0 a178,178 0 1,1 -356,0"/>
+        </defs>
+        <g class="ring">
+          <text fill="#f6e7b8" font-family="Gill Sans, Gill Sans MT, Avenir Next, Trebuchet MS, sans-serif" font-size="15" font-weight="600" letter-spacing="4">
+            <textPath href="#ringpath" textLength="1105">PASTA FRESCA ✶ FATTA A MANO ✶ OGNI MATTINA ✶ ROLLED BY HAND ✶ EVERY MORNING ✶</textPath>
+          </text>
+        </g>
+        <circle cx="200" cy="200" r="150" fill="#142b1f" opacity=".5"/>
+        <circle cx="200" cy="196" r="146" fill="#fbf5e2"/>
+        <circle cx="200" cy="196" r="146" fill="none" stroke="#c8391f" stroke-width="3"/>
+        <circle cx="200" cy="196" r="136" fill="none" stroke="#c8391f" stroke-width="1"/>
+        <circle cx="200" cy="196" r="104" fill="#f3ead0"/>
+        <!-- sauce -->
+        <path d="M150 170c14-34 76-42 104-14 26 26 20 72-12 90-34 18-82 6-96-26-7-16-4-32 4-50z" fill="#c8391f"/>
+        <!-- pasta nest -->
+        <g fill="none" stroke-linecap="round" stroke-width="7">
+          <ellipse cx="200" cy="196" rx="78" ry="44" stroke="#d9a233" transform="rotate(12 200 196)"/>
+          <ellipse cx="200" cy="196" rx="74" ry="38" stroke="#efc65a" transform="rotate(58 200 196)"/>
+          <ellipse cx="200" cy="196" rx="70" ry="46" stroke="#d9a233" transform="rotate(104 200 196)"/>
+          <ellipse cx="200" cy="196" rx="66" ry="30" stroke="#efc65a" transform="rotate(150 200 196)"/>
+          <ellipse cx="198" cy="194" rx="56" ry="28" stroke="#e3b144" transform="rotate(34 198 194)"/>
+          <ellipse cx="202" cy="198" rx="52" ry="24" stroke="#f3d072" transform="rotate(82 202 198)"/>
+          <ellipse cx="200" cy="196" rx="46" ry="22" stroke="#d9a233" transform="rotate(128 200 196)"/>
+          <ellipse cx="200" cy="196" rx="38" ry="16" stroke="#efc65a" transform="rotate(170 200 196)"/>
+          <ellipse cx="200" cy="196" rx="28" ry="12" stroke="#e3b144" transform="rotate(48 200 196)"/>
+          <ellipse cx="200" cy="196" rx="16" ry="7" stroke="#f3d072" transform="rotate(110 200 196)"/>
+        </g>
+        <!-- sauce flecks -->
+        <g fill="#c8391f">
+          <circle cx="176" cy="178" r="9"/><circle cx="226" cy="214" r="11"/><circle cx="212" cy="172" r="6"/><circle cx="184" cy="220" r="7"/>
+        </g>
+        <!-- basil -->
+        <g fill="#3f7d4d" stroke="#1c3a2a" stroke-width="1.5">
+          <path d="M196 190c-4-20 8-36 28-40 4 20-8 36-28 40z"/>
+          <path d="M198 194c-18-8-26-24-20-42 18 8 26 24 20 42z"/>
+          <path d="M202 196c14-12 32-12 46 0-14 12-32 12-46 0z"/>
+        </g>
+        <!-- parmesan -->
+        <g fill="#fffaf0">
+          <rect x="160" y="200" width="7" height="3" rx="1" transform="rotate(20 160 200)"/>
+          <rect x="232" y="186" width="7" height="3" rx="1" transform="rotate(-30 232 186)"/>
+          <rect x="206" y="226" width="7" height="3" rx="1" transform="rotate(50 206 226)"/>
+          <rect x="182" y="160" width="7" height="3" rx="1" transform="rotate(-10 182 160)"/>
+          <rect x="222" y="160" width="6" height="3" rx="1" transform="rotate(70 222 160)"/>
+          <rect x="166" y="228" width="6" height="3" rx="1" transform="rotate(-50 166 228)"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="facts" aria-label="Good to know">
+    <div class="wrap">
+      <ul>
+        <li><strong>Pasta rolled at 7 a.m.</strong><span>Six shapes a day, cut by hand in the front window. Wave if you walk past.</span></li>
+        <li><strong>Sunday supper at four</strong><span>One long ragù, family style, until the pot is empty.</span></li>
+        <li><strong>Walk-ins at the bar</strong><span>Eight stools, the full menu, no reservation needed.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="menu on-light" id="menu">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="label">La carta</p>
+          <h2>The <em>menu</em></h2>
+        </div>
+        <button class="veg-toggle" id="veg-toggle" type="button" aria-pressed="false">
+          <span class="leaf" aria-hidden="true"></span>Vegetarian dishes
+        </button>
+      </div>
+
+      <div class="menu-grid" id="menu-grid">
+        <div class="course">
+          <h3>Antipasti <span>to start</span></h3>
+          <ul>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Burrata e pomodori<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$14</span></div>
+              <p>Creamy burrata, blistered cherry tomatoes, basil oil, grilled bread.</p>
+            </li>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Polpette della nonna</span><span class="dots"></span><span class="price">$13</span></div>
+              <p>Veal and pork meatballs braised in Sunday sauce, pecorino.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Fiori di zucca<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$12</span></div>
+              <p>Fried squash blossoms filled with ricotta and lemon zest.</p>
+            </li>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Tagliere misto</span><span class="dots"></span><span class="price">$19</span></div>
+              <p>Prosciutto, finocchiona, two cheeses, pickled peppers, honey.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="course">
+          <h3>Primi <span>made this morning</span></h3>
+          <ul>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Tagliatelle al ragù</span><span class="dots"></span><span class="price">$21</span></div>
+              <p>Egg ribbons, six-hour beef and pork ragù, parmigiano.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Cacio e pepe<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$18</span></div>
+              <p>Tonnarelli, pecorino romano, a reckless amount of black pepper.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Ravioli di ricotta<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$20</span></div>
+              <p>Spinach and ricotta ravioli, brown butter, sage, toasted hazelnut.</p>
+            </li>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Linguine alle vongole</span><span class="dots"></span><span class="price">$24</span></div>
+              <p>Littleneck clams, garlic, white wine, chili, parsley.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="course">
+          <h3>Secondi <span>from the stove</span></h3>
+          <ul>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Pollo al mattone</span><span class="dots"></span><span class="price">$26</span></div>
+              <p>Half chicken pressed under a brick, lemon, rosemary potatoes.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Melanzane alla parmigiana<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$22</span></div>
+              <p>Layered eggplant, tomato, mozzarella, baked until the edges catch.</p>
+            </li>
+            <li class="dish">
+              <div class="dish-top"><span class="dish-name">Branzino al forno</span><span class="dots"></span><span class="price">$31</span></div>
+              <p>Whole roasted sea bass, fennel, olives, salsa verde.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="course">
+          <h3>Dolci <span>save room</span></h3>
+          <ul>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Tiramisù<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$10</span></div>
+              <p>Made in the big pan, scooped at the table. Ask for the corner.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Torta di olio d'oliva<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$9</span></div>
+              <p>Olive oil cake, orange, whipped mascarpone.</p>
+            </li>
+            <li class="dish" data-veg>
+              <div class="dish-top"><span class="dish-name">Affogato<span class="leaf" role="img" aria-label="vegetarian"></span></span><span class="dots"></span><span class="price">$8</span></div>
+              <p>Vanilla gelato drowned in espresso. Amaro on the side, $4.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="board" aria-label="Tonight's special">
+        <p class="label" id="board-day">On the board</p>
+        <div>
+          <p class="board-dish" id="board-dish">Ask about tonight's special</p>
+          <p class="board-note" id="board-note">One dish, changes daily, gone when it's gone.</p>
+        </div>
+        <p class="board-price" id="board-price" aria-label="Price"></p>
+      </aside>
+
+      <p class="menu-foot">Gluten-free pasta is available for any primo. Tell us about allergies and we'll cook around them.</p>
+    </div>
+  </section>
+
+  <section class="story on-light" id="story">
+    <div class="wrap">
+      <div>
+        <p class="label">La famiglia</p>
+        <h2>Thirty years, <em>one corner</em></h2>
+        <blockquote>
+          “If the pot's on, there's enough for one more.”
+          <footer>Rosalba Moretti, who still checks the sauce</footer>
+        </blockquote>
+      </div>
+      <div class="story-body">
+        <p>Rosalba Moretti opened Lucciola in 1994 with eleven tables, her mother's rolling pin from Abruzzo, and a handwritten menu taped to the door. She named it after the fireflies in the field behind the house she grew up in, the ones that came out just as dinner hit the table.</p>
+        <p>Her children Carla and Enzo run the room and the kitchen now. The rolling pin is still in use. So is the rule that nobody from the neighborhood waits outside in the rain: if the tables are full, you get a glass of wine and a spot by the pass until one opens.</p>
+        <p>We buy tomatoes from the Saturday market two blocks over, bread from Halloran's across the street, and we've never once changed the tiramisù.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit on-light" id="visit">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="label">Vieni a trovarci</p>
+          <h2>Come <em>find us</em></h2>
+        </div>
+      </div>
+
+      <div class="visit-grid">
+        <div>
+          <table class="hours" id="hours">
+            <caption class="label" style="text-align:left; color:var(--green); padding-bottom:.6rem;">Kitchen hours</caption>
+            <tbody>
+              <tr data-day="1" class="closed"><th scope="row">Monday</th><td>Closed. We rest.</td></tr>
+              <tr data-day="2"><th scope="row">Tuesday</th><td>5 – 10 pm</td></tr>
+              <tr data-day="3"><th scope="row">Wednesday</th><td>5 – 10 pm</td></tr>
+              <tr data-day="4"><th scope="row">Thursday</th><td>5 – 10 pm</td></tr>
+              <tr data-day="5"><th scope="row">Friday</th><td>5 – 11 pm</td></tr>
+              <tr data-day="6"><th scope="row">Saturday</th><td>5 – 11 pm</td></tr>
+              <tr data-day="0"><th scope="row">Sunday</th><td>4 – 9 pm</td></tr>
+            </tbody>
+          </table>
+
+          <address class="address">
+            <strong>214 Alder Street</strong>
+            <span>Corner of Alder &amp; 9th, under the striped awning</span>
+            <span><a href="tel:+15550142190">(555) 014-2190</a> · <a href="mailto:ciao@lucciola.example">ciao@lucciola.example</a></span>
+          </address>
+
+          <svg class="map" viewBox="0 0 520 240" role="img" aria-label="Map showing Trattoria Lucciola at the corner of Alder Street and 9th Avenue, one block from Market Square">
+            <rect width="520" height="240" fill="#eadfc2"/>
+            <rect x="330" y="20" width="160" height="78" rx="4" fill="#b9d3a6"/>
+            <text x="410" y="64" text-anchor="middle" font-family="Gill Sans, Trebuchet MS, sans-serif" font-size="11" letter-spacing="2" fill="#1c3a2a">MARKET SQUARE</text>
+            <g stroke="#fbf5e2" stroke-linecap="round">
+              <path d="M0 126H520" stroke-width="22"/>
+              <path d="M300 0V240" stroke-width="22"/>
+              <path d="M0 40H280M0 206H520" stroke-width="10"/>
+              <path d="M120 0V240M440 110V240" stroke-width="10"/>
+            </g>
+            <g font-family="Gill Sans, Trebuchet MS, sans-serif" font-size="11" letter-spacing="2" fill="#57503f">
+              <text x="24" y="130">ALDER STREET</text>
+              <text x="296" y="226" transform="rotate(-90 296 226)">9TH AVENUE</text>
+            </g>
+            <g transform="translate(268 100)">
+              <path d="M0 0c-14-16-22-26-22-38a22 22 0 0 1 44 0c0 12-8 22-22 38z" fill="#c8391f" stroke="#fbf5e2" stroke-width="2"/>
+              <circle cx="0" cy="-38" r="7" fill="#ffd96a"/>
+            </g>
+            <text x="238" y="52" text-anchor="end" font-family="Bodoni 72, Didot, Times New Roman, serif" font-style="italic" font-size="17" fill="#1c3a2a">Lucciola</text>
+          </svg>
+        </div>
+
+        <div class="book" id="book">
+          <h3>Book a table</h3>
+          <p>Tables for up to eight. For bigger gatherings or the back room, call us after 3 pm.</p>
+          <form id="book-form" novalidate>
+            <div class="field full">
+              <label for="f-name">Name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-date">Date</label>
+              <input id="f-date" name="date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="f-time">Time</label>
+              <select id="f-time" name="time" required>
+                <option>5:00 pm</option><option>5:30 pm</option><option>6:00 pm</option>
+                <option>6:30 pm</option><option selected>7:00 pm</option><option>7:30 pm</option>
+                <option>8:00 pm</option><option>8:30 pm</option><option>9:00 pm</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-party">Guests</label>
+              <select id="f-party" name="party" required>
+                <option>1</option><option selected>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-phone">Phone</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+            </div>
+            <div class="field full">
+              <label for="f-notes">Anything we should know? (optional)</label>
+              <textarea id="f-notes" name="notes" placeholder="Birthdays, allergies, a high chair"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Request table</button>
+            <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a class="brand" href="#top"><i aria-hidden="true"></i>Trattoria Lucciola</a>
+    <p>214 Alder Street · (555) 014-2190 · Dinner Tuesday to Sunday</p>
+    <p>© <span id="year">2026</span> The Moretti family</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Kitchen hours in minutes from midnight, indexed by Date.getDay() (0 = Sunday)
+  var HOURS = {
+    0: [16 * 60, 21 * 60],
+    1: null,
+    2: [17 * 60, 22 * 60],
+    3: [17 * 60, 22 * 60],
+    4: [17 * 60, 22 * 60],
+    5: [17 * 60, 23 * 60],
+    6: [17 * 60, 23 * 60]
+  };
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var SPECIALS = {
+    0: ['Sunday ragù, family style', 'Braised short rib, sausage and meatballs over rigatoni. Per person, seconds included.', '$28'],
+    1: null,
+    2: ['Gnocchi alla sorrentina', 'Potato gnocchi baked with tomato, mozzarella and basil.', '$19'],
+    3: ['Risotto ai funghi', 'Carnaroli rice, porcini and chestnut mushrooms, thyme butter.', '$23'],
+    4: ['Osso buco', 'Braised veal shank, saffron risotto, gremolata.', '$32'],
+    5: ['Fritto misto', 'Calamari, shrimp and zucchini, fried crisp, lemon aioli.', '$25'],
+    6: ['Lasagna verde', 'Spinach pasta, ragù and béchamel, nine layers. We counted.', '$24']
+  };
+
+  function fmt(mins) {
+    var h = Math.floor(mins / 60), m = mins % 60;
+    var suffix = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    return h + (m ? ':' + String(m).padStart(2, '0') : '') + ' ' + suffix;
+  }
+
+  var now = new Date();
+  var day = now.getDay();
+  var mins = now.getHours() * 60 + now.getMinutes();
+
+  // Open / closed status
+  var statusEl = document.getElementById('status');
+  var statusText = document.getElementById('status-text');
+  var today = HOURS[day];
+  if (today && mins >= today[0] && mins < today[1]) {
+    statusEl.classList.add('open');
+    statusText.textContent = 'Open now · kitchen until ' + fmt(today[1]);
+  } else if (today && mins < today[0]) {
+    statusText.textContent = 'Closed right now · opens today at ' + fmt(today[0]);
+  } else {
+    for (var i = 1; i <= 7; i++) {
+      var next = (day + i) % 7;
+      if (HOURS[next]) {
+        var when = i === 1 ? 'tomorrow' : DAY_NAMES[next];
+        statusText.textContent = 'Closed right now · opens ' + when + ' at ' + fmt(HOURS[next][0]);
+        break;
+      }
+    }
+  }
+
+  // Highlight today's row
+  var row = document.querySelector('#hours tr[data-day="' + day + '"]');
+  if (row) row.classList.add('today');
+
+  // Daily special
+  var special = SPECIALS[day];
+  var boardDay = document.getElementById('board-day');
+  if (special) {
+    boardDay.textContent = DAY_NAMES[day] + "'s board";
+    document.getElementById('board-dish').textContent = special[0];
+    document.getElementById('board-note').textContent = special[1];
+    document.getElementById('board-price').textContent = special[2];
+  } else {
+    boardDay.textContent = 'Closed today';
+    document.getElementById('board-dish').textContent = 'Back tomorrow with gnocchi alla sorrentina';
+    document.getElementById('board-note').textContent = 'The board changes every night we are open.';
+  }
+
+  // Vegetarian filter
+  var vegBtn = document.getElementById('veg-toggle');
+  var grid = document.getElementById('menu-grid');
+  vegBtn.addEventListener('click', function () {
+    var on = vegBtn.getAttribute('aria-pressed') !== 'true';
+    vegBtn.setAttribute('aria-pressed', String(on));
+    grid.classList.toggle('veg-only', on);
+  });
+
+  // Fireflies
+  var field = document.querySelector('.fireflies');
+  var spots = [[6, 18], [14, 72], [23, 40], [35, 88], [44, 12], [52, 64], [61, 30], [70, 82], [78, 10], [86, 55], [93, 28], [97, 76]];
+  spots.forEach(function (s, i) {
+    var f = document.createElement('span');
+    f.style.left = s[0] + '%';
+    f.style.top = s[1] + '%';
+    f.style.animationDelay = (i * 0.83 % 6).toFixed(2) + 's';
+    f.style.animationDuration = (5 + (i % 4)) + 's';
+    field.appendChild(f);
+  });
+
+  // Reservation form
+  var form = document.getElementById('book-form');
+  var msg = document.getElementById('form-msg');
+  var dateInput = document.getElementById('f-date');
+  var iso = function (d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  };
+  dateInput.min = iso(now);
+
+  function fail(text, field) {
+    msg.className = 'form-msg error';
+    msg.textContent = text;
+    if (field) field.focus();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = form.elements.name.value.trim();
+    var date = form.elements.date.value;
+    var phone = form.elements.phone.value.trim();
+
+    if (!name) return fail('We need a name for the table.', form.elements.name);
+    if (!date) return fail('Pick a date and we will check the book.', form.elements.date);
+    var picked = new Date(date + 'T12:00:00');
+    if (date < dateInput.min) return fail('That date has already passed. Pick another?', form.elements.date);
+    if (picked.getDay() === 1) return fail('We are closed Mondays. Any other night works.', form.elements.date);
+    if (phone.replace(/\D/g, '').length < 7) return fail('Add a phone number so we can confirm.', form.elements.phone);
+
+    var party = form.elements.party.value;
+    var pretty = picked.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    msg.className = 'form-msg';
+    msg.textContent = 'Grazie, ' + name.split(' ')[0] + '. Table for ' + party + ' on ' + pretty + ' at ' +
+      form.elements.time.value + '. We will call to confirm.';
+    form.reset();
+  });
+
+  document.getElementById('year').textContent = now.getFullYear();
+})();
+</script>
+</body>
+</html>

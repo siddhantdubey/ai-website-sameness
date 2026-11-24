@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soren Lindqvist — Editorial & Architectural Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --bg-elevated: #141413;
+      --bg-card: #1a1918;
+      --text: #f3efe6;
+      --text-muted: #9e9a90;
+      --text-dim: #5e5b54;
+      --accent: #d4b483;
+      --border: rgba(243, 239, 230, 0.11);
+      --border-strong: rgba(243, 239, 230, 0.24);
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f3ec;
+      --bg-elevated: #ece7dc;
+      --bg-card: #e3ddd0;
+      --text: #161514;
+      --text-muted: #5c5850;
+      --text-dim: #8c867a;
+      --accent: #9c6b30;
+      --border: rgba(22, 21, 20, 0.12);
+      --border-strong: rgba(22, 21, 20, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+    }
+
+    /* Subtle film grain overlay */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Header / Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.4rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: background 0.4s var(--ease), border-color 0.4s var(--ease);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    nav a {
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.25s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 1px;
+      background: var(--text);
+      transition: width 0.3s var(--ease);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .theme-toggle {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      padding: 8.5rem 3rem 4rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+      align-items: end;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding-top: 2rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #52b788;
+      box-shadow: 0 0 10px #52b788;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.2rem, 6.8vw, 6.6rem);
+      font-weight: 300;
+      line-height: 0.96;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1.02rem;
+      line-height: 1.68;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.95rem 1.8rem;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: transform 0.3s var(--ease), opacity 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.95rem 1.6rem;
+      border: 1px solid var(--border-strong);
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-elevated);
+    }
+
+    .hero-showcase {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hero-frame {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .hero-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--ease), filter 0.8s ease;
+    }
+
+    .hero-frame:hover img {
+      transform: scale(1.04);
+    }
+
+    .frame-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* Section Defaults */
+    section {
+      padding: 7rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .section-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.05;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .filter-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* Portfolio Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2.2rem;
+    }
+
+    .gallery-item {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.4s ease, transform 0.4s var(--ease);
+    }
+
+    .gallery-item.wide {
+      grid-column: span 8;
+    }
+
+    .gallery-item.half {
+      grid-column: span 6;
+    }
+
+    .gallery-item.hidden {
+      display: none;
+    }
+
+    .img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      aspect-ratio: 4 / 5;
+    }
+
+    .gallery-item.wide .img-wrap {
+      aspect-ratio: 16 / 10;
+    }
+
+    .gallery-item.half .img-wrap {
+      aspect-ratio: 5 / 4;
+    }
+
+    .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.9s var(--ease), filter 0.5s ease;
+    }
+
+    .gallery-item:hover .img-wrap img {
+      transform: scale(1.045);
+    }
+
+    .exif-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10, 10, 9, 0.78) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.4rem;
+      color: #f3efe6;
+    }
+
+    .gallery-item:hover .exif-overlay {
+      opacity: 1;
+    }
+
+    .exif-specs {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: rgba(243, 239, 230, 0.82);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .item-title {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+    }
+
+    .item-cat {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    /* Editorial / Philosophy Section */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .portrait-card {
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 1.25rem;
+    }
+
+    .portrait-card img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(25%);
+    }
+
+    .portrait-footnote {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .about-copy h3 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
+      font-weight: 300;
+      line-height: 1.18;
+      margin-bottom: 2rem;
+    }
+
+    .about-copy p {
+      color: var(--text-muted);
+      line-height: 1.75;
+      font-size: 1rem;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      padding-top: 2.5rem;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2.6rem;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* Exhibitions & Clients Table */
+    .client-list {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+
+    .client-cell {
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.2rem;
+      transition: background 0.3s ease;
+    }
+
+    .client-cell:hover {
+      background: var(--bg-elevated);
+    }
+
+    .client-year {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .client-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .client-project {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Services & Commissions */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .service-card {
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.3s ease, transform 0.3s var(--ease);
+    }
+
+    .service-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-4px);
+    }
+
+    .service-index {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 1.8rem;
+    }
+
+    .service-title {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .service-desc {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+
+    .service-deliverables {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 1.4rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .service-rate {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .rate-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .rate-price {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      color: var(--text);
+    }
+
+    /* Contact / Booking Section */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 5rem;
+    }
+
+    .contact-info h3 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 3.5vw, 3.4rem);
+      font-weight: 300;
+      line-height: 1.12;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-info p {
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+
+    .detail-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .detail-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+    }
+
+    .detail-val {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+    }
+
+    .booking-form {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .field label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.9rem 1rem;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-feedback {
+      display: none;
+      padding: 1rem 1.2rem;
+      border: 1px solid #52b788;
+      background: rgba(82, 183, 136, 0.1);
+      color: #52b788;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(8, 8, 8, 0.95);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 3rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease);
+      color: #f3efe6;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .lightbox-close {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(243, 239, 230, 0.25);
+      color: #f3efe6;
+      transition: background 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(243, 239, 230, 0.12);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+      min-height: 0;
+    }
+
+    .lightbox-stage img {
+      max-width: 85vw;
+      max-height: 74vh;
+      object-fit: contain;
+      border: 1px solid rgba(243, 239, 230, 0.15);
+      box-shadow: 0 25px 75px rgba(0, 0, 0, 0.7);
+    }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 1rem 1.3rem;
+      border: 1px solid rgba(243, 239, 230, 0.2);
+      background: rgba(12, 12, 11, 0.7);
+      color: #f3efe6;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .lb-nav:hover {
+      border-color: #f3efe6;
+      background: rgba(25, 25, 23, 0.95);
+    }
+
+    .lb-prev { left: 0; }
+    .lb-next { right: 0; }
+
+    .lightbox-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 1px solid rgba(243, 239, 230, 0.14);
+      padding-top: 1.2rem;
+    }
+
+    .lb-title {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+      font-weight: 300;
+    }
+
+    .lb-exif {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: rgba(243, 239, 230, 0.7);
+      letter-spacing: 0.08em;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 7.5rem;
+      }
+      .gallery-item,
+      .gallery-item.wide,
+      .gallery-item.half {
+        grid-column: span 6;
+      }
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .client-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+      nav {
+        display: none;
+      }
+      section, .hero {
+        padding: 4.5rem 1.5rem;
+      }
+      .gallery-item,
+      .gallery-item.wide,
+      .gallery-item.half {
+        grid-column: span 12;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .booking-form {
+        padding: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header>
+    <a href="#" class="brand">
+      <span class="brand-name">Soren Lindqvist</span>
+      <span class="brand-sub">Visual Monograph &amp; Studio</span>
+    </a>
+    <nav aria-label="Main Navigation">
+      <a href="#works">Index / Works</a>
+      <a href="#about">Monograph</a>
+      <a href="#commissions">Commissions</a>
+      <a href="#contact">Inquire</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark/Light Room">
+        Darkroom
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-left">
+        <div>
+          <div class="hero-meta">
+            <span><i class="status-dot"></i> Booking Q1/Q2 Commissions</span>
+            <span>Stockholm &bull; Paris &bull; Tokyo</span>
+            <span>Medium Format &amp; 35mm</span>
+          </div>
+          <h1 class="hero-title">
+            Quiet geometry,<br />
+            <em>human stillness</em> &amp;<br />
+            natural light.
+          </h1>
+          <p class="hero-desc">
+            Freelance editorial, architectural, and portrait photographer crafting tactile visual narratives for design houses, publications, and cultural institutions worldwide.
+          </p>
+        </div>
+        <div class="hero-cta-row">
+          <a href="#works" class="btn-primary">Explore Selected Works &rarr;</a>
+          <a href="#contact" class="btn-secondary">Commission Inquiry</a>
+        </div>
+      </div>
+
+      <div class="hero-showcase">
+        <div class="hero-frame" data-index="0" id="heroFrame">
+          <img
+            src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=85"
+            alt="Minimalist Nordic concrete courtyard bathed in low afternoon sunlight"
+          />
+        </div>
+        <div class="frame-caption">
+          <span>FIG. 00 — KUNSTHALLE PAVILION, AARHUS</span>
+          <span>HASSELBLAD 500C/M &bull; 80MM F/2.8</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio Gallery -->
+    <section id="works">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">01 / Archival Index</span>
+          <h2 class="section-title">Selected Commissions (2022–2026)</h2>
+        </div>
+        <div class="filter-bar" role="tablist" aria-label="Filter photography category">
+          <button class="filter-btn active" data-filter="all">All Plates (09)</button>
+          <button class="filter-btn" data-filter="architecture">Architecture</button>
+          <button class="filter-btn" data-filter="editorial">Editorial</button>
+          <button class="filter-btn" data-filter="portraiture">Portraiture</button>
+          <button class="filter-btn" data-filter="still">Still Life</button>
+        </div>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Item 1 -->
+        <article class="gallery-item wide" data-category="architecture" data-index="1">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85"
+              alt="Monolithic raw concrete villa overlooking misty coastline"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>LEICA SL2-S</span>
+                <span>35MM APO</span>
+                <span>F/5.6</span>
+                <span>1/500S</span>
+                <span>ISO 100</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">01. Villa Kullen — Brutalist Sanctuary</h3>
+            <span class="item-cat">Architecture / Sweden</span>
+          </div>
+        </article>
+
+        <!-- Item 2 -->
+        <article class="gallery-item" data-category="portraiture" data-index="2">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85"
+              alt="Editorial close portrait in directional window light"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>CONTAX 645</span>
+                <span>80MM F/2</span>
+                <span>KODAK PORTRA 400</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">02. Freja in Autumn Light</h3>
+            <span class="item-cat">Portraiture / Copenhagen</span>
+          </div>
+        </article>
+
+        <!-- Item 3 -->
+        <article class="gallery-item" data-category="still" data-index="3">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1000&q=85"
+              alt="Sculptural ceramic vessels arranged on travertine stone"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>HASSELBLAD X2D</span>
+                <span>90MM F/2.5</span>
+                <span>F/8.0</span>
+                <span>ISO 64</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">03. Stoneware Monograph IV</h3>
+            <span class="item-cat">Still Life / Kyoto</span>
+          </div>
+        </article>
+
+        <!-- Item 4 -->
+        <article class="gallery-item" data-category="editorial" data-index="4">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85"
+              alt="Silhouette in tailored wool coat walking past limestone colonnade"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>LEICA M6</span>
+                <span>50MM SUMMILUX</span>
+                <span>ILFORD HP5</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">04. Lemaire Autumn/Winter Study</h3>
+            <span class="item-cat">Editorial / Paris</span>
+          </div>
+        </article>
+
+        <!-- Item 5 -->
+        <article class="gallery-item" data-category="architecture" data-index="5">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=85"
+              alt="Minimalist white gallery stairwell with stark shadow lines"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>HASSELBLAD X2D</span>
+                <span>38MM F/2.5</span>
+                <span>F/11</span>
+                <span>ISO 64</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">05. Silence of Form</h3>
+            <span class="item-cat">Architecture / Zurich</span>
+          </div>
+        </article>
+
+        <!-- Item 6 -->
+        <article class="gallery-item half" data-category="editorial" data-index="6">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1400&q=85"
+              alt="Wide editorial landscape with figure in linen amidst coastal dunes"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>PENTAX 67II</span>
+                <span>105MM F/2.4</span>
+                <span>PORTRA 160</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">06. North Sea Solitude</h3>
+            <span class="item-cat">Editorial / Sylt</span>
+          </div>
+        </article>
+
+        <!-- Item 7 -->
+        <article class="gallery-item half" data-category="architecture" data-index="7">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85"
+              alt="Warm timber and glass interior living space at dusk"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>LEICA SL2-S</span>
+                <span>24-90MM VARIO</span>
+                <span>F/8.0</span>
+                <span>1/15S</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">07. House in Karuizawa</h3>
+            <span class="item-cat">Architecture / Nagano</span>
+          </div>
+        </article>
+
+        <!-- Item 8 -->
+        <article class="gallery-item" data-category="portraiture" data-index="8">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85"
+              alt="Environmental study of sculptor in dusty studio light"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>LEICA M11 MONOCHROM</span>
+                <span>50MM APO</span>
+                <span>F/2.8</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">08. Atelier of Henrik V.</h3>
+            <span class="item-cat">Portraiture / Oslo</span>
+          </div>
+        </article>
+
+        <!-- Item 9 -->
+        <article class="gallery-item wide" data-category="still" data-index="9">
+          <div class="img-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=85"
+              alt="Botanical shadow study on handmade cotton rag paper"
+              loading="lazy"
+            />
+            <div class="exif-overlay">
+              <div class="exif-specs">
+                <span>SINAR F2 4X5</span>
+                <span>150MM SCHNEIDER</span>
+                <span>ILFORD FP4+</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-meta">
+            <h3 class="item-title">09. Botanicals &amp; Silver Halide</h3>
+            <span class="item-cat">Still Life / Stockholm</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- About & Philosophy -->
+    <section id="about">
+      <div class="about-grid">
+        <div class="portrait-card">
+          <img
+            src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1000&q=80"
+            alt="Portrait of photographer Soren Lindqvist"
+            loading="lazy"
+          />
+          <div class="portrait-footnote">
+            <span>SELF-PORTRAIT, SODERMALM STUDIO</span>
+            <span>SILVER GELATIN PRINT</span>
+          </div>
+        </div>
+
+        <div class="about-copy">
+          <span class="section-eyebrow">02 / Monograph &amp; Ethos</span>
+          <h3>Working at the intersection of spatial restraint and analog permanence.</h3>
+          <p>
+            Over the past decade, my practice has centered on documenting spaces and subjects with unhurried precision. Rather than forcing artificial drama, I work primarily with available ambient light, medium-format film stocks, and high-resolution digital backs to preserve subtle tonal gradations.
+          </p>
+          <p>
+            Whether photographing a timber residence in the Japanese Alps or shooting a lookbook in Paris, every commission is approached as an archival publication—privileging texture, stillness, and honesty of material.
+          </p>
+
+          <div class="stats-row">
+            <div>
+              <div class="stat-num">11+</div>
+              <div class="stat-label">Years in Practice</div>
+            </div>
+            <div>
+              <div class="stat-num">48</div>
+              <div class="stat-label">Print Publications</div>
+            </div>
+            <div>
+              <div class="stat-num">07</div>
+              <div class="stat-label">Solo Exhibitions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Clients & Press -->
+      <div class="client-list" aria-label="Selected Clients and Publications">
+        <div class="client-cell">
+          <span class="client-year">2026 / EDITORIAL</span>
+          <div class="client-name">Kinfolk Magazine</div>
+          <div class="client-project">Issue 54 — Nordic Architecture Dossier</div>
+        </div>
+        <div class="client-cell">
+          <span class="client-year">2025 / CAMPAIGN</span>
+          <div class="client-name">Aesop</div>
+          <div class="client-project">Architectural Spaces: Stockholm &amp; Basel</div>
+        </div>
+        <div class="client-cell">
+          <span class="client-year">2025 / MONOGRAPH</span>
+          <div class="client-name">ArkDes Museum</div>
+          <div class="client-project">Exhibition Catalogue &amp; Archival Plates</div>
+        </div>
+        <div class="client-cell">
+          <span class="client-year">2024 / LOOKBOOK</span>
+          <div class="client-name">Studio Nicholson</div>
+          <div class="client-project">Autumn / Winter Campaign, London</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services & Commissions -->
+    <section id="commissions">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">03 / Services &amp; Rates</span>
+          <h2 class="section-title">Commission Formats</h2>
+        </div>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-index">FORMAT // 01</div>
+            <h3 class="service-title">Architectural &amp; Spatial</h3>
+            <p class="service-desc">
+              Full-day location documentation for architects, interior designers, and hospitality spaces. Shot tethered with shift lenses and natural light progression from dawn to dusk.
+            </p>
+            <ul class="service-deliverables">
+              <li>+ 25–40 Hand-Graded Master Plates</li>
+              <li>+ Digital Medium Format + 120 Film</li>
+              <li>+ Global Editorial &amp; Press Licensing</li>
+            </ul>
+          </div>
+          <div class="service-rate">
+            <span class="rate-label">Starting Day Rate</span>
+            <span class="rate-price">&euro;2,800</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-index">FORMAT // 02</div>
+            <h3 class="service-title">Editorial &amp; Brand Campaigns</h3>
+            <p class="service-desc">
+              Cohesive visual storytelling for fashion houses, independent print publications, and design objects. Includes creative direction, casting consultation, and location scouting.
+            </p>
+            <ul class="service-deliverables">
+              <li>+ Custom Lookbook &amp; Campaign Sets</li>
+              <li>+ Analog Darkroom Contact Sheets</li>
+              <li>+ Art Direction &amp; Print Pre-Press</li>
+            </ul>
+          </div>
+          <div class="service-rate">
+            <span class="rate-label">Project Retainer</span>
+            <span class="rate-price">&euro;4,200</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-index">FORMAT // 03</div>
+            <h3 class="service-title">Portraiture &amp; Fine Art Prints</h3>
+            <p class="service-desc">
+              Intimate environmental portraits for artists, founders, and gallerists, alongside limited-edition signed archival pigment and silver gelatin prints for private collections.
+            </p>
+            <ul class="service-deliverables">
+              <li>+ Half-Day Studio or On-Location Session</li>
+              <li>+ 12 Retouched Archival Tiff Files</li>
+              <li>+ 2x Signed 16&times;20" Hahnem&uuml;hle Prints</li>
+            </ul>
+          </div>
+          <div class="service-rate">
+            <span class="rate-label">Session Fee</span>
+            <span class="rate-price">&euro;1,450</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & Booking -->
+    <section id="contact">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="section-eyebrow">04 / Commission &amp; Representation</span>
+          <h3>Initiate a visual dialogue.</h3>
+          <p>
+            Available for commissions across Europe, Japan, and North America. For commercial bookings, print acquisitions, or press tear-sheets, please use the direct inquiry dossier or reach out to studio representation.
+          </p>
+
+          <div class="contact-details">
+            <div class="detail-row">
+              <span class="detail-label">Direct Studio Desk</span>
+              <a href="mailto:studio@sorenlindqvist.se" class="detail-val">studio@sorenlindqvist.se</a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Syndication &amp; Agency</span>
+              <span class="detail-val">Atelier Vesper — Paris / Stockholm</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Studio Address</span>
+              <span class="detail-val">Hornsgatan 42, 118 21 Stockholm</span>
+            </div>
+          </div>
+        </div>
+
+        <form class="booking-form" id="bookingForm">
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Your Name / Studio</label>
+              <input type="text" id="name" name="name" placeholder="Elena Rostova" required />
+            </div>
+            <div class="field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="elena@atelier.com" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="type">Commission Discipline</label>
+              <select id="type" name="type">
+                <option value="architecture">Architectural / Interior Monograph</option>
+                <option value="editorial">Editorial / Fashion Lookbook</option>
+                <option value="portrait">Private or Executive Portraiture</option>
+                <option value="print">Archival Fine-Art Print Acquisition</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timeline">Target Timeline &amp; Location</label>
+              <input type="text" id="timeline" name="timeline" placeholder="e.g. March 2027 — Zurich" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Project Brief &amp; Scope</label>
+            <textarea id="message" name="message" rows="4" placeholder="Outline the creative brief, architectural site, or desired deliverables..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="align-self: flex-start;">
+            Transmit Inquiry &rarr;
+          </button>
+
+          <div class="form-feedback" id="formFeedback" role="status">
+            INQUIRY LOGGED // Thank you. Studio desk will respond within 24 hours with a tailored PDF treatment and availability calendar.
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>&copy; 2026 Soren Lindqvist Studio. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#works">Archive</a>
+      <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+      <a href="https://are.na" target="_blank" rel="noreferrer">Are.na</a>
+      <a href="#contact">Press Kit</a>
+    </div>
+  </footer>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image Lightbox">
+    <div class="lightbox-top">
+      <span id="lbCounter">PLATE 01 / 09</span>
+      <button class="lightbox-close" id="lbClose">ESC / CLOSE &times;</button>
+    </div>
+    <div class="lightbox-stage">
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous image">&larr;</button>
+      <img id="lbImage" src="" alt="" />
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Next image">&rarr;</button>
+    </div>
+    <div class="lightbox-bottom">
+      <div>
+        <div class="lb-title" id="lbTitle"></div>
+      </div>
+      <div class="lb-exif" id="lbExif"></div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle (Darkroom vs Daylight Gallery)
+    const themeToggle = document.getElementById('themeToggle');
+    let isLight = false;
+    themeToggle.addEventListener('click', () => {
+      isLight = !isLight;
+      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+      themeToggle.textContent = isLight ? 'Daylight' : 'Darkroom';
+    });
+
+    // Portfolio Category Filter
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+
+        galleryItems.forEach(item => {
+          const cat = item.getAttribute('data-category');
+          if (filter === 'all' || cat === filter) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Lightbox Viewer
+    const lightbox = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbExif = document.getElementById('lbExif');
+    const lbCounter = document.getElementById('lbCounter');
+    const lbClose = document.getElementById('lbClose');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+
+    const plates = [
+      {
+        src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=85',
+        title: '00. Kunsthalle Pavilion, Aarhus',
+        exif: 'HASSELBLAD 500C/M • 80MM F/2.8 • ILFORD DELTA 100'
+      },
+      ...Array.from(galleryItems).map(item => ({
+        src: item.querySelector('img').src,
+        title: item.querySelector('.item-title').textContent,
+        exif: Array.from(item.querySelectorAll('.exif-specs span')).map(s => s.textContent).join(' • ')
+      }))
+    ];
+
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightbox() {
+      const plate = plates[currentIndex];
+      lbImage.src = plate.src;
+      lbImage.alt = plate.title;
+      lbTitle.textContent = plate.title;
+      lbExif.textContent = plate.exif;
+      lbCounter.textContent = `PLATE 0${currentIndex} / 0${plates.length - 1}`;
+    }
+
+    document.getElementById('heroFrame').addEventListener('click', () => openLightbox(0));
+
+    galleryItems.forEach((item, idx) => {
+      item.addEventListener('click', () => openLightbox(idx + 1));
+    });
+
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentIndex = (currentIndex - 1 + plates.length) % plates.length;
+      updateLightbox();
+    });
+    lbNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % plates.length;
+      updateLightbox();
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-stage')) {
+        closeLightbox();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lbPrev.click();
+      if (e.key === 'ArrowRight') lbNext.click();
+    });
+
+    // Contact Form Submission Feedback
+    const bookingForm = document.getElementById('bookingForm');
+    const formFeedback = document.getElementById('formFeedback');
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      formFeedback.style.display = 'block';
+      bookingForm.reset();
+    });
+  </script>
+</body>
+</html>

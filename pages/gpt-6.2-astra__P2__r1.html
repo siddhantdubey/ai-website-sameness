@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e6">
+  <title>Casa Rosa · Neighborhood Italian Kitchen</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f2e6;
+      --ink: #243e30;
+      --red: #a63128;
+      --rule: #b9bcaa;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--serif);
+    }
+    a { color: inherit; text-underline-offset: .24em; }
+    a:focus-visible, summary:focus-visible {
+      outline: 3px solid currentColor;
+      outline-offset: 5px;
+    }
+    .wrap { width: min(1240px, 89%); margin-inline: auto; }
+    .skip {
+      position: absolute;
+      top: -6rem;
+      padding: .8rem;
+      background: var(--paper);
+      z-index: 2;
+    }
+    .skip:focus { top: .5rem; }
+    header .wrap, nav, .actions, footer .wrap {
+      display: flex;
+      align-items: center;
+    }
+    header .wrap {
+      min-height: 86px;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--ink);
+    }
+    .brand {
+      font-size: 1.85rem;
+      font-weight: bold;
+      letter-spacing: -.075em;
+      text-decoration: none;
+    }
+    .brand i { color: var(--red); }
+    nav { gap: clamp(1rem, 3vw, 3rem); }
+    nav a, .button, .text-link, .label, footer, .price, summary {
+      font-family: var(--sans);
+    }
+    nav a, .text-link, .button {
+      font-size: .87rem;
+      font-weight: 600;
+    }
+    nav a { text-decoration: none; }
+    nav a:hover, .brand:hover { text-decoration: underline; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: center;
+      gap: 4%;
+      padding-block: clamp(3rem, 7vw, 7rem);
+    }
+    .label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: .2em 0;
+      font-size: clamp(5rem, 9.6vw, 9.6rem);
+      line-height: .84;
+      letter-spacing: -.085em;
+      font-weight: 400;
+    }
+    h1 em { color: var(--red); }
+    .intro {
+      max-width: 26rem;
+      margin: 1.65rem 0;
+      font-size: clamp(1.12rem, 1.6vw, 1.4rem);
+      line-height: 1.5;
+    }
+    .actions { gap: 1.5rem; flex-wrap: wrap; }
+    .button {
+      display: inline-block;
+      padding: 1rem 1.45rem;
+      background: var(--red);
+      color: white;
+      text-decoration: none;
+      border-radius: 3px;
+    }
+    .button:hover { background: #81251e; }
+    .art { margin: 0; position: relative; }
+    .art svg { display: block; width: 100%; height: auto; }
+    .menu {
+      border-block: 1px solid var(--ink);
+      padding: clamp(2rem, 5vw, 4rem) 0;
+    }
+    h2 {
+      margin: 0 0 1.5rem;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: 1;
+    }
+    .dishes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+    article { border-top: 1px solid var(--rule); padding-top: 1.1rem; }
+    .dish-head { display: flex; gap: .6rem; justify-content: space-between; align-items: baseline; }
+    h3 { margin: 0; font-size: 1.38rem; font-weight: normal; }
+    .price { font-size: .9rem; color: var(--red); }
+    article p, .visit p, address { line-height: 1.6; margin: .5rem 0 0; }
+    details { margin-top: 1.5rem; }
+    summary { cursor: pointer; width: fit-content; font-size: .9rem; font-weight: bold; }
+    details .dishes { margin-top: 1.25rem; }
+    .visit {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 2.5rem;
+      padding-block: 3rem;
+    }
+    address { font-style: normal; }
+    footer { background: var(--ink); color: var(--paper); }
+    footer .wrap { min-height: 78px; justify-content: space-between; gap: 1rem; }
+    footer small { font-size: .8rem; }
+    @media (max-width: 760px) {
+      header .wrap { min-height: 68px; }
+      .hero { grid-template-columns: 1fr; gap: 2rem; }
+      .art { width: min(100%, 460px); justify-self: center; }
+      h1 { font-size: clamp(5rem, 17vw, 8rem); }
+      .dishes, .visit { grid-template-columns: 1fr; gap: 1.4rem; }
+      .visit h2 { margin-bottom: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="#main" aria-label="Casa Rosa home">Casa <i>Rosa</i></a>
+      <nav aria-label="Main navigation">
+        <a href="#menu">The menu</a>
+        <a href="#visit">Visit us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <p class="label">Neighborhood Italian kitchen</p>
+        <h1 id="title">Casa <em>Rosa</em></h1>
+        <p class="intro">Hand-cut ribbons of pasta, a pot of ragù on the stove, and a corner table by the window. Dinner’s on in Carroll Gardens.</p>
+        <div class="actions">
+          <a class="button" href="#menu">Explore the menu</a>
+          <a class="text-link" href="#visit">Hours &amp; location</a>
+        </div>
+      </div>
+
+      <figure class="art">
+        <svg viewBox="0 0 500 395" role="img" aria-labelledby="art-title">
+          <title id="art-title">A pair of ripe red tomatoes on a cream plate over a green gingham tablecloth</title>
+          <defs>
+            <pattern id="gingham" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(-9)">
+              <rect width="28" height="28" fill="#e8e7cc"/>
+              <path d="M7 0v28M0 7h28" stroke="#64816a" stroke-width="14" opacity=".46"/>
+            </pattern>
+            <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(26)">
+              <path d="M0 0v6" stroke="#74291f" stroke-width="2"/>
+            </pattern>
+            <g id="tomato">
+              <path d="M0-57C31-82 76-66 84-29 96 19 62 69 17 77-16 87-57 61-75 30-99-13-76-66-42-69-24-72-13-65 0-57Z" fill="#c84934" stroke="#843427" stroke-width="2.4"/>
+              <path d="M-74 0C-60 44-31 63 2 65 41 68 73 37 85 3 77 46 51 72 17 77-24 88-66 52-74 24Z" fill="url(#hatch)"/>
+              <g fill="none" stroke-linecap="round">
+                <path d="M-57-34Q-70-10-57 14M-50-42l-3 4" stroke="#ed9670" stroke-width="5"/>
+                <path d="M-18-46Q-50-13-27 36M12-43Q43-26 44 10" stroke="#a63829" stroke-width="2"/>
+              </g>
+              <path d="M-3-54Q-19-70-44-75L-24-57-55-49Q-32-45-13-50L-24-28Q-5-39 2-49L27-31 15-51 44-56Q23-64 7-58L19-76Z" fill="#304d35"/>
+              <path d="M0-55Q-7-80 5-95" fill="none" stroke="#304d35" stroke-width="7" stroke-linecap="round"/>
+            </g>
+          </defs>
+          <rect x="8" y="8" width="484" height="379" rx="155" fill="url(#gingham)"/>
+          <g transform="rotate(-13 250 200)">
+            <ellipse cx="250" cy="209" rx="202" ry="143" fill="#344f39" opacity=".25"/>
+            <ellipse cx="249" cy="198" rx="202" ry="143" fill="#f8efda" stroke="#355340" stroke-width="3"/>
+            <ellipse cx="249" cy="198" rx="193" ry="134" fill="none" stroke="#58735c" stroke-width="2"/>
+            <ellipse cx="249" cy="198" rx="166" ry="108" fill="none" stroke="#a4aa8c" stroke-width="2"/>
+          </g>
+          <use href="#tomato" transform="translate(295 165) rotate(20) scale(.93)"/>
+          <use href="#tomato" transform="translate(206 221) rotate(-18) scale(1.07)"/>
+        </svg>
+      </figure>
+    </section>
+
+    <section class="menu" id="menu" aria-labelledby="menu-title">
+      <h2 id="menu-title">From the kitchen</h2>
+      <div class="dishes">
+        <article>
+          <div class="dish-head"><h3>Burrata &amp; peppers</h3><span class="price">$17</span></div>
+          <p>Sweet roasted peppers, basil oil, and a thick slice of grilled sourdough.</p>
+        </article>
+        <article>
+          <div class="dish-head"><h3>Tagliatelle al ragù</h3><span class="price">$26</span></div>
+          <p>Hand-cut egg pasta with slow-braised beef, pork, and Parmigiano.</p>
+        </article>
+        <article>
+          <div class="dish-head"><h3>Nonna’s tiramisù</h3><span class="price">$12</span></div>
+          <p>Espresso-soaked ladyfingers tucked between layers of mascarpone.</p>
+        </article>
+      </div>
+      <details>
+        <summary>More from the dinner menu</summary>
+        <div class="dishes">
+          <article>
+            <div class="dish-head"><h3>Arancini</h3><span class="price">$13</span></div>
+            <p>Crisp saffron rice balls filled with mozzarella, served with tomato sugo.</p>
+          </article>
+          <article>
+            <div class="dish-head"><h3>Rigatoni alla Norma</h3><span class="price">$24</span></div>
+            <p>Roasted eggplant, crushed tomatoes, basil, and shaved ricotta salata.</p>
+          </article>
+          <article>
+            <div class="dish-head"><h3>Chicken al limone</h3><span class="price">$29</span></div>
+            <p>Golden chicken cutlet with lemon butter, capers, and wilted greens.</p>
+          </article>
+        </div>
+      </details>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <h2 id="visit-title">Come by.</h2>
+      <div>
+        <span class="label">Find our door</span>
+        <address>218 Union Street<br>Carroll Gardens, Brooklyn, NY</address>
+      </div>
+      <div>
+        <span class="label">Dinner hours</span>
+        <p>Tuesday–Sunday · 5–10 pm<br>Walk-ins welcome. Closed Mondays.</p>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span class="brand">Casa Rosa</span>
+      <small>Carroll Gardens, Brooklyn</small>
+    </div>
+  </footer>
+</body>
+</html>

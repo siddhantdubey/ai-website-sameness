@@ -1,0 +1,640 @@
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whitlow & Aranda LLP · Attorneys at Law, Portland, Maine</title>
+<meta name="description" content="A three-lawyer firm on Exchange Street handling wills, real estate, small business, family and employment matters, at fees quoted in writing before work begins.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f5f2ea'/%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%238a2b1d' stroke-width='3'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='28' fill='%238a2b1d'%3EW%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f5f2ea;
+    --paper-2: #ebe6d9;
+    --ink: #1d1c1a;
+    --ink-2: #57534b;
+    --rule: #cdc6b5;
+    --red: #8a2b1d;
+    --red-soft: #e3b0a3;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", P052, Georgia, serif;
+    --pad: clamp(3.5rem, 8vw, 6rem);
+    --gutter: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p, ol, ul, dl, dd, blockquote, figure { margin: 0; padding: 0; }
+  ol, ul { list-style: none; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  .dark :focus-visible { outline-color: var(--paper); }
+
+  .skip {
+    position: absolute; left: 1rem; top: -4rem; z-index: 20;
+    background: var(--ink); color: var(--paper); padding: .6rem 1rem;
+  }
+  .skip:focus { top: 1rem; }
+
+  .caps {
+    font-variant-caps: all-small-caps;
+    letter-spacing: .09em;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  /* ---------- header ---------- */
+  .site-head {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-head .bar {
+    max-width: 72rem; margin-inline: auto; padding: .9rem var(--gutter);
+    display: flex; align-items: center; gap: 2rem;
+  }
+  .wordmark {
+    font-size: 1.3rem; text-decoration: none; letter-spacing: .01em; white-space: nowrap;
+    margin-right: auto;
+  }
+  .wordmark i { color: var(--red); padding-inline: .08em; }
+  .nav { display: flex; gap: 1.75rem; }
+  .nav a { text-decoration: none; padding-block: .25rem; border-bottom: 1px solid transparent; }
+  .nav a:hover { border-bottom-color: var(--red); color: var(--red); }
+  .head-tel { text-decoration: none; white-space: nowrap; font-variant-numeric: lining-nums; }
+  .head-tel:hover { color: var(--red); }
+  .menu-btn {
+    display: none; font: inherit; color: inherit; background: none;
+    border: 1px solid var(--ink); padding: .3rem .8rem; cursor: pointer;
+  }
+
+  /* ---------- buttons & links ---------- */
+  .btn {
+    display: inline-block; font: inherit; cursor: pointer; text-decoration: none;
+    background: var(--ink); color: var(--paper);
+    border: 1px solid var(--ink); padding: .8rem 1.5rem; line-height: 1.2;
+    transition: background-color .15s, border-color .15s;
+  }
+  .btn:hover { background: var(--red); border-color: var(--red); }
+  .btn.small { padding: .5rem 1rem; font-size: 1rem; }
+  .dark .btn { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .dark .btn:hover { background: var(--red-soft); border-color: var(--red-soft); }
+  .text-link { text-decoration-color: var(--red); text-underline-offset: .22em; text-decoration-thickness: 1px; }
+  .text-link:hover { color: var(--red); }
+
+  /* ---------- the page grid: margin column + ruled body ---------- */
+  .row {
+    max-width: 72rem; margin-inline: auto; padding-inline: var(--gutter);
+    display: grid; grid-template-columns: 10.5rem minmax(0, 1fr);
+  }
+  .margin { padding: var(--pad) 1.5rem var(--pad) 0; text-align: right; color: var(--ink-2); }
+  .margin .label { position: sticky; top: 6rem; }
+  .margin .mark { display: block; font-size: 1.5rem; font-style: italic; color: var(--red); line-height: 1.2; }
+  .body {
+    border-left: 3px double rgba(138, 43, 29, .55);
+    padding-left: clamp(1.5rem, 4vw, 3.5rem);
+    min-width: 0;
+  }
+  .inner { padding-block: var(--pad); border-top: 1px solid var(--rule); }
+  section { scroll-margin-top: 4rem; }
+
+  h2 {
+    font-weight: 400; font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+    line-height: 1.12; letter-spacing: -.012em; max-width: 22ch; text-wrap: balance;
+  }
+  .lede { margin-top: 1rem; color: var(--ink-2); max-width: 54ch; }
+
+  /* ---------- hero ---------- */
+  .hero .margin { padding-top: clamp(3.5rem, 9vw, 7rem); }
+  .hero .margin li + li { margin-top: .5rem; }
+  .hero .inner {
+    border-top: 0;
+    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(4rem, 9vw, 7rem);
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: start;
+  }
+  h1 {
+    font-weight: 400; font-size: clamp(2.7rem, 7vw, 5.25rem);
+    line-height: 1.02; letter-spacing: -.022em; text-wrap: balance;
+  }
+  h1 em { color: var(--red); }
+  .hero p.intro { margin-top: 1.75rem; font-size: clamp(1.15rem, 1.7vw, 1.35rem); line-height: 1.5; max-width: 34em; }
+  .hero .actions { margin-top: 2.25rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+  .hero .hours { margin-top: 1.25rem; color: var(--ink-2); font-size: 1rem; }
+  .seal { width: clamp(9rem, 15vw, 12.5rem); height: auto; transform: rotate(-9deg); margin-top: .5rem; color: var(--red); }
+  @media (prefers-reduced-motion: no-preference) {
+    .seal { animation: stamp .5s .35s cubic-bezier(.2, .9, .3, 1) both; }
+    @keyframes stamp {
+      from { opacity: 0; transform: rotate(-3deg) scale(1.35); }
+      to   { opacity: 1; transform: rotate(-9deg) scale(1); }
+    }
+  }
+
+  /* ---------- practice ---------- */
+  .practice { margin-top: 3rem; border-bottom: 1px solid var(--rule); }
+  .practice li {
+    display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 1.35fr) 11.5rem;
+    gap: .5rem 1.5rem; align-items: baseline;
+    padding-block: 1.4rem; border-top: 1px solid var(--rule);
+  }
+  .practice .n { color: var(--red); font-style: italic; }
+  .practice h3 { font-weight: 400; font-size: 1.5rem; line-height: 1.2; }
+  .practice p { color: var(--ink-2); font-size: 1.05rem; }
+  .practice .fee { text-align: right; font-variant-numeric: lining-nums; line-height: 1.35; }
+  .practice .fee a { display: inline-block; margin-top: .3rem; font-size: 1rem; }
+  .fee-note { margin-top: 1.25rem; color: var(--ink-2); font-size: 1rem; max-width: 60ch; }
+
+  /* ---------- steps ---------- */
+  .steps { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+  .steps .num { font-size: 2.6rem; font-style: italic; color: var(--red); line-height: 1; }
+  .steps h3 { font-weight: 400; font-size: 1.4rem; line-height: 1.2; margin-top: .9rem; }
+  .steps p { margin-top: .6rem; color: var(--ink-2); font-size: 1.05rem; }
+
+  /* ---------- attorneys ---------- */
+  .people { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+  .people article { border-top: 2px solid var(--ink); padding-top: 1.1rem; }
+  .people h3 { font-weight: 400; font-size: 1.6rem; line-height: 1.15; }
+  .people .role { color: var(--red); margin-top: .2rem; }
+  .people p.bio { margin-top: .9rem; font-size: 1.05rem; color: var(--ink-2); }
+  .people dl { margin-top: 1rem; font-size: 1rem; }
+  .people dt { color: var(--ink-2); }
+  .people dd { margin-bottom: .55rem; line-height: 1.4; }
+  .people a.text-link { font-size: 1rem; }
+
+  /* ---------- clients ---------- */
+  .quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+  .quotes blockquote { font-size: clamp(1.3rem, 2.1vw, 1.6rem); line-height: 1.4; font-style: italic; text-indent: -.45em; }
+  .quotes figcaption { margin-top: 1rem; color: var(--ink-2); }
+  .quote-note { margin-top: 2.5rem; color: var(--ink-2); font-size: .95rem; }
+
+  /* ---------- faq ---------- */
+  .faq { margin-top: 2.5rem; border-bottom: 1px solid var(--rule); max-width: 46rem; }
+  .faq details { border-top: 1px solid var(--rule); }
+  .faq summary {
+    cursor: pointer; list-style: none; padding: 1.15rem 0; font-size: 1.3rem; line-height: 1.3;
+    display: flex; justify-content: space-between; gap: 1.5rem; align-items: baseline;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--red); font-size: 1.5rem; line-height: 1; transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq summary:hover { color: var(--red); }
+  .faq details p { padding: 0 2.5rem 1.4rem 0; color: var(--ink-2); max-width: 60ch; }
+
+  /* ---------- contact (dark) ---------- */
+  .dark { background: var(--ink); color: var(--paper); }
+  .dark .margin { color: #bdb7a9; }
+  .dark .margin .mark { color: var(--red-soft); }
+  .dark .body { border-left-color: rgba(245, 242, 234, .35); }
+  .dark .inner { border-top: 0; }
+  .dark .lede { color: #cfc9bb; }
+  .contact-grid { margin-top: 3rem; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3.5rem; }
+  form .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.75rem; }
+  .field { margin-bottom: 1.6rem; }
+  .field label { display: block; color: #cfc9bb; }
+  .field input, .field select, .field textarea {
+    width: 100%; font: inherit; color: var(--paper); background: transparent;
+    border: 0; border-bottom: 1px solid rgba(245, 242, 234, .5); border-radius: 0;
+    padding: .45rem 0 .5rem;
+  }
+  .field textarea { resize: vertical; min-height: 6.5rem; }
+  .field select option { color: var(--ink); background: #fff; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: 0; border-bottom: 2px solid var(--paper); padding-bottom: calc(.5rem - 1px); }
+  .form-note { margin-top: 1.25rem; font-size: .95rem; color: #bdb7a9; max-width: 52ch; }
+  .sent { border: 1px solid rgba(245, 242, 234, .5); padding: 2rem; }
+  .sent h3 { font-weight: 400; font-size: 1.6rem; }
+  .sent p { margin-top: .6rem; color: #cfc9bb; }
+  .office dt { color: #bdb7a9; }
+  .office dd { margin-bottom: 1.5rem; font-variant-numeric: lining-nums; }
+  .office a { text-decoration-color: var(--red-soft); text-underline-offset: .22em; text-decoration-thickness: 1px; }
+  .office a:hover { color: var(--red-soft); }
+  .office .big { font-size: 1.6rem; line-height: 1.25; }
+
+  .site-foot {
+    max-width: 72rem; margin-inline: auto; padding: 2rem var(--gutter) 2.5rem;
+    border-top: 1px solid rgba(245, 242, 234, .25);
+    font-size: .95rem; color: #bdb7a9; line-height: 1.5;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 3rem;
+  }
+  .site-foot p { max-width: 68ch; }
+
+  /* ---------- small screens ---------- */
+  @media (max-width: 980px) {
+    .practice li { grid-template-columns: 2.5rem minmax(0, 1fr) 11rem; }
+    .practice p { grid-column: 2 / 3; grid-row: 2; }
+    .practice .fee { grid-row: 1 / 3; grid-column: 3; }
+    .steps, .people { grid-template-columns: 1fr; gap: 2.25rem; }
+    .steps li { display: grid; grid-template-columns: 3.5rem 1fr; column-gap: 1rem; }
+    .steps .num { grid-row: 1 / 3; }
+    .steps h3 { margin-top: .35rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+  @media (max-width: 860px) {
+    .menu-btn { display: block; }
+    .head-tel { display: none; }
+    .nav {
+      display: none; position: absolute; left: 0; right: 0; top: 100%;
+      flex-direction: column; gap: 0; background: var(--paper);
+      border-bottom: 1px solid var(--rule); padding: .5rem var(--gutter) 1rem;
+    }
+    .nav.open { display: flex; }
+    .nav a { padding: .7rem 0; border-bottom: 1px solid var(--rule); }
+    .site-head .bar { gap: .75rem; }
+
+    .row { grid-template-columns: 1fr; }
+    .margin { text-align: left; padding: 2.5rem 0 0; border-top: 1px solid var(--rule); }
+    .margin .label { position: static; }
+    .margin .mark { display: inline; font-size: 1.2rem; margin-right: .4rem; }
+    .body { border-left: 0; padding-left: 0; }
+    .inner { border-top: 0; padding-top: 1rem; }
+    .hero .margin { border-top: 0; padding-top: 2.5rem; }
+    .hero .margin ul { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+    .hero .margin li + li { margin-top: 0; }
+    .hero .inner { grid-template-columns: 1fr; padding-top: 1.5rem; }
+    .seal { display: none; }
+    .dark .margin { border-top: 0; padding-top: var(--pad); }
+    .quotes { grid-template-columns: 1fr; gap: 2.5rem; }
+    .site-foot { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 1.0625rem; }
+    .wordmark { font-size: 1.15rem; }
+    .practice li { grid-template-columns: 2rem minmax(0, 1fr); gap: .35rem 1rem; }
+    .practice p, .practice .fee { grid-column: 2; grid-row: auto; text-align: left; }
+    .practice .fee { margin-top: .4rem; }
+    .practice .fee a { margin-left: .75rem; }
+    form .pair { grid-template-columns: 1fr; }
+    .faq summary { font-size: 1.15rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="bar">
+    <a class="wordmark" href="#top" aria-label="Whitlow and Aranda LLP, home">Whitlow <i>&amp;</i> Aranda</a>
+    <nav class="nav" id="nav" aria-label="Primary">
+      <a href="#practice">Practice</a>
+      <a href="#approach">How we work</a>
+      <a href="#attorneys">Attorneys</a>
+      <a href="#questions">Questions</a>
+    </nav>
+    <a class="head-tel" href="tel:+12075550142">(207) 555-0142</a>
+    <a class="btn small" href="#contact">Book a consultation</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- Hero -->
+  <section class="row hero" aria-labelledby="hero-title">
+    <div class="margin">
+      <ul class="caps">
+        <li>Established 2009</li>
+        <li>Exchange Street, Portland</li>
+        <li>Admitted in Maine &amp; New Hampshire</li>
+      </ul>
+    </div>
+    <div class="body">
+      <div class="inner">
+        <div>
+          <h1 id="hero-title">Good counsel, in <em>plain English.</em></h1>
+          <p class="intro">Whitlow &amp; Aranda is a three-lawyer firm in the Old Port. We handle wills, homes, small businesses and family matters for people across greater Portland, and we tell you the fee in writing before we start.</p>
+          <div class="actions">
+            <a class="btn" href="#contact">Book a free first conversation</a>
+            <a class="text-link" href="#practice">See what we handle</a>
+          </div>
+          <p class="hours">Or call <a class="text-link" href="tel:+12075550142">(207) 555-0142</a>, Monday to Friday, 8:30 to 5:30.</p>
+        </div>
+        <svg class="seal" viewBox="0 0 200 200" role="img" aria-label="Firm seal: Whitlow and Aranda, Attorneys at Law, established 2009">
+          <defs><path id="seal-ring" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0"/></defs>
+          <g fill="none" stroke="currentColor">
+            <circle cx="100" cy="100" r="96" stroke-width="2.5"/>
+            <circle cx="100" cy="100" r="90" stroke-width="1"/>
+            <circle cx="100" cy="100" r="60" stroke-width="1"/>
+            <path d="M68 78h64M68 124h64" stroke-width="1"/>
+          </g>
+          <text fill="currentColor" font-family="Georgia, serif" font-size="11" letter-spacing="1">
+            <textPath href="#seal-ring" textLength="456" lengthAdjust="spacing">WHITLOW &amp; ARANDA • ATTORNEYS AT LAW • EST. 2009 •</textPath>
+          </text>
+          <text x="100" y="113" text-anchor="middle" fill="currentColor" font-family="Georgia, serif" font-style="italic" font-size="36">W&amp;A</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice -->
+  <section class="row" id="practice" aria-labelledby="practice-title">
+    <div class="margin"><div class="label caps"><span class="mark">§ 1</span>Practice areas</div></div>
+    <div class="body">
+      <div class="inner">
+        <h2 id="practice-title">Five kinds of work, done often and done well.</h2>
+        <p class="lede">We keep the list short on purpose. If your matter falls outside it, we will say so on the first call and give you the name of someone we trust.</p>
+
+        <ol class="practice">
+          <li>
+            <span class="n">i.</span>
+            <h3>Wills, Trusts &amp; Estates</h3>
+            <p>Wills, living trusts, powers of attorney and health-care directives, and probate when the time comes.</p>
+            <div class="fee">Wills from $650, flat<br><a class="text-link" href="#contact" data-matter="Wills, trusts &amp; estates">Ask about this</a></div>
+          </li>
+          <li>
+            <span class="n">ii.</span>
+            <h3>Real Estate</h3>
+            <p>Purchases and sales, title review, boundary questions, and disputes between landlords and tenants.</p>
+            <div class="fee">Closings from $900, flat<br><a class="text-link" href="#contact" data-matter="Real estate">Ask about this</a></div>
+          </li>
+          <li>
+            <span class="n">iii.</span>
+            <h3>Small Business</h3>
+            <p>Forming the company, contracts and leases, partner agreements, and selling the business when you are ready.</p>
+            <div class="fee">LLC formation $1,200, flat<br><a class="text-link" href="#contact" data-matter="Small business">Ask about this</a></div>
+          </li>
+          <li>
+            <span class="n">iv.</span>
+            <h3>Family Law</h3>
+            <p>Divorce, parental rights and support, prenuptial agreements, and mediation where both sides are willing.</p>
+            <div class="fee">Hourly, $285 to $340<br><a class="text-link" href="#contact" data-matter="Family law">Ask about this</a></div>
+          </li>
+          <li>
+            <span class="n">v.</span>
+            <h3>Employment</h3>
+            <p>Severance and non-compete review, wage claims, and handbooks and policies for employers under fifty people.</p>
+            <div class="fee">Severance review $500, flat<br><a class="text-link" href="#contact" data-matter="Employment">Ask about this</a></div>
+          </li>
+        </ol>
+        <p class="fee-note">Fees shown are starting points for straightforward matters. Yours is confirmed in a written engagement letter before any work begins, and court filing fees are billed at cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="row" id="approach" aria-labelledby="approach-title">
+    <div class="margin"><div class="label caps"><span class="mark">§ 2</span>How we work</div></div>
+    <div class="body">
+      <div class="inner">
+        <h2 id="approach-title">No surprises, least of all on the invoice.</h2>
+        <ol class="steps">
+          <li>
+            <div class="num" aria-hidden="true">1</div>
+            <h3>A first conversation</h3>
+            <p>Thirty minutes, by phone or at our office, at no charge. You explain the situation; we tell you whether you need a lawyer at all.</p>
+          </li>
+          <li>
+            <div class="num" aria-hidden="true">2</div>
+            <h3>A written quote</h3>
+            <p>Within two business days you receive a letter setting out the scope of the work, the fee, and a realistic timeline.</p>
+          </li>
+          <li>
+            <div class="num" aria-hidden="true">3</div>
+            <h3>One lawyer, start to finish</h3>
+            <p>The attorney you meet is the attorney who does the work. You get a direct line, and calls are returned within one business day.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attorneys -->
+  <section class="row" id="attorneys" aria-labelledby="attorneys-title">
+    <div class="margin"><div class="label caps"><span class="mark">§ 3</span>The attorneys</div></div>
+    <div class="body">
+      <div class="inner">
+        <h2 id="attorneys-title">Three lawyers. You will know all of us by name.</h2>
+        <div class="people">
+          <article>
+            <h3>Margaret Whitlow</h3>
+            <p class="role caps">Founding partner · Estates &amp; real estate</p>
+            <p class="bio">Twenty-two years in practice, after a first career as a title examiner in Cumberland County. Teaches the estate planning clinic at the public library each spring.</p>
+            <dl>
+              <dt class="caps">Admitted</dt><dd>Maine, 2004 · New Hampshire, 2006</dd>
+              <dt class="caps">Education</dt><dd>J.D., University of Maine School of Law</dd>
+            </dl>
+            <a class="text-link" href="mailto:mwhitlow@whitlowaranda.example">mwhitlow@whitlowaranda.example</a>
+          </article>
+          <article>
+            <h3>Daniel Aranda</h3>
+            <p class="role caps">Partner · Business &amp; employment</p>
+            <p class="bio">Advises owner-run companies from the first lease to the eventual sale. Spent six years as in-house counsel to a regional grocery cooperative before joining the firm in 2012.</p>
+            <dl>
+              <dt class="caps">Admitted</dt><dd>Maine, 2008</dd>
+              <dt class="caps">Education</dt><dd>J.D., Boston College Law School</dd>
+            </dl>
+            <a class="text-link" href="mailto:daranda@whitlowaranda.example">daranda@whitlowaranda.example</a>
+          </article>
+          <article>
+            <h3>Priya Nair</h3>
+            <p class="role caps">Associate · Family law</p>
+            <p class="bio">A trained mediator who settles most cases without a hearing and is fully prepared for the ones that need one. Formerly a clerk in the Maine District Court, Family Division.</p>
+            <dl>
+              <dt class="caps">Admitted</dt><dd>Maine, 2019 · New Hampshire, 2021</dd>
+              <dt class="caps">Education</dt><dd>J.D., Northeastern University School of Law</dd>
+            </dl>
+            <a class="text-link" href="mailto:pnair@whitlowaranda.example">pnair@whitlowaranda.example</a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clients -->
+  <section class="row" aria-labelledby="clients-title">
+    <div class="margin"><div class="label caps"><span class="mark">§ 4</span><span id="clients-title">From clients</span></div></div>
+    <div class="body">
+      <div class="inner">
+        <div class="quotes">
+          <figure>
+            <blockquote>“We had put off our wills for eleven years. It took two meetings, cost exactly what the letter said, and I understood every page I signed.”</blockquote>
+            <figcaption class="caps">R. T., estate planning client, Falmouth</figcaption>
+          </figure>
+          <figure>
+            <blockquote>“When my business partner wanted out, I expected a fight. What I got was a fair agreement in six weeks and a phone call returned the same day, every time.”</blockquote>
+            <figcaption class="caps">J. M., bakery owner, South Portland</figcaption>
+          </figure>
+        </div>
+        <p class="quote-note">Shared with permission. Every matter is different, and past results do not guarantee a similar outcome.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Questions -->
+  <section class="row" id="questions" aria-labelledby="questions-title">
+    <div class="margin"><div class="label caps"><span class="mark">§ 5</span>Questions</div></div>
+    <div class="body">
+      <div class="inner">
+        <h2 id="questions-title">What people ask before they call.</h2>
+        <div class="faq">
+          <details>
+            <summary>Is the first conversation really free?</summary>
+            <p>Yes. Thirty minutes, with no obligation to hire us. If the matter is simple enough to handle yourself, we will tell you how.</p>
+          </details>
+          <details>
+            <summary>What should I bring?</summary>
+            <p>Any paperwork you already have: a contract, a deed, a letter you received, a prior will. If you have nothing in writing yet, come anyway. A short timeline of what happened and when is the most useful thing you can prepare.</p>
+          </details>
+          <details>
+            <summary>Do you take cases outside Portland?</summary>
+            <p>We work throughout Maine and in New Hampshire, and most meetings can happen by phone or video. Court appearances outside Cumberland and York counties may carry travel time, which we quote in advance.</p>
+          </details>
+          <details>
+            <summary>What if I cannot afford a lawyer?</summary>
+            <p>Ask us about payment plans, which we offer on most flat-fee matters. We also keep a list of legal aid organizations and reduced-fee programs and are glad to point you to the right one.</p>
+          </details>
+          <details>
+            <summary>Is what I tell you confidential?</summary>
+            <p>What you tell us in a consultation is kept confidential, even if you decide not to hire us. Please hold sensitive details for that conversation and leave them out of the contact form below.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <div class="dark">
+    <section class="row" id="contact" aria-labelledby="contact-title">
+      <div class="margin"><div class="label caps"><span class="mark">§ 6</span>Contact</div></div>
+      <div class="body">
+        <div class="inner">
+          <h2 id="contact-title">Tell us what is going on.</h2>
+          <p class="lede">A few lines is enough. One of the three of us will reply within one business day to set up a time.</p>
+
+          <div class="contact-grid">
+            <div id="form-wrap" aria-live="polite">
+              <form id="contact-form" novalidate>
+                <div class="pair">
+                  <div class="field">
+                    <label class="caps" for="f-name">Your name</label>
+                    <input id="f-name" name="name" type="text" autocomplete="name" required>
+                  </div>
+                  <div class="field">
+                    <label class="caps" for="f-phone">Phone (optional)</label>
+                    <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+                  </div>
+                </div>
+                <div class="pair">
+                  <div class="field">
+                    <label class="caps" for="f-email">Email</label>
+                    <input id="f-email" name="email" type="email" autocomplete="email" required>
+                  </div>
+                  <div class="field">
+                    <label class="caps" for="f-matter">Type of matter</label>
+                    <select id="f-matter" name="matter" required>
+                      <option value="">Choose one</option>
+                      <option>Wills, trusts &amp; estates</option>
+                      <option>Real estate</option>
+                      <option>Small business</option>
+                      <option>Family law</option>
+                      <option>Employment</option>
+                      <option>Something else</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="caps" for="f-msg">Briefly, how can we help?</label>
+                  <textarea id="f-msg" name="message" rows="4" required></textarea>
+                </div>
+                <button class="btn" type="submit">Request a consultation</button>
+                <p class="form-note" id="form-status" role="status"></p>
+                <p class="form-note">Sending this form does not create an attorney-client relationship. Please do not include confidential information.</p>
+              </form>
+            </div>
+
+            <dl class="office">
+              <dt class="caps">Telephone</dt>
+              <dd class="big"><a href="tel:+12075550142">(207) 555-0142</a></dd>
+              <dt class="caps">Email</dt>
+              <dd><a href="mailto:hello@whitlowaranda.example">hello@whitlowaranda.example</a></dd>
+              <dt class="caps">Office</dt>
+              <dd>214 Exchange Street, Suite 3<br>Portland, Maine 04101<br>Second floor, with elevator access from the Milk Street entrance</dd>
+              <dt class="caps">Hours</dt>
+              <dd>Monday to Friday, 8:30 to 5:30<br>Evenings and Saturdays by appointment</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-foot">
+      <p>Attorney advertising. The information on this site is general in nature and is not legal advice. Contacting the firm does not create an attorney-client relationship until an engagement letter is signed.</p>
+      <p>© <span id="year">2026</span> Whitlow &amp; Aranda LLP</p>
+    </footer>
+  </div>
+</main>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var menuBtn = document.querySelector('.menu-btn');
+  menuBtn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // "Ask about this" links pre-select the matter type in the form
+  var matter = document.getElementById('f-matter');
+  document.querySelectorAll('[data-matter]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      matter.value = link.getAttribute('data-matter');
+    });
+  });
+
+  // Demo form handling: validates, then shows a confirmation. Nothing is sent.
+  var form = document.getElementById('contact-form');
+  var status = document.getElementById('form-status');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      status.textContent = 'Please add your name, a valid email, the type of matter and a short message.';
+      var firstBad = form.querySelector(':invalid');
+      if (firstBad) firstBad.focus();
+      return;
+    }
+    var first = form.elements.name.value.trim().split(/\s+/)[0];
+    var wrap = document.getElementById('form-wrap');
+    var box = document.createElement('div');
+    box.className = 'sent';
+    var h = document.createElement('h3');
+    h.textContent = 'Thank you, ' + first + '.';
+    var p = document.createElement('p');
+    p.textContent = 'Your note is on its way. You will hear from one of us within one business day. If it is urgent, call (207) 555-0142.';
+    box.appendChild(h);
+    box.appendChild(p);
+    wrap.replaceChildren(box);
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
+````
+
+The landing page is above as one self-contained HTML file with no external fonts, images or scripts; I haven't opened it in a browser, so it is untested.
+
+The page is laid out like a well-set legal document: a margin column with section marks (§ 1 to § 6), a double red rule running down the page, and a firm seal in the hero. It covers practice areas with starting fees, how the firm works, attorney bios, client quotes, common questions and a contact section.
+
+Two things to know before using it:
+
+- **All the content is invented.** The firm name (Whitlow & Aranda LLP, Portland, Maine), attorneys, fees, quotes, address, phone number and email addresses are placeholders to replace with real details.
+- **The contact form does not send anything.** It validates the fields and shows a confirmation message, but it needs to be connected to a form service or backend before it goes live.
+
+The footer and form carry typical attorney-advertising and no-attorney-client-relationship disclaimers; the firm should check them against its own state bar rules.

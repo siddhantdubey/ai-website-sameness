@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plotline — Project management that keeps the plot</title>
+<meta name="description" content="Plotline is project management for teams who'd rather ship than update statuses. Boards, timelines and docs that stay in sync on their own.">
+<style>
+  :root{
+    --paper:#f6f1e7;
+    --paper-2:#ede6d6;
+    --ink:#1b1a17;
+    --ink-2:#4a4740;
+    --line:#d9d0bc;
+    --accent:#d9421c;
+    --accent-ink:#fff;
+    --green:#2f6b4f;
+    --blue:#2c4a7a;
+    --gold:#c58a12;
+    --radius:14px;
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans: ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.08}
+  h2{font-size:clamp(32px,4.4vw,48px)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:block}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1.5px solid var(--ink);transition:transform .15s,box-shadow .15s,background .15s;cursor:pointer;font-family:inherit}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+  .btn.primary{background:var(--accent);border-color:var(--ink);color:var(--accent-ink)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:23px;text-decoration:none;letter-spacing:-.02em}
+  .logo svg{width:28px;height:28px}
+  .links{display:flex;gap:28px;align-items:center}
+  .links a{text-decoration:none;font-size:15px;color:var(--ink-2)}
+  .links a:hover{color:var(--ink)}
+  .links .btn{padding:9px 18px;font-size:14px;color:var(--accent-ink)}
+  .links .btn:hover{color:var(--accent-ink)}
+
+  /* hero */
+  .hero{padding:84px 0 40px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(44px,6.6vw,84px);margin-bottom:24px}
+  .hero h1 em{font-style:italic;color:var(--accent);position:relative;white-space:nowrap}
+  .hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:-.04em;height:.11em;background:var(--accent);opacity:.25;border-radius:4px;transform:rotate(-1deg)}
+  .hero p.lead{font-size:19px;color:var(--ink-2);max-width:500px;margin-bottom:34px}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .fine{font-size:13.5px;color:var(--ink-2)}
+
+  /* board mock */
+  .mock{background:#fffdf8;border:1.5px solid var(--ink);border-radius:var(--radius);box-shadow:10px 10px 0 var(--ink);overflow:hidden;transform:rotate(1.2deg)}
+  .mock-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1.5px solid var(--ink);background:var(--paper-2)}
+  .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink)}
+  .mock-title{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
+  .col h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:10px;display:flex;justify-content:space-between}
+  .card{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:10px;font-size:13px;line-height:1.35;transition:transform .2s,border-color .2s}
+  .card:hover{transform:translateY(-3px);border-color:var(--ink)}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:7px;color:#fff}
+  .t-g{background:var(--green)}.t-b{background:var(--blue)}.t-o{background:var(--gold)}.t-r{background:var(--accent)}
+  .meta{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--ink-2)}
+  .av{display:flex}
+  .av i{width:20px;height:20px;border-radius:50%;border:2px solid #fff;margin-left:-6px;display:block}
+  .av i:first-child{margin-left:0}
+  .bar{height:5px;background:var(--paper-2);border-radius:9px;margin-top:9px;overflow:hidden}
+  .bar b{display:block;height:100%;background:var(--green);border-radius:9px}
+  .drag{animation:float 4s ease-in-out infinite;border-color:var(--ink);box-shadow:4px 4px 0 var(--accent)}
+  @keyframes float{0%,100%{transform:translate(0,0) rotate(-1deg)}50%{transform:translate(-6px,-8px) rotate(1.5deg)}}
+
+  /* logos */
+  .logos{padding:44px 0 20px;text-align:center}
+  .logos p{font-size:13px;color:var(--ink-2);margin-bottom:20px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+  .logo-row{display:flex;justify-content:center;flex-wrap:wrap;gap:20px 54px;font-family:var(--serif);font-size:22px;color:#8a8372;font-weight:600}
+  .logo-row span:nth-child(2n){font-style:italic}
+  .logo-row span:nth-child(3n){letter-spacing:.12em;font-size:18px}
+
+  section{padding:96px 0}
+  .head{max-width:660px;margin-bottom:56px}
+  .head p{margin-top:16px;font-size:18px;color:var(--ink-2)}
+
+  /* features */
+  .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+  .tile{background:#fffdf8;border:1.5px solid var(--ink);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+  .tile h3{font-size:25px}
+  .tile p{color:var(--ink-2);font-size:15.5px}
+  .s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}
+  .tile.dark{background:var(--ink);color:var(--paper)}
+  .tile.dark p{color:#c9c2af}
+  .tile.warm{background:var(--accent);color:#fff}
+  .tile.warm p{color:#ffe3da}
+  .viz{margin-top:auto;padding-top:14px}
+  .gantt{display:grid;gap:8px}
+  .gantt div{height:22px;border-radius:6px;font-size:11px;color:#fff;padding:3px 9px;font-family:var(--mono);white-space:nowrap}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips span{border:1.5px solid currentColor;border-radius:99px;padding:4px 12px;font-size:13px;opacity:.95}
+  .big{font-family:var(--serif);font-size:68px;font-weight:700;line-height:1;letter-spacing:-.03em}
+  .code{font-family:var(--mono);font-size:12.5px;background:rgba(255,255,255,.08);border-radius:10px;padding:14px;line-height:1.7;color:#e9e2cf}
+  .code .k{color:#ff8e6e}.code .s{color:#9ed8b3}
+
+  /* steps */
+  .steps{background:var(--paper-2);border-block:1.5px solid var(--ink)}
+  .step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;counter-reset:s}
+  .step{counter-increment:s;position:relative;padding-top:64px}
+  .step::before{content:counter(s,decimal-leading-zero);position:absolute;top:0;left:0;font-family:var(--serif);font-size:52px;font-style:italic;color:var(--accent);line-height:1}
+  .step h3{font-size:24px;margin-bottom:10px}
+  .step p{color:var(--ink-2)}
+
+  /* quotes */
+  .quote-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px}
+  .quote{border:1.5px solid var(--ink);border-radius:var(--radius);padding:34px;background:#fffdf8}
+  .quote blockquote{font-family:var(--serif);font-size:24px;line-height:1.35;letter-spacing:-.01em;margin-bottom:24px}
+  .quote.big-q blockquote{font-size:31px}
+  .who{display:flex;align-items:center;gap:12px;font-size:14px}
+  .who b{display:block}
+  .who span{color:var(--ink-2)}
+  .face{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--serif);font-weight:700;color:#fff}
+  .stack{display:grid;gap:22px}
+
+  /* pricing */
+  .toggle{display:inline-flex;border:1.5px solid var(--ink);border-radius:99px;padding:4px;margin-bottom:36px;background:#fffdf8}
+  .toggle button{border:0;background:none;padding:8px 20px;border-radius:99px;font:600 14px var(--sans);cursor:pointer;color:var(--ink-2)}
+  .toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+  .plan{border:1.5px solid var(--ink);border-radius:var(--radius);padding:32px;background:#fffdf8;display:flex;flex-direction:column}
+  .plan.pop{background:var(--ink);color:var(--paper);transform:translateY(-12px);box-shadow:8px 8px 0 var(--accent)}
+  .plan h3{font-size:26px}
+  .plan .desc{font-size:14.5px;opacity:.75;margin:6px 0 20px}
+  .price{font-family:var(--serif);font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .price small{font:500 14px var(--sans);opacity:.7;letter-spacing:0}
+  .plan ul{list-style:none;margin:24px 0 28px;display:grid;gap:11px;font-size:15px}
+  .plan li{display:flex;gap:10px}
+  .plan li::before{content:"";flex:none;width:17px;height:17px;margin-top:3px;border-radius:50%;background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.3l2.7 2.6L12 5.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+  .plan .btn{margin-top:auto;justify-content:center}
+  .plan.pop .btn.ghost{color:var(--paper);border-color:var(--paper)}
+  .plan.pop .btn.primary{border-color:var(--paper)}
+  .plan.pop .btn:hover{box-shadow:3px 3px 0 var(--paper)}
+
+  /* faq */
+  .faq{max-width:760px}
+  details{border-bottom:1.5px solid var(--line);padding:22px 0}
+  summary{font-family:var(--serif);font-size:22px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-family:var(--mono);color:var(--accent);transition:transform .2s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{margin-top:12px;color:var(--ink-2);max-width:620px}
+
+  /* final cta */
+  .final{background:var(--accent);color:#fff;border-block:1.5px solid var(--ink);text-align:center;padding:100px 0}
+  .final h2{font-size:clamp(38px,6vw,68px);max-width:760px;margin:0 auto 18px}
+  .final p{font-size:19px;color:#ffe3da;margin-bottom:34px}
+  .final form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .final input{padding:14px 22px;border-radius:99px;border:1.5px solid var(--ink);font:16px var(--sans);min-width:280px;background:#fffdf8}
+  .final .btn{background:var(--ink);color:var(--paper)}
+  .final .btn:hover{box-shadow:3px 3px 0 var(--paper)}
+  .ok{margin-top:18px;font-weight:600;min-height:1.5em}
+
+  footer{padding:56px 0 40px}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px}
+  .foot nav{height:auto;gap:60px;align-items:flex-start}
+  .foot h5{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:12px}
+  .foot ul{list-style:none;display:grid;gap:8px;font-size:15px}
+  .foot ul a{text-decoration:none;color:var(--ink-2)}
+  .foot ul a:hover{color:var(--accent)}
+  .copy{margin-top:40px;font-size:13px;color:var(--ink-2)}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:900px){
+    .hero-grid,.quote-grid{grid-template-columns:1fr}
+    .links a:not(.btn){display:none}
+    .bento{grid-template-columns:1fr}
+    .s2,.s3,.s4{grid-column:auto}
+    .step-grid,.plans{grid-template-columns:1fr}
+    .plan.pop{transform:none}
+    .mock{transform:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="logo" href="#top" aria-label="Plotline home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1b1a17"/><path d="M7 22 L13 14 L18 18 L25 9" fill="none" stroke="#f6f1e7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="9" r="3" fill="#d9421c"/></svg>
+        Plotline
+      </a>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn primary" href="#start">Start free</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding-bottom:40px">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Project management, minus the admin</span>
+      <h1>Keep the <em>plot</em>. Skip the status meeting.</h1>
+      <p class="lead">Plotline turns the work your team already does into boards, timelines and weekly updates that stay current on their own. Everyone knows what's next, and nobody has to ask.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#start">Start free &rarr;</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <p class="fine">Free for teams up to 10. No credit card.</p>
+    </div>
+
+    <div class="mock" role="img" aria-label="Illustration of a Plotline kanban board with three columns: Planned, In progress and Shipped">
+      <div class="mock-bar"><span class="dot" style="background:#d9421c"></span><span class="dot" style="background:#c58a12"></span><span class="dot" style="background:#2f6b4f"></span><span class="mock-title">plotline.app / spring-launch</span></div>
+      <div class="cols">
+        <div class="col">
+          <h4>Planned <span>3</span></h4>
+          <div class="card"><span class="tag t-b">Design</span><br>Onboarding revamp<div class="meta"><span>Mar 12</span><span class="av"><i style="background:#2c4a7a"></i></span></div></div>
+          <div class="card"><span class="tag t-o">Research</span><br>Pricing interviews<div class="meta"><span>Mar 15</span><span class="av"><i style="background:#c58a12"></i><i style="background:#d9421c"></i></span></div></div>
+        </div>
+        <div class="col">
+          <h4>In progress <span>2</span></h4>
+          <div class="card drag"><span class="tag t-r">Blocker</span><br>Payments API migration<div class="bar"><b style="width:68%"></b></div><div class="meta"><span>68%</span><span class="av"><i style="background:#2f6b4f"></i><i style="background:#2c4a7a"></i></span></div></div>
+          <div class="card"><span class="tag t-g">Eng</span><br>Offline sync<div class="bar"><b style="width:35%"></b></div><div class="meta"><span>35%</span><span class="av"><i style="background:#d9421c"></i></span></div></div>
+        </div>
+        <div class="col">
+          <h4>Shipped <span>4</span></h4>
+          <div class="card"><span class="tag t-g">Eng</span><br>SSO for teams<div class="meta"><span>Done</span><span class="av"><i style="background:#2f6b4f"></i></span></div></div>
+          <div class="card"><span class="tag t-b">Design</span><br>Dark mode<div class="meta"><span>Done</span><span class="av"><i style="background:#2c4a7a"></i><i style="background:#c58a12"></i></span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="logos wrap">
+  <p>Trusted by teams that like shipping</p>
+  <div class="logo-row" aria-label="Customer names">
+    <span>Northwind</span><span>Halcyon</span><span>BRIGHTLY</span><span>Foundry&amp;Co</span><span>Oakline</span>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Features</span>
+      <h2>Everything in one story, not five tabs.</h2>
+      <p>Tasks, timelines, docs and updates share one source of truth, so a change in one place shows up everywhere it matters.</p>
+    </div>
+    <div class="bento">
+      <div class="tile s4 reveal">
+        <h3>Timelines that move when the work moves</h3>
+        <p>Drag a task and every dependent shifts with it. Slipping dates are flagged days before they become surprises.</p>
+        <div class="viz gantt" aria-hidden="true">
+          <div style="background:var(--blue);width:55%">Research</div>
+          <div style="background:var(--green);width:48%;margin-left:22%">Build</div>
+          <div style="background:var(--gold);width:34%;margin-left:52%">QA</div>
+          <div style="background:var(--accent);width:18%;margin-left:80%">Launch</div>
+        </div>
+      </div>
+      <div class="tile s2 dark reveal">
+        <h3>Weekly updates, written for you</h3>
+        <p>Plotline drafts a plain-English summary of progress, risks and decisions. You edit, then send.</p>
+        <div class="viz big" aria-hidden="true">12h<span style="font:500 14px var(--sans);display:block;margin-top:8px;color:#c9c2af">saved per team, per month*</span></div>
+      </div>
+      <div class="tile s2 reveal">
+        <h3>Docs next to tasks</h3>
+        <p>Specs, briefs and meeting notes live beside the work they describe. Link a line of text to a task in one keystroke.</p>
+      </div>
+      <div class="tile s2 warm reveal">
+        <h3>Workload view</h3>
+        <p>See who's stretched and who has room before you assign the next thing.</p>
+        <div class="viz chips" aria-hidden="true"><span>Ana 92%</span><span>Kofi 60%</span><span>Mei 78%</span></div>
+      </div>
+      <div class="tile s2 dark reveal">
+        <h3>Built to connect</h3>
+        <p>Native GitHub, Slack and Google Calendar. A simple API for the rest.</p>
+        <div class="viz code" aria-hidden="true"><span class="k">POST</span> /v1/tasks<br>{ <span class="s">"title"</span>: <span class="s">"Ship it"</span> }</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps" id="how">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>From blank page to rolling in an afternoon.</h2>
+    </div>
+    <div class="step-grid">
+      <div class="step reveal"><h3>Bring your work</h3><p>Import from Trello, Asana, Jira or a CSV. Boards, assignees and due dates come across intact.</p></div>
+      <div class="step reveal"><h3>Shape your flow</h3><p>Pick a template or build your own statuses. Switch between board, list, timeline and calendar anytime.</p></div>
+      <div class="step reveal"><h3>Let it run</h3><p>Plotline tracks progress, nudges owners and drafts your updates. You focus on the actual project.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Loved by teams</span>
+      <h2>Fewer meetings. More shipped.</h2>
+    </div>
+    <div class="quote-grid">
+      <figure class="quote big-q reveal">
+        <blockquote>“We cancelled our Monday status call in the first month. The weekly update was already in everyone's inbox, and it was better than what we'd have said out loud.”</blockquote>
+        <figcaption class="who"><span class="face" style="background:var(--accent)">M</span><div><b>Maya Okafor</b><span>VP Product, Northwind</span></div></figcaption>
+      </figure>
+      <div class="stack">
+        <figure class="quote reveal">
+          <blockquote>“The timeline actually reflects reality. That's the whole pitch.”</blockquote>
+          <figcaption class="who"><span class="face" style="background:var(--blue)">D</span><div><b>Daniel Reyes</b><span>Engineering Lead, Halcyon</span></div></figcaption>
+        </figure>
+        <figure class="quote reveal">
+          <blockquote>“Migrated 400 tasks from Asana before lunch.”</blockquote>
+          <figcaption class="who"><span class="face" style="background:var(--green)">P</span><div><b>Priya Nair</b><span>Ops, Oakline</span></div></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--paper-2);border-block:1.5px solid var(--ink)">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>Simple, per-seat, no surprises.</h2>
+    </div>
+    <div class="toggle" role="group" aria-label="Billing period">
+      <button type="button" id="mo" aria-pressed="true">Monthly</button>
+      <button type="button" id="yr" aria-pressed="false">Yearly (save 20%)</button>
+    </div>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Starter</h3><p class="desc">For small teams finding their rhythm.</p>
+        <div class="price">$0<small> /user /mo</small></div>
+        <ul><li>Up to 10 members</li><li>Unlimited tasks &amp; boards</li><li>Board &amp; list views</li><li>30-day activity history</li></ul>
+        <a class="btn ghost" href="#start">Start free</a>
+      </div>
+      <div class="plan pop reveal">
+        <h3>Team</h3><p class="desc">For teams that live in their roadmap.</p>
+        <div class="price"><span data-m="9" data-y="7">$9</span><small> /user /mo</small></div>
+        <ul><li>Everything in Starter</li><li>Timelines &amp; dependencies</li><li>Auto-drafted weekly updates</li><li>Workload view</li><li>GitHub &amp; Slack integrations</li></ul>
+        <a class="btn primary" href="#start">Try Team free for 14 days</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Company</h3><p class="desc">For orgs that need control.</p>
+        <div class="price"><span data-m="18" data-y="14">$18</span><small> /user /mo</small></div>
+        <ul><li>Everything in Team</li><li>SSO &amp; SCIM</li><li>Portfolio reporting</li><li>Audit log &amp; custom roles</li><li>Priority support</li></ul>
+        <a class="btn ghost" href="#start">Talk to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="head reveal"><span class="eyebrow">FAQ</span><h2>Good questions.</h2></div>
+    <div class="faq reveal">
+      <details><summary>How hard is it to switch from another tool?</summary><p>Most teams are moving within an hour. Our importers bring over projects, tasks, comments, assignees and due dates from Trello, Asana, Jira and CSV files.</p></details>
+      <details><summary>Do I pay for people who just want to look?</summary><p>No. Guests and viewers are always free, so clients and stakeholders can follow along without adding to your bill.</p></details>
+      <details><summary>Can I export my data?</summary><p>Anytime, on any plan. Export everything as CSV or JSON. It's your work.</p></details>
+      <details><summary>How are the weekly updates generated?</summary><p>Plotline summarizes completed tasks, upcoming deadlines and flagged risks from your project. Nothing is sent until you review and approve it.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="start">
+  <div class="wrap">
+    <h2>Your next project deserves a better plot.</h2>
+    <p>Set up your first board in under five minutes.</p>
+    <form id="signup" novalidate>
+      <label for="email" style="position:absolute;left:-9999px">Work email</label>
+      <input id="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+      <button class="btn" type="submit">Get started free</button>
+    </form>
+    <p class="ok" id="msg" role="status" aria-live="polite"></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top">Plotline</a>
+        <p class="fine" style="margin-top:8px;max-width:260px">Project management that keeps the plot.</p>
+      </div>
+      <nav aria-label="Footer">
+        <div><h5>Product</h5><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#how">Import</a></li></ul></div>
+        <div><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+        <div><h5>Legal</h5><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li></ul></div>
+      </nav>
+    </div>
+    <p class="copy">&copy; 2026 Plotline, Inc. *Based on average self-reported savings from early customers.</p>
+  </div>
+</footer>
+
+<script>
+  // Billing toggle
+  const mo = document.getElementById('mo'), yr = document.getElementById('yr');
+  function setBilling(yearly){
+    mo.setAttribute('aria-pressed', !yearly);
+    yr.setAttribute('aria-pressed', yearly);
+    document.querySelectorAll('[data-m]').forEach(el=>{
+      el.textContent = '$' + (yearly ? el.dataset.y : el.dataset.m);
+    });
+  }
+  mo.onclick = ()=>setBilling(false);
+  yr.onclick = ()=>setBilling(true);
+
+  // Scroll reveal
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Signup (demo only: no network request)
+  document.getElementById('signup').addEventListener('submit', e=>{
+    e.preventDefault();
+    const v = document.getElementById('email').value.trim();
+    const msg = document.getElementById('msg');
+    msg.textContent = /^\S+@\S+\.\S+$/.test(v)
+      ? "You're on the list. Check your inbox to get started."
+      : "Please enter a valid email address.";
+  });
+</script>
+</body>
+</html>

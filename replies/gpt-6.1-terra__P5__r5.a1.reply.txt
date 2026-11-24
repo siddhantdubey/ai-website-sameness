@@ -1,0 +1,523 @@
+Save this as `index.html` and open it in a browser.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2e9">
+  <title>Daymark — Make room for the work that matters</title>
+  <style>
+    :root {
+      --paper: #f4f2e9;
+      --ink: #202820;
+      --muted: #6e756b;
+      --line: #d9ddd1;
+      --green: #274c38;
+      --lime: #d9ed9b;
+      --orange: #e98d56;
+      --white: #fffef9;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 4px;
+    }
+    .wrap { width: min(1280px, calc(100% - 80px)); margin: auto; }
+
+    .announcement {
+      padding: 10px 20px;
+      background: var(--green);
+      color: #f2f8e8;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+    .announcement strong { color: var(--lime); font-weight: 700; }
+    .announcement span { margin-left: 8px; opacity: .75; }
+
+    header { border-bottom: 1px solid var(--line); }
+    .nav {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1.3px;
+      white-space: nowrap;
+    }
+    .brand-mark {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+      transform: rotate(-8deg);
+    }
+    .brand-mark i { display: block; background: var(--green); border-radius: 2px; }
+    .brand-mark i:nth-child(2) { background: #8da974; }
+    .brand-mark i:nth-child(3) { background: #b5ce89; }
+    .nav-links { display: flex; align-items: center; gap: 30px; margin-left: auto; }
+    .nav-links a, .login { font-size: 13px; font-weight: 600; }
+    .nav-links a:hover, .login:hover { color: #648253; }
+    .nav-actions { display: flex; align-items: center; gap: 24px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      min-height: 50px;
+      padding: 0 20px;
+      border: 1px solid var(--green);
+      border-radius: 4px;
+      background: var(--green);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { background: #386449; transform: translateY(-2px); }
+    .button.small { min-height: 42px; padding: 0 16px; gap: 15px; }
+    .arrow { font-size: 18px; line-height: 1; font-weight: 400; }
+
+    .hero { padding: 86px 0 74px; overflow: hidden; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      align-items: center;
+      gap: 55px;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 25px;
+      color: #53634f;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #8da974;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, .serif {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: -.055em;
+    }
+    h1 {
+      max-width: 600px;
+      margin-bottom: 25px;
+      font-size: clamp(56px, 5.8vw, 84px);
+      line-height: .99;
+    }
+    h1 em { color: #66845c; font-weight: 400; }
+    .hero-copy {
+      max-width: 430px;
+      margin-bottom: 31px;
+      color: #687066;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 22px; }
+    .quiet-link {
+      border-bottom: 1px solid #a4ada0;
+      padding-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .hero-note { margin: 15px 0 0; color: #858b80; font-size: 11px; }
+
+    .visual {
+      position: relative;
+      min-height: 510px;
+      padding: 40px 0 35px 42px;
+    }
+    .visual::before {
+      content: "";
+      position: absolute;
+      inset: 0 -90px 0 25px;
+      background: #dce8ce;
+      border-radius: 48% 0 0 48%;
+    }
+    .visual::after {
+      content: "A LITTLE MORE CLARITY, EVERY DAY";
+      position: absolute;
+      right: -55px;
+      top: 50%;
+      transform: rotate(90deg) translateX(50%);
+      transform-origin: right center;
+      color: #829579;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .17em;
+      white-space: nowrap;
+    }
+    .app {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      min-height: 430px;
+      background: var(--white);
+      border: 1px solid #cfd8c9;
+      border-radius: 9px;
+      box-shadow: 0 24px 60px rgba(41, 65, 42, .15);
+      transform: rotate(-2deg);
+    }
+    .app-top {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 15px;
+      border-bottom: 1px solid #edf0e9;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #d5dbd0; }
+    .app-name { margin-left: 13px; color: #899287; font-size: 9px; }
+    .app-body { display: grid; grid-template-columns: 112px 1fr; min-height: 385px; }
+    .sidebar { padding: 20px 12px; border-right: 1px solid #edf0e9; }
+    .workspace { margin-bottom: 25px; font-size: 10px; font-weight: 700; }
+    .workspace b {
+      display: inline-grid;
+      place-items: center;
+      width: 19px;
+      height: 19px;
+      margin-right: 5px;
+      border-radius: 4px;
+      background: #d9e9ce;
+      color: #496c49;
+    }
+    .side-item { padding: 8px; color: #899187; font-size: 9px; }
+    .side-item.active { border-radius: 4px; background: #edf3e9; color: #345a3d; font-weight: 700; }
+    .side-label { margin: 20px 8px 8px; color: #a5aca1; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
+    .side-item span { display: inline-block; width: 15px; color: #9da99b; }
+    .app-main { padding: 22px 24px; }
+    .app-breadcrumb { color: #a0a99d; font-size: 9px; }
+    .app-heading { display: flex; justify-content: space-between; align-items: end; margin: 22px 0 17px; }
+    .app-heading h3 { margin: 0 0 5px; font-size: 19px; letter-spacing: -.04em; }
+    .app-heading p { margin: 0; color: #9aa298; font-size: 9px; }
+    .avatars { display: flex; padding-left: 5px; }
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      margin-left: -5px;
+      border: 2px solid var(--white);
+      border-radius: 50%;
+      background: #e9bca5;
+      color: #5a514c;
+      font-size: 7px;
+      font-weight: 700;
+    }
+    .avatar:nth-child(2) { background: #c9d7b3; }
+    .avatar:nth-child(3) { background: #d7c8ad; }
+    .tabs { display: flex; gap: 18px; padding-bottom: 10px; border-bottom: 1px solid #edf0e9; color: #9aa298; font-size: 9px; }
+    .tabs strong { position: relative; color: #345a3d; }
+    .tabs strong::after { content: ""; position: absolute; height: 2px; background: #64875f; left: 0; right: 0; bottom: -11px; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-top: 18px; }
+    .column { min-width: 0; }
+    .column-title { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 9px; font-weight: 700; }
+    .column-title span { color: #aab2a6; }
+    .card { min-height: 86px; margin-bottom: 8px; padding: 10px; border: 1px solid #e8ece5; border-radius: 5px; background: #fff; }
+    .tag { display: inline-block; padding: 3px 5px; border-radius: 3px; background: #f8e9df; color: #b77956; font-size: 7px; }
+    .tag.green { background: #e8f1e2; color: #718c64; }
+    .tag.purple { background: #eee9f3; color: #88769b; }
+    .card-title { margin: 9px 0 11px; font-size: 9px; font-weight: 700; line-height: 1.35; }
+    .card-foot { display: flex; justify-content: space-between; align-items: center; color: #adb4a9; font-size: 8px; }
+    .mini-avatar { width: 16px; height: 16px; border-radius: 50%; background: #d7c2aa; }
+    .floating-note {
+      position: absolute;
+      z-index: 2;
+      right: -16px;
+      bottom: 6px;
+      width: 190px;
+      padding: 16px;
+      background: #f8cf9c;
+      box-shadow: 0 12px 25px rgba(69, 76, 48, .12);
+      transform: rotate(5deg);
+    }
+    .floating-note::before { content: "✳"; display: block; margin-bottom: 9px; font-size: 20px; }
+    .floating-note p { margin: 0; font-family: Georgia, serif; font-size: 16px; line-height: 1.2; }
+    .floating-note small { display: block; margin-top: 10px; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+
+    .trust { padding: 28px 0 35px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .trust-inner { display: flex; align-items: center; justify-content: space-between; gap: 35px; }
+    .trust p { max-width: 180px; margin: 0; color: #828a7d; font-size: 11px; line-height: 1.5; }
+    .logos { display: flex; flex: 1; align-items: center; justify-content: space-around; gap: 25px; color: #7c8979; }
+    .logos span { font-family: Georgia, serif; font-size: 19px; font-weight: 700; letter-spacing: -.05em; white-space: nowrap; }
+    .logos span:nth-child(2) { font-family: Arial, sans-serif; font-size: 16px; letter-spacing: -.07em; }
+    .logos span:nth-child(4) { font-style: italic; }
+
+    .features { padding: 110px 0 120px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 55px; }
+    .section-head h2 { max-width: 620px; margin-bottom: 0; font-size: clamp(42px, 4.5vw, 64px); line-height: 1.04; }
+    .section-head > p { max-width: 295px; margin-bottom: 4px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .feature { min-height: 240px; padding: 30px; background: var(--paper); }
+    .feature-number { display: flex; justify-content: space-between; color: #8b9785; font-size: 11px; }
+    .feature-icon { font-size: 27px; line-height: 1; color: #73966b; }
+    .feature h3 { margin: 55px 0 12px; font-size: 17px; letter-spacing: -.03em; }
+    .feature p { max-width: 290px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .closing { padding: 75px 0; background: #dce8ce; }
+    .closing-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .closing .eyebrow { margin-bottom: 15px; }
+    .closing h2 { max-width: 650px; margin: 0; font-size: clamp(40px, 4.5vw, 62px); line-height: 1.05; }
+    footer { padding: 35px 0; background: var(--green); color: #eaf1e4; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    footer .brand-mark i { background: #eaf1e4; }
+    footer .brand-mark i:nth-child(2), footer .brand-mark i:nth-child(3) { background: #a6bf99; }
+    footer p { margin: 0; color: #b1c4ae; font-size: 12px; }
+    .footer-links { display: flex; gap: 22px; font-size: 12px; }
+
+    @media (max-width: 900px) {
+      .wrap { width: min(100% - 48px, 700px); }
+      .nav { gap: 20px; }
+      .nav-links { display: none; }
+      .nav-actions { margin-left: auto; }
+      .hero { padding-top: 65px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 35px; }
+      .hero-copy { max-width: 500px; }
+      .visual { min-height: 480px; padding-right: 20px; }
+      .visual::before { right: -50px; }
+      .floating-note { right: 0; }
+      .trust-inner { align-items: flex-start; flex-direction: column; gap: 22px; }
+      .trust p { max-width: none; }
+      .logos { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .features { padding: 80px 0; }
+      .section-head { align-items: start; flex-direction: column; gap: 20px; }
+      .section-head > p { max-width: 500px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature { min-height: 190px; }
+      .feature h3 { margin-top: 35px; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: calc(100% - 36px); }
+      .announcement { font-size: 10px; }
+      .nav { min-height: 70px; }
+      .brand { font-size: 21px; }
+      .login { display: none; }
+      .button.small { padding: 0 12px; }
+      .hero { padding: 55px 0 50px; }
+      h1 { font-size: clamp(49px, 13vw, 65px); }
+      .hero-copy { font-size: 15px; }
+      .visual { min-height: 365px; padding: 24px 0 32px 15px; }
+      .visual::before { inset: 0 -30px 0 0; }
+      .visual::after { display: none; }
+      .app { min-height: 315px; }
+      .app-body { grid-template-columns: 76px 1fr; min-height: 270px; }
+      .sidebar { padding: 15px 6px; }
+      .workspace { font-size: 8px; }
+      .workspace b { width: 15px; height: 15px; }
+      .side-item { padding: 7px 4px; font-size: 7px; }
+      .side-label { margin-left: 4px; font-size: 7px; }
+      .app-main { padding: 18px 12px; }
+      .app-heading { margin: 15px 0; }
+      .app-heading h3 { font-size: 15px; }
+      .board { gap: 5px; }
+      .card { padding: 7px; min-height: 75px; }
+      .card-title { font-size: 8px; }
+      .floating-note { width: 135px; padding: 10px; bottom: 0; }
+      .floating-note::before { margin-bottom: 4px; font-size: 15px; }
+      .floating-note p { font-size: 13px; }
+      .floating-note small { font-size: 7px; }
+      .logos span { font-size: 16px; }
+      .closing-inner, .footer-inner { align-items: flex-start; flex-direction: column; }
+      .closing { padding: 60px 0; }
+      .footer-links { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">
+    <strong>NEW IN DAYMARK</strong><span>Meet the calmer way to plan your week &nbsp;↗</span>
+  </div>
+
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Daymark home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        daymark
+      </a>
+      <div class="nav-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#get-started">For teams</a>
+      </div>
+      <div class="nav-actions">
+        <a class="login" href="#get-started">Log in</a>
+        <a class="button small" href="#get-started">Get started <span class="arrow">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="how-it-works">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">A little structure goes a long way</p>
+          <h1>Make room for the work <em>that matters.</em></h1>
+          <p class="hero-copy">
+            Plans change. Good work takes focus. Daymark brings your projects,
+            people, and priorities together so your team can find its rhythm.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#get-started">Start planning for free <span class="arrow">↗</span></a>
+            <a class="quiet-link" href="#features">Take a look ↓</a>
+          </div>
+          <p class="hero-note">Free to get started. No credit card needed.</p>
+        </div>
+
+        <div class="visual" aria-label="A preview of the Daymark project board">
+          <div class="app" aria-hidden="true">
+            <div class="app-top">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="app-name">daymark / studio workspace</span>
+            </div>
+            <div class="app-body">
+              <aside class="sidebar">
+                <div class="workspace"><b>S</b> Studio North</div>
+                <div class="side-item"><span>⌂</span> Home</div>
+                <div class="side-item"><span>◷</span> My tasks</div>
+                <div class="side-item"><span>▦</span> Calendar</div>
+                <div class="side-label">Your projects</div>
+                <div class="side-item active"><span>◧</span> Spring launch</div>
+                <div class="side-item"><span>◧</span> Brand refresh</div>
+                <div class="side-item"><span>◧</span> Content studio</div>
+              </aside>
+              <div class="app-main">
+                <div class="app-breadcrumb">Projects &nbsp; / &nbsp; Spring launch</div>
+                <div class="app-heading">
+                  <div><h3>Spring launch 🌱</h3><p>Good things are growing.</p></div>
+                  <div class="avatars"><span class="avatar">A</span><span class="avatar">M</span><span class="avatar">J</span></div>
+                </div>
+                <div class="tabs"><strong>Board</strong><span>List</span><span>Timeline</span><span>Files</span></div>
+                <div class="board">
+                  <div class="column">
+                    <div class="column-title">To do <span>2 &nbsp; +</span></div>
+                    <div class="card"><span class="tag purple">Planning</span><div class="card-title">Map out launch moments</div><div class="card-foot"><span>◷ Mar 12</span><span class="mini-avatar"></span></div></div>
+                    <div class="card"><span class="tag">Creative</span><div class="card-title">Gather visual references</div><div class="card-foot"><span>◷ Mar 14</span><span class="mini-avatar"></span></div></div>
+                  </div>
+                  <div class="column">
+                    <div class="column-title">In progress <span>2 &nbsp; +</span></div>
+                    <div class="card"><span class="tag">Creative</span><div class="card-title">Design the campaign</div><div class="card-foot"><span>◷ Mar 18</span><span class="mini-avatar"></span></div></div>
+                    <div class="card"><span class="tag green">Content</span><div class="card-title">Write the story</div><div class="card-foot"><span>◷ Mar 20</span><span class="mini-avatar"></span></div></div>
+                  </div>
+                  <div class="column">
+                    <div class="column-title">Done <span>1 &nbsp; +</span></div>
+                    <div class="card"><span class="tag purple">Planning</span><div class="card-title">Kickoff with the team</div><div class="card-foot"><span>✓ Mar 08</span><span class="mini-avatar"></span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="floating-note" aria-hidden="true">
+            <p>More good days, less busywork.</p>
+            <small>That’s the idea.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust" aria-label="Made for thoughtful teams">
+      <div class="wrap trust-inner">
+        <p>Made for thoughtful teams doing their best work together.</p>
+        <div class="logos" aria-hidden="true">
+          <span>northstar.</span>
+          <span>FIELDWORK</span>
+          <span>goodside</span>
+          <span>Monroe & Co.</span>
+          <span>outline</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="features wrap" id="features">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">A better way to work together</p>
+          <h2>Less keeping up.<br>More moving forward.</h2>
+        </div>
+        <p>Everything your team needs to make a plan, see it through, and enjoy the work along the way.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <div class="feature-number"><span>01 / FIND YOUR FOCUS</span><span class="feature-icon">✳</span></div>
+          <h3>Know what’s next.</h3>
+          <p>Give every task a home, an owner, and a clear next step. Your priorities, finally in one place.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-number"><span>02 / STAY IN SYNC</span><span class="feature-icon">↗</span></div>
+          <h3>See the whole picture.</h3>
+          <p>From the big milestones to the little details, everyone can see how the work is coming together.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-number"><span>03 / MAKE SPACE</span><span class="feature-icon">◌</span></div>
+          <h3>Keep the good stuff moving.</h3>
+          <p>Spend less time chasing updates and more time making things you’re proud to put into the world.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="closing" id="get-started">
+      <div class="wrap closing-inner">
+        <div>
+          <p class="eyebrow">Your next good day starts here</p>
+          <h2>Let’s make work feel a little lighter.</h2>
+        </div>
+        <a class="button" href="mailto:hello@daymark.example?subject=Getting%20started%20with%20Daymark">
+          Get started with Daymark <span class="arrow">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="#">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        daymark
+      </a>
+      <p>Make good work, together.</p>
+      <div class="footer-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#features">Features</a>
+        <a href="mailto:hello@daymark.example">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+```
+
+The contact address is a placeholder; replace it with your real signup or contact destination.

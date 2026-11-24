@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docket — The plan everyone actually reads</title>
+<meta name="description" content="Docket keeps tasks, timelines and workloads in one place your team can read in thirty seconds.">
+<style>
+  :root {
+    --bg: #ECEFE8;
+    --surface: #FAFBF7;
+    --ink: #121A16;
+    --muted: #55615A;
+    --line: rgba(18, 26, 22, .16);
+    --line-strong: rgba(18, 26, 22, .85);
+    --accent: #F4511E;
+    --lime: #D7F04A;
+    --forest: #163B2D;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --wrap: 1140px;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p { margin: 0; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  [hidden] { display: none !important; }
+
+  .wrap { width: min(100% - 40px, var(--wrap)); margin-inline: auto; }
+  .label {
+    font: 500 12px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .skip {
+    position: absolute; left: 12px; top: -60px; z-index: 100;
+    background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 8px;
+  }
+  .skip:focus { top: 12px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 22px;
+    border: 1.5px solid var(--ink); border-radius: 999px;
+    background: var(--ink); color: var(--bg);
+    font-weight: 600; font-size: 16px; line-height: 1.2;
+    text-decoration: none; cursor: pointer;
+    transition: background .15s, color .15s, transform .15s;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--ink); color: var(--ink); }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn.small { padding: 9px 16px; font-size: 15px; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; gap: 32px; height: 64px; }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 700 22px/1 var(--serif); letter-spacing: -.01em; text-decoration: none;
+  }
+  .logo svg { width: 26px; height: 26px; }
+  .nav nav { display: flex; gap: 26px; margin-left: auto; }
+  .nav nav a { font-size: 15px; text-decoration: none; color: var(--muted); }
+  .nav nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; }
+
+  /* Hero */
+  .hero { padding: 76px 0 40px; }
+  .hero h1 {
+    font: 600 clamp(2.7rem, 7.2vw, 5.6rem)/0.98 var(--serif);
+    letter-spacing: -.03em;
+    max-width: 13ch;
+    margin-top: 22px;
+    text-wrap: balance;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(transparent 58%, var(--lime) 58%, var(--lime) 92%, transparent 92%);
+    padding-inline: .06em;
+  }
+  .hero-row {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: end;
+    margin-top: 34px;
+  }
+  .hero-row p { font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--muted); max-width: 52ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: center; }
+  .hero-cta small { flex-basis: 100%; text-align: right; color: var(--muted); font-size: 14px; }
+
+  /* Demo */
+  .demo {
+    margin-top: 56px;
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -40px rgba(22, 59, 45, .55);
+  }
+  .demo-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .demo-title { font: 600 18px/1.2 var(--serif); }
+  .tabs { display: flex; gap: 4px; padding: 4px; background: var(--bg); border-radius: 999px; }
+  .tabs button {
+    border: 0; background: transparent; cursor: pointer;
+    padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--muted);
+  }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+  .progress { margin-left: auto; display: flex; align-items: center; gap: 10px; font: 500 13px/1 var(--mono); color: var(--muted); }
+  .progress-track { width: 110px; height: 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--forest); width: 0; transition: width .35s ease; }
+
+  .panel { padding: 18px; min-height: 380px; }
+  .hint { padding: 0 18px 16px; font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+  .hint::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+
+  /* Board */
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .col {
+    background: var(--bg); border-radius: 12px; padding: 12px;
+    border: 1.5px dashed transparent;
+    min-height: 330px;
+    transition: border-color .15s, background .15s;
+  }
+  .col.over { border-color: var(--ink); background: #E2E7DC; }
+  .col-head { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px 12px; }
+  .col-head .count { font: 500 12px/1 var(--mono); color: var(--muted); }
+  .cards { display: grid; gap: 8px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 12px 10px;
+    cursor: grab; user-select: none;
+    transition: transform .12s, border-color .12s, box-shadow .12s;
+  }
+  .card:hover { border-color: var(--ink); transform: translateY(-1px); box-shadow: 0 6px 14px -10px rgba(18, 26, 22, .5); }
+  .card.dragging { opacity: .4; }
+  .card.moved { animation: pop .35s ease; }
+  @keyframes pop { from { transform: scale(.94); background: var(--lime); } to { transform: none; } }
+  .card-title { font-weight: 550; font-size: 15px; line-height: 1.3; }
+  .col[data-col="2"] .card-title { text-decoration: line-through; text-decoration-color: rgba(18,26,22,.4); color: var(--muted); }
+  .card-meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; font: 500 11px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .card-meta .av { margin-left: auto; }
+  .tag { padding: 4px 7px; border-radius: 5px; background: var(--bg); color: var(--ink); }
+  .av {
+    display: inline-grid; place-items: center; flex: none;
+    width: 24px; height: 24px; border-radius: 50%;
+    font: 600 10px/1 var(--mono); letter-spacing: 0; color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+  .empty { font-size: 14px; color: var(--muted); padding: 18px 6px; text-align: center; }
+
+  /* Timeline */
+  .tl { --lab: 220px; position: relative; }
+  .tl-row { display: grid; grid-template-columns: var(--lab) 1fr; align-items: center; min-height: 40px; border-top: 1px solid var(--line); }
+  .tl-row.head { border-top: 0; min-height: 30px; }
+  .tl-name { font-size: 14px; padding-right: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tl-track { display: grid; grid-template-columns: repeat(10, 1fr); align-items: center; height: 100%; }
+  .tl-track span.day { font: 500 11px/1 var(--mono); color: var(--muted); text-align: center; }
+  .tl-track span.day:nth-child(6) { box-shadow: -1px 0 0 var(--line); }
+  .bar {
+    height: 20px; border-radius: 6px; margin: 0 2px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    transition: background .3s;
+  }
+  .bar.s1 { background: repeating-linear-gradient(-45deg, var(--accent) 0 6px, #F77A52 6px 12px); }
+  .bar.s2 { background: var(--forest); }
+  .today {
+    position: absolute; top: 26px; bottom: 0; width: 0;
+    left: calc(var(--lab) + (100% - var(--lab)) * .45);
+    border-left: 1.5px dashed var(--accent);
+    pointer-events: none;
+  }
+  .today::before {
+    content: "Today"; position: absolute; top: -22px; left: -24px;
+    font: 600 10px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em;
+    background: var(--accent); color: var(--ink); padding: 4px 6px; border-radius: 4px;
+  }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; font-size: 13px; color: var(--muted); }
+  .legend i { display: inline-block; width: 22px; height: 10px; border-radius: 3px; border: 1.5px solid var(--ink); margin-right: 6px; vertical-align: -1px; }
+  .legend .l1 { background: var(--accent); } .legend .l2 { background: var(--forest); }
+
+  /* Workload */
+  .wl { display: grid; gap: 4px; }
+  .wl-row { display: grid; grid-template-columns: 150px 1fr 170px; gap: 16px; align-items: center; padding: 16px 0; border-top: 1px solid var(--line); }
+  .wl-row:first-child { border-top: 0; }
+  .wl-who { display: flex; align-items: center; gap: 10px; font-weight: 550; }
+  .wl-track { position: relative; height: 22px; background: var(--bg); border-radius: 6px; }
+  .wl-track::after { /* capacity mark at 40h of 56h */
+    content: ""; position: absolute; top: -5px; bottom: -5px; left: 71.43%;
+    border-left: 1.5px solid var(--ink);
+  }
+  .wl-fill { height: 100%; border-radius: 6px; background: var(--forest); transition: width .4s ease, background .3s; }
+  .wl-row.over .wl-fill { background: var(--accent); }
+  .wl-num { font: 500 13px/1.3 var(--mono); color: var(--muted); }
+  .wl-row.over .wl-num strong { color: var(--ink); background: var(--lime); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+  .wl-note { margin-top: 14px; font-size: 14px; color: var(--muted); }
+
+  /* Sections */
+  section { padding: 96px 0; }
+  .sec-head { display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px; align-items: start; margin-bottom: 52px; }
+  h2 { font: 600 clamp(2rem, 4.2vw, 3.2rem)/1.05 var(--serif); letter-spacing: -.025em; text-wrap: balance; }
+
+  /* Features */
+  .features { display: grid; grid-template-columns: 1fr 1fr; border-top: 1.5px solid var(--ink); }
+  .feature { padding: 34px 34px 38px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
+  .feature:nth-child(even) { padding: 34px 0 38px 34px; border-left: 1px solid var(--line); }
+  .feature .num { font: 500 13px/1 var(--mono); color: var(--accent); }
+  .feature h3 { font: 600 1.6rem/1.15 var(--serif); letter-spacing: -.015em; margin: 14px 0 10px; }
+  .feature p { color: var(--muted); max-width: 44ch; }
+  .spec {
+    margin-top: 26px; padding: 16px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    font: 500 13px/1.5 var(--mono);
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .chip { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); white-space: nowrap; }
+  .chip.dark { background: var(--ink); color: var(--bg); }
+  .chip.lime { background: var(--lime); }
+  .chip.hot { background: var(--accent); }
+  .spec .kw { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+  .spec.stack { display: grid; gap: 9px; }
+  .mini { display: grid; grid-template-columns: 62px 1fr; gap: 10px; align-items: center; }
+  .mini b { height: 10px; border-radius: 3px; background: var(--forest); display: block; }
+  .mini b.hot { background: var(--accent); }
+
+  /* Quote */
+  .quote { background: var(--forest); color: #EEF3EA; }
+  .quote .wrap { display: grid; grid-template-columns: 1.7fr 1fr; gap: 60px; align-items: end; }
+  .quote blockquote { margin: 0; font: 500 clamp(1.6rem, 3.4vw, 2.6rem)/1.2 var(--serif); letter-spacing: -.02em; text-wrap: pretty; }
+  .quote blockquote mark { background: none; color: var(--lime); font-style: italic; }
+  .quote figcaption { margin-top: 28px; font-size: 15px; color: #B9C9BD; }
+  .quote figcaption strong { color: #EEF3EA; display: block; }
+  .quote figure { margin: 0; }
+  .facts { display: grid; gap: 0; border-top: 1px solid rgba(238, 243, 234, .3); }
+  .facts div { padding: 18px 0; border-bottom: 1px solid rgba(238, 243, 234, .3); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .facts dt { font: 500 12px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #B9C9BD; }
+  .facts dd { margin: 0; font: 600 1.7rem/1 var(--serif); }
+  dl { margin: 0; }
+
+  /* Pricing */
+  .bill { display: flex; align-items: center; gap: 12px; font-size: 15px; justify-self: end; align-self: end; }
+  .switch {
+    width: 50px; height: 28px; border-radius: 99px; border: 1.5px solid var(--ink);
+    background: var(--surface); position: relative; cursor: pointer; padding: 0;
+    transition: background .2s;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 19px; height: 19px; border-radius: 50%;
+    background: var(--ink); transition: transform .2s;
+  }
+  .switch[aria-checked="true"] { background: var(--lime); }
+  .switch[aria-checked="true"]::after { transform: translateX(22px); }
+  .save { font: 500 12px/1 var(--mono); background: var(--lime); padding: 5px 8px; border-radius: 5px; }
+
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .plan {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 30px 28px; display: flex; flex-direction: column;
+  }
+  .plan.pick { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .plan.pick .label, .plan.pick .per, .plan.pick .blurb { color: #B4C0B6; }
+  .plan h3 { font: 600 1.5rem/1.1 var(--serif); margin-top: 12px; }
+  .price { display: flex; align-items: baseline; gap: 8px; margin: 22px 0 6px; }
+  .price .amt { font: 600 3.4rem/1 var(--serif); letter-spacing: -.03em; }
+  .per { font-size: 14px; color: var(--muted); }
+  .blurb { color: var(--muted); font-size: 15px; min-height: 3em; }
+  .plan ul { list-style: none; padding: 0; margin: 22px 0 28px; display: grid; gap: 10px; font-size: 15px; }
+  .plan li { padding-left: 24px; position: relative; }
+  .plan li::before {
+    content: ""; position: absolute; left: 2px; top: .42em; width: 11px; height: 6px;
+    border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg);
+  }
+  .plan .btn { margin-top: auto; }
+  .plan.pick .btn { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+  .plan.pick .btn:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* FAQ */
+  .faq { display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px; }
+  .faq-list { border-top: 1.5px solid var(--ink); }
+  details { border-bottom: 1px solid var(--line); }
+  summary {
+    list-style: none; cursor: pointer; padding: 22px 44px 22px 0; position: relative;
+    font: 600 1.2rem/1.3 var(--serif);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    font: 400 26px/1 var(--mono); color: var(--accent); transition: transform .2s;
+  }
+  details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  details p { padding: 0 44px 24px 0; color: var(--muted); max-width: 62ch; }
+
+  /* CTA */
+  .cta { padding: 0 0 96px; }
+  .cta-box {
+    background: var(--lime); border: 1.5px solid var(--ink); border-radius: 20px;
+    padding: clamp(36px, 6vw, 72px);
+    display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: end;
+  }
+  .cta-box h2 { font-size: clamp(2.2rem, 5vw, 4rem); }
+  .cta-box p { margin-top: 14px; max-width: 40ch; }
+  .signup { display: grid; gap: 10px; }
+  .signup label { font-size: 14px; font-weight: 600; }
+  .signup-row { display: flex; gap: 8px; }
+  .signup input {
+    flex: 1; min-width: 0; padding: 13px 16px; font: inherit; font-size: 16px;
+    border: 1.5px solid var(--ink); border-radius: 999px; background: var(--surface); color: var(--ink);
+  }
+  .signup input::placeholder { color: #7B867F; }
+  .signup-msg { font-size: 14px; min-height: 1.5em; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--muted); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 18px 32px; align-items: center; }
+  footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-left: auto; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+  /* Entrance */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+    .rise.d1 { animation-delay: .08s; } .rise.d2 { animation-delay: .16s; } .rise.d3 { animation-delay: .28s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-row, .sec-head, .quote .wrap, .faq, .cta-box { grid-template-columns: 1fr; }
+    .hero-cta { justify-content: flex-start; }
+    .hero-cta small { text-align: left; }
+    .bill { justify-self: start; }
+    .plans { grid-template-columns: 1fr; }
+    .blurb { min-height: 0; }
+    section { padding: 72px 0; }
+    .cta { padding-bottom: 72px; }
+  }
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    .nav nav { display: none; }
+    .nav .btn { margin-left: auto; }
+    .hero { padding-top: 48px; }
+    .board { grid-template-columns: 1fr; }
+    .col { min-height: 0; }
+    .progress { margin-left: 0; }
+    .features { grid-template-columns: 1fr; }
+    .feature, .feature:nth-child(even) { padding: 30px 0 34px; border-left: 0; }
+    .tl { --lab: 118px; }
+    .tl-name { font-size: 13px; }
+    .wl-row { grid-template-columns: 1fr; gap: 8px; }
+    .signup-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="Docket home">
+      <svg viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" fill="#121A16"/>
+        <path d="M7 9h8M7 13h5M7 17h3" stroke="#ECEFE8" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14.5 16.5l2.2 2.2 4-5" stroke="#D7F04A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Docket
+    </a>
+    <nav aria-label="Primary">
+      <a href="#demo">Product</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn small" href="#start">Start free</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap">
+      <p class="label rise">Project management for teams that ship</p>
+      <h1 class="rise d1">The plan everyone <em>actually reads.</em></h1>
+      <div class="hero-row rise d2">
+        <p>Docket keeps tasks, timelines and workloads in one place your team can take in at a glance, so standup can be about decisions instead of status.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#start">Start free</a>
+          <a class="btn ghost" href="#demo">Try the demo ↓</a>
+          <small>Free for up to 5 people. No card needed.</small>
+        </div>
+      </div>
+
+      <div class="demo rise d3" id="demo">
+        <div class="demo-bar">
+          <span class="demo-title">Website relaunch</span>
+          <div class="tabs" role="tablist" aria-label="Project views">
+            <button role="tab" id="tab-board" aria-controls="panel-board" aria-selected="true">Board</button>
+            <button role="tab" id="tab-timeline" aria-controls="panel-timeline" aria-selected="false" tabindex="-1">Timeline</button>
+            <button role="tab" id="tab-workload" aria-controls="panel-workload" aria-selected="false" tabindex="-1">Workload</button>
+          </div>
+          <div class="progress" aria-live="polite">
+            <span id="progress-text">0 of 8 done</span>
+            <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="panel" role="tabpanel" id="panel-board" aria-labelledby="tab-board">
+          <div class="board" id="board"></div>
+        </div>
+        <div class="panel" role="tabpanel" id="panel-timeline" aria-labelledby="tab-timeline" hidden>
+          <div class="tl" id="timeline"></div>
+          <div class="legend">
+            <span><i></i>Up next</span><span><i class="l1"></i>In progress</span><span><i class="l2"></i>Done</span>
+          </div>
+        </div>
+        <div class="panel" role="tabpanel" id="panel-workload" aria-labelledby="tab-workload" hidden>
+          <div class="wl" id="workload"></div>
+          <p class="wl-note">The line marks a 40-hour week. Finish or move work on the board and these bars follow.</p>
+        </div>
+
+        <p class="hint" id="hint">This is live. Drag a card, or click one to move it along, then check the other views.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label">What it does</p>
+        <h2>One set of tasks. Every view your team needs.</h2>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <span class="num">01</span>
+          <h3>Three views, one source</h3>
+          <p>Board, timeline and workload all read from the same tasks. Move a card and the schedule redraws itself, so nothing is ever copied by hand.</p>
+          <div class="spec">
+            <span class="chip dark">Board</span><span class="kw">=</span>
+            <span class="chip">Timeline</span><span class="kw">=</span>
+            <span class="chip">Workload</span>
+          </div>
+        </article>
+        <article class="feature">
+          <span class="num">02</span>
+          <h3>See overload before it lands</h3>
+          <p>Every task carries an estimate. Docket adds them up per person per week and flags anyone past capacity while there is still time to rebalance.</p>
+          <div class="spec stack" aria-hidden="true">
+            <div class="mini"><span>Ines</span><b style="width:46%"></b></div>
+            <div class="mini"><span>Tobias</span><b class="hot" style="width:94%"></b></div>
+            <div class="mini"><span>Wen</span><b style="width:62%"></b></div>
+          </div>
+        </article>
+        <article class="feature">
+          <span class="num">03</span>
+          <h3>Rules instead of reminders</h3>
+          <p>Write the routine once. Docket assigns reviewers, sets due dates and nudges owners, and you stop being the person who chases.</p>
+          <div class="spec">
+            <span class="kw">When</span><span class="chip">moved to Review</span>
+            <span class="kw">Then</span><span class="chip lime">assign reviewer</span><span class="chip lime">due in 2 days</span>
+          </div>
+        </article>
+        <article class="feature">
+          <span class="num">04</span>
+          <h3>Updates that write themselves</h3>
+          <p>Each Friday, everyone gets a short digest of what moved, what slipped and what is blocked, built from the work itself.</p>
+          <div class="spec">
+            <span class="kw">Fri digest</span>
+            <span class="chip">12 moved</span><span class="chip hot">2 slipped</span><span class="chip">1 blocked</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote">
+    <div class="wrap">
+      <figure>
+        <blockquote>“We cancelled the Monday status meeting in our second week. Everything it used to tell us was <mark>already on the board.</mark>”</blockquote>
+        <figcaption><strong>Priya Raman</strong>Head of Delivery, Northfold Studio</figcaption>
+      </figure>
+      <dl class="facts">
+        <div><dt>Setup time</dt><dd>~10 min</dd></div>
+        <div><dt>Imports from</dt><dd>CSV, Trello, Jira</dd></div>
+        <div><dt>Works on</dt><dd>Web, iOS, Android</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="label" style="margin-bottom:18px">Pricing</p>
+          <h2>Pay per person. Guests are free.</h2>
+        </div>
+        <div class="bill">
+          <span id="bill-label">Bill annually</span>
+          <button class="switch" role="switch" aria-checked="true" aria-labelledby="bill-label" id="bill"></button>
+          <span class="save">Save 20%</span>
+        </div>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <span class="label">Starter</span>
+          <h3>Free</h3>
+          <div class="price"><span class="amt">$0</span><span class="per">for up to 5 people</span></div>
+          <p class="blurb">Everything a small team needs to run a project properly.</p>
+          <ul>
+            <li>Unlimited tasks and projects</li>
+            <li>Board and timeline views</li>
+            <li>Weekly digest</li>
+            <li>30-day activity history</li>
+          </ul>
+          <a class="btn ghost" href="#start">Start free</a>
+        </div>
+        <div class="plan pick">
+          <span class="label">Team · most chosen</span>
+          <h3>Team</h3>
+          <div class="price"><span class="amt" data-m="$10" data-y="$8">$8</span><span class="per">per person / month</span></div>
+          <p class="blurb">For teams juggling several projects and one shared calendar.</p>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Workload view and capacity alerts</li>
+            <li>Automation rules</li>
+            <li>Unlimited free guests</li>
+            <li>Unlimited history</li>
+          </ul>
+          <a class="btn" href="#start">Try Team free for 14 days</a>
+        </div>
+        <div class="plan">
+          <span class="label">Business</span>
+          <h3>Business</h3>
+          <div class="price"><span class="amt" data-m="$19" data-y="$15">$15</span><span class="per">per person / month</span></div>
+          <p class="blurb">For organisations that need controls, reporting and support.</p>
+          <ul>
+            <li>Everything in Team</li>
+            <li>Portfolios across projects</li>
+            <li>SSO and audit log</li>
+            <li>Custom roles and permissions</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btn ghost" href="#start">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap faq">
+      <div>
+        <p class="label" style="margin-bottom:18px">Questions</p>
+        <h2>Before you switch</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>Can we bring our existing projects?</summary>
+          <p>Yes. Import from Trello, Jira or any CSV. Columns, assignees, due dates and comments come across, and you can preview the result before anything is saved.</p>
+        </details>
+        <details>
+          <summary>What counts as a guest?</summary>
+          <p>Clients, contractors and anyone else you invite to a single project. Guests can comment and update tasks assigned to them, and they never count toward your bill.</p>
+        </details>
+        <details>
+          <summary>What happens when the Team trial ends?</summary>
+          <p>You drop back to Starter automatically. Nothing is deleted, and Team features unlock again whenever you upgrade.</p>
+        </details>
+        <details>
+          <summary>Can we leave and take our data?</summary>
+          <p>Any time. Export every project to CSV or JSON from workspace settings, with attachments included.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta" id="start">
+    <div class="wrap">
+      <div class="cta-box">
+        <div>
+          <h2>Put your next project on the Docket.</h2>
+          <p>Set up a workspace in about ten minutes. Invite the team when it looks right.</p>
+        </div>
+        <!-- Demo only: this form is not wired to a backend. Point it at your signup endpoint. -->
+        <form class="signup" id="signup" novalidate>
+          <label for="email">Work email</label>
+          <div class="signup-row">
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+            <button class="btn" type="submit">Create workspace</button>
+          </div>
+          <p class="signup-msg" id="signup-msg" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Docket Labs</span>
+    <nav aria-label="Footer">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const COLS = ['Up next', 'In progress', 'Done'];
+  const PEOPLE = {
+    IA: { name: 'Ines',   bg: '#D7F04A' },
+    WL: { name: 'Wen',    bg: '#F9B49C' },
+    TK: { name: 'Tobias', bg: '#BFD8CB' },
+    DO: { name: 'Dele',   bg: '#F1E3A0' }
+  };
+  const tasks = [
+    { id: 1, title: 'Audit existing content',       tag: 'Content', who: 'IA', col: 2, start: 0, len: 2, h: 12 },
+    { id: 2, title: 'Wireframe pricing page',       tag: 'Design',  who: 'WL', col: 2, start: 1, len: 3, h: 16 },
+    { id: 3, title: 'Migrate blog to new CMS',      tag: 'Eng',     who: 'TK', col: 1, start: 2, len: 4, h: 24 },
+    { id: 4, title: 'Write launch announcement',    tag: 'Content', who: 'IA', col: 1, start: 3, len: 3, h: 14 },
+    { id: 5, title: 'Colour and type pass',         tag: 'Design',  who: 'WL', col: 0, start: 5, len: 3, h: 18 },
+    { id: 6, title: 'Set up URL redirects',         tag: 'Eng',     who: 'TK', col: 0, start: 6, len: 2, h: 12 },
+    { id: 7, title: 'Image pipeline and page speed', tag: 'Eng',    who: 'TK', col: 0, start: 7, len: 2, h: 12 },
+    { id: 8, title: 'QA on mobile',                 tag: 'QA',      who: 'DO', col: 0, start: 7, len: 3, h: 18 }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+  const avatar = who => {
+    const a = el('span', 'av', who);
+    a.style.background = PEOPLE[who].bg;
+    a.title = PEOPLE[who].name;
+    return a;
+  };
+
+  let lastMoved = null;
+
+  function move(id, col, refocus) {
+    const t = tasks.find(t => t.id === id);
+    if (!t || t.col === col) return;
+    t.col = col;
+    lastMoved = id;
+    render();
+    if (refocus) {
+      const card = document.querySelector('.card[data-id="' + id + '"]');
+      if (card) card.focus();
+    }
+  }
+
+  function renderBoard() {
+    const board = $('board');
+    board.replaceChildren();
+    COLS.forEach((name, c) => {
+      const col = el('div', 'col');
+      col.dataset.col = c;
+      const items = tasks.filter(t => t.col === c);
+      const head = el('div', 'col-head');
+      head.append(el('span', 'label', name), el('span', 'count', String(items.length)));
+      const list = el('div', 'cards');
+
+      items.forEach(t => {
+        const next = (t.col + 1) % 3;
+        const card = el('div', 'card' + (t.id === lastMoved ? ' moved' : ''));
+        card.dataset.id = t.id;
+        card.draggable = true;
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', t.title + ', ' + PEOPLE[t.who].name + ', ' + name +
+          '. Activate to move to ' + COLS[next] + '.');
+        const meta = el('div', 'card-meta');
+        meta.append(el('span', 'tag', t.tag), el('span', null, t.h + 'h'), avatar(t.who));
+        card.append(el('div', 'card-title', t.title), meta);
+
+        card.addEventListener('click', () => move(t.id, next, true));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); move(t.id, next, true); }
+        });
+        card.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', String(t.id));
+          e.dataTransfer.effectAllowed = 'move';
+          card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          document.querySelectorAll('.col.over').forEach(n => n.classList.remove('over'));
+        });
+        list.append(card);
+      });
+
+      if (!items.length) {
+        list.append(el('p', 'empty', c === 2 ? 'Nothing finished yet.' : 'All clear.'));
+      }
+
+      col.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; col.classList.add('over'); });
+      col.addEventListener('dragleave', e => { if (!col.contains(e.relatedTarget)) col.classList.remove('over'); });
+      col.addEventListener('drop', e => {
+        e.preventDefault();
+        col.classList.remove('over');
+        move(Number(e.dataTransfer.getData('text/plain')), c, false);
+      });
+
+      col.append(head, list);
+      board.append(col);
+    });
+  }
+
+  function renderTimeline() {
+    const tl = $('timeline');
+    tl.replaceChildren();
+    const head = el('div', 'tl-row head');
+    const days = el('div', 'tl-track');
+    ['M', 'T', 'W', 'T', 'F', 'M', 'T', 'W', 'T', 'F'].forEach(d => days.append(el('span', 'day', d)));
+    head.append(el('span', 'label', 'Two-week sprint'), days);
+    tl.append(head);
+
+    tasks.forEach(t => {
+      const row = el('div', 'tl-row');
+      const track = el('div', 'tl-track');
+      const bar = el('div', 'bar s' + t.col);
+      bar.style.gridColumn = (t.start + 1) + ' / span ' + t.len;
+      bar.title = t.title + ' — ' + COLS[t.col];
+      track.append(bar);
+      row.append(el('span', 'tl-name', t.title), track);
+      tl.append(row);
+    });
+    tl.append(el('div', 'today'));
+  }
+
+  function renderWorkload() {
+    const wl = $('workload');
+    wl.replaceChildren();
+    Object.keys(PEOPLE).forEach(k => {
+      const open = tasks.filter(t => t.who === k && t.col !== 2);
+      const hours = open.reduce((s, t) => s + t.h, 0);
+      const over = hours > 40;
+      const row = el('div', 'wl-row' + (over ? ' over' : ''));
+      const who = el('div', 'wl-who');
+      who.append(avatar(k), el('span', null, PEOPLE[k].name));
+      const track = el('div', 'wl-track');
+      const fill = el('div', 'wl-fill');
+      fill.style.width = Math.min(hours, 56) / 56 * 100 + '%';
+      track.append(fill);
+      const num = el('div', 'wl-num');
+      num.append(hours + 'h of 40h ');
+      if (over) num.append(el('strong', null, 'Over'));
+      else if (!hours) num.append('· free');
+      row.append(who, track, num);
+      wl.append(row);
+    });
+  }
+
+  function renderProgress() {
+    const done = tasks.filter(t => t.col === 2).length;
+    $('progress-text').textContent = done + ' of ' + tasks.length + ' done';
+    $('progress-fill').style.width = done / tasks.length * 100 + '%';
+    $('hint').textContent = done === tasks.length
+      ? 'Board cleared. That is the whole launch, shipped.'
+      : 'This is live. Drag a card, or click one to move it along, then check the other views.';
+  }
+
+  function render() {
+    renderBoard();
+    renderTimeline();
+    renderWorkload();
+    renderProgress();
+  }
+  render();
+
+  /* View tabs */
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function selectTab(tab, focus) {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      $(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    $('hint').hidden = tab.id !== 'tab-board';
+    if (focus) tab.focus();
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectTab(tab));
+    tab.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') selectTab(tabs[(i + 1) % tabs.length], true);
+      if (e.key === 'ArrowLeft') selectTab(tabs[(i - 1 + tabs.length) % tabs.length], true);
+    });
+  });
+
+  /* Billing toggle */
+  const bill = $('bill');
+  bill.addEventListener('click', () => {
+    const yearly = bill.getAttribute('aria-checked') !== 'true';
+    bill.setAttribute('aria-checked', yearly);
+    document.querySelectorAll('.amt[data-m]').forEach(a => {
+      a.textContent = yearly ? a.dataset.y : a.dataset.m;
+    });
+  });
+
+  /* Signup (demo only, nothing is sent) */
+  $('signup').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = $('email');
+    const msg = $('signup-msg');
+    if (!input.checkValidity()) {
+      msg.textContent = 'Enter a valid work email to continue.';
+      input.focus();
+      return;
+    }
+    msg.textContent = 'Thanks. This demo form is not connected, so nothing was sent.';
+    e.target.reset();
+  });
+})();
+</script>
+</body>
+</html>

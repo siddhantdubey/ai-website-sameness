@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ines Calder — Photographer</title>
+<meta name="description" content="Ines Calder is a freelance photographer working in portrait, landscape, editorial and events.">
+<style>
+  :root {
+    --bg: #f4f1ec;
+    --ink: #1b1a18;
+    --muted: #6d6860;
+    --line: #d9d3c9;
+    --accent: #b5532f;
+    --card: #ebe6de;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --max: 1240px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+  .eyebrow { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.1; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 14px; z-index: 100; }
+  .skip:focus { left: 8px; }
+
+  /* Nav */
+  header.nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .3s; }
+  header.nav.scrolled { border-bottom-color: var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { font-family: var(--serif); font-size: 1.35rem; text-decoration: none; letter-spacing: .01em; }
+  .logo span { color: var(--accent); }
+  .nav ul { display: flex; gap: 32px; list-style: none; }
+  .nav ul a { text-decoration: none; font-size: .88rem; color: var(--muted); transition: color .2s; }
+  .nav ul a:hover { color: var(--ink); }
+  .menu-btn { display: none; background: none; border: 0; font: inherit; font-size: .88rem; cursor: pointer; color: var(--ink); }
+  @media (max-width: 720px) {
+    .menu-btn { display: block; }
+    .nav ul { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 1px solid var(--line); display: none; }
+    .nav ul.open { display: flex; }
+    .nav ul a { display: block; padding: 14px clamp(20px, 4vw, 48px); font-size: 1rem; }
+  }
+
+  /* Hero */
+  .hero { padding: clamp(48px, 9vw, 110px) 0 clamp(40px, 6vw, 72px); display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 5vw, 72px); align-items: end; }
+  .hero h1 { font-size: clamp(2.8rem, 7vw, 5.6rem); letter-spacing: -.02em; margin: 18px 0 24px; }
+  .hero h1 em { color: var(--accent); }
+  .hero p.lede { font-size: 1.08rem; color: var(--muted); max-width: 44ch; }
+  .hero-actions { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border: 1px solid var(--ink); text-decoration: none; font-size: .88rem; letter-spacing: .04em; cursor: pointer; background: none; color: var(--ink); font-family: inherit; transition: background .2s, color .2s; }
+  .btn.primary, .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+  .hero-figure { position: relative; }
+  .hero-figure img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+  .hero-figure figcaption { position: absolute; left: -1px; bottom: -1px; background: var(--bg); padding: 10px 16px 0 0; font-size: .75rem; color: var(--muted); }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-figure { max-width: 520px; } }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stats div { padding: 26px 0; }
+  .stats div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+  .stats strong { display: block; font-family: var(--serif); font-size: 2rem; font-weight: 400; }
+  .stats span { font-size: .8rem; color: var(--muted); }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr 1fr; } .stats div:nth-child(3) { border-left: 0; padding-left: 0; } .stats div:nth-child(n+3) { border-top: 1px solid var(--line); } }
+
+  section { padding: clamp(64px, 10vw, 120px) 0; }
+  .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin-top: 10px; }
+
+  /* Work */
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filters button { background: none; border: 1px solid var(--line); padding: 8px 16px; border-radius: 999px; font: inherit; font-size: .82rem; cursor: pointer; color: var(--muted); transition: all .2s; }
+  .filters button:hover { color: var(--ink); border-color: var(--ink); }
+  .filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .gallery { columns: 3 300px; column-gap: 18px; }
+  .tile { break-inside: avoid; margin-bottom: 18px; position: relative; cursor: zoom-in; overflow: hidden; background: var(--card); display: block; width: 100%; border: 0; padding: 0; text-align: left; transition: opacity .35s, transform .35s; }
+  .tile img { width: 100%; height: auto; transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .4s; }
+  .tile:hover img { transform: scale(1.04); }
+  .tile .meta { position: absolute; inset: auto 0 0 0; padding: 40px 18px 16px; background: linear-gradient(transparent, rgba(15,14,12,.72)); color: #f4f1ec; display: flex; justify-content: space-between; align-items: end; opacity: 0; transform: translateY(8px); transition: all .35s; }
+  .tile:hover .meta, .tile:focus-visible .meta { opacity: 1; transform: none; }
+  .tile .meta strong { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; display: block; }
+  .tile .meta span { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
+  .tile.hidden { display: none; }
+  @media (hover: none) { .tile .meta { opacity: 1; transform: none; } }
+
+  /* About */
+  .about { background: var(--ink); color: var(--bg); }
+  .about .eyebrow { color: #a29b90; }
+  .about-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .about-grid img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+  .about h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin: 12px 0 28px; }
+  .about p { color: #c9c2b7; margin-bottom: 18px; max-width: 58ch; }
+  .clients { margin-top: 36px; padding-top: 28px; border-top: 1px solid #3a3733; }
+  .clients ul { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 14px; font-family: var(--serif); font-size: 1.15rem; color: var(--bg); }
+  @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } .about-grid img { max-width: 420px; } }
+
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .service { background: var(--bg); padding: 36px 30px; display: flex; flex-direction: column; }
+  .service .num { font-family: var(--serif); color: var(--accent); font-size: .95rem; }
+  .service h3 { font-size: 1.7rem; margin: 18px 0 12px; }
+  .service p { color: var(--muted); font-size: .94rem; }
+  .service ul { list-style: none; margin: 22px 0 28px; font-size: .9rem; }
+  .service li { padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .service li::before { content: "—  "; color: var(--accent); }
+  .service .price { margin-top: auto; font-size: .82rem; color: var(--muted); }
+  .service .price strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.6rem; color: var(--ink); }
+  @media (max-width: 900px) { .services { grid-template-columns: 1fr; } }
+
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+  blockquote { border-top: 1px solid var(--ink); padding-top: 24px; }
+  blockquote p { font-family: var(--serif); font-size: 1.3rem; line-height: 1.45; }
+  blockquote footer { margin-top: 18px; font-size: .82rem; color: var(--muted); }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 96px); }
+  .contact-grid h2 { font-size: clamp(2.2rem, 5vw, 3.8rem); margin: 12px 0 24px; }
+  .contact-info { margin-top: 36px; display: grid; gap: 18px; font-size: .95rem; }
+  .contact-info dt { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  input, select, textarea { font: inherit; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 10px 0; border-radius: 0; transition: border-color .2s; }
+  input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--ink); }
+  textarea { resize: vertical; min-height: 120px; }
+  .field .err { font-size: .78rem; color: var(--accent); min-height: 1em; }
+  .field.invalid input, .field.invalid textarea, .field.invalid select { border-bottom-color: var(--accent); }
+  .form-status { grid-column: 1 / -1; font-size: .92rem; color: var(--muted); }
+  .form-status.ok { color: #3f6b45; }
+  @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { form { grid-template-columns: 1fr; } }
+
+  footer.site { border-top: 1px solid var(--line); padding: 32px 0; font-size: .82rem; color: var(--muted); }
+  footer.site .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer.site nav { display: flex; gap: 22px; }
+  footer.site a { text-decoration: none; }
+  footer.site a:hover { color: var(--ink); }
+
+  /* Lightbox */
+  dialog.lightbox { border: 0; padding: 0; max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh; background: rgba(14,13,12,.96); color: #f4f1ec; }
+  dialog.lightbox::backdrop { background: transparent; }
+  .lb-inner { height: 100%; display: grid; grid-template-rows: auto 1fr auto; }
+  .lb-top, .lb-bottom { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; font-size: .82rem; }
+  .lb-stage { position: relative; display: flex; align-items: center; justify-content: center; padding: 0 72px; min-height: 0; }
+  .lb-stage img { max-height: 100%; max-width: 100%; object-fit: contain; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .lb-btn { background: none; border: 1px solid rgba(244,241,236,.25); color: inherit; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; transition: background .2s; }
+  .lb-btn:hover { background: rgba(244,241,236,.12); }
+  .lb-prev, .lb-next { position: absolute; top: 50%; transform: translateY(-50%); }
+  .lb-prev { left: 16px; } .lb-next { right: 16px; }
+  .lb-bottom strong { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; }
+  .lb-bottom span { color: #a29b90; }
+  @media (max-width: 600px) { .lb-stage { padding: 0 12px; } .lb-prev, .lb-next { top: auto; bottom: -58px; transform: none; } .lb-prev { left: auto; right: 76px; } }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .tile img, .tile .meta { transition: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="nav" id="top">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo">Ines Calder<span>.</span></a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <nav aria-label="Primary">
+      <ul id="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="hero">
+      <div class="reveal">
+        <p class="eyebrow">Freelance photographer · Lisbon &amp; worldwide</p>
+        <h1>Quiet light,<br><em>honest</em> frames.</h1>
+        <p class="lede">I make photographs of people, places and the moments in between — for magazines, brands, and anyone who wants to remember things as they actually felt.</p>
+        <div class="hero-actions">
+          <a href="#work" class="btn primary">View portfolio →</a>
+          <a href="#contact" class="btn">Book a session</a>
+        </div>
+      </div>
+      <figure class="hero-figure reveal">
+        <img id="hero-img" alt="Mountain ridges at dusk under a low amber sun">
+        <figcaption>Serra da Estrela, 2025</figcaption>
+      </figure>
+    </div>
+
+    <div class="stats reveal" aria-label="At a glance">
+      <div><strong>11</strong><span>Years behind the lens</span></div>
+      <div><strong>240+</strong><span>Commissions delivered</span></div>
+      <div><strong>19</strong><span>Countries shot in</span></div>
+      <div><strong>48h</strong><span>Preview turnaround</span></div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2>Portfolio</h2>
+        </div>
+        <div class="filters" role="group" aria-label="Filter by category">
+          <button aria-pressed="true" data-filter="all">All</button>
+          <button aria-pressed="false" data-filter="portrait">Portrait</button>
+          <button aria-pressed="false" data-filter="landscape">Landscape</button>
+          <button aria-pressed="false" data-filter="editorial">Editorial</button>
+          <button aria-pressed="false" data-filter="events">Events</button>
+        </div>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <img id="about-img" class="reveal" alt="Portrait of Ines Calder in soft window light">
+      <div class="reveal">
+        <p class="eyebrow">About</p>
+        <h2>I'm Ines — I chase the light most people walk past.</h2>
+        <p>I started out assisting documentary photographers in Porto, carrying bags and learning to wait. That patience is still the core of how I work: unhurried, observant, and more interested in what's real than what's posed.</p>
+        <p>Today I split my time between editorial assignments, brand campaigns and private commissions. I shoot both digital and medium-format film, and every image is edited by hand — no presets, no shortcuts.</p>
+        <div class="clients">
+          <p class="eyebrow">Selected clients</p>
+          <ul>
+            <li>Kinfolk</li><li>Monocle</li><li>Aesop</li><li>Condé Nast Traveller</li><li>Le Labo</li><li>The Guardian</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Services</p>
+          <h2>Ways to work together</h2>
+        </div>
+        <p style="max-width:38ch;color:var(--muted);font-size:.94rem">Every project is quoted individually. These starting points cover most enquiries — get in touch for anything else.</p>
+      </div>
+      <div class="services">
+        <article class="service reveal">
+          <span class="num">01</span>
+          <h3>Portraits</h3>
+          <p>Personal, family and professional portraits made in natural light, on location or in studio.</p>
+          <ul><li>90-minute session</li><li>25 hand-edited images</li><li>Private online gallery</li></ul>
+          <p class="price">From <strong>€450</strong></p>
+        </article>
+        <article class="service reveal">
+          <span class="num">02</span>
+          <h3>Editorial &amp; Brand</h3>
+          <p>Campaigns, lookbooks and magazine features with full creative direction or to your brief.</p>
+          <ul><li>Half or full day rates</li><li>Pre-production &amp; moodboards</li><li>Commercial usage licence</li></ul>
+          <p class="price">From <strong>€1,200 / day</strong></p>
+        </article>
+        <article class="service reveal">
+          <span class="num">03</span>
+          <h3>Events</h3>
+          <p>Weddings, launches and gatherings documented candidly, so you can be present for them.</p>
+          <ul><li>Up to 10 hours coverage</li><li>Second shooter available</li><li>Preview set in 48 hours</li></ul>
+          <p class="price">From <strong>€1,800</strong></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="kind-words" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">Kind words</p><h2>From clients</h2></div></div>
+      <div class="quotes">
+        <blockquote class="reveal"><p>“Ines has a rare way of disappearing into a room. The photographs feel like memories rather than pictures.”</p><footer>— Clara M., wedding, Sintra</footer></blockquote>
+        <blockquote class="reveal"><p>“Calm, prepared and endlessly inventive on set. Our campaign imagery has never looked this considered.”</p><footer>— Creative Director, skincare brand</footer></blockquote>
+        <blockquote class="reveal"><p>“We commissioned a two-week assignment across the Azores. Every single frame was usable.”</p><footer>— Photo Editor, travel magazine</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" style="border-top:1px solid var(--line)">
+    <div class="wrap contact-grid">
+      <div class="reveal">
+        <p class="eyebrow">Contact</p>
+        <h2>Let's make something worth keeping.</h2>
+        <p style="color:var(--muted);max-width:40ch">Tell me a little about your project and I'll reply within two working days with availability and a tailored quote.</p>
+        <dl class="contact-info">
+          <div><dt>Email</dt><dd><a href="mailto:hello@inescalder.example">hello@inescalder.example</a></dd></div>
+          <div><dt>Studio</dt><dd>Rua das Flores 42, Lisbon</dd></div>
+          <div><dt>Elsewhere</dt><dd><a href="#">Instagram</a> · <a href="#">Behance</a></dd></div>
+        </dl>
+      </div>
+      <form id="contact-form" class="reveal" novalidate>
+        <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required><span class="err" aria-live="polite"></span></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" aria-live="polite"></span></div>
+        <div class="field"><label for="type">Project type</label>
+          <select id="type" name="type" required>
+            <option value="">Choose one…</option><option>Portrait</option><option>Editorial / Brand</option><option>Event / Wedding</option><option>Something else</option>
+          </select><span class="err" aria-live="polite"></span></div>
+        <div class="field"><label for="date">Preferred date</label><input id="date" name="date" type="date"><span class="err"></span></div>
+        <div class="field full"><label for="msg">Tell me about it</label><textarea id="msg" name="msg" required></textarea><span class="err" aria-live="polite"></span></div>
+        <div class="field full" style="flex-direction:row;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <button type="submit" class="btn primary">Send enquiry →</button>
+        </div>
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© <span id="year"></span> Ines Calder Photography</span>
+    <nav aria-label="Footer"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a><a href="#top">Back to top ↑</a></nav>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <div class="lb-inner">
+    <div class="lb-top"><span id="lb-count"></span><button class="lb-btn" id="lb-close" aria-label="Close">✕</button></div>
+    <div class="lb-stage">
+      <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous image">←</button>
+      <img id="lb-img" alt="">
+      <button class="lb-btn lb-next" id="lb-next" aria-label="Next image">→</button>
+    </div>
+    <div class="lb-bottom"><div><strong id="lb-title"></strong><br><span id="lb-sub"></span></div></div>
+  </div>
+</dialog>
+
+<script>
+/* ------------------------------------------------------------------
+   Placeholder imagery
+   Every "photo" is a procedurally generated SVG so this file has zero
+   external dependencies. To use real photos, give each PHOTOS entry a
+   `src` (URL or path) and it will be used instead of the generated art.
+------------------------------------------------------------------- */
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+const PALETTES = {
+  dusk:   ["#2b2d42", "#e8a87c", "#f6d6a8", "#8d5b4c", "#5a3d3a", "#2e2220"],
+  dawn:   ["#a7c4d9", "#f3d9c8", "#fff4e0", "#7e8fa3", "#556273", "#2f3742"],
+  moss:   ["#c9d4c5", "#eae4d3", "#fbf6ea", "#7d8b6a", "#4f5c45", "#2b3326"],
+  ember:  ["#3a1f2b", "#c4533a", "#ffc58a", "#7a2f2a", "#4a1d1f", "#1e0d10"],
+  fog:    ["#d8d6d1", "#ece9e3", "#ffffff", "#a9a6a0", "#7f7c76", "#55524d"],
+  night:  ["#0d1321", "#1d2d44", "#f0ebd8", "#3e5c76", "#2a3d52", "#141e2b"],
+  studio: ["#2a2622", "#4a4139", "#e9b98f", "#1a1715", "#c88e66", "#0f0d0c"],
+  sage:   ["#3d4a3f", "#8b9a83", "#f1e3cf", "#20271f", "#d4a483", "#111410"],
+};
+
+const grain = `<filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0"/></filter>`;
+
+function ridge(r, w, h, base, amp, rough) {
+  let y = base, d = `M0 ${h} L0 ${y.toFixed(1)}`;
+  const steps = 40;
+  for (let i = 1; i <= steps; i++) {
+    y += (r() - .5) * amp * rough;
+    y = Math.max(base - amp, Math.min(base + amp * .5, y));
+    d += ` L${(w * i / steps).toFixed(1)} ${y.toFixed(1)}`;
+  }
+  return d + ` L${w} ${h} Z`;
+}
+
+function makeScene(type, palette, seed, w, h) {
+  const r = rng(seed), p = PALETTES[palette];
+  let body = "";
+  const defs = `<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="${p[2]}" stop-opacity=".9"/><stop offset="1" stop-color="${p[2]}" stop-opacity="0"/></radialGradient>`;
+
+  if (type === "mountains") {
+    const sx = w * (.25 + r() * .5), sy = h * (.35 + r() * .2), sr = w * (.05 + r() * .04);
+    body += `<rect width="${w}" height="${h}" fill="url(#sky)"/>`;
+    body += `<circle cx="${sx}" cy="${sy}" r="${sr * 5}" fill="url(#glow)"/><circle cx="${sx}" cy="${sy}" r="${sr}" fill="${p[2]}"/>`;
+    [[.5, .14, 1.4, 3, .55], [.62, .12, 1.2, 4, .8], [.75, .1, 1, 5, 1]].forEach(([b, a, ro, ci, op]) => {
+      body += `<path d="${ridge(r, w, h, h * b, h * a, ro)}" fill="${p[ci]}" opacity="${op}"/>`;
+    });
+  } else if (type === "sea") {
+    const hz = h * (.5 + r() * .12), sx = w * (.3 + r() * .4);
+    body += `<rect width="${w}" height="${hz}" fill="url(#sky)"/>`;
+    body += `<circle cx="${sx}" cy="${hz}" r="${w * .45}" fill="url(#glow)"/><circle cx="${sx}" cy="${hz - w * .03}" r="${w * .06}" fill="${p[2]}"/>`;
+    body += `<linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[3]}"/><stop offset="1" stop-color="${p[5]}"/></linearGradient>`;
+    body += `<rect y="${hz}" width="${w}" height="${h - hz}" fill="url(#sea)"/>`;
+    for (let i = 0; i < 26; i++) {
+      const y = hz + Math.pow(r(), 1.6) * (h - hz), len = w * (.05 + r() * .2) * (1 + (y - hz) / h);
+      body += `<rect x="${sx - len / 2 + (r() - .5) * w * .15}" y="${y}" width="${len}" height="${1 + (y - hz) / 90}" fill="${p[2]}" opacity="${.15 + r() * .45}"/>`;
+    }
+  } else if (type === "city") {
+    body += `<rect width="${w}" height="${h}" fill="url(#sky)"/>`;
+    body += `<circle cx="${w * (.2 + r() * .6)}" cy="${h * .28}" r="${w * .04}" fill="${p[2]}" opacity=".9"/>`;
+    [[.45, p[4], .7], [.6, p[5], 1]].forEach(([top, col, op]) => {
+      let x = -10;
+      while (x < w) {
+        const bw = w * (.06 + r() * .1), bh = h * (1 - top) * (.5 + r() * .8);
+        body += `<rect x="${x}" y="${h - bh}" width="${bw}" height="${bh}" fill="${col}" opacity="${op}"/>`;
+        if (op === 1) for (let wy = h - bh + 12; wy < h - 10; wy += 16) for (let wx = x + 6; wx < x + bw - 8; wx += 12)
+          if (r() > .72) body += `<rect x="${wx}" y="${wy}" width="5" height="7" fill="${p[2]}" opacity="${.5 + r() * .5}"/>`;
+        x += bw + 2;
+      }
+    });
+  } else if (type === "portrait" || type === "crowd") {
+    body += `<radialGradient id="bg" cx="${.35 + r() * .3}" cy=".35" r=".85"><stop offset="0" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[0]}"/></radialGradient>`;
+    body += `<rect width="${w}" height="${h}" fill="url(#bg)"/>`;
+    const figures = type === "crowd" ? 6 + Math.floor(r() * 4) : 1;
+    for (let i = 0; i < figures; i++) {
+      const s = type === "crowd" ? .35 + r() * .35 : 1;
+      const cx = type === "crowd" ? w * (i + .5) / figures + (r() - .5) * 30 : w * (.42 + r() * .16);
+      const hr = w * .13 * s, cy = h - (type === "crowd" ? h * .28 * s + r() * 20 : h * .5);
+      const side = r() > .5 ? 1 : -1;
+      body += `<path d="M${cx - hr * 2.6} ${h} C${cx - hr * 2.4} ${cy + hr * 2.2} ${cx - hr * 1.2} ${cy + hr * 1.6} ${cx} ${cy + hr * 1.6} C${cx + hr * 1.2} ${cy + hr * 1.6} ${cx + hr * 2.4} ${cy + hr * 2.2} ${cx + hr * 2.6} ${h} Z" fill="${p[3]}"/>`;
+      body += `<rect x="${cx - hr * .38}" y="${cy + hr * .6}" width="${hr * .76}" height="${hr * 1.2}" fill="${p[3]}"/>`;
+      body += `<ellipse cx="${cx}" cy="${cy}" rx="${hr * .82}" ry="${hr}" fill="${p[3]}"/>`;
+      body += `<ellipse cx="${cx}" cy="${cy}" rx="${hr * .82}" ry="${hr}" fill="none" stroke="${p[4]}" stroke-width="${hr * .09}" stroke-dasharray="${hr * 2.2} ${hr * 4}" stroke-dashoffset="${side > 0 ? hr * .4 : hr * 3.2}" opacity=".85"/>`;
+      if (type === "crowd" && r() > .6) body += `<circle cx="${cx + side * hr * 1.4}" cy="${cy - hr * 1.6}" r="${hr * .25}" fill="${p[2]}" opacity=".7"/>`;
+    }
+    body += `<rect width="${w}" height="${h}" fill="${p[5]}" opacity=".18"/>`;
+  } else if (type === "still") {
+    body += `<rect width="${w}" height="${h}" fill="${p[1]}"/>`;
+    body += `<rect y="${h * .62}" width="${w}" height="${h * .38}" fill="${p[0]}" opacity=".55"/>`;
+    const n = 2 + Math.floor(r() * 3);
+    for (let i = 0; i < n; i++) {
+      const x = w * (.18 + i * (.64 / n)) + r() * 30, bw = w * (.1 + r() * .1), bh = h * (.15 + r() * .3);
+      const col = p[3 + Math.floor(r() * 3)];
+      if (r() > .5) body += `<rect x="${x}" y="${h * .66 - bh}" width="${bw}" height="${bh}" rx="${bw * .15}" fill="${col}"/><ellipse cx="${x + bw / 2}" cy="${h * .66 - bh}" rx="${bw / 2}" ry="${bw * .12}" fill="${p[2]}" opacity=".5"/>`;
+      else body += `<circle cx="${x + bw / 2}" cy="${h * .66 - bw / 2}" r="${bw / 2}" fill="${col}"/>`;
+      body += `<ellipse cx="${x + bw * .7}" cy="${h * .665}" rx="${bw * .8}" ry="${bw * .08}" fill="#000" opacity=".18"/>`;
+    }
+    body += `<rect width="${w}" height="${h}" fill="url(#glow)" opacity=".25"/>`;
+  }
+
+  body += `<rect width="${w}" height="${h}" filter="url(#g)" opacity=".35"/>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"><defs>${defs}${grain}</defs>${body}</svg>`);
+}
+
+/* ------------------------------ Portfolio data ------------------------------ */
+const PHOTOS = [
+  { title: "Before the Thaw",    cat: "landscape", place: "Serra da Estrela", year: 2025, scene: "mountains", pal: "dawn",   ratio: 1.25 },
+  { title: "Marta, Unposed",     cat: "portrait",  place: "Lisbon studio",    year: 2025, scene: "portrait",  pal: "studio", ratio: 1.33 },
+  { title: "Low Tide, Ericeira", cat: "landscape", place: "Ericeira",         year: 2024, scene: "sea",       pal: "dusk",   ratio: .75 },
+  { title: "Ceramics for Aesop", cat: "editorial", place: "Commission",       year: 2025, scene: "still",     pal: "moss",   ratio: 1.2 },
+  { title: "The Long Table",     cat: "events",    place: "Comporta",         year: 2024, scene: "crowd",     pal: "ember",  ratio: .8 },
+  { title: "Alfama After Dark",  cat: "editorial", place: "Monocle",          year: 2024, scene: "city",      pal: "night",  ratio: 1.4 },
+  { title: "João in Green",      cat: "portrait",  place: "Porto",            year: 2023, scene: "portrait",  pal: "sage",   ratio: 1.25 },
+  { title: "Fog Line",           cat: "landscape", place: "Azores",           year: 2024, scene: "mountains", pal: "fog",    ratio: .66 },
+  { title: "Opening Night",      cat: "events",    place: "Gallery launch",   year: 2025, scene: "crowd",     pal: "studio", ratio: 1.25 },
+  { title: "Vessel Study",       cat: "editorial", place: "Kinfolk",          year: 2023, scene: "still",     pal: "fog",    ratio: 1 },
+  { title: "Ember Hour",         cat: "landscape", place: "Alentejo",         year: 2025, scene: "mountains", pal: "ember",  ratio: .75 },
+  { title: "First Dance",        cat: "events",    place: "Sintra",           year: 2024, scene: "portrait",  pal: "ember",  ratio: 1.3 },
+  { title: "Harbour, 6 a.m.",    cat: "landscape", place: "Nazaré",           year: 2023, scene: "sea",       pal: "dawn",   ratio: 1.2 },
+  { title: "Rooftops",           cat: "editorial", place: "Condé Nast Traveller", year: 2025, scene: "city", pal: "dusk",   ratio: .8 },
+];
+
+PHOTOS.forEach((p, i) => {
+  p.src = p.src || makeScene(p.scene, p.pal, 1000 + i * 97, 800, Math.round(800 * p.ratio));
+});
+
+document.getElementById("hero-img").src = makeScene("mountains", "dusk", 42, 800, 1000);
+document.getElementById("about-img").src = makeScene("portrait", "sage", 7, 600, 800);
+
+/* ------------------------------ Gallery ------------------------------ */
+const gallery = document.getElementById("gallery");
+PHOTOS.forEach((p, i) => {
+  const b = document.createElement("button");
+  b.className = "tile reveal";
+  b.dataset.cat = p.cat;
+  b.dataset.index = i;
+  b.setAttribute("aria-label", `Open “${p.title}” — ${p.cat}, ${p.place} ${p.year}`);
+  b.innerHTML = `<img src="${p.src}" alt="${p.title}" width="800" height="${Math.round(800 * p.ratio)}" loading="lazy">
+    <div class="meta"><div><strong>${p.title}</strong><span>${p.cat}</span></div><span>${p.year}</span></div>`;
+  b.addEventListener("click", () => openLightbox(i));
+  gallery.appendChild(b);
+});
+
+document.querySelectorAll(".filters button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+    const f = btn.dataset.filter;
+    gallery.querySelectorAll(".tile").forEach(t => t.classList.toggle("hidden", f !== "all" && t.dataset.cat !== f));
+  });
+});
+
+/* ------------------------------ Lightbox ------------------------------ */
+const lb = document.getElementById("lightbox");
+let current = 0;
+const visible = () => [...gallery.querySelectorAll(".tile:not(.hidden)")].map(t => +t.dataset.index);
+
+function render() {
+  const p = PHOTOS[current], list = visible();
+  const img = document.getElementById("lb-img");
+  img.src = p.src; img.alt = p.title;
+  document.getElementById("lb-title").textContent = p.title;
+  document.getElementById("lb-sub").textContent = `${p.place} · ${p.year}`;
+  document.getElementById("lb-count").textContent = `${list.indexOf(current) + 1} / ${list.length}`;
+}
+function openLightbox(i) { current = i; render(); lb.showModal(); document.body.style.overflow = "hidden"; }
+function step(d) { const l = visible(); current = l[(l.indexOf(current) + d + l.length) % l.length]; render(); }
+
+document.getElementById("lb-prev").onclick = () => step(-1);
+document.getElementById("lb-next").onclick = () => step(1);
+document.getElementById("lb-close").onclick = () => lb.close();
+lb.addEventListener("close", () => {
+  document.body.style.overflow = "";
+  gallery.querySelector(`[data-index="${current}"]`)?.focus();
+});
+lb.addEventListener("click", e => { if (e.target.classList.contains("lb-stage")) lb.close(); });
+document.addEventListener("keydown", e => {
+  if (!lb.open) return;
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+let touchX = null;
+lb.addEventListener("touchstart", e => touchX = e.touches[0].clientX, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  touchX = null;
+});
+
+/* ------------------------------ Nav ------------------------------ */
+const nav = document.querySelector("header.nav"), menuBtn = document.querySelector(".menu-btn"), links = document.getElementById("nav-links");
+addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 10), { passive: true });
+menuBtn.addEventListener("click", () => {
+  const open = links.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", open);
+  menuBtn.textContent = open ? "Close" : "Menu";
+});
+links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+  links.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false); menuBtn.textContent = "Menu";
+}));
+
+/* ------------------------------ Reveal on scroll ------------------------------ */
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+}), { threshold: .12 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* ------------------------------ Contact form ------------------------------ */
+const form = document.getElementById("contact-form"), status = document.getElementById("form-status");
+function check(el) {
+  const field = el.closest(".field"), err = field.querySelector(".err");
+  let msg = "";
+  if (el.required && !el.value.trim()) msg = "This field is required.";
+  else if (el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)) msg = "Please enter a valid email.";
+  else if (el.type === "date" && el.value && new Date(el.value) < new Date(new Date().toDateString())) msg = "Please choose a future date.";
+  field.classList.toggle("invalid", !!msg);
+  err.textContent = msg;
+  return !msg;
+}
+form.querySelectorAll("input, select, textarea").forEach(el => el.addEventListener("blur", () => check(el)));
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const fields = [...form.querySelectorAll("input, select, textarea")];
+  const ok = fields.map(check).every(Boolean);
+  if (!ok) { status.className = "form-status"; status.textContent = "Please fix the highlighted fields."; fields.find(f => f.closest(".invalid"))?.focus(); return; }
+  // No backend in a single-file site — wire this up to Formspree, Netlify Forms, or your own endpoint.
+  const name = form.name.value.trim().split(" ")[0];
+  status.className = "form-status ok";
+  status.textContent = `Thank you, ${name} — your enquiry is on its way. I'll be in touch within two working days.`;
+  form.reset();
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

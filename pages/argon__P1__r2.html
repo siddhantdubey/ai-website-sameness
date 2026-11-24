@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetix — High-Velocity Project Operations for Product Teams</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              950: '#07090E',
+              900: '#0B0E17',
+              800: '#121726',
+              700: '#1A2136',
+              600: '#27314F'
+            },
+            accent: {
+              indigo: '#6366F1',
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#F43F5E'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #07090E;
+      color: #F3F4F6;
+      overflow-x: hidden;
+    }
+
+    /* Subtle technical grid background */
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Glassmorphic surfaces */
+    .glass-panel {
+      background: rgba(18, 23, 38, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: linear-gradient(180deg, rgba(26, 33, 54, 0.55) 0%, rgba(15, 19, 32, 0.75) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Ambient glow spots */
+    .hero-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.22) 0%, rgba(6, 182, 212, 0.08) 38%, transparent 70%);
+    }
+
+    /* Custom Scrollbars for Workspace Preview */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27314F;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4F46E5;
+    }
+
+    .kbd-badge {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Announcement Banner -->
+  <div class="border-b border-white/10 bg-obsidian-900/90 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <span class="px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 rounded border border-indigo-500/30">Release 4.2</span>
+        <span class="text-gray-300">Introducing <strong class="text-white font-medium">Autonomous Sprint Triaging</strong> &amp; bi-directional GitHub PR sync.</span>
+      </div>
+      <a href="#interactive-demo" class="hidden sm:inline-flex items-center text-indigo-400 hover:text-indigo-300 font-medium transition">
+        Explore live workspace
+        <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Sticky Navigation -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex items-baseline space-x-1.5">
+          <span class="font-display font-bold text-xl tracking-tight text-white">KINETIX</span>
+          <span class="font-mono text-[10px] text-cyan-400 border border-cyan-500/30 bg-cyan-500/10 px-1.5 py-0.2 rounded">OS</span>
+        </div>
+      </a>
+
+      <!-- Nav Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+        <a href="#interactive-demo" class="hover:text-white transition">Workspace</a>
+        <a href="#architecture" class="hover:text-white transition">Architecture</a>
+        <a href="#velocity" class="hover:text-white transition">Telemetry</a>
+        <a href="#pricing" class="hover:text-white transition">Pricing</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleCommandModal()" class="hidden sm:flex items-center space-x-2 text-xs text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 transition" title="Open Command Palette">
+          <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Quick Action</span>
+          <kbd class="kbd-badge font-mono text-[10px] px-1.5 py-0.5 rounded text-gray-300">⌘K</kbd>
+        </button>
+        <a href="#pricing" class="text-sm font-medium text-gray-300 hover:text-white px-3 py-1.5 hidden sm:inline-block transition">Sign In</a>
+        <button onclick="openTaskModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg shadow-indigo-600/30 border border-indigo-400/30 transition flex items-center space-x-1.5">
+          <span>Deploy Workspace</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative bg-grid-pattern hero-glow pt-16 pb-24 md:pt-24 md:pb-32 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Top Hero Copy -->
+      <div class="text-center max-w-4xl mx-auto">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300 mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-mono">LATENCY &lt; 14MS</span>
+          <span class="text-gray-600">|</span>
+          <span>Local-first sync engine built for high-velocity teams</span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08]">
+          Ship complex roadmaps at <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-300 to-emerald-300">sub-millisecond</span> speed.
+        </h1>
+
+        <p class="mt-6 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-normal leading-relaxed">
+          Kinetix replaces bloated issue trackers with a keyboard-first command center. Real-time cycle telemetry, automated dependency resolution, and instant Git synchronization.
+        </p>
+
+        <!-- Hero CTA Group -->
+        <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="#interactive-demo" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white text-obsidian-950 font-semibold text-sm hover:bg-gray-100 transition shadow-xl shadow-white/10 flex items-center justify-center space-x-2">
+            <span>Try Interactive Sandbox</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <button onclick="toggleCommandModal()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl glass-panel hover:bg-white/10 text-white font-medium text-sm border border-white/15 transition flex items-center justify-center space-x-2.5">
+            <span class="text-gray-300">Press</span>
+            <kbd class="kbd-badge font-mono text-xs px-2 py-0.5 rounded text-indigo-300">⌘K</kbd>
+            <span class="text-gray-300">to test command bar</span>
+          </button>
+        </div>
+
+        <!-- Technical guarantees -->
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs font-mono text-gray-400">
+          <div class="flex items-center space-x-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>SOC2 Type II Certified</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>99.99% Uptime SLA</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>1-Click Linear &amp; Jira Migration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE LIVE WORKSPACE SANDBOX -->
+      <div id="interactive-demo" class="mt-14 scroll-mt-24">
+        <div class="rounded-2xl glass-panel border border-white/15 shadow-2xl shadow-black/80 overflow-hidden">
+          
+          <!-- App Window Titlebar -->
+          <div class="bg-obsidian-900/95 border-b border-white/10 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Left Window Controls & Breadcrumb -->
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center space-x-1.5">
+                <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+              </div>
+              <div class="hidden sm:flex items-center space-x-2 text-xs font-mono text-gray-400">
+                <span class="text-indigo-400 font-semibold">CORE-ENG</span>
+                <span>/</span>
+                <span class="text-white">Cycle 24 · Q4 Architecture</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px]">ACTIVE · 4 DAYS LEFT</span>
+              </div>
+            </div>
+
+            <!-- Interactive View Switcher Tabs -->
+            <div class="flex items-center bg-obsidian-950 p-1 rounded-lg border border-white/10 text-xs font-medium">
+              <button onclick="switchWorkspaceView('board')" id="tab-board" class="px-3 py-1.5 rounded-md bg-indigo-600 text-white shadow transition flex items-center space-x-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+                <span>Kanban Board</span>
+              </button>
+              <button onclick="switchWorkspaceView('timeline')" id="tab-timeline" class="px-3 py-1.5 rounded-md text-gray-400 hover:text-white transition flex items-center space-x-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span>Roadmap Gantt</span>
+              </button>
+              <button onclick="switchWorkspaceView('analytics')" id="tab-analytics" class="px-3 py-1.5 rounded-md text-gray-400 hover:text-white transition flex items-center space-x-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <span>Burnup Telemetry</span>
+              </button>
+            </div>
+
+            <!-- Right Controls: Filter & New Issue -->
+            <div class="flex items-center space-x-2">
+              <select id="priority-filter" onchange="renderWorkspace()" class="bg-obsidian-950 text-xs text-gray-300 border border-white/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-indigo-500">
+                <option value="ALL">All Priorities</option>
+                <option value="URGENT">Urgent Only</option>
+                <option value="HIGH">High Priority</option>
+              </select>
+              <button onclick="openTaskModal()" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 text-xs font-medium px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span>New Issue</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sub-toolbar: Live Telemetry Metrics Bar -->
+          <div class="bg-obsidian-950/70 border-b border-white/10 px-6 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs">
+            <div class="flex items-center space-x-6">
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400">Cycle Velocity:</span>
+                <span id="metric-velocity" class="font-mono font-semibold text-white">48 / 62 pts</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-400">Completion:</span>
+                <div class="w-28 h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div id="metric-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-300" style="width: 77%"></div>
+                </div>
+                <span id="metric-percent" class="font-mono text-emerald-400">77%</span>
+              </div>
+            </div>
+            <div class="text-gray-400 font-mono text-[11px]">
+              💡 <span class="text-gray-300">Interactive Tip:</span> Click any task's status pill to advance its stage in real time.
+            </div>
+          </div>
+
+          <!-- WORKSPACE MAIN BODY -->
+          <div class="p-6 bg-obsidian-950/40 min-h-[460px]">
+            
+            <!-- VIEW 1: KANBAN BOARD -->
+            <div id="view-board" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <!-- Column: Todo / Backlog -->
+              <div class="bg-obsidian-900/70 border border-white/10 rounded-xl p-4 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full border-2 border-gray-400"></span>
+                    <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-gray-300">Queued</h3>
+                    <span id="count-todo" class="text-xs font-mono px-2 py-0.5 rounded bg-white/5 text-gray-400">0</span>
+                  </div>
+                  <button onclick="openTaskModal('todo')" class="text-gray-500 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  </button>
+                </div>
+                <div id="col-todo" class="space-y-3 flex-1"></div>
+              </div>
+
+              <!-- Column: In Progress -->
+              <div class="bg-obsidian-900/70 border border-indigo-500/20 rounded-xl p-4 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                    <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-indigo-300">In Flight</h3>
+                    <span id="count-progress" class="text-xs font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300">0</span>
+                  </div>
+                  <button onclick="openTaskModal('progress')" class="text-gray-500 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  </button>
+                </div>
+                <div id="col-progress" class="space-y-3 flex-1"></div>
+              </div>
+
+              <!-- Column: Shipped -->
+              <div class="bg-obsidian-900/70 border border-emerald-500/20 rounded-xl p-4 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-emerald-300">Merged &amp; Deployed</h3>
+                    <span id="count-done" class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">0</span>
+                  </div>
+                  <button onclick="openTaskModal('done')" class="text-gray-500 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  </button>
+                </div>
+                <div id="col-done" class="space-y-3 flex-1"></div>
+              </div>
+            </div>
+
+            <!-- VIEW 2: ROADMAP GANTT TIMELINE -->
+            <div id="view-timeline" class="hidden space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3 text-xs font-mono text-gray-400">
+                <span>INITIATIVE &amp; OWNER</span>
+                <div class="hidden sm:grid grid-cols-4 gap-12 pr-8">
+                  <span>WEEK 1</span>
+                  <span>WEEK 2</span>
+                  <span>WEEK 3 (NOW)</span>
+                  <span>WEEK 4</span>
+                </div>
+              </div>
+
+              <!-- Timeline Bars -->
+              <div class="space-y-3">
+                <div class="bg-obsidian-900/80 border border-white/10 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div class="sm:w-1/3">
+                    <div class="flex items-center space-x-2">
+                      <span class="font-mono text-xs text-indigo-400">KNX-101</span>
+                      <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-mono">ON TRACK</span>
+                    </div>
+                    <p class="text-sm font-medium text-white mt-1">Zero-Downtime Rust WebSocket Mesh</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Lead: Elena Vance · 18 Issues Linked</p>
+                  </div>
+                  <div class="sm:w-2/3 bg-obsidian-950 rounded-lg p-3 border border-white/5 relative h-12 flex items-center">
+                    <div class="w-[75%] bg-gradient-to-r from-indigo-600 to-cyan-500 h-6 rounded-md flex items-center justify-between px-3 text-[11px] font-mono text-white shadow-lg">
+                      <span>Oct 04 → Oct 24</span>
+                      <span>85%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-obsidian-900/80 border border-white/10 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div class="sm:w-1/3">
+                    <div class="flex items-center space-x-2">
+                      <span class="font-mono text-xs text-cyan-400">KNX-108</span>
+                      <span class="text-xs px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 font-mono">DEPENDENCY CHECK</span>
+                    </div>
+                    <p class="text-sm font-medium text-white mt-1">CRDT Offline State Synchronization</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Lead: Marcus Chen · 12 Issues Linked</p>
+                  </div>
+                  <div class="sm:w-2/3 bg-obsidian-950 rounded-lg p-3 border border-white/5 relative h-12 flex items-center">
+                    <div class="ml-[20%] w-[60%] bg-gradient-to-r from-amber-500/80 to-indigo-500 h-6 rounded-md flex items-center justify-between px-3 text-[11px] font-mono text-white shadow-lg">
+                      <span>Oct 12 → Nov 02</span>
+                      <span>62%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-obsidian-900/80 border border-white/10 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div class="sm:w-1/3">
+                    <div class="flex items-center space-x-2">
+                      <span class="font-mono text-xs text-emerald-400">KNX-114</span>
+                      <span class="text-xs px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 font-mono">SCHEDULED</span>
+                    </div>
+                    <p class="text-sm font-medium text-white mt-1">AI Triage Agent &amp; Auto-PR Reviewer</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Lead: Aria Patel · 9 Issues Linked</p>
+                  </div>
+                  <div class="sm:w-2/3 bg-obsidian-950 rounded-lg p-3 border border-white/5 relative h-12 flex items-center">
+                    <div class="ml-[45%] w-[50%] bg-gradient-to-r from-emerald-500 to-teal-500 h-6 rounded-md flex items-center justify-between px-3 text-[11px] font-mono text-obsidian-950 font-semibold shadow-lg">
+                      <span>Oct 20 → Nov 12</span>
+                      <span>40%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 3: BURNUP TELEMETRY -->
+            <div id="view-analytics" class="hidden">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-obsidian-900/80 border border-white/10 rounded-xl p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 class="text-sm font-semibold text-white">Cycle 24 Scope vs. Completed Story Points</h4>
+                      <p class="text-xs text-gray-400">Automated Monte Carlo forecast predicts 100% completion 1.4 days ahead of schedule</p>
+                    </div>
+                    <span class="font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded">+18% vs Cycle 23</span>
+                  </div>
+                  <!-- SVG Burnup Chart -->
+                  <div class="h-56 w-full pt-4">
+                    <svg viewBox="0 0 600 180" class="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="burnGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="#6366F1" stop-opacity="0.45"/>
+                          <stop offset="100%" stop-color="#6366F1" stop-opacity="0.0"/>
+                        </linearGradient>
+                      </defs>
+                      <!-- Grid lines -->
+                      <line x1="0" y1="20" x2="600" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                      <line x1="0" y1="70" x2="600" y2="70" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                      <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                      <line x1="0" y1="165" x2="600" y2="165" stroke="rgba(255,255,255,0.12)"/>
+                      <!-- Ideal Guideline -->
+                      <line x1="0" y1="165" x2="600" y2="25" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="6"/>
+                      <!-- Area Fill -->
+                      <path d="M0,165 L90,145 L180,122 L270,94 L360,65 L450,38 L540,22 L600,15 L600,165 Z" fill="url(#burnGrad)"/>
+                      <!-- Actual Velocity Line -->
+                      <path d="M0,165 L90,145 L180,122 L270,94 L360,65 L450,38 L540,22 L600,15" fill="none" stroke="#818CF8" stroke-width="3"/>
+                      <!-- Data Points -->
+                      <circle cx="270" cy="94" r="4" fill="#06B6D4"/>
+                      <circle cx="450" cy="38" r="4" fill="#06B6D4"/>
+                      <circle cx="600" cy="15" r="5" fill="#10B981"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Right Telemetry Cards -->
+                <div class="space-y-4">
+                  <div class="bg-obsidian-900/80 border border-white/10 rounded-xl p-4">
+                    <span class="text-xs font-mono text-gray-400 uppercase">Mean PR Cycle Time</span>
+                    <div class="mt-2 flex items-baseline justify-between">
+                      <span class="text-3xl font-display font-bold text-white">3.4 hrs</span>
+                      <span class="text-xs font-mono text-emerald-400">↓ 42% faster</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">From branch creation to production merge across 64 commits.</p>
+                  </div>
+
+                  <div class="bg-obsidian-900/80 border border-white/10 rounded-xl p-4">
+                    <span class="text-xs font-mono text-gray-400 uppercase">Scope Creep Detector</span>
+                    <div class="mt-2 flex items-baseline justify-between">
+                      <span class="text-3xl font-display font-bold text-cyan-400">2.1%</span>
+                      <span class="text-xs font-mono text-gray-300">Minimal Variance</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Only 1 unscheduled issue added after sprint lock.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTED BY LOGOS -->
+  <section class="py-12 border-b border-white/10 bg-obsidian-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-center font-mono text-xs uppercase tracking-widest text-gray-500 mb-8">
+        Powering mission-critical engineering organizations worldwide
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center justify-items-center opacity-70">
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rounded-sm bg-indigo-500 inline-block"></span><span>VERCEL_LABS</span>
+        </div>
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rounded-full bg-cyan-400 inline-block"></span><span>CHRONOSPHERE</span>
+        </div>
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rotate-45 bg-emerald-400 inline-block"></span><span>RAYCAST.IO</span>
+        </div>
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rounded-sm bg-amber-400 inline-block"></span><span>SUPABASE</span>
+        </div>
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rounded-full bg-rose-400 inline-block"></span><span>PLANETSCALE</span>
+        </div>
+        <div class="flex items-center space-x-2 font-display font-bold text-lg text-gray-300">
+          <span class="w-3 h-3 rotate-45 bg-purple-400 inline-block"></span><span>MODAL_AI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENTO ARCHITECTURE GRID -->
+  <section id="architecture" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-16">
+    <div class="max-w-3xl">
+      <span class="font-mono text-xs uppercase tracking-widest text-indigo-400">Engineered for Flow State</span>
+      <h2 class="mt-3 font-display text-3xl sm:text-5xl font-bold text-white tracking-tight">
+        Every interaction optimized to eliminate administrative drag.
+      </h2>
+      <p class="mt-4 text-gray-400 text-lg">
+        Most project trackers feel like filing tax returns. Kinetix is architected like a high-frequency trading terminal for software delivery.
+      </p>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="mt-14 grid grid-cols-1 md:grid-cols-12 gap-6">
+      
+      <!-- Card 1: 7 cols - Command Palette First -->
+      <div class="md:col-span-7 glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-md bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-mono mb-4">
+            <span>01 · KEYBOARD NAVIGATION</span>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-white">Universal <kbd class="px-2 py-0.5 text-lg font-mono bg-white/10 rounded border border-white/15">⌘K</kbd> Command Execution</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">
+            Assign engineers, reprioritize blockers, merge duplicate tickets, or trigger CI/CD deployments without lifting your hands from the home row.
+          </p>
+        </div>
+
+        <!-- Mini interactive command preview -->
+        <div class="mt-8 bg-obsidian-950/90 border border-white/10 rounded-xl p-4 font-mono text-xs">
+          <div class="flex items-center justify-between text-gray-400 pb-3 border-b border-white/10">
+            <span>&gt; Type a command or search 14,200 issues...</span>
+            <span class="text-[10px] text-indigo-400">ESC to close</span>
+          </div>
+          <div class="mt-3 space-y-2">
+            <div onclick="openTaskModal()" class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-lg bg-indigo-600/20 border border-indigo-500/40 text-white">
+              <span>+ Create High-Priority Issue in Cycle 24</span>
+              <kbd class="kbd-badge px-1.5 py-0.5 rounded text-[10px]">C</kbd>
+            </div>
+            <div onclick="switchWorkspaceView('analytics'); document.getElementById('interactive-demo').scrollIntoView();" class="cursor-pointer flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-gray-300 transition">
+              <span>↗ Jump to Cycle 24 Burnup Telemetry</span>
+              <kbd class="kbd-badge px-1.5 py-0.5 rounded text-[10px]">G V</kbd>
+            </div>
+            <div class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-400">
+              <span>⚡ Auto-assign unassigned bugs to On-Call rotation</span>
+              <kbd class="kbd-badge px-1.5 py-0.5 rounded text-[10px]">⇧ A</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: 5 cols - Bi-directional Git Sync -->
+      <div class="md:col-span-5 glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-md bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono mb-4">
+            <span>02 · GIT AUTOMATION</span>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-white">Zero-Touch PR Sync</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">
+            Push a branch with <code class="text-cyan-300 font-mono">git checkout -b feat/KNX-204</code> and Kinetix automatically moves the ticket to <em class="text-white not-italic">In Flight</em>, links preview environments, and closes on merge.
+          </p>
+        </div>
+
+        <div class="mt-8 bg-obsidian-950 border border-white/10 rounded-xl p-4 font-mono text-xs space-y-3">
+          <div class="flex items-center space-x-2 text-gray-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>github/kinetix-core #1842 merged</span>
+          </div>
+          <div class="p-2.5 rounded bg-white/5 border border-white/10 text-gray-300">
+            <span class="text-indigo-400">fix(sync):</span> resolve CRDT vector clock drift (<span class="text-cyan-400">KNX-204</span>)
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-emerald-400 pt-1">
+            <span>✓ Issue KNX-204 transitioned → Merged</span>
+            <span>12ms ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: 5 cols - AI Triage Engine -->
+      <div class="md:col-span-5 glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono mb-4">
+            <span>03 · NEURAL TRIAGE</span>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-white">Autonomous Scope Protection</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">
+            Incoming bug reports are automatically deduplicated, tagged with affected microservices, and assigned story point estimates based on historical commit complexity.
+          </p>
+        </div>
+
+        <div class="mt-8 space-y-2.5 text-xs font-mono">
+          <div class="p-3 rounded-lg bg-obsidian-950 border border-white/10 flex items-center justify-between">
+            <span class="text-gray-300">Duplicate detection confidence</span>
+            <span class="text-emerald-400 font-bold">99.4%</span>
+          </div>
+          <div class="p-3 rounded-lg bg-obsidian-950 border border-white/10 flex items-center justify-between">
+            <span class="text-gray-300">Suggested Owner: @elena-v</span>
+            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Auth-Service</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: 7 cols - Offline Local-First Engine -->
+      <div class="md:col-span-7 glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-mono mb-4">
+            <span>04 · LOCAL-FIRST ARCHITECTURE</span>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-white">IndexedDB + WebAssembly Sync Engine</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">
+            Say goodbye to loading spinners. Every workspace state lives locally in your browser's memory and syncs over delta-compressed WebSockets. Works seamlessly on 12-hour flights without Wi-Fi.
+          </p>
+        </div>
+
+        <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+          <div class="p-4 rounded-xl bg-obsidian-950 border border-white/10">
+            <div class="font-display text-2xl font-bold text-white">0 ms</div>
+            <div class="text-[11px] font-mono text-gray-400 mt-1">UI State Transition</div>
+          </div>
+          <div class="p-4 rounded-xl bg-obsidian-950 border border-white/10">
+            <div class="font-display text-2xl font-bold text-cyan-400">120 fps</div>
+            <div class="text-[11px] font-mono text-gray-400 mt-1">Virtual Board Scroll</div>
+          </div>
+          <div class="p-4 rounded-xl bg-obsidian-950 border border-white/10">
+            <div class="font-display text-2xl font-bold text-emerald-400">100k+</div>
+            <div class="text-[11px] font-mono text-gray-400 mt-1">Issues Cached Locally</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TELEMETRY & ROI CALCULATOR SECTION -->
+  <section id="velocity" class="py-24 border-y border-white/10 bg-obsidian-900/50 scroll-mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-6">
+          <span class="font-mono text-xs uppercase tracking-widest text-cyan-400">Engineering Telemetry</span>
+          <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold text-white">
+            Calculate the engineering hours reclaimed from status meetings.
+          </h2>
+          <p class="mt-4 text-gray-400 leading-relaxed">
+            Teams switching from legacy trackers report a 38% drop in context-switching overhead within their first two sprints. Adjust the slider to estimate your team's annual velocity dividend.
+          </p>
+
+          <!-- Interactive Team Size Slider -->
+          <div class="mt-8 p-6 rounded-2xl glass-panel border border-white/10">
+            <div class="flex items-center justify-between mb-3">
+              <label for="team-slider" class="text-sm font-medium text-gray-300">Active Product &amp; Engineering Headcount</label>
+              <span id="team-size-label" class="font-mono text-lg font-bold text-indigo-400">35 Engineers</span>
+            </div>
+            <input id="team-slider" type="range" min="5" max="250" value="35" oninput="updateROICalculator(this.value)" class="w-full accent-indigo-500 cursor-pointer h-2 bg-obsidian-950 rounded-lg" />
+            <div class="flex justify-between text-[11px] font-mono text-gray-500 mt-2">
+              <span>5 (Seed)</span>
+              <span>50 (Growth)</span>
+              <span>150 (Scale)</span>
+              <span>250+ (Enterprise)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Metrics -->
+        <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="glass-card rounded-2xl p-6">
+            <span class="font-mono text-xs text-gray-400 uppercase">Engineering Hours Saved / Yr</span>
+            <div id="roi-hours" class="mt-3 font-display text-4xl font-bold text-white">5,460 hrs</div>
+            <p class="mt-2 text-xs text-gray-400">Based on 3.0 hrs/week saved per developer on manual ticket hygiene and standups.</p>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6">
+            <span class="font-mono text-xs text-gray-400 uppercase">Equivalent R&amp;D Capital</span>
+            <div id="roi-dollars" class="mt-3 font-display text-4xl font-bold text-emerald-400">$464,100</div>
+            <p class="mt-2 text-xs text-gray-400">Calculated at $85/hr blended engineering cost reinvested directly into shipping product.</p>
+          </div>
+
+          <div class="sm:col-span-2 glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div class="text-sm font-semibold text-white">Ready to benchmark your real GitHub repository?</div>
+              <div class="text-xs text-gray-400 mt-0.5">Generate a historical cycle-time audit in 60 seconds with read-only OAuth.</div>
+            </div>
+            <button onclick="openTaskModal()" class="shrink-0 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+              Run Free Audit →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING SECTION -->
+  <section id="pricing" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-16">
+    <div class="text-center max-w-3xl mx-auto">
+      <span class="font-mono text-xs uppercase tracking-widest text-indigo-400">Transparent Licensing</span>
+      <h2 class="mt-3 font-display text-3xl sm:text-5xl font-bold text-white">
+        Predictable pricing that scales with your shipping cadence.
+      </h2>
+      
+      <!-- Billing Toggle -->
+      <div class="mt-8 inline-flex items-center p-1 rounded-xl bg-obsidian-900 border border-white/10">
+        <button id="btn-monthly" onclick="setBilling('monthly')" class="px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition">
+          Monthly Billing
+        </button>
+        <button id="btn-annual" onclick="setBilling('annual')" class="px-4 py-2 rounded-lg text-xs font-medium bg-indigo-600 text-white shadow transition flex items-center space-x-1.5">
+          <span>Annual Billing</span>
+          <span class="px-1.5 py-0.2 bg-emerald-400/20 text-emerald-300 rounded text-[10px] font-mono">-20%</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Tier 1: Starter -->
+      <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl font-bold text-white">Core Seed</h3>
+            <span class="font-mono text-xs text-gray-400">Up to 10 seats</span>
+          </div>
+          <p class="mt-2 text-xs text-gray-400">Full speed local-first issue tracking for early-stage startups.</p>
+          <div class="mt-6 flex items-baseline space-x-1">
+            <span class="font-display text-4xl font-bold text-white">$0</span>
+            <span class="text-xs text-gray-400 font-mono">/ forever</span>
+          </div>
+
+          <ul class="mt-8 space-y-3 text-sm text-gray-300">
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Unlimited issues &amp; cycles</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>GitHub &amp; GitLab PR automation</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Sub-millisecond ⌘K command bar</span>
+            </li>
+          </ul>
+        </div>
+
+        <button onclick="openTaskModal()" class="mt-8 w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-medium border border-white/10 transition">
+          Start Free Workspace
+        </button>
+      </div>
+
+      <!-- Tier 2: Velocity Pro (Highlighted) -->
+      <div class="rounded-2xl p-8 flex flex-col justify-between bg-gradient-to-b from-indigo-950/80 via-obsidian-900 to-obsidian-900 border-2 border-indigo-500 shadow-2xl shadow-indigo-500/20 relative">
+        <div class="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-indigo-500 text-white font-mono text-[10px] font-semibold uppercase tracking-wider">
+          Most Popular
+        </div>
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl font-bold text-white">Velocity Pro</h3>
+            <span class="font-mono text-xs text-indigo-300">Unlimited seats</span>
+          </div>
+          <p class="mt-2 text-xs text-gray-300">Autonomous AI triage, multi-team roadmaps, and burnup telemetry.</p>
+          <div class="mt-6 flex items-baseline space-x-1">
+            <span id="price-pro" class="font-display text-4xl font-bold text-white">$12</span>
+            <span class="text-xs text-gray-400 font-mono">/ user / month</span>
+          </div>
+
+          <ul class="mt-8 space-y-3 text-sm text-gray-200">
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Everything in Core Seed</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Monte Carlo sprint forecasting</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Neural bug deduplication &amp; auto-triage</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>Private Slack &amp; PagerDuty bi-directional sync</span>
+            </li>
+          </ul>
+        </div>
+
+        <button onclick="openTaskModal()" class="mt-8 w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/30 transition">
+          Deploy 14-Day Pro Trial
+        </button>
+      </div>
+
+      <!-- Tier 3: Enterprise -->
+      <div class="glass-card rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl font-bold text-white">Hyperion Enterprise</h3>
+            <span class="font-mono text-xs text-cyan-400">Custom SLA</span>
+          </div>
+          <p class="mt-2 text-xs text-gray-400">Dedicated single-tenant cloud or air-gapped Kubernetes deployment.</p>
+          <div class="mt-6 flex items-baseline space-x-1">
+            <span id="price-ent" class="font-display text-4xl font-bold text-white">$28</span>
+            <span class="text-xs text-gray-400 font-mono">/ user / month</span>
+          </div>
+
+          <ul class="mt-8 space-y-3 text-sm text-gray-300">
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>SAML SSO, SCIM &amp; Okta provisioning</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>BYOK Customer-Managed Encryption Keys</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>99.99% Uptime SLA + Dedicated Solutions Architect</span>
+            </li>
+          </ul>
+        </div>
+
+        <button onclick="openTaskModal()" class="mt-8 w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-medium border border-white/10 transition">
+          Request Architecture Review
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 bg-obsidian-950 py-16 text-sm text-gray-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div>
+        <div class="flex items-center space-x-2.5">
+          <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-white font-bold">K</div>
+          <span class="font-display font-bold text-white text-lg">KINETIX SYSTEMS INC.</span>
+        </div>
+        <p class="mt-2 text-xs text-gray-500">Crafted for high-velocity product teams · San Francisco &amp; Zurich</p>
+      </div>
+      <div class="flex flex-wrap gap-8 text-xs font-mono">
+        <a href="#interactive-demo" class="hover:text-white transition">SANDBOX</a>
+        <a href="#architecture" class="hover:text-white transition">ARCHITECTURE</a>
+        <a href="#velocity" class="hover:text-white transition">ROI TELEMETRY</a>
+        <a href="#pricing" class="hover:text-white transition">PRICING</a>
+        <button onclick="toggleCommandModal()" class="text-indigo-400 hover:text-indigo-300">⌘K PALETTE</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL 1: CREATE NEW ISSUE IN LIVE SANDBOX -->
+  <div id="task-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="glass-panel border border-white/15 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center space-x-2">
+          <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono text-xs">CORE-ENG</span>
+          <h3 class="font-display font-bold text-lg text-white">Create Issue in Live Sandbox</h3>
+        </div>
+        <button onclick="closeTaskModal()" class="text-gray-400 hover:text-white">✕</button>
+      </div>
+
+      <form onsubmit="createNewTask(event)" class="mt-5 space-y-4">
+        <div>
+          <label class="block text-xs font-mono uppercase text-gray-400 mb-1.5">Issue Title</label>
+          <input id="new-task-title" type="text" required placeholder="e.g., Optimize WebSocket payload compression" class="w-full bg-obsidian-950 border border-white/15 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-mono uppercase text-gray-400 mb-1.5">Column</label>
+            <select id="new-task-status" class="w-full bg-obsidian-950 border border-white/15 rounded-lg px-3 py-2 text-xs text-white">
+              <option value="todo">Queued</option>
+              <option value="progress" selected>In Flight</option>
+              <option value="done">Merged</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-gray-400 mb-1.5">Priority</label>
+            <select id="new-task-priority" class="w-full bg-obsidian-950 border border-white/15 rounded-lg px-3 py-2 text-xs text-white">
+              <option value="URGENT">Urgent</option>
+              <option value="HIGH" selected>High</option>
+              <option value="NORMAL">Normal</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-gray-400 mb-1.5">Estimate (Pts)</label>
+            <input id="new-task-points" type="number" min="1" max="13" value="5" class="w-full bg-obsidian-950 border border-white/15 rounded-lg px-3 py-2 text-xs text-white" />
+          </div>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeTaskModal()" class="px-4 py-2 rounded-lg text-xs text-gray-400 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30">
+            Create &amp; Sync to Board
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: COMMAND PALETTE (⌘K) -->
+  <div id="cmd-modal" class="fixed inset-0 z-50 hidden items-start justify-center pt-24 bg-black/75 backdrop-blur-sm p-4">
+    <div class="glass-panel border border-white/20 rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl">
+      <div class="p-4 border-b border-white/10 flex items-center space-x-3">
+        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="cmd-input" type="text" placeholder="Type a command (e.g., 'create', 'roadmap', 'burnup')..." class="w-full bg-transparent text-sm text-white focus:outline-none font-mono" />
+        <button onclick="toggleCommandModal()" class="text-xs font-mono text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5">ESC</button>
+      </div>
+      <div class="p-2 max-h-72 overflow-y-auto divide-y divide-white/5 text-xs font-mono">
+        <button onclick="toggleCommandModal(); openTaskModal();" class="w-full text-left px-4 py-3 hover:bg-indigo-600/20 rounded-lg flex items-center justify-between text-gray-200 transition">
+          <span>+ Create New Sprint Issue</span>
+          <span class="text-indigo-400">Action</span>
+        </button>
+        <button onclick="toggleCommandModal(); switchWorkspaceView('board'); document.getElementById('interactive-demo').scrollIntoView();" class="w-full text-left px-4 py-3 hover:bg-indigo-600/20 rounded-lg flex items-center justify-between text-gray-200 transition">
+          <span>→ Switch Sandbox to Kanban Board</span>
+          <span class="text-gray-500">View</span>
+        </button>
+        <button onclick="toggleCommandModal(); switchWorkspaceView('timeline'); document.getElementById('interactive-demo').scrollIntoView();" class="w-full text-left px-4 py-3 hover:bg-indigo-600/20 rounded-lg flex items-center justify-between text-gray-200 transition">
+          <span>→ Switch Sandbox to Roadmap Gantt</span>
+          <span class="text-gray-500">View</span>
+        </button>
+        <button onclick="toggleCommandModal(); switchWorkspaceView('analytics'); document.getElementById('interactive-demo').scrollIntoView();" class="w-full text-left px-4 py-3 hover:bg-indigo-600/20 rounded-lg flex items-center justify-between text-gray-200 transition">
+          <span>→ Switch Sandbox to Burnup Telemetry</span>
+          <span class="text-gray-500">View</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script>
+    // Initial Sandbox Issues Data
+    let tasks = [
+      { id: 'KNX-201', title: 'Implement zero-copy WebSocket frame serializer', status: 'todo', priority: 'URGENT', points: 8, owner: 'EV', tag: 'Rust Core' },
+      { id: 'KNX-205', title: 'Add keyboard shortcut chord G+V for Cycle Telemetry', status: 'todo', priority: 'NORMAL', points: 3, owner: 'MC', tag: 'Frontend' },
+      { id: 'KNX-198', title: 'CRDT state reconciliation for offline IndexedDB cache', status: 'progress', priority: 'URGENT', points: 13, owner: 'MC', tag: 'Sync Engine' },
+      { id: 'KNX-202', title: 'Automated GitHub PR preview environment linker', status: 'progress', priority: 'HIGH', points: 5, owner: 'AP', tag: 'Integrations' },
+      { id: 'KNX-190', title: 'Sub-millisecond fuzzy search index in WebAssembly', status: 'done', priority: 'HIGH', points: 8, owner: 'EV', tag: 'Performance' },
+      { id: 'KNX-194', title: 'SOC2 Type II automated audit log exporter', status: 'done', priority: 'NORMAL', points: 5, owner: 'AP', tag: 'Security' },
+      { id: 'KNX-196', title: 'Monte Carlo burnup confidence interval shader', status: 'done', priority: 'HIGH', points: 8, owner: 'MC', tag: 'Analytics' }
+    ];
+
+    let nextIssueNum = 206;
+
+    function getPriorityBadge(priority) {
+      if (priority === 'URGENT') {
+        return `<span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono text-[10px]">URGENT</span>`;
+      }
+      if (priority === 'HIGH') {
+        return `<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-[10px]">HIGH</span>`;
+      }
+      return `<span class="px-1.5 py-0.5 rounded bg-white/5 text-gray-400 border border-white/10 font-mono text-[10px]">NORMAL</span>`;
+    }
+
+    function advanceTaskStatus(id) {
+      const order = ['todo', 'progress', 'done'];
+      tasks = tasks.map(t => {
+        if (t.id === id) {
+          const nextIdx = (order.indexOf(t.status) + 1) % order.length;
+          return { ...t, status: order[nextIdx] };
+        }
+        return t;
+      });
+      renderWorkspace();
+    }
+
+    function renderWorkspace() {
+      const filter = document.getElementById('priority-filter').value;
+      const cols = { todo: [], progress: [], done: [] };
+
+      tasks.forEach(task => {
+        if (filter !== 'ALL' && task.priority !== filter) return;
+        cols[task.status].push(task);
+      });
+
+      ['todo', 'progress', 'done'].forEach(status => {
+        const container = document.getElementById(`col-${status}`);
+        const countEl = document.getElementById(`count-${status}`);
+        countEl.textContent = cols[status].length;
+
+        container.innerHTML = cols[status].map(task => {
+          const actionLabel = status === 'todo' ? 'Start →' : status === 'progress' ? 'Deploy ✓' : 'Reopen ↺';
+          const statusBtnColor = status === 'done'
+            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25'
+            : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/30';
+
+          return `
+            <div class="p-3.5 rounded-xl bg-obsidian-950/90 border border-white/10 hover:border-indigo-500/40 transition group">
+              <div class="flex items-center justify-between text-xs mb-2">
+                <span class="font-mono text-gray-400">${task.id}</span>
+                <div class="flex items-center space-x-1.5">
+                  ${getPriorityBadge(task.priority)}
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-300">${task.points} pts</span>
+                </div>
+              </div>
+              <p class="text-sm font-medium text-gray-100 leading-snug">${task.title}</p>
+              <div class="mt-3 pt-2.5 border-t border-white/5 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="w-5 h-5 rounded-full bg-indigo-600/40 border border-indigo-400/40 text-[10px] font-mono flex items-center justify-center text-white">${task.owner}</span>
+                  <span class="text-[11px] font-mono text-gray-400">${task.tag}</span>
+                </div>
+                <button onclick="advanceTaskStatus('${task.id}')" class="text-[11px] font-mono px-2 py-0.5 rounded border transition ${statusBtnColor}">
+                  ${actionLabel}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+
+      // Update live cycle velocity bar
+      const totalPts = tasks.reduce((acc, t) => acc + Number(t.points), 0);
+      const donePts = tasks.filter(t => t.status === 'done').reduce((acc, t) => acc + Number(t.points), 0);
+      const pct = totalPts > 0 ? Math.round((donePts / totalPts) * 100) : 0;
+
+      document.getElementById('metric-velocity').textContent = `${donePts} / ${totalPts} pts`;
+      document.getElementById('metric-progress-bar').style.width = `${pct}%`;
+      document.getElementById('metric-percent').textContent = `${pct}%`;
+    }
+
+    function switchWorkspaceView(view) {
+      ['board', 'timeline', 'analytics'].forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const tab = document.getElementById(`tab-${v}`);
+        if (v === view) {
+          el.classList.remove('hidden');
+          tab.className = 'px-3 py-1.5 rounded-md bg-indigo-600 text-white shadow transition flex items-center space-x-1.5';
+        } else {
+          el.classList.add('hidden');
+          tab.className = 'px-3 py-1.5 rounded-md text-gray-400 hover:text-white transition flex items-center space-x-1.5';
+        }
+      });
+    }
+
+    function openTaskModal(defaultStatus = 'progress') {
+      document.getElementById('new-task-status').value = defaultStatus;
+      const modal = document.getElementById('task-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => document.getElementById('new-task-title').focus(), 50);
+    }
+
+    function closeTaskModal() {
+      const modal = document.getElementById('task-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function createNewTask(e) {
+      e.preventDefault();
+      const title = document.getElementById('new-task-title').value.trim();
+      const status = document.getElementById('new-task-status').value;
+      const priority = document.getElementById('new-task-priority').value;
+      const points = Number(document.getElementById('new-task-points').value) || 3;
+
+      if (!title) return;
+
+      tasks.unshift({
+        id: `KNX-${nextIssueNum++}`,
+        title,
+        status,
+        priority,
+        points,
+        owner: 'YOU',
+        tag: 'Cycle 24'
+      });
+
+      document.getElementById('new-task-title').value = '';
+      closeTaskModal();
+      switchWorkspaceView('board');
+      renderWorkspace();
+      document.getElementById('interactive-demo').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Command Palette (Cmd+K / Ctrl+K)
+    function toggleCommandModal() {
+      const modal = document.getElementById('cmd-modal');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => document.getElementById('cmd-input').focus(), 50);
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCommandModal();
+      } else if (e.key === 'Escape') {
+        document.getElementById('cmd-modal').classList.add('hidden');
+        document.getElementById('cmd-modal').classList.remove('flex');
+        closeTaskModal();
+      }
+    });
+
+    // ROI Calculator
+    function updateROICalculator(headcount) {
+      const count = Number(headcount);
+      document.getElementById('team-size-label').textContent = `${count} Engineers`;
+      const hoursSaved = count * 156; // 3 hrs/wk * 52 wks
+      const dollarsSaved = hoursSaved * 85;
+      document.getElementById('roi-hours').textContent = `${hoursSaved.toLocaleString()} hrs`;
+      document.getElementById('roi-dollars').textContent = `$${dollarsSaved.toLocaleString()}`;
+    }
+
+    // Pricing Billing Toggle
+    function setBilling(mode) {
+      const btnMonthly = document.getElementById('btn-monthly');
+      const btnAnnual = document.getElementById('btn-annual');
+      if (mode === 'annual') {
+        btnAnnual.className = 'px-4 py-2 rounded-lg text-xs font-medium bg-indigo-600 text-white shadow transition flex items-center space-x-1.5';
+        btnMonthly.className = 'px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition';
+        document.getElementById('price-pro').textContent = '$12';
+        document.getElementById('price-ent').textContent = '$28';
+      } else {
+        btnMonthly.className = 'px-4 py-2 rounded-lg text-xs font-medium bg-indigo-600 text-white shadow transition';
+        btnAnnual.className = 'px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition flex items-center space-x-1.5';
+        document.getElementById('price-pro').textContent = '$15';
+        document.getElementById('price-ent').textContent = '$35';
+      }
+    }
+
+    // Initialize workspace on load
+    renderWorkspace();
+  </script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+Save this as `index.html` and open it in a browser.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f3">
+  <title>Fieldwork — Make room for great work</title>
+  <meta name="description" content="Bring your team's projects, tasks, and conversations together with Fieldwork.">
+  <style>
+    :root {
+      --ink: #20241f;
+      --muted: #70766d;
+      --paper: #f8f7f3;
+      --white: #fff;
+      --line: #e5e7df;
+      --green: #d5efaa;
+      --dark-green: #254c39;
+      --lavender: #e8e1fb;
+      --peach: #f7dfcc;
+      --shadow: 0 20px 60px rgba(39, 50, 36, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1200px, calc(100% - 48px)); margin: 0 auto; }
+
+    .nav {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 21px; letter-spacing: -.07em; }
+    .brand-mark { display: grid; grid-template-columns: repeat(2, 8px); gap: 3px; transform: rotate(-8deg); }
+    .brand-mark i { width: 8px; height: 8px; background: #345c43; border-radius: 2px; }
+    .brand-mark i:nth-child(2) { opacity: .65; }
+    .brand-mark i:nth-child(3) { opacity: .45; }
+    .nav-links, .nav-actions { display: flex; align-items: center; gap: 32px; }
+    .nav-links a, .login { font-size: 14px; font-weight: 600; color: #565d53; }
+    .nav-links a:hover, .login:hover { color: #1c472f; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 0 21px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: var(--ink);
+      color: white;
+      font-weight: 650;
+      font-size: 14px;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); background: #36503c; }
+    .button.light { background: white; color: var(--ink); border-color: #e1e4da; }
+    .button.light:hover { background: #f4f6ef; }
+    .arrow { font-size: 18px; line-height: 1; }
+
+    .hero { text-align: center; padding: 72px 0 0; overflow: hidden; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #53684d;
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; background: #8ebd69; border-radius: 50%; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 800px; margin: 22px auto 20px; font-size: clamp(46px, 6vw, 76px); line-height: 1.04; letter-spacing: -.065em; font-weight: 700; }
+    h1 em { font-family: Georgia, serif; font-weight: 400; color: #628354; }
+    .hero-copy { max-width: 550px; margin: 0 auto; color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 28px 0 15px; }
+    .small-note { color: #959b91; font-size: 12px; }
+
+    .product-frame {
+      position: relative;
+      margin: 55px auto 0;
+      padding: 10px;
+      max-width: 1050px;
+      background: #e9eddf;
+      border: 1px solid #e2e8d8;
+      border-radius: 17px 17px 0 0;
+      box-shadow: 0 30px 70px rgba(51, 72, 43, .12);
+      text-align: left;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      min-height: 430px;
+      overflow: hidden;
+      background: white;
+      border: 1px solid #e0e5da;
+      border-radius: 10px 10px 0 0;
+    }
+    .sidebar { padding: 22px 14px; background: #fafbf8; border-right: 1px solid #edf0e9; }
+    .workspace { display: flex; align-items: center; gap: 9px; padding: 0 5px 25px; font-size: 12px; font-weight: 750; }
+    .workspace-icon { display: grid; place-items: center; width: 25px; height: 25px; color: #fff; background: #53775d; border-radius: 7px; font-size: 13px; }
+    .side-link { padding: 9px 10px; color: #858c82; font-size: 11px; font-weight: 600; border-radius: 6px; }
+    .side-link.active { background: #eaf1e4; color: #406148; }
+    .side-icon { display: inline-block; width: 23px; color: #9aa395; }
+    .side-label { margin: 27px 10px 9px; color: #b0b6ad; font-size: 9px; font-weight: 750; letter-spacing: .08em; }
+    .dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #b3cda0; }
+    .dot.purple { background: #c7b7ed; }
+    .dot.orange { background: #e9b995; }
+    .app-main { min-width: 0; padding: 24px 28px; }
+    .app-top, .project-heading, .board-header, .task-bottom { display: flex; align-items: center; justify-content: space-between; }
+    .breadcrumbs { color: #a7ada3; font-size: 10px; }
+    .app-top-right { display: flex; align-items: center; gap: 11px; color: #a0a89d; font-size: 12px; }
+    .avatar { display: inline-grid; place-items: center; width: 25px; height: 25px; flex: none; border: 2px solid white; border-radius: 50%; background: #e9c4a7; color: #754e3c; font-size: 8px; font-weight: 800; }
+    .avatar.a2 { background: #d7c9ee; color: #5e4b7a; }
+    .avatar.a3 { background: #c5dfca; color: #41634a; }
+    .project-heading { margin-top: 34px; }
+    .project-heading h3 { margin: 0 0 6px; font-size: 21px; letter-spacing: -.04em; }
+    .project-heading p { margin: 0; color: #a0a79d; font-size: 10px; }
+    .invite { padding: 8px 11px; border: 1px solid #e8ebe5; border-radius: 6px; color: #6f786c; font-size: 10px; }
+    .tabs { display: flex; gap: 24px; margin-top: 28px; border-bottom: 1px solid #edf0eb; color: #a2a99f; font-size: 10px; }
+    .tabs span { padding-bottom: 12px; }
+    .tabs .selected { color: #355e41; border-bottom: 2px solid #638b64; font-weight: 700; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin-top: 20px; }
+    .column { min-width: 0; padding: 10px; background: #f7f8f5; border-radius: 8px; }
+    .board-header { margin-bottom: 10px; color: #6a7368; font-size: 10px; font-weight: 750; }
+    .count { color: #aab0a7; font-weight: 500; }
+    .task { min-height: 105px; margin-bottom: 8px; padding: 11px; background: white; border: 1px solid #edf0ea; border-radius: 7px; box-shadow: 0 3px 8px rgba(40, 60, 40, .025); }
+    .tag { display: inline-block; padding: 4px 6px; color: #7c6399; background: #f0eaf8; border-radius: 4px; font-size: 8px; font-weight: 700; }
+    .tag.green { color: #5f8055; background: #eaf3e5; }
+    .tag.peach { color: #ab7756; background: #fbede2; }
+    .task-title { margin: 9px 0 12px; font-size: 10px; font-weight: 700; line-height: 1.35; }
+    .task-bottom { color: #aab1a7; font-size: 9px; }
+    .task-bottom .avatar { width: 20px; height: 20px; font-size: 7px; }
+    .add-task { padding: 3px; color: #abb3a8; font-size: 10px; }
+
+    .trust { padding: 45px 0 65px; text-align: center; }
+    .trust p { color: #999f95; font-size: 12px; }
+    .logos { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: clamp(25px, 6vw, 80px); margin-top: 25px; color: #929a8e; font-size: 19px; font-weight: 750; letter-spacing: -.05em; }
+    .logos span:nth-child(2) { font-family: Georgia, serif; font-style: italic; }
+    .logos span:nth-child(4) { letter-spacing: .08em; font-size: 14px; }
+
+    .features { padding: 95px 0 110px; background: #fff; }
+    .section-head { max-width: 610px; margin: 0 auto 50px; text-align: center; }
+    h2 { margin: 15px 0; font-size: clamp(34px, 4vw, 48px); line-height: 1.12; letter-spacing: -.055em; }
+    .section-head p, .feature-card p, .cta p { color: var(--muted); line-height: 1.7; font-size: 15px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature-card { padding: 25px; border: 1px solid #ebeee7; border-radius: 14px; background: #fbfcf9; }
+    .feature-art { display: flex; align-items: center; justify-content: center; height: 160px; margin-bottom: 25px; border-radius: 9px; background: #eaf2e4; }
+    .feature-card:nth-child(2) .feature-art { background: #f0ebf8; }
+    .feature-card:nth-child(3) .feature-art { background: #f9ece2; }
+    .feature-card h3 { margin-bottom: 9px; font-size: 19px; letter-spacing: -.035em; }
+    .feature-card p { margin-bottom: 0; font-size: 14px; }
+    .mini-list { width: 68%; padding: 13px; background: white; border-radius: 8px; box-shadow: var(--shadow); }
+    .mini-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f0f1ed; }
+    .mini-row:last-child { border: 0; }
+    .check { width: 13px; height: 13px; border: 1px solid #b4c9ab; border-radius: 4px; }
+    .check.done { background: #91b883; }
+    .line { height: 5px; width: 65%; background: #e6eae3; border-radius: 9px; }
+    .mini-chart { display: flex; align-items: end; gap: 9px; height: 100px; padding: 15px 22px; background: white; border-radius: 8px; box-shadow: var(--shadow); }
+    .mini-chart i { width: 18px; height: 40%; background: #d7c9ef; border-radius: 4px 4px 0 0; }
+    .mini-chart i:nth-child(2) { height: 65%; }
+    .mini-chart i:nth-child(3) { height: 50%; }
+    .mini-chart i:nth-child(4) { height: 90%; background: #a991d2; }
+    .mini-chat { width: 70%; padding: 14px; background: white; border-radius: 8px; box-shadow: var(--shadow); }
+    .chat-row { display: flex; gap: 7px; align-items: flex-start; margin: 7px 0; }
+    .chat-row .avatar { width: 20px; height: 20px; }
+    .bubble { width: 70%; height: 24px; background: #f8f0e9; border-radius: 3px 8px 8px 8px; }
+
+    .cta { padding: 95px 24px; text-align: center; background: #e7f0dd; }
+    .cta h2 { max-width: 600px; margin: 0 auto 16px; }
+    .cta p { margin-bottom: 25px; }
+    footer { padding: 34px 0; background: #fff; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-inner p { margin: 0; color: #a0a79d; font-size: 12px; }
+    .footer-links { display: flex; gap: 24px; color: #737b70; font-size: 12px; }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 32px, 1200px); }
+      .nav { height: 70px; }
+      .nav-links, .login { display: none; }
+      .nav-actions { gap: 0; }
+      .nav .button { min-height: 42px; padding: 0 15px; }
+      .hero { padding-top: 52px; }
+      .hero-copy { font-size: 15px; }
+      .product-frame { margin-top: 40px; width: 730px; left: 50%; transform: translateX(-50%); }
+      .app { grid-template-columns: 150px 1fr; min-height: 380px; }
+      .app-main { padding: 20px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { max-width: 500px; width: 100%; margin: auto; }
+      .features { padding: 70px 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Fieldwork home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        fieldwork
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#get-started">Get started</a>
+      </div>
+      <div class="nav-actions">
+        <a class="button" href="#get-started">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="how-it-works">
+      <div class="wrap">
+        <span class="eyebrow">A little more space to do great things</span>
+        <h1>Good work happens <em>together.</em></h1>
+        <p class="hero-copy">Bring your projects, people, and plans into one calm space. Spend less time managing work and more time making it happen.</p>
+        <div class="hero-actions">
+          <a class="button" href="#get-started">Get started <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button light" href="#features">Explore features <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="small-note">A clearer way to work, from the first task onward.</div>
+
+        <div class="product-frame" aria-label="Preview of a Fieldwork project board">
+          <div class="app">
+            <aside class="sidebar" aria-hidden="true">
+              <div class="workspace"><span class="workspace-icon">✳</span> Studio workspace <span style="margin-left:auto;color:#abb2a8">⌄</span></div>
+              <div class="side-link"><span class="side-icon">⌂</span> Home</div>
+              <div class="side-link"><span class="side-icon">▦</span> My tasks</div>
+              <div class="side-link"><span class="side-icon">◷</span> Inbox</div>
+              <div class="side-label">YOUR PROJECTS</div>
+              <div class="side-link active"><span class="dot"></span> Website refresh</div>
+              <div class="side-link"><span class="dot purple"></span> Brand campaign</div>
+              <div class="side-link"><span class="dot orange"></span> Content calendar</div>
+            </aside>
+            <div class="app-main" aria-hidden="true">
+              <div class="app-top">
+                <div class="breadcrumbs">Projects &nbsp; / &nbsp; Website refresh</div>
+                <div class="app-top-right">⌕ &nbsp; ♧ <span class="avatar a2">AM</span></div>
+              </div>
+              <div class="project-heading">
+                <div><h3>Website refresh 🌱</h3><p>A fresh new home for all our best work.</p></div>
+                <div class="invite">＋ &nbsp; Invite</div>
+              </div>
+              <div class="tabs"><span>Overview</span><span class="selected">Board</span><span>Timeline</span><span>Files</span></div>
+              <div class="board">
+                <div class="column">
+                  <div class="board-header"><span>○ &nbsp; To do &nbsp; <span class="count">3</span></span><span>···</span></div>
+                  <div class="task"><span class="tag">Design</span><div class="task-title">Explore homepage concepts</div><div class="task-bottom"><span>◷ &nbsp; May 24</span><span class="avatar a2">AM</span></div></div>
+                  <div class="task"><span class="tag peach">Content</span><div class="task-title">Write the new page copy</div><div class="task-bottom"><span>◷ &nbsp; May 26</span><span class="avatar">JL</span></div></div>
+                  <div class="add-task">＋ &nbsp; Add task</div>
+                </div>
+                <div class="column">
+                  <div class="board-header"><span>◐ &nbsp; In progress &nbsp; <span class="count">2</span></span><span>···</span></div>
+                  <div class="task"><span class="tag green">Research</span><div class="task-title">Gather customer insights</div><div class="task-bottom"><span>◷ &nbsp; May 22</span><span class="avatar a3">SK</span></div></div>
+                  <div class="task"><span class="tag">Design</span><div class="task-title">Build the design system</div><div class="task-bottom"><span>◷ &nbsp; May 25</span><span class="avatar a2">AM</span></div></div>
+                  <div class="add-task">＋ &nbsp; Add task</div>
+                </div>
+                <div class="column">
+                  <div class="board-header"><span>◉ &nbsp; Done &nbsp; <span class="count">2</span></span><span>···</span></div>
+                  <div class="task"><span class="tag peach">Planning</span><div class="task-title">Project kickoff & goals</div><div class="task-bottom"><span>✓ &nbsp; May 16</span><span class="avatar">JL</span></div></div>
+                  <div class="task"><span class="tag green">Research</span><div class="task-title">Review current website</div><div class="task-bottom"><span>✓ &nbsp; May 19</span><span class="avatar a3">SK</span></div></div>
+                  <div class="add-task">＋ &nbsp; Add task</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust" aria-label="Built for modern teams">
+      <div class="wrap">
+        <p>Made for the people behind your best work</p>
+        <div class="logos" aria-hidden="true">
+          <span>✳ studio</span><span>northstar</span><span>◒ common</span><span>WANDER</span><span>form & field</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">A better way to work</span>
+          <h2>Everything in its right place.</h2>
+          <p>From the big picture to the smallest detail, give your team a little more clarity every day.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-art" aria-hidden="true">
+              <div class="mini-list"><div class="mini-row"><span class="check done"></span><span class="line"></span></div><div class="mini-row"><span class="check done"></span><span class="line" style="width:45%"></span></div><div class="mini-row"><span class="check"></span><span class="line" style="width:75%"></span></div></div>
+            </div>
+            <h3>Make a little progress, every day.</h3>
+            <p>Turn big ideas into clear, manageable tasks so everyone knows what comes next.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-art" aria-hidden="true"><div class="mini-chart"><i></i><i></i><i></i><i></i></div></div>
+            <h3>See the whole picture.</h3>
+            <p>Keep an eye on timelines and progress, and spot what's moving at a glance.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-art" aria-hidden="true"><div class="mini-chat"><div class="chat-row"><span class="avatar">JL</span><span class="bubble"></span></div><div class="chat-row"><span class="avatar a2">AM</span><span class="bubble" style="width:55%;background:#eeeaf8"></span></div></div></div>
+            <h3>Keep everyone in the loop.</h3>
+            <p>Bring conversations closer to the work, so good ideas and updates don't get lost.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="get-started">
+      <span class="eyebrow">Make room for the good stuff</span>
+      <h2>Ready to make work feel a little lighter?</h2>
+      <p>Bring your best ideas and your favorite people together.</p>
+      <a class="button" href="mailto:hello@example.com?subject=Getting%20started%20with%20Fieldwork">Get in touch <span class="arrow" aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>fieldwork</a>
+      <p>© 2026 Fieldwork. Made for work that matters.</p>
+      <div class="footer-links"><a href="#features">Features</a><a href="#get-started">Contact</a><a href="#">Back to top ↑</a></div>
+    </div>
+  </footer>
+</body>
+</html>
+```

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hartwell & Okafor LLP — Trusted Counsel for Families and Small Businesses</title>
+<meta name="description" content="Hartwell & Okafor LLP is a small, independent law firm offering clear, practical counsel in business law, estate planning, real estate, and family matters.">
+<style>
+  :root{
+    --paper:#f6f1e7;
+    --paper-2:#ede6d6;
+    --ink:#1c2a26;
+    --ink-soft:#4a5853;
+    --green:#1f3d36;
+    --green-2:#2c554b;
+    --brass:#a77c2f;
+    --brass-2:#c79a45;
+    --line:#d8cfba;
+    --white:#fffdf8;
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --max:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+  h1{font-size:clamp(2.4rem,5.5vw,4.2rem)}
+  h2{font-size:clamp(1.9rem,3.6vw,2.7rem)}
+  h3{font-size:1.3rem}
+  p{margin:0 0 1em}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--sans);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:1rem;display:block}
+  .skip{position:absolute;left:-999px;top:0;background:var(--green);color:#fff;padding:10px 16px;z-index:100}
+  .skip:focus{left:8px;top:8px}
+  :focus-visible{outline:3px solid var(--brass-2);outline-offset:3px}
+
+  /* Header */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{font-family:var(--serif);font-size:1.3rem;font-weight:600;text-decoration:none;color:var(--green);display:flex;align-items:center;gap:12px}
+  .logo .mark{width:34px;height:34px;border:1.5px solid var(--brass);display:grid;place-items:center;font-size:1rem;color:var(--brass);transform:rotate(45deg)}
+  .logo .mark span{transform:rotate(-45deg)}
+  nav ul{list-style:none;display:flex;gap:30px;margin:0;padding:0;align-items:center}
+  nav a{text-decoration:none;font-size:.95rem;color:var(--ink-soft)}
+  nav a:hover{color:var(--green)}
+  .btn{display:inline-block;background:var(--green);color:var(--white);padding:14px 26px;text-decoration:none;font-weight:600;font-size:.95rem;border:1.5px solid var(--green);transition:.2s;cursor:pointer;font-family:var(--sans)}
+  .btn:hover{background:var(--green-2)}
+  .btn.ghost{background:transparent;color:var(--green)}
+  .btn.ghost:hover{background:var(--green);color:var(--white)}
+  nav .btn{padding:10px 20px;color:var(--white)}
+  nav .btn:hover{color:var(--white)}
+  .menu-toggle{display:none;background:none;border:1px solid var(--line);padding:8px 12px;font:inherit;color:var(--green);cursor:pointer}
+
+  /* Hero */
+  .hero{padding:96px 0 88px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:64px;align-items:center}
+  .hero h1 em{font-style:italic;color:var(--brass)}
+  .hero p.lead{font-size:1.2rem;color:var(--ink-soft);max-width:34em;margin-bottom:2rem}
+  .hero .actions{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-card{background:var(--green);color:var(--paper);padding:36px;position:relative}
+  .hero-card::before{content:"";position:absolute;inset:10px;border:1px solid rgba(199,154,69,.5);pointer-events:none}
+  .hero-card h3{color:var(--white);font-size:1.15rem;margin-bottom:1.2rem}
+  .hero-card ul{list-style:none;margin:0;padding:0}
+  .hero-card li{padding:12px 0;border-top:1px solid rgba(246,241,231,.15);display:flex;justify-content:space-between;gap:12px;font-size:.95rem}
+  .hero-card li span:last-child{color:var(--brass-2);font-family:var(--serif);font-size:1.1rem}
+  .hero-card small{display:block;margin-top:1rem;opacity:.7;font-size:.8rem}
+
+  /* Stats */
+  .stats{border-block:1px solid var(--line);background:var(--paper-2)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:30px 20px;text-align:center;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat b{display:block;font-family:var(--serif);font-size:2.3rem;color:var(--green);font-weight:600;line-height:1}
+  .stat span{font-size:.85rem;color:var(--ink-soft)}
+
+  section{padding:96px 0}
+  .section-head{max-width:640px;margin-bottom:56px}
+  .section-head p{color:var(--ink-soft);font-size:1.08rem}
+
+  /* Practice areas */
+  .areas{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .area{background:var(--paper);padding:36px 30px;transition:.25s}
+  .area:hover{background:var(--white)}
+  .area .num{font-family:var(--serif);color:var(--brass);font-size:1rem;margin-bottom:1.4rem;display:block}
+  .area p{color:var(--ink-soft);font-size:.97rem;margin-bottom:1.2rem}
+  .area ul{margin:0;padding:0;list-style:none;font-size:.9rem;color:var(--ink-soft)}
+  .area li{padding:5px 0 5px 18px;position:relative}
+  .area li::before{content:"";position:absolute;left:0;top:.95em;width:8px;height:1px;background:var(--brass)}
+
+  /* Approach */
+  .approach{background:var(--green);color:var(--paper)}
+  .approach h2{color:var(--white)}
+  .approach .section-head p{color:rgba(246,241,231,.78)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;counter-reset:s}
+  .step{counter-increment:s;border-top:2px solid var(--brass);padding-top:22px}
+  .step::before{content:"0" counter(s);font-family:var(--serif);color:var(--brass-2);font-size:1.5rem;display:block;margin-bottom:.6rem}
+  .step h3{color:var(--white);font-size:1.15rem}
+  .step p{font-size:.95rem;color:rgba(246,241,231,.78);margin:0}
+
+  /* Team */
+  .team{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+  .person .portrait{aspect-ratio:4/5;background:linear-gradient(160deg,var(--paper-2),#d9cfb6);display:grid;place-items:center;margin-bottom:20px;position:relative;overflow:hidden}
+  .person .portrait span{font-family:var(--serif);font-size:3.6rem;color:var(--green);opacity:.55}
+  .person .portrait::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--brass)}
+  .person h3{margin-bottom:.15em}
+  .person .role{color:var(--brass);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:.8rem;display:block}
+  .person p{color:var(--ink-soft);font-size:.96rem}
+
+  /* Testimonial */
+  .quote{background:var(--paper-2);padding:88px 0}
+  blockquote{margin:0 auto;max-width:800px;text-align:center}
+  blockquote p{font-family:var(--serif);font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.4;color:var(--green);font-style:italic}
+  blockquote footer{font-size:.9rem;color:var(--ink-soft);margin-top:1.4rem}
+
+  /* FAQ */
+  .faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+  details{border-bottom:1px solid var(--line);padding:22px 0}
+  details:first-of-type{border-top:1px solid var(--line)}
+  summary{cursor:pointer;font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--green);list-style:none;display:flex;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--brass);font-size:1.5rem;line-height:1;transition:.2s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{margin:14px 0 0;color:var(--ink-soft)}
+
+  /* Contact */
+  .contact{background:var(--white);border-top:1px solid var(--line)}
+  .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:72px}
+  .details dl{margin:2rem 0 0}
+  .details dt{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-top:1.4rem}
+  .details dd{margin:.2rem 0 0;font-family:var(--serif);font-size:1.15rem;color:var(--green)}
+  form{display:grid;gap:18px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  label{font-size:.85rem;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:6px}
+  input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);background:var(--paper);font:inherit;color:var(--ink);border-radius:0}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--brass-2);border-color:var(--brass-2);background:var(--white)}
+  textarea{min-height:130px;resize:vertical}
+  .fine{font-size:.8rem;color:var(--ink-soft);margin:0}
+  #form-msg{display:none;padding:16px;background:#e6efe9;border-left:3px solid var(--green);color:var(--green);font-weight:600}
+
+  footer.site{background:var(--ink);color:rgba(246,241,231,.7);padding:48px 0 36px;font-size:.85rem}
+  footer .top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+  footer .logo{color:var(--paper)}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--brass-2)}
+  footer .links{display:flex;gap:24px;flex-wrap:wrap}
+  footer .legal{border-top:1px solid rgba(246,241,231,.15);padding-top:24px;font-size:.78rem;line-height:1.6}
+
+  @media (max-width:900px){
+    .hero-grid,.faq-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
+    .areas,.team{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+    .stat:nth-child(2){border-right:0}
+    .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  }
+  @media (max-width:680px){
+    body{font-size:16px}
+    section{padding:68px 0}
+    .hero{padding:60px 0}
+    .menu-toggle{display:block}
+    nav ul{display:none;position:absolute;top:72px;left:0;right:0;background:var(--paper);flex-direction:column;align-items:flex-start;padding:20px 24px 28px;gap:18px;border-bottom:1px solid var(--line)}
+    nav ul.open{display:flex}
+    .areas,.team,.steps,.row{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="#top" class="logo" aria-label="Hartwell & Okafor LLP home">
+      <span class="mark" aria-hidden="true"><span>H</span></span>
+      Hartwell &amp; Okafor
+    </a>
+    <nav aria-label="Primary">
+      <button class="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+      <ul id="menu">
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#approach">Approach</a></li>
+        <li><a href="#team">Attorneys</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a class="btn" href="#contact">Book a consultation</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div id="top" class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Independent law firm · Est. 2011</span>
+        <h1>Legal counsel that <em>speaks plainly</em> and acts promptly.</h1>
+        <p class="lead">We are a three-attorney firm helping families and owner-operated businesses make sound decisions, protect what they've built, and resolve disputes without needless escalation.</p>
+        <div class="actions">
+          <a class="btn" href="#contact">Schedule a free 20-minute call</a>
+          <a class="btn ghost" href="#practice">Explore our practice</a>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Fee overview">
+        <h3>Transparent, upfront fees</h3>
+        <ul>
+          <li><span>Initial consultation</span><span>Free</span></li>
+          <li><span>Simple will &amp; documents</span><span>from $650</span></li>
+          <li><span>Entity formation</span><span>from $900</span></li>
+          <li><span>Residential closing</span><span>from $1,100</span></li>
+        </ul>
+        <small>Sample flat fees shown for illustration. Complex matters are quoted in writing before work begins.</small>
+      </aside>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="wrap">
+      <div class="stat"><b>25+</b><span>Years combined experience</span></div>
+      <div class="stat"><b>1,800</b><span>Matters handled</span></div>
+      <div class="stat"><b>24 hr</b><span>Response on every inquiry</span></div>
+      <div class="stat"><b>4.9/5</b><span>Average client rating</span></div>
+    </div>
+  </div>
+
+  <section id="practice">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Practice areas</span>
+        <h2>Focused on the matters that matter most.</h2>
+        <p>We stay deliberately small and deliberately focused, so every client works directly with an attorney, not a rotating cast of juniors.</p>
+      </div>
+      <div class="areas">
+        <article class="area">
+          <span class="num">I.</span>
+          <h3>Business &amp; Contracts</h3>
+          <p>From first formation to eventual sale, we keep your company on solid legal footing.</p>
+          <ul><li>Entity formation &amp; governance</li><li>Contracts &amp; negotiations</li><li>Partnership &amp; shareholder agreements</li></ul>
+        </article>
+        <article class="area">
+          <span class="num">II.</span>
+          <h3>Estate Planning</h3>
+          <p>Clear, durable plans that protect your family and reflect your wishes.</p>
+          <ul><li>Wills &amp; revocable trusts</li><li>Powers of attorney</li><li>Probate &amp; estate administration</li></ul>
+        </article>
+        <article class="area">
+          <span class="num">III.</span>
+          <h3>Real Estate</h3>
+          <p>Careful diligence and steady hands for residential and small commercial transactions.</p>
+          <ul><li>Purchases, sales &amp; closings</li><li>Commercial leases</li><li>Title &amp; boundary issues</li></ul>
+        </article>
+        <article class="area">
+          <span class="num">IV.</span>
+          <h3>Family Law</h3>
+          <p>Compassionate guidance through life's most difficult transitions.</p>
+          <ul><li>Divorce &amp; separation</li><li>Custody &amp; support</li><li>Mediation &amp; settlement</li></ul>
+        </article>
+        <article class="area">
+          <span class="num">V.</span>
+          <h3>Employment</h3>
+          <p>Practical advice for employers and individuals navigating workplace issues.</p>
+          <ul><li>Employment agreements</li><li>Handbooks &amp; policies</li><li>Disputes &amp; severance</li></ul>
+        </article>
+        <article class="area">
+          <span class="num">VI.</span>
+          <h3>Civil Disputes</h3>
+          <p>We aim to resolve conflicts early, and prepare thoroughly if we must litigate.</p>
+          <ul><li>Contract &amp; property disputes</li><li>Demand letters &amp; negotiation</li><li>Mediation &amp; arbitration</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="approach">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How we work</span>
+        <h2>A straightforward process, start to finish.</h2>
+        <p>No jargon, no surprises. You'll always know where your matter stands and what it will cost.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><h3>Listen</h3><p>We begin with a free call to understand your situation and goals.</p></div>
+        <div class="step"><h3>Advise</h3><p>You receive a candid assessment of your options, risks, and a written fee estimate.</p></div>
+        <div class="step"><h3>Act</h3><p>We draft, negotiate, or file, keeping you informed at each milestone.</p></div>
+        <div class="step"><h3>Follow through</h3><p>We make sure the outcome holds, and remain available when you need us again.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Our attorneys</span>
+        <h2>The people you'll actually work with.</h2>
+      </div>
+      <div class="team">
+        <article class="person">
+          <div class="portrait" role="img" aria-label="Portrait placeholder for Eleanor Hartwell"><span>EH</span></div>
+          <h3>Eleanor Hartwell</h3>
+          <span class="role">Founding Partner</span>
+          <p>Eleanor advises owner-managed businesses on formation, contracts, and succession. Previously in-house counsel for a regional manufacturer.</p>
+        </article>
+        <article class="person">
+          <div class="portrait" role="img" aria-label="Portrait placeholder for Daniel Okafor"><span>DO</span></div>
+          <h3>Daniel Okafor</h3>
+          <span class="role">Partner</span>
+          <p>Daniel leads our real estate and civil dispute practice, with a reputation for calm, thorough preparation and practical solutions.</p>
+        </article>
+        <article class="person">
+          <div class="portrait" role="img" aria-label="Portrait placeholder for Priya Raman"><span>PR</span></div>
+          <h3>Priya Raman</h3>
+          <span class="role">Associate</span>
+          <p>Priya focuses on estate planning and family law, helping clients through sensitive transitions with clarity and care.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="quote">
+    <div class="wrap">
+      <blockquote>
+        <p>“They explained everything in words I could actually understand, quoted a fair price, and finished ahead of schedule. I wouldn't hesitate to call them again.”</p>
+        <footer>— Sample testimonial · replace with a real client quote (with permission)</footer>
+      </blockquote>
+    </div>
+  </div>
+
+  <section id="faq">
+    <div class="wrap faq-grid">
+      <div>
+        <span class="eyebrow">Common questions</span>
+        <h2>Before you call.</h2>
+        <p style="color:var(--ink-soft)">Not seeing your question? Send us a note and we'll respond within one business day.</p>
+      </div>
+      <div>
+        <details>
+          <summary>Is the first consultation really free?</summary>
+          <p>Yes. Our initial 20-minute call is free and carries no obligation. We'll tell you honestly whether we can help, and if not, try to point you to someone who can.</p>
+        </details>
+        <details>
+          <summary>How do your fees work?</summary>
+          <p>Where possible we offer flat fees for defined work such as wills, entity formation, and closings. For ongoing or contested matters we bill hourly, always with a written estimate and engagement letter up front.</p>
+        </details>
+        <details>
+          <summary>Will I work directly with an attorney?</summary>
+          <p>Always. Every matter is handled by a named attorney who is your point of contact from start to finish.</p>
+        </details>
+        <details>
+          <summary>Do you meet clients remotely?</summary>
+          <p>Yes. We offer secure video meetings and electronic signing, as well as in-person appointments at our office.</p>
+        </details>
+        <details>
+          <summary>Is what I tell you confidential?</summary>
+          <p>Yes. Information you share when seeking legal advice is protected by attorney–client confidentiality, subject to applicable law.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap contact-grid">
+      <div class="details">
+        <span class="eyebrow">Get in touch</span>
+        <h2>Let's talk about your situation.</h2>
+        <p style="color:var(--ink-soft)">Tell us a little about what you need and we'll reply within one business day.</p>
+        <dl>
+          <dt>Office</dt><dd>214 Maple Street, Suite 300<br>Springfield, ST 00000</dd>
+          <dt>Phone</dt><dd><a href="tel:+15555550142">(555) 555-0142</a></dd>
+          <dt>Email</dt><dd><a href="mailto:hello@example.com">hello@example.com</a></dd>
+          <dt>Hours</dt><dd>Mon–Fri, 8:30 am – 5:30 pm</dd>
+        </dl>
+      </div>
+      <form id="contact-form" novalidate>
+        <div class="row">
+          <div><label for="name">Full name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="row">
+          <div><label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div>
+            <label for="topic">Area of law</label>
+            <select id="topic" name="topic">
+              <option>Business &amp; Contracts</option>
+              <option>Estate Planning</option>
+              <option>Real Estate</option>
+              <option>Family Law</option>
+              <option>Employment</option>
+              <option>Civil Disputes</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+        </div>
+        <div><label for="message">How can we help?</label><textarea id="message" name="message" required></textarea></div>
+        <p class="fine">Please do not include confidential details here. Submitting this form does not create an attorney–client relationship.</p>
+        <button class="btn" type="submit">Request a consultation</button>
+        <div id="form-msg" role="status"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="top">
+      <a href="#top" class="logo"><span class="mark" aria-hidden="true"><span>H</span></span>Hartwell &amp; Okafor LLP</a>
+      <div class="links">
+        <a href="#practice">Practice</a><a href="#team">Attorneys</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="legal">
+      <p>© <span id="yr">2026</span> Hartwell &amp; Okafor LLP. All rights reserved.</p>
+      <p><strong>Attorney advertising.</strong> The information on this website is for general informational purposes only and is not legal advice. Viewing this site or contacting the firm does not create an attorney–client relationship. Prior results do not guarantee a similar outcome. This is a template using fictional names and placeholder details.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const toggle = document.querySelector('.menu-toggle');
+  const menu = document.getElementById('menu');
+  toggle.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  menu.addEventListener('click', e => {
+    if (e.target.tagName === 'A') { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', false); }
+  });
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Contact form: front-end validation only. Wire `action` to your backend or form service.
+  const form = document.getElementById('contact-form');
+  const msg = document.getElementById('form-msg');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    msg.style.display = 'block';
+    if (!form.checkValidity()) {
+      msg.style.background = '#f6e5e2';
+      msg.style.borderColor = '#a33a2c';
+      msg.style.color = '#7a2a1f';
+      msg.textContent = 'Please complete your name, a valid email, and a short message.';
+      return;
+    }
+    msg.removeAttribute('style');
+    msg.style.display = 'block';
+    msg.textContent = 'Thank you. We have received your request and will respond within one business day.';
+    form.reset();
+  });
+</script>
+</body>
+</html>

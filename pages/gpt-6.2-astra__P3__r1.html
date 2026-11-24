@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f3ed">
+<title>Mara Vale — Landscape Photographer</title>
+<style>
+  :root{--paper:#f5f3ed;--ink:#242720;--muted:#64675e;--line:#c9cbc0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 Arial,Helvetica,sans-serif}
+  header,main,footer{width:min(1520px,92%);margin:auto}
+  header,nav,.section-head,.caption,.footer-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  header{padding:24px 0;border-bottom:1px solid var(--line)}
+  a{color:inherit;text-underline-offset:5px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:-.045em;font-size:22px}
+  .brand svg{width:30px;height:30px}
+  nav{gap:26px;font-size:14px}
+  nav a{text-decoration:none}
+  nav a:hover,.contact:hover{text-decoration:underline}
+  .contact{border:1px solid var(--ink);border-radius:50px;padding:8px 17px}
+  .intro{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;padding:55px 0 32px}
+  h1,h2,h3,p,figure{margin:0}
+  h1,h2,h3,.hero-title{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+  h1{font-size:clamp(64px,9.2vw,154px);letter-spacing:-.078em;line-height:.94}
+  h1 em{font-weight:400}
+  .intro p{max-width:285px;color:var(--muted);font-size:15px;margin-bottom:4px}
+  .hero{position:relative;overflow:hidden;background:#526568;color:white}
+  canvas{display:block;width:100%;height:100%;object-fit:cover}
+  .hero canvas{height:clamp(350px,37vw,580px)}
+  .hero:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#10201fe0);pointer-events:none}
+  .hero-info,.controls{position:absolute;z-index:1;bottom:30px}
+  .hero-info{left:32px}
+  .meta{font:11px/1.5 'Courier New',monospace;letter-spacing:.1em;text-transform:uppercase}
+  .hero-title{font-size:clamp(38px,4vw,70px);letter-spacing:-.055em;line-height:1.14;margin-top:4px}
+  .controls{right:32px;display:flex;align-items:center;gap:9px}
+  button{color:inherit;cursor:pointer;font:inherit}
+  .controls button{border:1px solid #ffffff90;background:#12232142;width:40px;height:40px;border-radius:50%;font-size:19px}
+  .controls button:hover{background:white;color:var(--ink)}
+  .controls span{margin-right:6px}
+  .section-head{padding:44px 0 18px;align-items:baseline}
+  h2{font-size:clamp(36px,4vw,62px);letter-spacing:-.065em;line-height:1.12}
+  .section-head .meta,.caption .meta{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .plate{background:none;border:0;padding:0;width:100%;text-align:left}
+  .plate canvas{aspect-ratio:1.48;transition:filter .2s}
+  .plate:hover canvas{filter:brightness(1.07)}
+  .caption{padding:12px 0;align-items:baseline;gap:6px}
+  h3{font-size:clamp(22px,2.1vw,34px);letter-spacing:-.05em}
+  #about{margin:60px 0;border-top:1px solid var(--line);padding-top:30px;display:grid;grid-template-columns:1fr 2fr;gap:24px}
+  #about p{max-width:740px;font:clamp(23px,2.5vw,39px)/1.24 Georgia,serif;letter-spacing:-.035em}
+  footer{border-top:1px solid var(--line);padding:24px 0 32px}
+  dialog{width:min(960px,94vw);border:0;background:var(--paper);color:var(--ink);padding:14px}
+  dialog::backdrop{background:#131812cc}
+  dialog canvas{width:100%;height:min(58vh,520px)}
+  dialog button{border:1px solid var(--line);border-radius:50px;padding:5px 14px;background:transparent}
+  :focus-visible{outline:3px solid #ca692f;outline-offset:4px}
+  @media(max-width:720px){
+    header{padding:16px 0}nav{gap:14px}.contact{padding:6px 10px}
+    .intro{display:block;padding:36px 0 22px}.intro p{margin-top:17px;max-width:330px}
+    .hero-info{left:17px;bottom:65px}.controls{bottom:14px;right:15px}
+    .grid{grid-template-columns:1fr;gap:20px}.section-head{padding-top:32px}
+    #about{grid-template-columns:1fr;margin:35px 0}.footer-row{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#" aria-label="Mara Vale home">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor">
+      <path id="blade" d="M19 2 29 5 17 18 9 18Z"/>
+      <use href="#blade" transform="rotate(60 20 20)"/><use href="#blade" transform="rotate(120 20 20)"/>
+      <use href="#blade" transform="rotate(180 20 20)"/><use href="#blade" transform="rotate(240 20 20)"/>
+      <use href="#blade" transform="rotate(300 20 20)"/>
+    </g></svg>Mara Vale
+  </a>
+  <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><a class="contact" href="mailto:studio@maravale.example">Contact ↗</a></nav>
+</header>
+<main>
+  <section class="intro"><h1>Field <em>Studies.</em></h1><p>Landscape photography by Mara Vale.<br>Independent photographer based in Portland, Oregon.</p></section>
+  <section class="hero" aria-label="Featured landscapes">
+    <canvas id="feature" width="1500" height="610" role="img"></canvas>
+    <div class="hero-info" aria-live="polite"><p class="meta" id="location"></p><h2 class="hero-title" id="title"></h2></div>
+    <div class="controls"><span class="meta" id="count"></span><button id="prev" aria-label="Previous landscape">←</button><button id="next" aria-label="Next landscape">→</button></div>
+  </section>
+  <section id="work"><div class="section-head"><h2>Selected work</h2><span class="meta">2023 — 2025</span></div><div class="grid" id="gallery"></div></section>
+  <section id="about"><h2>About Mara</h2><p>I photograph the American West on foot, often returning to the same ridge or shoreline to see what a change in weather leaves behind. I work with editors, conservation groups, and outdoor publications.</p></section>
+</main>
+<footer><div class="footer-row"><span class="meta">© Mara Vale Studio</span><a href="mailto:studio@maravale.example">Commission an assignment ↗</a></div></footer>
+<dialog id="viewer" aria-labelledby="viewTitle"><canvas id="large" width="1200" height="700" role="img"></canvas><div class="caption"><h3 id="viewTitle"></h3><form method="dialog"><button>Close ×</button></form></div></dialog>
+<script>
+  // Embedded procedural landscape plates keep the portfolio usable offline.
+  const scenes = [
+    {title:'Where the fog settles', place:'Cascade Range, Oregon', year:2025, seed:59, kind:'forest', sky:[176,187,180], land:[29,55,49], alt:'Layers of evergreen ridges recede into pale morning fog.'},
+    {title:'The painted hills', place:'John Day, Oregon', year:2024, seed:172, kind:'desert', sky:[226,202,175], land:[129,65,43], alt:'Ochre and rust-colored hills catch the last light.'},
+    {title:'Blue distance', place:'Olympic Peninsula, Washington', year:2023, seed:12, kind:'alpine', sky:[182,196,207], land:[44,66,81], alt:'Blue mountain folds rise beneath a cool, clouded sky.'}
+  ];
+  const byId = id => document.getElementById(id);
+  function hash(x,y,s){
+    let n=Math.imul(x,374761393)+Math.imul(y,668265263)+Math.imul(s,69069);
+    n=Math.imul(n^(n>>>13),1274126177);
+    return ((n^(n>>>16))>>>0)/4294967295;
+  }
+  function noise(x,y,s){
+    const i=Math.floor(x), j=Math.floor(y);
+    let u=x-i,v=y-j;
+    u=u*u*(3-2*u); v=v*v*(3-2*v);
+    const a=hash(i,j,s),b=hash(i+1,j,s),c=hash(i,j+1,s),d=hash(i+1,j+1,s);
+    return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
+  }
+  function ridge(x,k,s){
+    return .16+k*.088+(noise(x*3,k,s)-.5)*.35+
+      (noise(x*10,k,s+1)-.5)*.105+(noise(x*40,k,s+2)-.5)*.025;
+  }
+  function draw(canvas,scene){
+    const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+    const img=ctx.createImageData(w,h),pixels=img.data;
+    const {sky,land,seed,kind}=scene;
+    for(let x=0;x<w;x++){
+      const u=x/w, heights=[];
+      for(let k=0;k<9;k++){
+        let height=ridge(u,k,seed);
+        if(kind==='forest'){
+          const treeWidth=1+k*.55,tree=Math.floor(x/treeWidth);
+          const tip=1-Math.abs(2*(x/treeWidth-tree)-1);
+          height-=tip*hash(tree,k,seed)*(.001+k*.0018);
+        }
+        heights.push(height);
+      }
+      for(let y=0;y<h;y++){
+        const v=y/h;
+        let k=8;
+        while(k>=0 && v<heights[k])k--;
+        const cloud=noise(u*6,v*12,seed+3)*.7+noise(u*23,v*36,seed+4)*.3;
+        const grain=(hash(x,y,seed)-.5)*6;
+        const depth=k<0?0:Math.pow((k+1)/9,1.35);
+        const relief=k<0?0:v-heights[k];
+        const texture=k<0?0:noise(u*95+v*24,v*36,seed+k)-.5;
+        let light=(cloud-.45)*(k<0?34:15)+grain;
+        if(k<0)light+=13*v;
+        else if(kind==='desert')light+=Math.sin(relief*80+cloud*4)*7+texture*15;
+        else light+=texture*(6+20*depth)+Math.exp(-relief*10)*8;
+        const mist=k<0?0:Math.max(0,cloud-.32)*Math.exp(-Math.abs(v-.5)*5)*.48;
+        const mix=depth*(1-mist),i=(y*w+x)*4;
+        for(let c=0;c<3;c++)pixels[i+c]=sky[c]*(1-mix)+land[c]*mix+light;
+        pixels[i+3]=255;
+      }
+    }
+    ctx.putImageData(img,0,0);canvas.setAttribute('aria-label',scene.alt);
+  }
+  let current=0;
+  const cache=new Map();
+  function show(index){
+    current=(index+scenes.length)%scenes.length;
+    const s=scenes[current],canvas=byId('feature');
+    if(!cache.has(current)){
+      const plate=document.createElement('canvas');
+      plate.width=canvas.width;plate.height=canvas.height;
+      draw(plate,s);cache.set(current,plate);
+    }
+    canvas.getContext('2d').drawImage(cache.get(current),0,0);
+    canvas.setAttribute('aria-label',s.alt);
+    byId('title').textContent=s.title;
+    byId('location').textContent=s.place+' / '+s.year;
+    byId('count').textContent='0'+(current+1)+' / 03';
+  }
+  byId('prev').onclick=()=>show(current-1);
+  byId('next').onclick=()=>show(current+1);
+  show(0);
+  for(const s of scenes){
+    const card=document.createElement('button');
+    card.className='plate';card.setAttribute('aria-label','Enlarge '+s.title);
+    card.innerHTML='<canvas width="660" height="446" aria-hidden="true"></canvas><span class="caption"><span style="font:inherit;font-family:Georgia,serif;font-size:25px;letter-spacing:-.05em"></span><span class="meta"></span></span>';
+    card.querySelector('.caption span').textContent=s.title;
+    card.querySelector('.meta').textContent=s.year+' ↗';
+    draw(card.firstElementChild,s);
+    card.onclick=()=>{
+      byId('viewTitle').textContent=s.title;
+      draw(byId('large'),s);byId('viewer').showModal();
+    };
+    byId('gallery').append(card);
+  }
+</script>
+</body>
+</html>

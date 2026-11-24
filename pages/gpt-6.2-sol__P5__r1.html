@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Daymark is a project management app for teams that want a clear plan and fewer status meetings.">
+<title>Daymark — Work with a clear plan</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f8f7f2;
+    --ink: #212821;
+    --muted: #5b655b;
+    --line: #dddcd3;
+    --green: #233e33;
+    --lime: #e3f38e;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 system-ui, sans-serif; }
+  a { color: inherit; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid #a15825; outline-offset: 4px; }
+  .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+  .site-header { border-bottom: 1px solid var(--line); }
+  .header-inner { min-height: 74px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .brand { display: inline-flex; align-items: center; gap: 9px; font-size: 21px; font-weight: 750; letter-spacing: -.05em; text-decoration: none; }
+  .mark { display: grid; grid-template-columns: repeat(2, 6px); gap: 3px; padding: 6px; background: var(--green); border-radius: 5px; }
+  .mark i { width: 6px; height: 6px; background: var(--lime); border-radius: 1px; }
+  .mark i:last-child { opacity: .42; }
+  .nav { display: flex; align-items: center; gap: 24px; font-size: 14px; }
+  .nav a, .footer a { text-decoration: none; }
+  .nav a:hover, .footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .nav .nav-cta { border: 1px solid #aeb5a8; padding: 7px 12px; border-radius: 5px; }
+  .hero { padding: 76px 0 0; }
+  .hero-copy { display: grid; grid-template-columns: 1.65fr 1fr; align-items: end; gap: 52px; margin-bottom: 42px; }
+  h1, h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.065em; margin: 0; }
+  h1 { font-size: clamp(58px, 8.1vw, 114px); line-height: .91; }
+  h1 em { color: var(--green); font-weight: 400; }
+  .intro { max-width: 320px; padding-bottom: 4px; }
+  .intro p { margin: 0 0 21px; color: var(--muted); font-size: 17px; }
+  .button { display: inline-flex; align-items: center; gap: 20px; padding: 11px 16px; border-radius: 5px; text-decoration: none; background: var(--green); color: white; font-weight: 650; font-size: 14px; }
+  .button:hover { background: #315647; }
+  .showcase { padding: 33px 38px 0; border-radius: 10px; background: var(--green); }
+  .app { display: grid; grid-template-columns: 187px minmax(0, 1fr); min-height: 386px; overflow: hidden; border-radius: 7px 7px 0 0; background: #fff; box-shadow: 0 12px 38px #101d1740; font-size: 13px; }
+  .sidebar { background: #efefe8; border-right: 1px solid #e7e6df; padding: 21px 14px; }
+  .workspace { display: flex; align-items: center; gap: 8px; padding-left: 5px; font-weight: 700; white-space: nowrap; }
+  .workspace span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 5px; background: #d8e5cc; }
+  .side-label { margin: 27px 6px 7px; color: var(--muted); font-size: 11px; }
+  .side-item { padding: 6px 8px; margin-block: 2px; border-radius: 4px; color: var(--muted); }
+  .side-item.current { color: var(--green); background: #dfe7d8; font-weight: 700; }
+  .project { min-width: 0; padding: 23px 25px 26px; }
+  .path { color: var(--muted); font-size: 12px; }
+  .project-title { margin: 5px 0 0; font-size: 24px; line-height: 1.15; letter-spacing: -.045em; }
+  .project-sub { margin: 5px 0 12px; color: var(--muted); }
+  .tabs { display: flex; gap: 17px; margin-bottom: 15px; border-bottom: 1px solid #e5e6df; }
+  .tabs button { border: 0; border-bottom: 2px solid transparent; padding: 5px 0 7px; background: transparent; color: var(--muted); cursor: pointer; }
+  .tabs button[aria-selected="true"] { border-bottom-color: var(--green); color: var(--green); font-weight: 700; }
+  .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .lane { border-radius: 5px; padding: 9px; background: #f4f4ef; }
+  .lane h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; font-size: 12px; }
+  .lane h3 small { margin-left: auto; color: var(--muted); font-weight: 500; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #a7a79b; }
+  .working .dot { background: #b57b36; }
+  .done .dot { background: #598667; }
+  .task { min-height: 70px; padding: 8px; background: white; border: 1px solid #e7e7df; border-radius: 5px; }
+  .task + .task { margin-top: 7px; }
+  .task strong { display: block; line-height: 1.35; font-size: 12px; }
+  .task-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px; margin-top: 7px; }
+  .tag { padding: 1px 5px; border-radius: 3px; background: #f1e9da; color: #654823; font-size: 10px; }
+  .tag.design { background: #e9e6f4; color: #514170; }
+  .tag.web { background: #e4eddf; color: #33563a; }
+  .avatar { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; background: #f0d9d2; color: #633f36; font-size: 9px; font-weight: 700; }
+  .avatar.alt { background: #dce7f2; color: #344e6c; }
+  [hidden] { display: none !important; }
+  .list { width: 100%; border-collapse: collapse; text-align: left; }
+  .list th, .list td { padding: 6px 8px; border-bottom: 1px solid #e8e9e2; }
+  .list th { color: var(--muted); font-size: 11px; }
+  .caption { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+  .features { display: grid; grid-template-columns: 1fr 1.55fr; gap: 44px; padding-block: 72px; }
+  h2 { font-size: clamp(37px, 5vw, 64px); line-height: 1.02; }
+  .feature { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); }
+  .feature:last-child { border-bottom: 1px solid var(--line); }
+  .feature h3, .feature p { margin: 0; font-size: 14px; }
+  .feature p { color: var(--muted); }
+  .footer { border-top: 1px solid var(--line); }
+  .footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 20px; }
+  .footer .top { color: var(--muted); font-size: 13px; }
+  @media (max-width: 820px) {
+    .hero-copy { gap: 24px; }
+    .showcase { padding: 23px 22px 0; }
+    .app { grid-template-columns: 142px minmax(0, 1fr); }
+    .project { padding-inline: 16px; }
+  }
+  @media (max-width: 650px) {
+    .wrap { width: calc(100% - 32px); }
+    .header-inner { min-height: 62px; }
+    .nav { gap: 12px; font-size: 12px; }
+    .hero { padding-top: 47px; }
+    .hero-copy, .features { grid-template-columns: 1fr; }
+    .hero-copy { margin-bottom: 28px; }
+    .showcase { padding: 12px 10px 0; }
+    .app { grid-template-columns: minmax(0, 1fr); min-height: 360px; }
+    .sidebar { display: none; }
+    .project { padding: 15px 10px; }
+    .board { gap: 5px; }
+    .lane { padding: 4px; }
+    .lane h3 { font-size: 10px; gap: 3px; }
+    .task { padding: 5px; }
+    .task strong { font-size: 11px; }
+    .features { padding-block: 48px; gap: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Daymark</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a class="nav-cta" href="#demo">Try the demo <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-labelledby="headline">
+      <div class="hero-copy">
+        <h1 id="headline">Work with<br>a <em>clear plan.</em></h1>
+        <div class="intro">
+          <p>Daymark gives your team one place to plan projects, assign work, and see what’s ready to ship.</p>
+          <a class="button" href="#demo">Explore the demo <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+
+      <div class="showcase" id="demo">
+        <div class="app" aria-label="Daymark sample workspace">
+          <aside class="sidebar" aria-label="Sample workspace projects">
+            <div class="workspace"><span aria-hidden="true">F</span> Fieldwork Studio</div>
+            <p class="side-label">Projects</p>
+            <div class="side-item current">Website launch</div>
+            <div class="side-item">Spring campaign</div>
+            <div class="side-item">Studio operations</div>
+          </aside>
+          <section class="project" aria-labelledby="project-title">
+            <div class="path">Projects / Marketing</div>
+            <h2 class="project-title" id="project-title">Website launch</h2>
+            <p class="project-sub">A new home for Fieldwork Studio.</p>
+
+            <div class="tabs" role="tablist" aria-label="Project views">
+              <button type="button" role="tab" id="board-tab" aria-controls="board-panel" aria-selected="true">Board</button>
+              <button type="button" role="tab" id="list-tab" aria-controls="list-panel" aria-selected="false" tabindex="-1">List</button>
+            </div>
+
+            <div class="board" role="tabpanel" id="board-panel" aria-labelledby="board-tab" tabindex="0">
+              <section class="lane">
+                <h3><span class="dot" aria-hidden="true"></span>To do <small>2</small></h3>
+                <article class="task"><strong>Write launch email</strong><div class="task-meta"><span class="tag">Content</span><span class="avatar" aria-label="Owner Sam Lee">SL</span></div></article>
+                <article class="task"><strong>Check mobile layouts</strong><div class="task-meta"><span class="tag web">Web</span><span class="avatar alt" aria-label="Owner Ari Morgan">AM</span></div></article>
+              </section>
+              <section class="lane working">
+                <h3><span class="dot" aria-hidden="true"></span>In progress <small>2</small></h3>
+                <article class="task"><strong>Build case study pages</strong><div class="task-meta"><span class="tag web">Web</span><span class="avatar alt" aria-label="Owner Ari Morgan">AM</span></div></article>
+                <article class="task"><strong>Review homepage copy</strong><div class="task-meta"><span class="tag">Content</span><span class="avatar" aria-label="Owner Sam Lee">SL</span></div></article>
+              </section>
+              <section class="lane done">
+                <h3><span class="dot" aria-hidden="true"></span>Done <small>2</small></h3>
+                <article class="task"><strong>Approve visual direction</strong><div class="task-meta"><span class="tag design">Design</span><span class="avatar" aria-label="Owner Jules Reyes">JR</span></div></article>
+                <article class="task"><strong>Map site structure</strong><div class="task-meta"><span class="tag design">Design</span><span class="avatar" aria-label="Owner Jules Reyes">JR</span></div></article>
+              </section>
+            </div>
+
+            <div role="tabpanel" id="list-panel" aria-labelledby="list-tab" tabindex="0" hidden>
+              <table class="list">
+                <thead><tr><th scope="col">Task</th><th scope="col">Owner</th><th scope="col">Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Write launch email</td><td>Sam Lee</td><td>To do</td></tr>
+                  <tr><td>Check mobile layouts</td><td>Ari Morgan</td><td>To do</td></tr>
+                  <tr><td>Build case study pages</td><td>Ari Morgan</td><td>In progress</td></tr>
+                  <tr><td>Review homepage copy</td><td>Sam Lee</td><td>In progress</td></tr>
+                  <tr><td>Approve visual direction</td><td>Jules Reyes</td><td>Done</td></tr>
+                  <tr><td>Map site structure</td><td>Jules Reyes</td><td>Done</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+      <p class="caption">Sample project · Switch between Board and List to see the same work two ways.</p>
+    </section>
+
+    <section class="features" id="features" aria-labelledby="features-title">
+      <h2 id="features-title">A place for the whole project.</h2>
+      <div>
+        <article class="feature"><h3>Break down the work</h3><p>Turn a launch plan into tasks with owners and due dates.</p></article>
+        <article class="feature"><h3>Find the latest decision</h3><p>Keep feedback and files with the task they belong to.</p></article>
+        <article class="feature"><h3>See what’s moving</h3><p>Scan the board for work in progress, then switch to a list for the details.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <a class="brand" href="#top">Daymark</a>
+      <a class="top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
+
+  <script>
+    const tabList = document.querySelector('[role="tablist"]');
+    const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+
+    function selectTab(selected) {
+      for (const tab of tabs) {
+        const active = tab === selected;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+      }
+    }
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => selectTab(tab));
+    }
+
+    tabList.addEventListener('keydown', event => {
+      const current = tabs.indexOf(event.target);
+      if (current < 0) return;
+
+      let next;
+      switch (event.key) {
+        case 'ArrowRight': next = (current + 1) % tabs.length; break;
+        case 'ArrowLeft': next = (current - 1 + tabs.length) % tabs.length; break;
+        case 'Home': next = 0; break;
+        case 'End': next = tabs.length - 1; break;
+        default: return;
+      }
+
+      event.preventDefault();
+      selectTab(tabs[next]);
+      tabs[next].focus();
+    });
+  </script>
+</body>
+</html>

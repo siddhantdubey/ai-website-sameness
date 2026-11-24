@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plumb: know your real finish date</title>
+<meta name="description" content="Plumb is a project planner that recalculates your finish date every time the work changes.">
+<meta name="theme-color" content="#F1F2EE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2315181B'/%3E%3Ccircle cx='16' cy='7' r='3' fill='none' stroke='%23E0452B' stroke-width='2'/%3E%3Cpath d='M16 10v9' stroke='%23E0452B' stroke-width='1.5'/%3E%3Cpath d='M14.5 17h3v1.5h2V22L16 29l-3.5-7v-3.5h2z' fill='%23E0452B'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#F1F2EE;
+  --panel:#FFFFFF;
+  --ink:#15181B;
+  --muted:#596168;
+  --rule:#CDD1CB;
+  --line:#E0452B;
+  --line-deep:#B5341D;
+  --ok:#1E6A49;
+  --bar-float:#868E91;
+  --bar-done:#B7BDB7;
+  --sans:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --gutter:56px;
+  --pad-r:32px;
+  --section:112px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:17px/1.5 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--line-deep);color:#fff}
+h1,h2,h3,p,ul,ol,figure,blockquote{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.dark :focus-visible{outline-color:#fff}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.wrap{position:relative;max-width:1180px;margin:0 auto;padding:0 var(--pad-r) 0 var(--gutter)}
+
+/* ---------- plumb line ---------- */
+.plumb{position:fixed;top:0;left:0;width:0;height:0;transform-origin:0 0;pointer-events:none;z-index:5}
+.plumb-string{position:absolute;left:-.5px;top:0;width:1px;height:1px;background:var(--line);transform-origin:0 0}
+.plumb-bob{position:absolute;left:0;top:0;width:14px;height:22px;display:block}
+
+/* ---------- nav ---------- */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 0}
+.ring{
+  position:absolute;left:calc(var(--gutter) / 2 - 6px);top:50%;margin-top:-6px;
+  width:12px;height:12px;border:2px solid var(--line);border-radius:50%;
+}
+.wordmark{font-weight:700;font-size:21px;letter-spacing:-.03em;text-decoration:none}
+.nav-links{display:flex;gap:30px;font-size:15px}
+.nav-links a{text-decoration:none;padding:6px 0}
+.nav-links a:hover{text-decoration:underline;text-underline-offset:5px}
+.nav-end{display:flex;align-items:center;gap:22px;font-size:15px}
+.nav-end .login{text-decoration:none}
+.nav-end .login:hover{text-decoration:underline;text-underline-offset:5px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:13px 20px;border-radius:3px;font-weight:700;font-size:16px;line-height:1.2;
+  text-decoration:none;cursor:pointer;white-space:nowrap;
+  transition:background-color .15s,border-color .15s;
+}
+.btn:hover{background:var(--line-deep);border-color:var(--line-deep)}
+.btn:active{transform:translateY(1px)}
+.btn.small{padding:9px 14px;font-size:15px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* ---------- hero ---------- */
+.hero{padding:76px 0 56px}
+.hero h1{
+  font-size:clamp(2.5rem,6.3vw,5.1rem);line-height:1;letter-spacing:-.04em;font-weight:700;
+  max-width:21ch;
+}
+.hero-row{display:grid;grid-template-columns:minmax(0,34em) 1fr;gap:48px;align-items:end;margin-top:36px}
+.lede{font-size:1.24rem;line-height:1.45;color:var(--ink)}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:28px}
+.hero-actions small{font-size:14px;color:var(--muted)}
+.pointer{justify-self:end;text-align:right;font:13px/1.5 var(--mono);color:var(--muted);max-width:26ch}
+.pointer b{color:var(--ink);font-weight:600}
+
+/* ---------- demo ---------- */
+.demo{padding-bottom:var(--section)}
+.panel{background:var(--panel);border:1px solid var(--ink);border-radius:4px}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:20px 20px 18px}
+.proj h3{font-size:19px;letter-spacing:-.015em}
+.proj p{font:12.5px/1.4 var(--mono);color:var(--muted);margin-top:5px}
+.readout{text-align:right}
+.readout-label{font-size:13px;color:var(--muted)}
+.readout-val{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:2px}
+.finish-date{font-size:28px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{font:600 12.5px/1 var(--mono);padding:6px 8px;border-radius:2px;white-space:nowrap}
+.chip.ok{color:var(--ok);box-shadow:inset 0 0 0 1px currentColor}
+.chip.late{background:var(--line-deep);color:#fff}
+.chip.early{background:var(--ok);color:#fff}
+
+.row{
+  display:grid;grid-template-columns:minmax(0,236px) 62px 104px minmax(0,1fr);
+  align-items:center;column-gap:12px;
+  padding:0 20px;min-height:44px;border-top:1px solid var(--rule);
+}
+.row:not(.head):hover{background:#F8F8F6}
+.row.head{min-height:30px;font-size:12.5px;color:var(--muted)}
+.t-name{font-size:15px;font-weight:700;letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row.is-done .t-name{font-weight:400;color:var(--muted)}
+.t-who{font-size:14px;color:var(--muted)}
+.t-who-inline{display:none}
+.ctrl{display:flex;align-items:center;gap:3px}
+.ctrl button{
+  width:28px;height:28px;padding:0;border:1px solid var(--rule);border-radius:2px;background:var(--panel);
+  font:600 15px/1 var(--mono);cursor:pointer;
+}
+.ctrl button:hover:not(:disabled){border-color:var(--ink);background:var(--ink);color:#fff}
+.ctrl button:disabled{opacity:.35;cursor:default}
+.ctrl .dur{font:12.5px/1 var(--mono);min-width:32px;text-align:center;font-variant-numeric:tabular-nums}
+.ctrl .done-note{font:12.5px/1 var(--mono);color:var(--muted)}
+
+.track{
+  position:relative;align-self:stretch;min-height:44px;
+  background:repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 12.5%);
+}
+.row.head .track{min-height:30px;background:none}
+.weeks{display:grid;grid-template-columns:repeat(8,1fr);height:100%;align-items:center}
+.weeks span{font:11px/1 var(--mono);padding-left:5px;white-space:nowrap}
+
+.bar,.float,.ghost,.m{position:absolute}
+.bar{top:50%;margin-top:-9px;height:14px;border-radius:2px;background:var(--ink);
+  transition:left .38s cubic-bezier(.2,.7,.2,1),width .38s cubic-bezier(.2,.7,.2,1),background-color .25s}
+.bar.has-float{background:var(--bar-float)}
+.bar.done{background:var(--bar-done)}
+.float{top:50%;margin-top:-9px;height:14px;border:1px dashed var(--bar-float);border-left:0;border-radius:0 2px 2px 0;
+  transition:left .38s cubic-bezier(.2,.7,.2,1),width .38s cubic-bezier(.2,.7,.2,1)}
+.fl{position:absolute;top:50%;margin-top:-9px;height:14px;display:flex;align-items:center;
+  font:11px/1 var(--mono);color:var(--muted);padding-left:6px;white-space:nowrap;
+  transition:left .38s cubic-bezier(.2,.7,.2,1)}
+.ghost{top:50%;margin-top:9px;height:3px;background:#C6CBC5;border-radius:1px}
+.m{top:0;bottom:0;width:0}
+.m.today{border-left:1px dashed var(--ink);opacity:.55}
+.m.base{border-left:1px solid #8C9396}
+.m.fin{border-left:2px solid var(--line);margin-left:-1px;transition:left .38s cubic-bezier(.2,.7,.2,1)}
+
+.panel-foot{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 28px;
+  padding:14px 20px;border-top:1px solid var(--ink);
+}
+.log{font-size:15px;min-height:1.5em;flex:1 1 320px}
+.log b{font-weight:700}
+.reset{background:none;border:0;padding:0;margin-left:8px;font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;color:var(--muted)}
+.reset:hover{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:7px}
+.k{display:inline-block;width:18px;height:8px;border-radius:1px;background:var(--ink)}
+.k.f{background:none;border:1px dashed var(--bar-float)}
+.k.g{height:3px;background:#C6CBC5}
+.k.t{width:0;height:12px;border-left:1px dashed var(--ink);border-radius:0;background:none}
+.k.e{width:0;height:12px;border-left:2px solid var(--line);border-radius:0;background:none}
+noscript p{padding:20px;border-top:1px solid var(--rule);color:var(--muted)}
+
+/* ---------- shared section layout ---------- */
+section{scroll-margin-top:24px}
+.split{display:grid;grid-template-columns:4fr 8fr;gap:48px}
+h2{font-size:clamp(1.85rem,3.3vw,2.7rem);line-height:1.05;letter-spacing:-.035em;font-weight:700}
+.sub{color:var(--muted);margin-top:16px;max-width:30em}
+
+/* ---------- what it does ---------- */
+.does{padding-bottom:var(--section)}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:0 48px}
+.feat li{border-top:1px solid var(--ink);padding:18px 0 34px}
+.feat h3{font-size:18px;letter-spacing:-.015em;line-height:1.25}
+.feat p{color:var(--muted);margin-top:8px;font-size:16px}
+
+/* ---------- who it's for ---------- */
+.fit{padding-bottom:var(--section)}
+.fit p{font-size:clamp(1.5rem,2.9vw,2.3rem);line-height:1.2;letter-spacing:-.025em;max-width:27em}
+.fit .no{color:var(--muted)}
+
+/* ---------- date history ---------- */
+.dark{background:var(--ink);color:#E8EBE6;padding:var(--section) 0}
+.dark .sub{color:#A4ACB0}
+.history{grid-template-columns:5fr 7fr;align-items:start}
+.ledger{border-top:1px solid #E8EBE6;font:13.5px/1.45 var(--mono)}
+.ledger li{
+  display:grid;grid-template-columns:58px 158px 52px minmax(0,1fr);column-gap:14px;
+  padding:14px 0;border-bottom:1px solid #353A3F;align-items:baseline;
+}
+.ledger .when{color:#A4ACB0}
+.ledger .move{white-space:nowrap}
+.ledger .d{font-weight:600}
+.ledger .up{color:#FF8366}
+.ledger .down{color:#74D3A2}
+.ledger .held{color:#A4ACB0;font-weight:400}
+.ledger .why{font-family:var(--sans);font-size:15.5px;color:#E8EBE6}
+.ledger .why span{color:#A4ACB0}
+.ledger-note{font-size:14px;color:#A4ACB0;margin-top:14px}
+
+/* ---------- quote ---------- */
+.said{padding:var(--section) 0}
+.said blockquote p{
+  font-size:clamp(1.55rem,3vw,2.4rem);line-height:1.18;letter-spacing:-.028em;max-width:24em;
+  text-indent:-.42em;
+}
+.said figcaption{margin-top:24px;font-size:15px;color:var(--muted)}
+.said figcaption b{color:var(--ink)}
+
+/* ---------- pricing ---------- */
+.pricing{padding-bottom:var(--section)}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.plan{border-top:2px solid var(--ink);padding-top:18px;display:flex;flex-direction:column}
+.plan h3{font-size:18px}
+.price{font-size:54px;font-weight:700;letter-spacing:-.045em;line-height:1;margin-top:18px;font-variant-numeric:tabular-nums}
+.price small{font-size:15px;font-weight:400;letter-spacing:0;color:var(--muted);margin-left:6px}
+.plan ul{margin:22px 0 26px}
+.plan li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:16px}
+.plan li:first-child{border-top:1px solid var(--rule)}
+.plan .btn{align-self:flex-start;margin-top:auto}
+.fine{grid-column:1 / -1;font-size:15px;color:var(--muted);max-width:44em}
+
+/* ---------- faq ---------- */
+.faq{padding-bottom:var(--section)}
+details{border-top:1px solid var(--ink)}
+details:last-child{border-bottom:1px solid var(--ink)}
+summary{
+  list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+  padding:18px 0;font-weight:700;font-size:18px;letter-spacing:-.015em;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:400 20px/1 var(--mono);color:var(--muted)}
+details[open] summary::after{content:"\2212"}
+details p{color:var(--muted);max-width:38em;padding:0 0 22px}
+
+/* ---------- start ---------- */
+.start{border-top:1px solid var(--ink);padding:var(--section) 0}
+.start h2{font-size:clamp(2.1rem,5vw,4rem);line-height:1;letter-spacing:-.04em;max-width:16ch}
+.start .sub{font-size:1.1rem;color:var(--ink)}
+.signup{display:flex;gap:10px;margin-top:30px;max-width:480px}
+.signup input{
+  flex:1;min-width:0;padding:13px 14px;font-size:16px;border:1px solid var(--ink);border-radius:3px;background:var(--panel);
+}
+.signup input::placeholder{color:#7C8388}
+.signup-done{margin-top:30px;font-weight:700}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule);padding:30px 0 96px;font-size:14px;color:var(--muted)}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px 40px}
+.foot ul{display:flex;flex-wrap:wrap;gap:8px 24px}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+
+/* ---------- responsive ---------- */
+@media (max-width:940px){
+  .nav-links{display:none}
+  .split,.history{grid-template-columns:1fr;gap:32px}
+  .hero-row{grid-template-columns:1fr;gap:28px}
+  .pointer{justify-self:start;text-align:left;max-width:none}
+}
+@media (max-width:760px){
+  :root{--gutter:40px;--pad-r:20px;--section:76px}
+  body{font-size:16px}
+  .hero{padding:44px 0 40px}
+  .lede{font-size:1.1rem}
+  .nav-end .login{display:none}
+
+  .panel-head{flex-direction:column;align-items:flex-start;padding:16px 14px}
+  .readout{text-align:left}
+  .readout-val{justify-content:flex-start}
+  .row{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"name ctrl" "track track";
+    padding:8px 14px 0;row-gap:2px;
+  }
+  .row.head{padding-top:0}
+  .row.head .t-name,.row.head .t-who,.row.head .ctrl-h{display:none}
+  .t-name{grid-area:name;white-space:normal}
+  .t-who{display:none}
+  .t-who-inline{display:inline;font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+  .ctrl{grid-area:ctrl}
+  .ctrl button{width:36px;height:34px}
+  .track{grid-area:track;min-height:34px}
+  .weeks span{font-size:10px;padding-left:3px}
+  .weeks span:nth-child(even){visibility:hidden}
+  .fl{font-size:10px}
+  .panel-foot{padding:14px}
+
+  .feat{grid-template-columns:1fr}
+  .feat li{padding-bottom:24px}
+  .plans{grid-template-columns:1fr;gap:40px}
+  .ledger li{grid-template-columns:52px minmax(0,1fr) auto;row-gap:4px}
+  .ledger .why{grid-column:2 / -1}
+  .signup{flex-direction:column}
+  .signup .btn{width:100%}
+  footer{padding-bottom:80px}
+}
+@media (prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth}
+}
+@media (prefers-reduced-motion:reduce){
+  .bar,.float,.fl,.m.fin,.btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="plumb" aria-hidden="true" hidden>
+  <div class="plumb-string"></div>
+  <svg class="plumb-bob" viewBox="0 0 14 22"><path d="M5 0h4v3h3v7L7 22 2 10V3h3z" fill="#E0452B"/></svg>
+</div>
+
+<header class="wrap">
+  <nav class="nav" aria-label="Main">
+    <span class="ring" aria-hidden="true"></span>
+    <a class="wordmark" href="#top">Plumb</a>
+    <div class="nav-links">
+      <a href="#demo">How it works</a>
+      <a href="#history">Date history</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+    </div>
+    <div class="nav-end">
+      <a class="login" href="#start">Log in</a>
+      <a class="btn small" href="#start">Start a project</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero wrap">
+    <h1>Find out you’re late while you can still do something about it.</h1>
+    <div class="hero-row">
+      <div>
+        <p class="lede">Plumb is a project planner that redoes the schedule every time the work changes. A task runs long, someone is out Thursday, scope gets added: you see what it does to the finish date that same minute.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#start">Start a project</a>
+          <small>Free for one project. No card.</small>
+        </div>
+      </div>
+      <p class="pointer"><b>↓ This schedule is live.</b><br>Go ahead and make something late.</p>
+    </div>
+  </section>
+
+  <section class="demo wrap" id="demo" aria-labelledby="demo-h">
+    <h2 class="sr" id="demo-h">Try a live schedule</h2>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="proj">
+          <h3>Checkout redesign</h3>
+          <p>8 tasks · 4 people · started Nov 9</p>
+        </div>
+        <div class="readout" aria-live="polite">
+          <div class="readout-label">Projected finish</div>
+          <div class="readout-val">
+            <span class="finish-date" id="finish">Fri, Dec 18</span>
+            <span class="chip ok" id="delta">on plan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gantt" id="gantt">
+        <div class="row head" aria-hidden="true">
+          <span class="t-name">Task</span>
+          <span class="t-who">Owner</span>
+          <span class="ctrl-h">Estimate</span>
+          <div class="track">
+            <div class="weeks"><span>Nov 9</span><span>Nov 16</span><span>Nov 23</span><span>Nov 30</span><span>Dec 7</span><span>Dec 14</span><span>Dec 21</span><span>Dec 28</span></div>
+          </div>
+        </div>
+        <noscript><p>The interactive schedule needs JavaScript. The short version: change one estimate and every bar after it moves, along with the finish date.</p></noscript>
+      </div>
+
+      <div class="panel-foot">
+        <p class="log"><span id="log" aria-live="polite">Add a day to <b>Visual design</b>, then to <b>API: tokenized cards</b>. They don’t do the same thing.</span><button class="reset" id="reset" type="button" hidden>Reset</button></p>
+        <ul class="legend" aria-label="Legend">
+          <li><span class="k"></span>Sets the date</li>
+          <li><span class="k f"></span>Float</li>
+          <li><span class="k g"></span>Original plan</li>
+          <li><span class="k t"></span>Today</li>
+          <li><span class="k e"></span>Finish</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="does wrap" aria-labelledby="does-h">
+    <div class="split">
+      <div>
+        <h2 id="does-h">You describe the work. Plumb does the calendar.</h2>
+        <p class="sub">Tasks, estimates, and what’s waiting on what. That’s the whole input.</p>
+      </div>
+      <ul class="feat">
+        <li>
+          <h3>Float is shown, not hidden</h3>
+          <p>Every task shows how many days it can slip before the finish date moves. People stop padding estimates when everyone can see where the padding is.</p>
+        </li>
+        <li>
+          <h3>Time off counts</h3>
+          <p>Connect a calendar and holidays, vacations and that offsite in week three are already in the math. No one has to remember to mention them.</p>
+        </li>
+        <li>
+          <h3>The original plan stays put</h3>
+          <p>The first schedule you commit to is drawn under every bar from then on. Nobody can quietly edit history to make the project look on time.</p>
+        </li>
+        <li>
+          <h3>One email on Monday</h3>
+          <p>The finish date, whether it moved last week, and what moved it. Three lines, sent to whoever keeps asking.</p>
+        </li>
+        <li>
+          <h3>Keep your issue tracker</h3>
+          <p>Two-way sync with Linear, Jira and GitHub Issues. Close an issue over there and the bar closes here. Engineers never have to open Plumb.</p>
+        </li>
+        <li>
+          <h3>Share a link, not a login</h3>
+          <p>Clients and stakeholders get a read-only page with the current date and the reasons behind it. Viewers are always free.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="fit wrap" aria-label="Who Plumb is for">
+    <p>Plumb is for projects that end: launches, migrations, builds, client work with a date in the contract. <span class="no">If your work is a queue of tickets that never empties, a kanban board will serve you better, and we’d rather you used one.</span></p>
+  </section>
+
+  <section class="dark" id="history" aria-labelledby="hist-h">
+    <div class="wrap split history">
+      <div>
+        <h2 id="hist-h">The date has a history.</h2>
+        <p class="sub">Every time the finish date moves, Plumb writes down what moved it. When someone asks in January why launch slipped, you don’t reconstruct it from chat logs. You read it.</p>
+      </div>
+      <div>
+        <ol class="ledger">
+          <li>
+            <span class="when">Nov 12</span>
+            <span class="move">Dec 16 → Dec 18</span>
+            <span class="d up">+2d</span>
+            <span class="why">Payment provider contract ran two days long <span>· Tomás</span></span>
+          </li>
+          <li>
+            <span class="when">Nov 17</span>
+            <span class="move">Dec 18 → Dec 22</span>
+            <span class="d up">+2d</span>
+            <span class="why">Scope added: Apple Pay <span>· Priya</span></span>
+          </li>
+          <li>
+            <span class="when">Nov 19</span>
+            <span class="move">Dec 22 → Dec 18</span>
+            <span class="d down">−2d</span>
+            <span class="why">Apple Pay moved to phase two <span>· Wen</span></span>
+          </li>
+          <li>
+            <span class="when">Nov 23</span>
+            <span class="move">Dec 18</span>
+            <span class="d held">held</span>
+            <span class="why">QA estimate raised a day, rollout cut a day <span>· Tomás</span></span>
+          </li>
+        </ol>
+        <p class="ledger-note">Date history for Checkout redesign, the project in the schedule above.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="said wrap" aria-label="Customer quote">
+    <figure>
+      <blockquote><p>“I used to find out we were behind from the look on my lead’s face. Now it’s a number, and I get it about a month sooner.”</p></blockquote>
+      <figcaption><b>Renata Okafor</b>, delivery lead at Fieldhouse Studio</figcaption>
+    </figure>
+  </section>
+
+  <section class="pricing wrap" id="pricing" aria-labelledby="price-h">
+    <div class="split">
+      <div>
+        <h2 id="price-h">Two plans. You only pay for people who edit.</h2>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Solo</h3>
+          <p class="price">$0</p>
+          <ul>
+            <li>One active project</li>
+            <li>Up to three editors</li>
+            <li>Full scheduling, float and baselines</li>
+            <li>CSV import and export</li>
+          </ul>
+          <a class="btn ghost" href="#start">Start free</a>
+        </div>
+        <div class="plan">
+          <h3>Team</h3>
+          <p class="price">$9<small>per editor / month</small></p>
+          <ul>
+            <li>Unlimited projects</li>
+            <li>Date history and Monday email</li>
+            <li>Linear, Jira and GitHub sync</li>
+            <li>Shared links, unlimited free viewers</li>
+          </ul>
+          <a class="btn" href="#start">Try Team for 30 days</a>
+        </div>
+        <p class="fine">Pay yearly and two months are on us. There is no “contact sales” tier. If you need SSO and an invoice, that’s the Team plan plus $3 per editor, and you can turn it on yourself.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq wrap" id="faq" aria-labelledby="faq-h">
+    <div class="split">
+      <div>
+        <h2 id="faq-h">Fair questions</h2>
+      </div>
+      <div>
+        <details>
+          <summary>Is this a Gantt chart?</summary>
+          <p>Yes. Gantt charts earned their bad name because someone drew them by hand in week one and they were wrong by week two. This one redraws itself whenever the work changes, which is the only version of the idea that was ever useful.</p>
+        </details>
+        <details>
+          <summary>Our estimates are always wrong. Does that break it?</summary>
+          <p>Everyone’s are. Plumb keeps track of how each estimate compared with what happened, per person and per kind of task, and can widen the projected finish into a range based on your own record. You get a more honest date without anyone having to guess better.</p>
+        </details>
+        <details>
+          <summary>Can I bring in a project from a spreadsheet?</summary>
+          <p>Paste the rows or upload a CSV. Plumb needs a task name and an estimate; owner and “waiting on” columns are picked up if they’re there. Most people have a first schedule on screen in a few minutes.</p>
+        </details>
+        <details>
+          <summary>Do you do sprints, story points or velocity?</summary>
+          <p>No. Plumb plans in days and dates because that’s what the people outside your team are asking about. If your engineers run sprints in another tool, the sync keeps both sides current.</p>
+        </details>
+        <details>
+          <summary>What happens to my data if I leave?</summary>
+          <p>Export everything, including the date history, as CSV or JSON at any time on either plan. Close your account and we delete it within 30 days.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="start" id="start" aria-labelledby="start-h">
+    <div class="wrap">
+      <h2 id="start-h">Start with the project you’re most worried about.</h2>
+      <p class="sub">Setup takes about as long as listing the tasks. You’ll have a finish date you can defend by the end of it.</p>
+      <form class="signup" id="signup">
+        <label class="sr" for="email">Work email</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com">
+        <button class="btn" type="submit">Start a project</button>
+      </form>
+      <p class="signup-done" id="signup-done" role="status" hidden></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>© 2026 Plumb Software</p>
+    <ul>
+      <li><a href="#">Changelog</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><a href="#">Security</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Status</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+/* ---------- live schedule ---------- */
+(function () {
+  var DAYS = 40, TODAY = 11;
+  var DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  var tasks = [
+    { id: 'audit',    name: 'Audit current flow',        who: 'Ines',  dur: 4, deps: [], done: true },
+    { id: 'contract', name: 'Payment provider contract', who: 'Tomás', dur: 8, deps: [], done: true },
+    { id: 'wires',    name: 'Wireframes',                who: 'Ines',  dur: 5, deps: ['audit'], done: true },
+    { id: 'api',      name: 'API: tokenized cards',      who: 'Priya', dur: 8, deps: ['contract'] },
+    { id: 'visual',   name: 'Visual design',             who: 'Ines',  dur: 6, deps: ['wires'] },
+    { id: 'build',    name: 'Build checkout UI',         who: 'Wen',   dur: 8, deps: ['api', 'visual'] },
+    { id: 'qa',       name: 'QA & accessibility pass',   who: 'Tomás', dur: 4, deps: ['build'] },
+    { id: 'rollout',  name: 'Staged rollout',            who: 'Priya', dur: 2, deps: ['qa'] }
+  ];
+  var byId = {};
+  tasks.forEach(function (t) { byId[t.id] = t; t.orig = t.dur; });
+
+  var finish = 0;
+  function schedule() {
+    finish = 0;
+    tasks.forEach(function (t) {
+      t.start = t.deps.reduce(function (m, d) { return Math.max(m, byId[d].end); }, 0);
+      t.end = t.start + t.dur;
+      finish = Math.max(finish, t.end);
+    });
+    for (var i = tasks.length - 1; i >= 0; i--) {
+      var t = tasks[i], lf = finish;
+      tasks.forEach(function (s) {
+        if (s.deps.indexOf(t.id) > -1) lf = Math.min(lf, s.lf - s.dur);
+      });
+      t.lf = lf;
+      t.float = lf - t.end;
+    }
+  }
+
+  function dateOf(i) {
+    var d = new Date(2026, 10, 9 + Math.floor(i / 5) * 7 + (i % 5));
+    return DOW[i % 5] + ', ' + MON[d.getMonth()] + ' ' + d.getDate();
+  }
+  function pct(n) { return (n / DAYS * 100) + '%'; }
+  function days(n) { return n + (n === 1 ? ' day' : ' days'); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  schedule();
+  var baseFinish = finish;
+  tasks.forEach(function (t) { t.b0 = t.start; t.b1 = t.end; });
+
+  var gantt = document.getElementById('gantt');
+  var finishEl = document.getElementById('finish');
+  var deltaEl = document.getElementById('delta');
+  var logEl = document.getElementById('log');
+  var resetEl = document.getElementById('reset');
+  var introLog = logEl.innerHTML;
+
+  tasks.forEach(function (t) {
+    var row = el('div', 'row' + (t.done ? ' is-done' : ''));
+    var name = el('span', 't-name', t.name);
+    name.appendChild(el('span', 't-who-inline', t.who));
+    row.appendChild(name);
+    row.appendChild(el('span', 't-who', t.who));
+
+    var ctrl = el('div', 'ctrl');
+    if (t.done) {
+      ctrl.appendChild(el('span', 'done-note', t.dur + 'd · done'));
+    } else {
+      t.minus = el('button', null, '−');
+      t.minus.type = 'button';
+      t.minus.setAttribute('aria-label', 'Take a day off ' + t.name);
+      t.durEl = el('span', 'dur');
+      t.plus = el('button', null, '+');
+      t.plus.type = 'button';
+      t.plus.setAttribute('aria-label', 'Add a day to ' + t.name);
+      t.minus.addEventListener('click', function () { change(t, -1); });
+      t.plus.addEventListener('click', function () { change(t, 1); });
+      ctrl.appendChild(t.minus); ctrl.appendChild(t.durEl); ctrl.appendChild(t.plus);
+    }
+    row.appendChild(ctrl);
+
+    var track = el('div', 'track');
+    var ghost = el('i', 'ghost');
+    ghost.style.left = pct(t.b0); ghost.style.width = pct(t.b1 - t.b0);
+    var today = el('i', 'm today'); today.style.left = pct(TODAY + .5);
+    var base = el('i', 'm base'); base.style.left = pct(baseFinish);
+    t.finEl = el('i', 'm fin');
+    t.floatEl = el('i', 'float');
+    t.flEl = el('span', 'fl');
+    t.barEl = el('i', 'bar' + (t.done ? ' done' : ''));
+    [ghost, base, today, t.finEl, t.floatEl, t.flEl, t.barEl].forEach(function (n) { track.appendChild(n); });
+    row.appendChild(track);
+    gantt.appendChild(row);
+  });
+
+  function minDur(t) { return t.start < TODAY ? Math.max(1, TODAY - t.start + 1) : 1; }
+  function canGrow(t) {
+    t.dur++; schedule();
+    var ok = finish <= DAYS;
+    t.dur--; schedule();
+    return ok;
+  }
+
+  function render() {
+    tasks.forEach(function (t) {
+      t.barEl.style.left = pct(t.start);
+      t.barEl.style.width = pct(t.dur);
+      t.finEl.style.left = pct(finish);
+      var showFloat = !t.done && t.float > 0;
+      t.floatEl.style.left = pct(t.end);
+      t.floatEl.style.width = pct(showFloat ? t.float : 0);
+      t.floatEl.style.opacity = showFloat ? 1 : 0;
+      t.flEl.style.left = pct(t.end + (showFloat ? t.float : 0));
+      t.flEl.textContent = showFloat ? t.float + 'd float' : '';
+      if (!t.done) {
+        t.barEl.classList.toggle('has-float', t.float > 0);
+        t.durEl.textContent = t.dur + 'd';
+        t.minus.disabled = t.dur <= minDur(t);
+        t.plus.disabled = !canGrow(t);
+      }
+    });
+    finishEl.textContent = dateOf(finish - 1);
+    var diff = finish - baseFinish;
+    deltaEl.className = 'chip ' + (diff > 0 ? 'late' : diff < 0 ? 'early' : 'ok');
+    deltaEl.textContent = diff > 0 ? '+' + days(diff) : diff < 0 ? days(-diff) + ' early' : 'on plan';
+    resetEl.hidden = !tasks.some(function (t) { return t.dur !== t.orig; });
+  }
+
+  function change(t, by) {
+    var before = finish;
+    t.dur += by;
+    schedule();
+    var msg = '<b>' + t.name + '</b> ' + (by > 0 ? '+1 day. ' : '−1 day. ');
+    if (finish > before) {
+      msg += 'Finish moves to ' + dateOf(finish - 1) + ', and everything after it shifted.';
+    } else if (finish < before) {
+      msg += 'Finish pulls in to ' + dateOf(finish - 1) + '.';
+    } else if (by > 0) {
+      msg += t.float > 0
+        ? 'Finish holds. It still has ' + days(t.float) + ' of float.'
+        : 'Finish holds, but that was its last day of float. The next slip moves the date.';
+    } else {
+      msg += 'Finish holds. This task isn’t what the date is waiting on.';
+    }
+    logEl.innerHTML = msg;
+    render();
+  }
+
+  resetEl.addEventListener('click', function () {
+    tasks.forEach(function (t) { t.dur = t.orig; });
+    schedule();
+    logEl.innerHTML = introLog;
+    render();
+  });
+
+  render();
+})();
+
+/* ---------- plumb line ---------- */
+(function () {
+  var ring = document.querySelector('.ring');
+  var plumb = document.querySelector('.plumb');
+  if (!ring || !plumb) return;
+  var string = plumb.querySelector('.plumb-string');
+  var bob = plumb.querySelector('.plumb-bob');
+  var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var ang = 0, vel = 0, lastY = window.scrollY, raf = 0;
+
+  function place() {
+    var r = ring.getBoundingClientRect();
+    var x = r.left + r.width / 2;
+    var top = Math.max(0, r.bottom);
+    var vh = window.innerHeight;
+    var max = document.documentElement.scrollHeight - vh;
+    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    var rest = vh * 0.3;
+    var bobY = still.matches ? vh * 0.5 : rest + (vh - 64 - rest) * p;
+    var len = Math.max(0, bobY - top);
+    plumb.style.transform = 'translate(' + x + 'px,' + top + 'px) rotate(' + ang + 'deg)';
+    string.style.transform = 'scaleY(' + len + ')';
+    bob.style.transform = 'translate(-50%,' + len + 'px)';
+  }
+
+  function swing() {
+    vel += -ang * 0.008;
+    vel *= 0.965;
+    ang = Math.max(-0.5, Math.min(0.5, ang + vel));
+    place();
+    if (Math.abs(ang) < 0.003 && Math.abs(vel) < 0.003) { ang = 0; vel = 0; raf = 0; place(); return; }
+    raf = requestAnimationFrame(swing);
+  }
+
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY, dy = y - lastY;
+    lastY = y;
+    if (still.matches) { place(); return; }
+    vel += Math.max(-60, Math.min(60, dy)) * 0.0012;
+    if (!raf) raf = requestAnimationFrame(swing);
+  }, { passive: true });
+  window.addEventListener('resize', place);
+  window.addEventListener('load', place);
+
+  plumb.hidden = false;
+  place();
+})();
+
+/* ---------- signup (not wired to a backend) ---------- */
+(function () {
+  var form = document.getElementById('signup');
+  var done = document.getElementById('signup-done');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = form.elements.email.value.trim();
+    done.textContent = 'Setup link sent to ' + email + '. It’s good for 24 hours.';
+    form.hidden = true;
+    done.hidden = false;
+  });
+})();
+</script>
+</body>
+</html>

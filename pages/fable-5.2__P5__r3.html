@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plumb: project plans with an honest end date</title>
+<meta name="description" content="Plumb re-forecasts every project's end date each morning from how fast your team has actually been finishing work.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1E28'/%3E%3Cpath d='M16 4v9' stroke='%23E7ECEE' stroke-width='2'/%3E%3Cpath d='M10 13h12l-6 15z' fill='%23E7ECEE'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #E7ECEE;
+    --panel: #F8FAFA;
+    --ink: #0F1E28;
+    --muted: #4A5963;
+    --rule: rgba(15, 30, 40, .2);
+    --rule-soft: rgba(15, 30, 40, .09);
+    --red: #C8351A;
+    --red-tint: #F4D9D0;
+    --green: #1C6A4D;
+    --sans: "Helvetica Neue", Helvetica, Arimo, "Liberation Sans", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); font-size: .76rem; letter-spacing: .01em; }
+  h1, h2, h3, p { margin: 0; }
+
+  /* nav */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-weight: 700; font-size: 1.25rem; letter-spacing: -.02em;
+    text-decoration: none;
+  }
+  .brand svg { width: 13px; height: 22px; }
+  .nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; align-items: center; }
+  .nav li a { text-decoration: none; font-size: .94rem; }
+  .nav li a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .btn {
+    display: inline-block;
+    background: var(--ink); color: var(--paper);
+    padding: 13px 20px;
+    font: 600 1rem/1 var(--sans);
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: var(--red); border-color: var(--red); }
+  .btn.small { padding: 9px 14px; font-size: .9rem; }
+  .nav li a.btn:hover { text-decoration: none; }
+
+  /* hero */
+  .hero { padding: 72px 0 40px; }
+  h1 {
+    font-size: clamp(2.7rem, 8.2vw, 6.6rem);
+    line-height: .94;
+    letter-spacing: -.045em;
+    font-weight: 700;
+  }
+  h1 span { display: block; }
+  h1 .says { color: var(--red); }
+  .hero-sub {
+    display: grid; grid-template-columns: 7fr 4fr; gap: 48px; align-items: end;
+    margin-top: 40px;
+  }
+  .lede { font-size: 1.24rem; line-height: 1.45; max-width: 33em; }
+  .hero-cta { justify-self: end; text-align: right; }
+  .hero-cta p { margin-top: 10px; color: var(--muted); font-size: .9rem; }
+
+  /* demo */
+  .demo {
+    background: var(--panel);
+    border: 1px solid var(--ink);
+    margin: 24px 0 0;
+  }
+  .demo-head {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .demo-head h2 { font-size: 1.15rem; letter-spacing: -.01em; margin-top: 4px; }
+  .demo-head .mono { color: var(--muted); }
+  .readout { text-align: right; white-space: nowrap; }
+  .readout .date {
+    display: block;
+    font-size: 1.9rem; font-weight: 700; letter-spacing: -.03em; line-height: 1.1;
+  }
+  .readout .status { color: var(--red); font-weight: 600; font-size: .95rem; }
+  .demo.ok .readout .status { color: var(--green); }
+
+  .track-pad { padding: 20px 26px 6px; }
+  .track { position: relative; padding-top: 28px; }
+  .bars {
+    display: flex; height: 56px;
+    background-color: var(--paper);
+    background-image: linear-gradient(to right, var(--rule-soft) 1px, transparent 1px);
+    background-size: calc(100% / 28) 100%;
+  }
+  .seg {
+    flex: 0 0 auto;
+    width: calc(var(--d) / 28 * 100%);
+    height: 100%;
+    overflow: hidden;
+    border-right: 1px solid var(--panel);
+    display: flex; align-items: flex-end;
+    transition: width .45s cubic-bezier(.2, .7, .2, 1), opacity .3s;
+  }
+  .seg span {
+    font: 500 .68rem/1 var(--mono);
+    padding: 0 0 8px 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: #fff;
+  }
+  .seg.c1 { background: #0F1E28; }
+  .seg.c2 { background: #243848; }
+  .seg.c3 { background: #3A5164; }
+  .seg.c4 { background: #546C7F; }
+  .seg.extra {
+    background-color: var(--red-tint);
+    background-image: repeating-linear-gradient(135deg, rgba(200, 53, 26, .5) 0 1.5px, transparent 1.5px 7px);
+  }
+  .seg.extra span { color: #7A1D0B; background: var(--red-tint); padding: 3px 5px; margin: 0 0 5px 4px; }
+  .seg.cut { width: 0; opacity: 0; border-right-width: 0; }
+
+  .ticks { position: relative; height: 24px; }
+  .ticks span {
+    position: absolute; top: 0; left: calc(var(--at) / 28 * 100%);
+    height: 100%;
+    padding: 7px 0 0 5px;
+    border-left: 1px solid var(--rule);
+    font: .68rem/1 var(--mono); color: var(--muted); white-space: nowrap;
+  }
+  .flag { position: absolute; width: 0; border-left: 2px solid var(--ink); }
+  .flag span {
+    position: absolute; right: 7px;
+    font: .72rem/1 var(--mono); white-space: nowrap;
+  }
+  .flag b { font-weight: 700; }
+  .flag-deadline { top: 0; height: 84px; left: calc(16 / 28 * 100%); }
+  .flag-deadline span { top: 3px; }
+  .flag-forecast {
+    top: 28px; height: 110px; border-color: var(--red); color: var(--red);
+    transition: left .45s cubic-bezier(.2, .7, .2, 1);
+  }
+  .flag-forecast span { bottom: 2px; }
+  .demo.ok .flag-forecast { border-color: var(--green); color: var(--green); }
+  .track-foot { height: 32px; }
+
+  .scope {
+    display: grid; grid-template-columns: 1fr 1.25fr;
+    border-top: 1px solid var(--rule);
+  }
+  .scope > div { padding: 20px 26px 22px; }
+  .scope > div + div { border-left: 1px solid var(--rule); }
+  .scope h3 {
+    font: 600 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .scope ul { list-style: none; margin: 0; padding: 0; }
+  .scope li, .scope label {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: .95rem;
+  }
+  .scope li:has(label) { display: block; padding: 0; border: 0; }
+  .scope label { grid-template-columns: auto 1fr auto; cursor: pointer; }
+  .scope label:hover .name { text-decoration: underline; text-underline-offset: 3px; }
+  .scope input { accent-color: var(--ink); width: 16px; height: 16px; margin: 0; transform: translateY(2px); }
+  .scope small { color: var(--muted); font-size: .82rem; margin-left: 6px; }
+  .scope .d { font: .8rem/1 var(--mono); }
+  .scope input:not(:checked) ~ .name { text-decoration: line-through; color: var(--muted); }
+  .scope input:not(:checked) ~ .d { color: var(--muted); }
+  .scope .total { border-bottom: 0; font-weight: 600; }
+  .demo-note {
+    padding: 16px 26px 18px;
+    border-top: 1px solid var(--rule);
+    font-size: .98rem;
+    min-height: 3.4em;
+  }
+  .demo-caption { margin: 12px 0 0; color: var(--muted); font-size: .88rem; }
+
+  /* sections */
+  section.block { padding: 96px 0 0; }
+  .split { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; }
+  .split.flip { grid-template-columns: 7fr 5fr; }
+  h2 {
+    font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+    line-height: 1.08; letter-spacing: -.03em; font-weight: 700;
+  }
+  .block p { margin-top: 16px; max-width: 34em; }
+  .block p.aside { color: var(--muted); font-size: .95rem; }
+
+  /* morning log */
+  .log { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .log li {
+    display: grid; grid-template-columns: 76px 1fr; gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .log time { font: .82rem/1.9 var(--mono); color: var(--muted); }
+  .log strong { font-weight: 600; }
+
+  /* ledger */
+  .ledger { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--ink); font-size: .93rem; }
+  .ledger caption {
+    caption-side: top; text-align: left;
+    font: .72rem/1 var(--mono); color: var(--muted);
+    padding-bottom: 10px;
+  }
+  .ledger th, .ledger td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .ledger th {
+    font: 600 .68rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+  }
+  .ledger td:first-child, .ledger td:last-child, .ledger th:last-child { font-family: var(--mono); font-size: .8rem; white-space: nowrap; }
+  .ledger td:last-child, .ledger th:last-child { text-align: right; }
+  .ledger .plus { color: var(--red); font-weight: 600; }
+  .ledger tfoot td { border-bottom: 0; font-weight: 700; }
+  .ledger td small { display: block; color: var(--muted); font-size: .82rem; }
+
+  /* client view */
+  .client {
+    background: var(--panel); border: 1px solid var(--ink);
+    padding: 26px 28px 22px;
+  }
+  .client .url {
+    font: .72rem/1 var(--mono); color: var(--muted);
+    padding-bottom: 14px; margin-bottom: 20px; border-bottom: 1px solid var(--rule);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .client .label { font-size: .85rem; color: var(--muted); }
+  .client .big { font-size: 2.6rem; font-weight: 700; letter-spacing: -.04em; line-height: 1.1; margin: 2px 0 6px; }
+  .client .was { font-size: .92rem; margin: 0; }
+  .client .was s { color: var(--muted); }
+  .client dl { margin: 20px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: .92rem; }
+  .client dt { color: var(--muted); }
+  .client dd { margin: 0; }
+  .client .stamp { margin-top: 20px; font: .7rem/1 var(--mono); color: var(--muted); }
+
+  /* left out */
+  .omit { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); }
+  .omit li { padding: 20px 28px 0 0; }
+  .omit li + li { padding-left: 28px; border-left: 1px solid var(--rule); }
+  .omit s { display: block; font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; text-decoration-thickness: 2px; text-decoration-color: var(--red); margin-bottom: 6px; }
+  .rest { margin-top: 36px !important; max-width: 44em !important; }
+
+  /* quote */
+  .quote { padding: 110px 0 0; }
+  .quote blockquote { margin: 0; max-width: 21em; font-size: clamp(1.5rem, 3.1vw, 2.3rem); line-height: 1.2; letter-spacing: -.025em; font-weight: 500; }
+  .quote figcaption { margin-top: 20px; font-size: .95rem; color: var(--muted); }
+  .quote figure { margin: 0; padding-left: 28px; border-left: 2px solid var(--red); }
+
+  /* pricing */
+  .plans { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--ink); background: var(--panel); margin-top: 32px; }
+  .plan { padding: 30px 30px 32px; }
+  .plan + .plan { border-left: 1px solid var(--ink); }
+  .plan h3 { font: 600 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .price { font-size: 3.4rem; font-weight: 700; letter-spacing: -.05em; line-height: 1; margin: 14px 0 4px; }
+  .price small { font-size: 1rem; font-weight: 400; letter-spacing: 0; color: var(--muted); margin-left: 6px; }
+  .plan ul { margin: 18px 0 24px; padding: 0; list-style: none; }
+  .plan li { padding: 8px 0; border-bottom: 1px solid var(--rule-soft); font-size: .96rem; }
+  .ghost { background: transparent; color: var(--ink); }
+  .ghost:hover { color: var(--paper); }
+
+  /* faq */
+  .faq { border-top: 1px solid var(--ink); }
+  .faq details { border-bottom: 1px solid var(--rule); }
+  .faq summary {
+    list-style: none; cursor: pointer;
+    display: flex; justify-content: space-between; gap: 20px;
+    padding: 17px 0; font-weight: 600;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font: 400 1.2rem/1.2 var(--mono); }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details p { margin: 0; padding: 0 40px 20px 0; max-width: 38em; }
+
+  /* closing */
+  .closing {
+    margin-top: 110px; padding: 64px 0 72px;
+    border-top: 1px solid var(--ink);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap;
+  }
+  .closing h2 { font-size: clamp(2.2rem, 5.4vw, 4.2rem); letter-spacing: -.04em; line-height: .98; }
+  .closing p { margin-top: 14px; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); padding: 22px 0 40px; font-size: .86rem; color: var(--muted); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  footer nav { display: flex; gap: 22px; flex-wrap: wrap; }
+  footer a { text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 860px) {
+    body { font-size: 16px; }
+    .nav .hide-s { display: none; }
+    .hero { padding-top: 48px; }
+    .hero-sub, .split, .split.flip { grid-template-columns: 1fr; gap: 28px; }
+    .hero-cta { justify-self: start; text-align: left; }
+    .scope { grid-template-columns: 1fr; }
+    .scope > div + div { border-left: 0; border-top: 1px solid var(--rule); }
+    .omit { grid-template-columns: 1fr; }
+    .omit li, .omit li + li { padding: 18px 0; border-left: 0; }
+    .omit li + li { border-top: 1px solid var(--rule); }
+    .plans { grid-template-columns: 1fr; }
+    .plan + .plan { border-left: 0; border-top: 1px solid var(--ink); }
+    section.block { padding-top: 72px; }
+    .quote { padding-top: 80px; }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 0 18px; }
+    .demo-head { flex-direction: column; align-items: flex-start; padding: 18px; }
+    .readout { text-align: left; }
+    .track-pad { padding: 16px 18px 4px; }
+    .scope > div, .demo-note { padding-left: 18px; padding-right: 18px; }
+    .seg span { display: none; }
+    .ticks span:last-child { display: none; }
+    .scope small { display: block; margin: 0; }
+    .ledger th:nth-child(3), .ledger td:nth-child(3) { display: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .seg, .flag-forecast { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="#" aria-label="Plumb home">
+      <svg viewBox="0 0 13 22" aria-hidden="true"><path d="M6.5 0v8" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 8h10l-5 13z" fill="currentColor"/></svg>
+      Plumb
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        <li class="hide-s"><a href="#how">How it works</a></li>
+        <li class="hide-s"><a href="#pricing">Pricing</a></li>
+        <li class="hide-s"><a href="#questions">Questions</a></li>
+        <li><a href="#">Sign in</a></li>
+        <li><a class="btn small" href="#pricing">Start free</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>
+        <span>The deadline is the 14th.</span>
+        <span class="says">Plumb says the 23rd.</span>
+      </h1>
+      <div class="hero-sub">
+        <p class="lede">Plumb is a project tool that recalculates every end date each morning from how fast your team has actually been finishing work. You hear about the slip in week two, while there is still time to do something about it.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#pricing">Start free</a>
+          <p>Free for three people. No card.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo" id="demo" aria-labelledby="demo-title">
+      <div class="demo-head">
+        <div>
+          <p class="mono">Hartwell Clinic</p>
+          <h2 id="demo-title">Booking site relaunch</h2>
+        </div>
+        <div class="readout" aria-live="polite">
+          <span class="date" id="fc-date">Wed 23 Dec</span>
+          <span class="status" id="fc-status">9 days late</span>
+        </div>
+      </div>
+
+      <div class="track-pad">
+        <div class="track" aria-hidden="true">
+          <div class="flag flag-deadline"><span>Deadline <b>Mon 14 Dec</b></span></div>
+          <div class="bars">
+            <div class="seg c1" style="--d:5"><span>Booking flow</span></div>
+            <div class="seg c2" style="--d:4"><span>Payments</span></div>
+            <div class="seg c3" style="--d:3"><span>Content</span></div>
+            <div class="seg c4" style="--d:2"><span>QA</span></div>
+            <div class="seg extra" data-id="es" style="--d:4"><span>Spanish</span></div>
+            <div class="seg extra" data-id="ins" style="--d:3"><span>Insurance</span></div>
+            <div class="seg extra" data-id="bios" style="--d:2"><span>Bios</span></div>
+          </div>
+          <div class="ticks">
+            <span style="--at:0">23 Nov</span>
+            <span style="--at:5">30 Nov</span>
+            <span style="--at:10">7 Dec</span>
+            <span style="--at:15">14 Dec</span>
+            <span style="--at:20">21 Dec</span>
+            <span style="--at:25">28 Dec</span>
+          </div>
+          <div class="track-foot"></div>
+          <div class="flag flag-forecast" id="fc-flag" style="left:82.143%"><span>Forecast <b id="fc-flag-date">Wed 23 Dec</b></span></div>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div>
+          <h3>Original plan, still to do</h3>
+          <ul>
+            <li><span>Booking flow</span><span class="d">5 d</span></li>
+            <li><span>Payments and deposits</span><span class="d">4 d</span></li>
+            <li><span>Content migration</span><span class="d">3 d</span></li>
+            <li><span>QA and launch</span><span class="d">2 d</span></li>
+            <li class="total"><span>At this team's pace</span><span class="d">14 d</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Added since kickoff</h3>
+          <ul>
+            <li><label>
+              <input type="checkbox" checked value="es" data-days="4" data-name="the Spanish locale">
+              <span class="name">Spanish locale <small>client, 2 Nov</small></span>
+              <span class="d">+4 d</span>
+            </label></li>
+            <li><label>
+              <input type="checkbox" checked value="ins" data-days="3" data-name="insurance lookup">
+              <span class="name">Insurance lookup <small>client, 10 Nov</small></span>
+              <span class="d">+3 d</span>
+            </label></li>
+            <li><label>
+              <input type="checkbox" checked value="bios" data-days="2" data-name="the staff bios page">
+              <span class="name">Staff bios page <small>design, 12 Nov</small></span>
+              <span class="d">+2 d</span>
+            </label></li>
+          </ul>
+        </div>
+      </div>
+      <p class="demo-note" id="fc-note">Three additions since kickoff pushed the end date out by nine days. Untick one to see what cutting it buys back.</p>
+    </section>
+    <p class="demo-caption">A working forecast on a made-up project. The tick boxes are live.</p>
+
+    <section class="block" id="how">
+      <div class="split">
+        <div>
+          <h2>What happens at six every morning</h2>
+          <p>Most plans are built on the estimate from kickoff and never checked against it again. Plumb checks daily. If your team gets through about three quarters of a planned day per working day, every remaining task is stretched by that much.</p>
+          <p class="aside">Pace is a rolling six-week figure per team. Holidays and booked leave are taken out before the sums are done.</p>
+        </div>
+        <ol class="log">
+          <li><time>06:00</time><div><strong>Counts what was finished yesterday</strong> and compares it with what those tasks were estimated at.</div></li>
+          <li><time>06:01</time><div><strong>Updates the team's pace.</strong> One slow day barely moves it. Three slow weeks do.</div></li>
+          <li><time>06:02</time><div><strong>Reruns the end date of every open project</strong> using the work that's left and the pace you're really going at.</div></li>
+          <li><time>06:05</time><div><strong>Sends one message if a date moved by more than a day.</strong> It goes to the project lead and says which tasks caused it. Everyone else is left alone.</div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="split flip">
+        <table class="ledger">
+          <caption>Scope ledger · Booking site relaunch</caption>
+          <thead>
+            <tr><th>Date</th><th>Change</th><th>Asked by</th><th>Cost</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2 Nov</td><td>Spanish locale<small>All patient-facing pages and emails</small></td><td>M. Okafor, client</td><td class="plus">+4 d</td></tr>
+            <tr><td>10 Nov</td><td>Insurance lookup<small>Check cover before booking</small></td><td>M. Okafor, client</td><td class="plus">+3 d</td></tr>
+            <tr><td>12 Nov</td><td>Staff bios page</td><td>Design</td><td class="plus">+2 d</td></tr>
+            <tr><td>18 Nov</td><td>Square in place of Stripe<small>Same effort, different provider</small></td><td>Client finance</td><td>0 d</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td></td><td>Net change since kickoff</td><td></td><td class="plus">+9 d</td></tr>
+          </tfoot>
+        </table>
+        <div>
+          <h2>Every addition gets a name, a date and a price in days</h2>
+          <p>When someone asks for one small thing, Plumb records who asked, when, and what it did to the schedule. Three months later nobody has to reconstruct how a six-week job became a ten-week one.</p>
+          <p>It also makes the request easier to answer on the spot. "Yes, and that moves launch to the 18th" is a better reply than "we'll try".</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="split">
+        <div>
+          <h2>A link you can send the client</h2>
+          <p>They see one date, what's left, and what has been added since kickoff. There's no login and no board to learn. The date on their screen is the same one on yours, so there is only ever one version of the story.</p>
+        </div>
+        <div class="client" aria-label="Example of the client view">
+          <p class="url">plumb.example/s/hartwell-booking-7fq2</p>
+          <p class="label">Expected launch</p>
+          <p class="big">Wed 23 Dec</p>
+          <p class="was">Originally <s>Mon 14 Dec</s>. <a href="#">See what changed</a></p>
+          <dl>
+            <dt>Left to do</dt><dd>23 working days across 7 items</dd>
+            <dt>Added</dt><dd>3 items since kickoff, +9 days</dd>
+            <dt>In progress</dt><dd>Booking flow, Payments and deposits</dd>
+          </dl>
+          <p class="stamp">Updated today 06:02</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Left out on purpose</h2>
+      <ul class="omit">
+        <li><s>Timesheets</s>Pace comes from finished tasks. Nobody logs hours and nobody is asked to.</li>
+        <li><s>Leaderboards</s>Forecasts use the team's number. Your own pace is visible to you and no one else.</li>
+        <li><s>A notification for everything</s>A date moving earns one message. Comments and mentions arrive in a single daily digest unless you ask for more.</li>
+      </ul>
+      <p class="rest">The rest is what you'd expect from a project tool: tasks, boards, a timeline, files and comments. You can import from Jira, Asana, Linear, Trello or a CSV, and if your history comes with it the forecast works from the first morning.</p>
+    </section>
+
+    <section class="quote">
+      <figure>
+        <blockquote>We told a client in week three that December wasn't going to happen. They moved the launch and thanked us. In nine years of running this studio, that had never once been a calm conversation.</blockquote>
+        <figcaption>Ines Varga, managing partner at Fieldnote, a twelve-person web studio</figcaption>
+      </figure>
+    </section>
+
+    <section class="block" id="pricing">
+      <h2>Two plans</h2>
+      <div class="plans">
+        <div class="plan">
+          <h3>Small</h3>
+          <p class="price">$0</p>
+          <ul>
+            <li>Up to 3 people</li>
+            <li>2 active projects</li>
+            <li>Forecasts, scope ledger and client links included</li>
+            <li>No card, no trial clock</li>
+          </ul>
+          <a class="btn ghost" href="#">Start free</a>
+        </div>
+        <div class="plan">
+          <h3>Team</h3>
+          <p class="price">$8<small>per person, per month</small></p>
+          <ul>
+            <li>Unlimited projects</li>
+            <li>Clients and view-only guests are free</li>
+            <li>SSO, and audit history on the scope ledger</li>
+            <li>Pay yearly and it's $80 a head</li>
+          </ul>
+          <a class="btn" href="#">Start a 30-day trial</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="questions">
+      <div class="split">
+        <h2>Questions people ask before switching</h2>
+        <div class="faq">
+          <details open>
+            <summary>How long before the forecast is worth trusting?</summary>
+            <p>About two weeks of real work on a fresh account. Until then Plumb shows a range instead of a single date and tells you why. If you import history from your current tool, it has what it needs straight away.</p>
+          </details>
+          <details>
+            <summary>Do we have to estimate every task?</summary>
+            <p>Roughly. Sizes are half a day, one, two, three or five. Anything bigger gets flagged to be split. The estimates don't need to be right, only consistent, because the pace figure absorbs how optimistic your team tends to be.</p>
+          </details>
+          <details>
+            <summary>Is this a way of monitoring individuals?</summary>
+            <p>No. Forecasts run on a team figure. Individual pace exists so people can see their own, and it isn't shown to managers or admins.</p>
+          </details>
+          <details>
+            <summary>What if we leave?</summary>
+            <p>Everything exports as CSV or JSON from the settings page, including the scope ledger and forecast history. Cancelling is a button on the same page.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div>
+        <h2>Find out your real date.</h2>
+        <p>Import a project today and the first forecast lands tomorrow at six.</p>
+      </div>
+      <a class="btn" href="#pricing">Start free</a>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Plumb Software Ltd.</span>
+    <nav aria-label="Footer">
+      <a href="#">Changelog</a>
+      <a href="#">Docs</a>
+      <a href="#">Security</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">hello@plumb.example</a>
+    </nav>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var TOTAL = 28, DEADLINE = 16, CORE = 14, FULL = 23;
+  var DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // working days starting Mon 23 Nov 2026
+  var days = [], d = new Date(2026, 10, 23);
+  while (days.length < TOTAL) {
+    if (d.getDay() % 6 !== 0) days.push(new Date(d));
+    d.setDate(d.getDate() + 1);
+  }
+  function fmt(x) { return DAY[x.getDay()] + ' ' + x.getDate() + ' ' + MON[x.getMonth()]; }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+  function list(a) {
+    if (a.length < 2) return a[0] || '';
+    return a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  }
+
+  var demo = document.getElementById('demo');
+  var boxes = demo.querySelectorAll('input[type=checkbox]');
+  var elDate = document.getElementById('fc-date');
+  var elStatus = document.getElementById('fc-status');
+  var elFlag = document.getElementById('fc-flag');
+  var elFlagDate = document.getElementById('fc-flag-date');
+  var elNote = document.getElementById('fc-note');
+  var defaultNote = elNote.textContent;
+
+  function update() {
+    var n = CORE, cut = [];
+    boxes.forEach(function (b) {
+      demo.querySelector('.seg[data-id="' + b.value + '"]').classList.toggle('cut', !b.checked);
+      if (b.checked) n += Number(b.dataset.days);
+      else cut.push(b.dataset.name);
+    });
+
+    var end = days[n - 1];
+    var diff = Math.round((end - days[DEADLINE - 1]) / 864e5);
+    var label = fmt(end);
+
+    elDate.textContent = label;
+    elFlagDate.textContent = label;
+    elFlag.style.left = (n / TOTAL * 100) + '%';
+    demo.classList.toggle('ok', diff <= 0);
+
+    elStatus.textContent = diff > 0 ? plural(diff, 'day') + ' late'
+      : diff === 0 ? 'On the day'
+      : plural(-diff, 'day') + ' early';
+
+    if (!cut.length) {
+      elNote.textContent = defaultNote;
+    } else {
+      var s = 'Cutting ' + list(cut) + ' buys back ' + plural(FULL - n, 'working day') + '. ';
+      if (diff > 0) s += 'Still ' + plural(diff, 'day') + ' over.';
+      else if (diff === 0) s += 'That lands it on the deadline, and it is a conversation you can have with the client today, three weeks out.';
+      else s += 'That leaves ' + plural(-diff, 'day') + ' of slack before the deadline.';
+      elNote.textContent = s;
+    }
+  }
+
+  boxes.forEach(function (b) { b.addEventListener('change', update); });
+  update();
+})();
+</script>
+</body>
+</html>

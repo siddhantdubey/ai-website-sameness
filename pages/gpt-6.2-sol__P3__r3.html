@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f1e9">
+<title>Mara Vale — Freelance Photographer</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f4f1e9;
+    --ink: #252822;
+    --muted: #585b52;
+    --line: #cccbbf;
+    --accent: #c4d89a;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans); }
+  a { color: inherit; text-underline-offset: .25em; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid #52672e; outline-offset: 5px; }
+  .wrap { width: min(100% - 3rem, 82rem); margin-inline: auto; }
+  .skip { position: absolute; top: .5rem; left: .5rem; z-index: 5; padding: .5rem 1rem; background: var(--paper); transform: translateY(-150%); }
+  .skip:focus { transform: none; }
+  header .wrap, footer .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .8rem 2rem; padding-block: 1.1rem;
+  }
+  header .wrap { border-bottom: 1px solid var(--line); }
+  .brand { font: 1.45rem var(--serif); text-decoration: none; }
+  nav { display: flex; gap: clamp(.95rem, 3vw, 2.2rem); }
+  nav a { text-decoration: none; font-size: .87rem; }
+  nav a:hover, footer a:hover { text-decoration: underline; }
+  .intro { padding-block: clamp(3.5rem, 8vw, 7.5rem) 2.3rem; }
+  .eyebrow { margin: 0 0 .85rem; font-size: .73rem; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
+  h1, h2, h3, p { margin-top: 0; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: normal; }
+  h1 { max-width: 11ch; margin-bottom: 1.5rem; font-size: clamp(3.5rem, 10vw, 9rem); line-height: .9; letter-spacing: -.065em; }
+  h1 em { color: #4b583a; }
+  h2 { margin-bottom: .9rem; font-size: clamp(2.7rem, 6vw, 5rem); line-height: 1; letter-spacing: -.055em; }
+  .intro-bottom { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: .8rem 2rem; }
+  .intro-bottom p { margin: 0; max-width: 36ch; color: var(--muted); }
+  .intro-bottom a { white-space: nowrap; }
+  .plate { display: block; width: 100%; height: auto; background: #596258; }
+  .hero .plate { aspect-ratio: 2.12; object-fit: cover; }
+  figure { margin: 0; }
+  figcaption { display: flex; justify-content: space-between; gap: 1rem; padding-block: .6rem; font-size: .76rem; color: var(--muted); }
+  .work { padding-block: clamp(4.5rem, 9vw, 8rem); }
+  .section-heading { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 1.25rem; margin-bottom: 1.9rem; }
+  .section-heading h2 { margin-bottom: 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .filter { border: 1px solid var(--line); padding: .34rem .8rem; border-radius: 2rem; background: transparent; font-size: .79rem; }
+  .filter:hover { border-color: var(--ink); }
+  .filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.25rem; }
+  .project { width: 100%; border: 0; padding: 0; background: transparent; text-align: left; }
+  .project-image { display: block; overflow: hidden; }
+  .project .plate { aspect-ratio: 1.46; object-fit: cover; transition: transform .45s ease; }
+  .project:hover .plate, .project:focus-visible .plate { transform: scale(1.035); }
+  .project-label { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .15rem 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .project-title { font: clamp(1.25rem, 3vw, 1.8rem) var(--serif); }
+  .project-type { grid-column: 1; font-size: .77rem; color: var(--muted); }
+  .project-arrow { grid-column: 2; grid-row: 1 / span 2; font-size: 1.2rem; }
+  .about { background: #e7e8da; padding-block: clamp(3.5rem, 8vw, 7rem); }
+  .about .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 3rem; }
+  .about-copy { max-width: 47ch; align-self: center; }
+  .about-copy p:last-child { margin-bottom: 0; }
+  .contact { background: var(--accent); padding-block: clamp(3.5rem, 8vw, 7rem); }
+  .contact p { max-width: 46ch; }
+  .contact a { display: inline-block; border-radius: 2rem; background: var(--ink); color: var(--paper); padding: .65rem 1.2rem; text-decoration: none; }
+  .contact a:hover { background: #435033; }
+  footer { font-size: .8rem; }
+  dialog { width: min(54rem, calc(100% - 2rem)); max-height: 90vh; padding: 0; overflow: auto; border: 0; color: var(--ink); background: var(--paper); }
+  dialog::backdrop { background: #161913d9; }
+  .dialog-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .75rem 1rem; }
+  .dialog-top h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.6rem); }
+  .close { border: 1px solid var(--line); border-radius: 2rem; background: transparent; padding: .2rem .75rem; }
+  .dialog-copy { margin: 0; padding: 1rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (max-width: 42rem) {
+    .wrap { width: calc(100% - 2rem); }
+    .grid, .about .wrap { grid-template-columns: 1fr; }
+    .hero .plate { aspect-ratio: 1.35; }
+  }
+  @media (prefers-reduced-motion: reduce) { .project .plate { transition: none; } }
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top">Mara Vale</a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="intro wrap" aria-labelledby="intro-title">
+    <p class="eyebrow">Freelance photographer · Pacific Northwest</p>
+    <h1 id="intro-title">In the <em>quiet</em> of things.</h1>
+    <div class="intro-bottom">
+      <p>Landscape and still-life photography for editorial, independent brands, and personal commissions.</p>
+      <a href="#work">Explore the work ↓</a>
+    </div>
+  </section>
+
+  <figure class="hero wrap">
+    <canvas class="plate" data-scene="coast" width="1200" height="570" role="img" aria-label="Illustration of dark coastal cliffs overlooking a misty sea at dusk"></canvas>
+    <figcaption><span>Where the Land Ends</span><span>Oregon Coast</span></figcaption>
+  </figure>
+
+  <section class="work wrap" id="work" aria-labelledby="work-title">
+    <div class="section-heading">
+      <h2 id="work-title">Selected work</h2>
+      <div class="filters" role="group" aria-label="Filter projects">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter" type="button" data-filter="landscape" aria-pressed="false">Landscape</button>
+        <button class="filter" type="button" data-filter="still-life" aria-pressed="false">Still life</button>
+      </div>
+    </div>
+    <p class="sr-only" id="filter-status" role="status"></p>
+    <div class="grid">
+      <article data-category="landscape">
+        <button class="project" type="button" aria-haspopup="dialog" data-description="Headlands and tidal water along the Oregon coast, seen in the last light of the day.">
+          <span class="project-image"><canvas class="plate" data-scene="coast" width="840" height="576" role="img" aria-label="Illustration of a rocky headland and silver water"></canvas></span>
+          <span class="project-label"><span class="project-title">Where the Land Ends</span><span class="project-type">Landscape · Oregon Coast</span><span class="project-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      </article>
+      <article data-category="still-life">
+        <button class="project" type="button" aria-haspopup="dialog" data-description="A study in clay, linen, and the warm light that moves across a studio in late afternoon.">
+          <span class="project-image"><canvas class="plate" data-scene="clay" width="840" height="576" role="img" aria-label="Illustration of two clay vessels on a warm ochre table"></canvas></span>
+          <span class="project-label"><span class="project-title">Earth &amp; Form</span><span class="project-type">Still life · Studio</span><span class="project-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      </article>
+      <article data-category="landscape">
+        <button class="project" type="button" aria-haspopup="dialog" data-description="Ridges of the North Cascades emerge through blue morning haze.">
+          <span class="project-image"><canvas class="plate" data-scene="mountains" width="840" height="576" role="img" aria-label="Illustration of layered blue mountain ridges at sunrise"></canvas></span>
+          <span class="project-label"><span class="project-title">Blue Hour</span><span class="project-type">Landscape · North Cascades</span><span class="project-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      </article>
+      <article data-category="still-life">
+        <button class="project" type="button" aria-haspopup="dialog" data-description="Citrus on a dark tabletop, with window light picking out the texture of the peel.">
+          <span class="project-image"><canvas class="plate" data-scene="citrus" width="840" height="576" role="img" aria-label="Illustration of oranges and green leaves on a dark table"></canvas></span>
+          <span class="project-label"><span class="project-title">Winter Citrus</span><span class="project-type">Still life · Studio</span><span class="project-arrow" aria-hidden="true">↗</span></span>
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <div><p class="eyebrow">Behind the camera</p><h2 id="about-title">Hi, I’m Mara.</h2></div>
+      <div class="about-copy">
+        <p>I’m a freelance photographer based in the Pacific Northwest. I’m drawn to the way weather changes a familiar place and the way a little window light can reveal the texture of an everyday object.</p>
+        <p>I work with editors, independent brands, and individuals on location and in the studio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <h2 id="contact-title">Let’s make something.</h2>
+      <p>Tell me what you have in mind, where it’s happening, and when you’d like to shoot.</p>
+      <a href="mailto:hello@example.com">Email Mara ↗</a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="year">2026</span> Mara Vale</span><a href="#top">Back to top ↑</a></div></footer>
+
+<dialog aria-labelledby="project-heading">
+  <div class="dialog-top">
+    <h2 id="project-heading"></h2>
+    <form method="dialog"><button class="close" autofocus>Close</button></form>
+  </div>
+  <div class="dialog-image"></div>
+  <p class="dialog-copy"></p>
+</dialog>
+
+<script>
+  // These illustrations keep the demo offline. Replace each canvas with an
+  // image using an embedded data URL to keep a customized gallery offline.
+  function drawPlate(canvas) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const { width, height } = canvas;
+    const scene = canvas.dataset.scene;
+    let seed = { coast: 892, mountains: 742, clay: 192, citrus: 321 }[scene];
+    function random() {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+    ctx.save();
+    ctx.scale(width / 1000, height / 650);
+
+    function wash(top, bottom, y = 0, depth = 650) {
+      const gradient = ctx.createLinearGradient(0, y, 0, y + depth);
+      gradient.addColorStop(0, top);
+      gradient.addColorStop(1, bottom);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, y, 1000, depth);
+    }
+    function glow(x, y, radius, color) {
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, "transparent");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1000, 650);
+    }
+    function ridge(points, color, roughness) {
+      ctx.beginPath();
+      ctx.moveTo(...points[0]);
+      for (let i = 1; i < points.length; i++) {
+        const [x0, y0] = points[i - 1];
+        const [x1, y1] = points[i];
+        const steps = Math.max(1, Math.ceil((x1 - x0) / 8));
+        for (let step = 1; step <= steps; step++) {
+          const t = step / steps;
+          const jitter = step === steps ? 0 : (random() - .5) * roughness;
+          ctx.lineTo(x0 + t * (x1 - x0), y0 + t * (y1 - y0) + jitter);
+        }
+      }
+      ctx.lineTo(1000, 650);
+      ctx.lineTo(0, 650);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+    function ellipse(x, y, rx, ry, color, angle = 0) {
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, angle, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    if (scene === "coast") {
+      wash("#7d8e91", "#d7c9ab", 0, 335);
+      glow(690, 220, 350, "#f5d6a98c");
+      wash("#75888a", "#263d40", 302, 348);
+      for (let i = 0; i < 1700; i++) {
+        const depth = random();
+        const x = random() * 1000;
+        const y = 304 + depth * 346;
+        ctx.fillStyle = i % 4 ? "#dfdfc51d" : "#182c302c";
+        ctx.fillRect(x, y, 2 + random() * depth * 85, .35 + depth);
+      }
+      ridge([[0, 289], [112, 312], [178, 365], [254, 381], [304, 414], [430, 452], [520, 650], [1000, 650]], "#485956", 13);
+      ridge([[0, 341], [81, 352], [131, 404], [219, 426], [305, 500], [385, 650], [1000, 650]], "#2d403c", 21);
+      ridge([[0, 429], [73, 457], [117, 507], [191, 545], [257, 650], [1000, 650]], "#202e29", 20);
+      ridge([[0, 650], [717, 650], [778, 577], [791, 549], [817, 538], [835, 552], [862, 602], [910, 650], [1000, 650]], "#253936", 9);
+    } else if (scene === "mountains") {
+      wash("#50687f", "#efc1a2");
+      glow(735, 294, 335, "#f6c69b9a");
+      ridge([[0, 327], [96, 262], [165, 299], [296, 207], [369, 276], [432, 255], [567, 338], [664, 278], [774, 331], [907, 246], [1000, 305]], "#8b8f9b", 19);
+      ridge([[0, 399], [112, 340], [223, 392], [328, 333], [450, 387], [552, 318], [644, 363], [753, 285], [860, 338], [1000, 364]], "#677b8c", 22);
+      ridge([[0, 386], [98, 433], [225, 465], [332, 442], [417, 495], [600, 468], [772, 390], [881, 408], [1000, 352]], "#475f72", 17);
+      ridge([[0, 497], [158, 556], [318, 567], [493, 599], [668, 570], [791, 501], [1000, 447]], "#344957", 23);
+      ridge([[0, 549], [169, 592], [291, 624], [483, 634], [710, 596], [893, 563], [1000, 512]], "#283b44", 15);
+    } else {
+      const clay = scene === "clay";
+      wash(clay ? "#9b6447" : "#454838", clay ? "#d1a477" : "#252820");
+      glow(275, 190, 520, clay ? "#ffd5a390" : "#b1a87a68");
+      wash(clay ? "#a57150" : "#39392d", clay ? "#6c4938" : "#20221c", 451, 199);
+      if (clay) {
+        ctx.fillStyle = "#cfab86";
+        ctx.beginPath();
+        ctx.moveTo(112, 650);
+        ctx.lineTo(293, 487);
+        ctx.lineTo(700, 468);
+        ctx.lineTo(842, 650);
+        ctx.fill();
+        function vessel(x, y, scale, light, dark) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(scale, scale);
+          ellipse(51, 122, 171, 25, "#49312460", -.05);
+          const glaze = ctx.createLinearGradient(-119, -40, 111, 13);
+          glaze.addColorStop(0, dark);
+          glaze.addColorStop(.35, light);
+          glaze.addColorStop(1, dark);
+          ctx.beginPath();
+          ctx.moveTo(-51, -148);
+          ctx.bezierCurveTo(-47, -91, -130, -77, -120, 27);
+          ctx.bezierCurveTo(-116, 92, -80, 122, -58, 124);
+          ctx.lineTo(61, 124);
+          ctx.bezierCurveTo(104, 116, 132, 54, 119, -10);
+          ctx.bezierCurveTo(105, -79, 48, -96, 51, -148);
+          ctx.closePath();
+          ctx.fillStyle = glaze;
+          ctx.fill();
+          ellipse(0, -148, 51, 11, light);
+          ellipse(0, -149, 41, 6, dark);
+          ctx.restore();
+        }
+        vessel(435, 355, 1.25, "#d58f62", "#7e422e");
+        vessel(648, 459, .58, "#e1b286", "#855f49");
+      } else {
+        for (const [x, y, angle] of [[350, 394, -.7], [622, 337, .2], [688, 396, .6], [506, 408, -1.1]]) {
+          ellipse(x, y, 89, 17, "#546147", angle);
+          ellipse(x, y, 75, 1, "#8c93686e", angle);
+        }
+        for (const [x, y, radius] of [[585, 406, 75], [430, 446, 90], [537, 508, 72], [696, 493, 60]]) {
+          ellipse(x + 24, y + radius * .78, radius * 1.2, radius * .33, "#161a128c", -.08);
+          const peel = ctx.createRadialGradient(x - radius * .33, y - radius * .38, 4, x, y, radius);
+          peel.addColorStop(0, "#ffd287");
+          peel.addColorStop(.45, "#dc8d40");
+          peel.addColorStop(1, "#94441d");
+          ellipse(x, y, radius, radius * .92, peel);
+          for (let i = 0; i < 260; i++) {
+            const angle = random() * Math.PI * 2;
+            const distance = Math.sqrt(random()) * radius * .96;
+            ellipse(x + Math.cos(angle) * distance, y + Math.sin(angle) * distance * .92, .65, .55, "#67311148");
+          }
+        }
+      }
+    }
+
+    const vignette = ctx.createRadialGradient(500, 305, 180, 500, 305, 630);
+    vignette.addColorStop(0, "transparent");
+    vignette.addColorStop(1, "#13191355");
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, 1000, 650);
+    ctx.restore();
+
+    const pixels = ctx.getImageData(0, 0, width, height);
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const grain = (random() - .5) * 22;
+      pixels.data[i] += grain;
+      pixels.data[i + 1] += grain;
+      pixels.data[i + 2] += grain;
+    }
+    ctx.putImageData(pixels, 0, 0);
+  }
+
+  document.querySelectorAll("canvas[data-scene]").forEach(drawPlate);
+  document.querySelector("#year").textContent = new Date().getFullYear();
+
+  const filters = document.querySelectorAll(".filter");
+  const projects = document.querySelectorAll(".grid article");
+  const filterStatus = document.querySelector("#filter-status");
+
+  filters.forEach(button => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.filter;
+      filters.forEach(filter => filter.setAttribute("aria-pressed", String(filter === button)));
+      let count = 0;
+      projects.forEach(project => {
+        project.hidden = category !== "all" && project.dataset.category !== category;
+        if (!project.hidden) count++;
+      });
+      filterStatus.textContent = `${count} ${count === 1 ? "project" : "projects"} shown.`;
+    });
+  });
+
+  const dialog = document.querySelector("dialog");
+  const dialogImage = dialog.querySelector(".dialog-image");
+  document.querySelectorAll(".project").forEach(project => {
+    project.addEventListener("click", () => {
+      dialog.querySelector("h2").textContent = project.querySelector(".project-title").textContent;
+      dialog.querySelector(".dialog-copy").textContent = project.dataset.description;
+      const source = project.querySelector(".plate");
+      const preview = source.cloneNode(true);
+      if (source instanceof HTMLCanvasElement) {
+        preview.getContext("2d")?.drawImage(source, 0, 0);
+      }
+      dialogImage.replaceChildren(preview);
+      dialog.showModal();
+    });
+  });
+</script>
+</body>
+</html>

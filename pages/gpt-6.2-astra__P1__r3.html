@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8f0">
+  <meta name="description" content="Plan projects, assign tasks, and track your team's progress with Fieldwork.">
+  <title>Fieldwork — Project management for small teams</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f8f0;
+      --ink: #172e23;
+      --forest: #173e30;
+      --lime: #d5f58b;
+      --muted: #58665b;
+      --line: #d4d9cb;
+      --mono: "IBM Plex Mono", "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", Arial, sans-serif; }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid #a36420; outline-offset: 4px; }
+    .wrap { width: min(1240px, 90%); margin: auto; }
+    header { border-bottom: 1px solid var(--line); }
+    nav, .brand, .nav-links, .actions, .board-top, .board-foot, .task-foot { display: flex; align-items: center; }
+    nav { min-height: 78px; justify-content: space-between; gap: 24px; }
+    .brand { gap: 10px; font-size: 25px; font-weight: 750; letter-spacing: -1.4px; text-decoration: none; }
+    .mark { display: inline-flex; align-items: flex-end; gap: 3px; height: 24px; transform: skew(-15deg); }
+    .mark i { display: block; width: 7px; background: currentColor; }
+    .mark i:nth-child(1) { height: 11px; }
+    .mark i:nth-child(2) { height: 17px; }
+    .mark i:nth-child(3) { height: 24px; }
+    .nav-links { gap: 30px; font-size: 14px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover, .text-link:hover { text-decoration: underline; }
+    .btn { padding: 14px 20px; border: 1px solid var(--ink); border-radius: 6px; color: white; background: var(--ink); font-weight: 650; font-size: 14px; }
+    .btn:hover { background: #32553d; }
+    .btn span { margin-left: 12px; }
+    .hero { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: clamp(28px, 4vw, 72px); padding: clamp(54px, 7vw, 106px) 0; }
+    .eyebrow, .section-label { font: 700 11px/1.5 var(--mono); letter-spacing: 1.6px; text-transform: uppercase; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; }
+    .eyebrow::before { content: ""; width: 24px; height: 2px; background: var(--ink); }
+    h1 { font-size: clamp(58px, 6.2vw, 94px); line-height: .98; letter-spacing: -.075em; margin: 26px 0 22px; font-weight: 600; }
+    h1 em { color: #597140; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -.07em; }
+    .intro { max-width: 425px; margin: 0; font-size: 18px; line-height: 1.6; color: var(--muted); }
+    .actions { gap: 24px; flex-wrap: wrap; margin-top: 30px; }
+    .text-link { font-size: 14px; font-weight: 650; text-underline-offset: 5px; }
+    .scene { position: relative; isolation: isolate; overflow: hidden; border-radius: 15px; padding: 54px 6% 50px; background-color: #dce6c6; background-image: radial-gradient(#a9ba97 1px, transparent 1px); background-size: 13px 13px; }
+    .contours { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; color: #8fa578; }
+    .board { background: #fdfdf8; border: 1px solid #8b9c84; border-radius: 9px; box-shadow: 7px 9px 0 #334c2922; overflow: hidden; transform: rotate(-2deg); }
+    .board-top { background: var(--forest); color: white; justify-content: space-between; padding: 12px 16px; font: 11px var(--mono); }
+    .dots { display: flex; gap: 4px; }
+    .dots i { width: 6px; height: 6px; background: #d8e3cb; border-radius: 50%; }
+    .board-body { padding: 19px 16px 15px; }
+    .board h2 { margin: 0 0 17px; font-size: clamp(23px, 2.3vw, 33px); letter-spacing: -.055em; }
+    .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .lane { background: #edf0e7; border-radius: 5px; padding: 8px; min-width: 0; }
+    .lane h3 { display: flex; align-items: center; gap: 5px; margin: 2px 0 10px; font-size: 11px; }
+    .lane h3::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #9ca997; }
+    .lane:nth-child(2) h3::before { background: #d09845; }
+    .lane:nth-child(3) h3::before { background: #609674; }
+    .task { background: white; border: 1px solid #d8ded1; border-radius: 4px; padding: 9px; margin-top: 7px; }
+    .task strong { display: block; font-size: 12px; line-height: 1.3; margin: 7px 0 12px; }
+    .tag { display: inline-block; font: 9px var(--mono); background: #e4ebd0; padding: 3px 5px; border-radius: 3px; }
+    .peach { background: #f5deca; }
+    .lilac { background: #e6def0; }
+    .task-foot { justify-content: space-between; color: #62705e; font: 9px var(--mono); }
+    .avatar { display: inline-grid; place-items: center; width: 20px; height: 20px; background: #efe2ce; border-radius: 50%; color: #4f473b; }
+    .board-foot { gap: 10px; margin-top: 15px; font: 10px var(--mono); color: #58665b; }
+    .track { flex: 1; height: 5px; background: #e0e6d7; border-radius: 4px; overflow: hidden; }
+    .track i { display: block; width: 25%; height: 100%; background: #799752; }
+    .workflow { background: var(--forest); color: #f8f8ef; padding: 52px 0 58px; }
+    .section-label { color: var(--lime); }
+    .workflow h2 { font-size: clamp(32px, 3.7vw, 53px); letter-spacing: -.06em; margin: 10px 0 32px; font-weight: 550; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .feature { border-top: 1px solid #688174; padding-top: 19px; }
+    .feature svg { width: 28px; height: 28px; fill: none; stroke: var(--lime); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .feature h3 { margin: 14px 0 7px; font-size: 21px; letter-spacing: -.04em; }
+    .feature p { color: #d1ddcf; margin: 0; line-height: 1.55; max-width: 330px; }
+    dialog { width: min(500px, 92vw); max-height: 85vh; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); }
+    dialog::backdrop { background: #10241bc4; }
+    dialog h2 { margin: 0 36px 20px 0; letter-spacing: -.05em; }
+    .close { position: absolute; right: 15px; top: 12px; border: 0; background: transparent; color: inherit; font-size: 25px; }
+    dialog label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 650; }
+    dialog input, dialog select { width: 100%; border: 1px solid #9dac96; border-radius: 5px; padding: 10px; color: var(--ink); background: white; }
+    dialog form .btn { margin-top: 12px; }
+    .local-note { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .entry { display: grid; grid-template-columns: 1fr 130px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+    #entries { margin: 18px 0; }
+    [hidden] { display: none !important; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .scene { width: 100%; max-width: 680px; justify-self: center; }
+      h1 { font-size: clamp(60px, 10vw, 86px); }
+    }
+    @media (max-width: 600px) {
+      nav { min-height: 66px; }
+      .nav-links a { display: none; }
+      .hero { padding: 44px 0; }
+      .features { grid-template-columns: 1fr; gap: 24px; }
+      .scene { padding: 32px 3%; }
+      .board-body { padding: 12px 8px; }
+      .columns { gap: 4px; }
+      .lane { padding: 4px; }
+      .task { padding: 5px; }
+      .task strong { font-size: 11px; }
+      .nav-links .btn { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="wrap" aria-label="Main navigation">
+      <a href="#" class="brand" aria-label="Fieldwork home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Fieldwork</a>
+      <div class="nav-links"><a href="#preview">Project board</a><a href="#workflow">How it works</a><button class="btn launch">Open workspace <span aria-hidden="true">↗</span></button></div>
+    </nav>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div>
+        <div class="eyebrow">Project management for small teams</div>
+        <h1>Big plans.<br><em>Clear next steps.</em></h1>
+        <p class="intro">Give every task a home, every deadline an owner, and everyone a clear view of what comes next.</p>
+        <div class="actions"><button class="btn launch">Start a project <span aria-hidden="true">↗</span></button><a href="#workflow" class="text-link">See how it works ↓</a></div>
+      </div>
+      <div class="scene" id="preview">
+        <svg class="contours" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
+          <defs><path id="ridge" d="M-90 305C30 230 50 380 180 330S330 135 435 170s140 20 240-135"/></defs>
+          <g stroke="currentColor" stroke-width="1">
+            <use href="#ridge" y="-180"/><use href="#ridge" y="-166"/><use href="#ridge" y="-152"/><use href="#ridge" y="-138"/><use href="#ridge" y="-124"/><use href="#ridge" y="-110"/><use href="#ridge" y="15"/><use href="#ridge" y="29"/><use href="#ridge" y="43"/><use href="#ridge" y="57"/><use href="#ridge" y="71"/><use href="#ridge" y="85"/><use href="#ridge" y="99"/>
+          </g>
+        </svg>
+        <article class="board" aria-label="Example project board">
+          <div class="board-top"><span>Fieldwork / Studio</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="board-body">
+            <h2>Website launch</h2>
+            <div class="columns">
+              <section class="lane"><h3>To do</h3>
+                <div class="task"><span class="tag lilac">Content</span><strong>Write launch email</strong><div class="task-foot"><span>Jun 12</span><span class="avatar">AL</span></div></div>
+              </section>
+              <section class="lane"><h3>In progress</h3>
+                <div class="task"><span class="tag peach">Design</span><strong>Build landing page</strong><div class="task-foot"><span>Jun 10</span><span class="avatar">MK</span></div></div>
+                <div class="task"><span class="tag">Dev</span><strong>Connect forms</strong><div class="task-foot"><span>Jun 11</span><span class="avatar">JO</span></div></div>
+              </section>
+              <section class="lane"><h3>Done</h3>
+                <div class="task"><span class="tag peach">Design</span><strong>Approve brand kit</strong><div class="task-foot"><span>Jun 08</span><span class="avatar">MK</span></div></div>
+              </section>
+            </div>
+            <div class="board-foot"><span>Project progress</span><span class="track"><i></i></span><span>25%</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="workflow" id="workflow">
+      <div class="wrap">
+        <div class="section-label">How it works</div>
+        <h2>From kickoff to handoff.</h2>
+        <div class="features">
+          <article class="feature">
+            <svg viewBox="0 0 28 28" aria-hidden="true"><path d="m3 6 7-3 8 3 7-3v19l-7 3-8-3-7 3zM10 3v19M18 6v19"/></svg>
+            <h3>Map out the work</h3><p>Break a project into tasks small enough to pick up and finish.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="3" y="4" width="22" height="20" rx="2"/><path d="M10 4v20M18 4v20M5 9h3m4 3h4m4-4h3"/></svg>
+            <h3>Keep tasks moving</h3><p>Move work across the board as priorities shift and handoffs happen.</p>
+          </article>
+          <article class="feature">
+            <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 24V4m0 19h21M9 18v-5m6 5V9m6 9V5"/></svg>
+            <h3>See where you stand</h3><p>Spot what’s finished and what still needs attention at a glance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dialog id="workspace" aria-labelledby="workspace-title">
+    <button class="close" aria-label="Close workspace">×</button>
+    <h2 id="workspace-title">Start a project</h2>
+    <form id="create">
+      <label for="project-name">Project name</label>
+      <input id="project-name" maxlength="80" required placeholder="e.g. Autumn launch">
+      <button class="btn">Create project</button>
+    </form>
+    <div id="project" hidden>
+      <p id="summary" aria-live="polite"></p>
+      <div id="entries"></div>
+      <form id="add">
+        <label for="task-name">New task</label>
+        <input id="task-name" required maxlength="140" placeholder="What needs to happen?">
+        <button class="btn">Add task</button>
+      </form>
+    </div>
+    <p class="local-note" id="storage-note">This workspace saves to this browser.</p>
+  </dialog>
+  <script>
+    const byId = id => document.getElementById(id);
+    const dialog = byId('workspace');
+    const statuses = ['To do', 'In progress', 'Done'];
+    let project = null;
+    try {
+      const saved = JSON.parse(localStorage.getItem('fieldwork-project-v1'));
+      if (saved && typeof saved.name === 'string' && Array.isArray(saved.tasks) &&
+          saved.tasks.every(task => task && typeof task.name === 'string' && statuses.includes(task.status))) project = saved;
+    } catch {}
+    function save() {
+      try { localStorage.setItem('fieldwork-project-v1', JSON.stringify(project)); }
+      catch { byId('storage-note').textContent = 'Browser storage is unavailable. Changes last for this visit.'; }
+    }
+    function updateSummary() {
+      const done = project.tasks.filter(task => task.status === 'Done').length;
+      byId('summary').textContent = project.tasks.length ? `${done} of ${project.tasks.length} tasks complete` : 'Add the first task to your project.';
+    }
+    function render() {
+      byId('create').hidden = Boolean(project);
+      byId('project').hidden = !project;
+      if (!project) return;
+      byId('workspace-title').textContent = project.name;
+      updateSummary();
+      byId('entries').replaceChildren();
+      for (const task of project.tasks) {
+        const row = document.createElement('div');
+        row.className = 'entry';
+        const title = document.createElement('span');
+        title.textContent = task.name;
+        const select = document.createElement('select');
+        select.setAttribute('aria-label', `Status for ${task.name}`);
+        for (const status of statuses) select.add(new Option(status, status));
+        select.value = task.status;
+        select.onchange = () => { task.status = select.value; save(); updateSummary(); };
+        row.append(title, select);
+        byId('entries').append(row);
+      }
+    }
+    document.querySelectorAll('.launch').forEach(button => button.onclick = () => {
+      render();
+      dialog.showModal();
+      byId(project ? 'task-name' : 'project-name').focus();
+    });
+    document.querySelector('.close').onclick = () => dialog.close();
+    byId('create').onsubmit = event => {
+      event.preventDefault();
+      const name = byId('project-name').value.trim();
+      if (!name) return byId('project-name').focus();
+      project = { name, tasks: [] };
+      save();
+      render();
+      byId('task-name').focus();
+    };
+    byId('add').onsubmit = event => {
+      event.preventDefault();
+      const input = byId('task-name');
+      const name = input.value.trim();
+      if (!name) return input.focus();
+      project.tasks.push({ name, status: statuses[0] });
+      save();
+      render();
+      input.value = '';
+      input.focus();
+    };
+  </script>
+</body>
+</html>

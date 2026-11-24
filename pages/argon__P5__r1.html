@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QUARRY — Industrial-Grade Project Ledgers & Execution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-paper: #F4F1EA;
+      --bg-card: #FAF8F4;
+      --bg-contrast: #161615;
+      --bg-subtle: #EAE5DB;
+      --ink: #161615;
+      --ink-muted: #5C5A54;
+      --ink-faint: #8C8980;
+      --rule: #D5CFC2;
+      --rule-dark: #161615;
+      --accent: #D64527; /* Vermilion drafting ink */
+      --accent-hover: #B83519;
+      --forest: #1E4631;
+      --amber: #B46509;
+      --blue-ink: #1F4E79;
+
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(rgba(22, 22, 21, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Structural Ledger Container */
+    .shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      border-left: 1px solid var(--rule-dark);
+      border-right: 1px solid var(--rule-dark);
+      background-color: var(--bg-paper);
+    }
+
+    /* Top Bulletin Bar */
+    .bulletin {
+      border-bottom: 1px solid var(--rule-dark);
+      background: var(--ink);
+      color: var(--bg-paper);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.02em;
+    }
+
+    .bulletin-tag {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.1rem 0.45rem;
+      font-weight: 600;
+      margin-right: 0.65rem;
+      text-transform: uppercase;
+    }
+
+    .bulletin a {
+      color: var(--bg-paper);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Navigation Header */
+    header {
+      display: grid;
+      grid-template-columns: 240px 1fr auto;
+      border-bottom: 1px solid var(--rule-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-paper);
+    }
+
+    .brand {
+      padding: 1.15rem 1.5rem;
+      border-right: 1px solid var(--rule-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--ink);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .brand-mark span:nth-child(1) { background: var(--ink); }
+    .brand-mark span:nth-child(4) { background: var(--accent); }
+
+    .brand-name {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-rev {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--ink-muted);
+      border: 1px solid var(--rule);
+      padding: 0.05rem 0.3rem;
+      background: var(--bg-card);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      position: relative;
+      padding: 0.25rem 0;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: stretch;
+      border-left: 1px solid var(--rule-dark);
+    }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      padding: 0 1.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink);
+      text-decoration: none;
+      border-right: 1px solid var(--rule-dark);
+      transition: background 0.15s;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-subtle);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .hero-main {
+      padding: 4rem 3rem 3.5rem;
+      border-right: 1px solid var(--rule-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .index-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .index-meta::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 4.5vw, 4.15rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.75rem;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 400;
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      color: var(--ink-muted);
+      max-width: 58ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .btn-large {
+      padding: 1rem 1.75rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--rule-dark);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .btn-large:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+
+    .btn-secondary-large {
+      padding: 1rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: var(--bg-card);
+      color: var(--ink);
+      border: 1px solid var(--rule-dark);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-secondary-large:hover {
+      background: var(--bg-subtle);
+    }
+
+    .kbd-hint {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.1rem 0.35rem;
+      border: 1px solid var(--rule);
+      background: var(--bg-paper);
+      color: var(--ink-muted);
+    }
+
+    .hero-footnotes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--rule);
+      padding-top: 1.25rem;
+      gap: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .footnote-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.95rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .footnote-item span {
+      color: var(--ink-muted);
+    }
+
+    /* Hero Right Column: Field Notes & Manifesto */
+    .hero-aside {
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .spec-sheet {
+      padding: 2rem 2.25rem;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .spec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--rule-dark);
+      padding-bottom: 0.65rem;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .spec-table tr {
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    .spec-table td {
+      padding: 0.55rem 0;
+    }
+
+    .spec-table td:first-child {
+      color: var(--ink-muted);
+      width: 44%;
+    }
+
+    .spec-table td:last-child {
+      color: var(--ink);
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .editorial-note {
+      padding: 2rem 2.25rem;
+      background: var(--bg-subtle);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .editorial-quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.2rem;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+
+    .editorial-author {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+      padding-top: 0.75rem;
+    }
+
+    /* Interactive Workspace Section */
+    .workspace-section {
+      border-bottom: 1px solid var(--rule-dark);
+      background: var(--bg-paper);
+    }
+
+    .workspace-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+      background: var(--ink);
+      color: var(--bg-paper);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #38C172;
+      display: inline-block;
+      box-shadow: 0 0 0 3px rgba(56, 193, 114, 0.25);
+    }
+
+    .view-switcher {
+      display: flex;
+      border: 1px solid #3D3D3A;
+      background: #222220;
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: #A09E97;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      border-right: 1px solid #3D3D3A;
+      text-transform: uppercase;
+      transition: all 0.12s;
+    }
+
+    .view-btn:last-child {
+      border-right: none;
+    }
+
+    .view-btn.active {
+      background: var(--bg-paper);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* App Frame */
+    .app-frame {
+      display: grid;
+      grid-template-columns: 230px 1fr 330px;
+      min-height: 540px;
+      background: var(--bg-card);
+    }
+
+    /* App Left Sidebar */
+    .app-sidebar {
+      border-right: 1px solid var(--rule-dark);
+      padding: 1.25rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--bg-paper);
+    }
+
+    .sidebar-group-title {
+      padding: 0 1.25rem;
+      font-size: 0.68rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-item {
+      padding: 0.45rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: var(--ink-muted);
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-subtle);
+      color: var(--ink);
+    }
+
+    .sidebar-item.active {
+      background: var(--bg-card);
+      color: var(--ink);
+      font-weight: 600;
+      border-left-color: var(--accent);
+    }
+
+    .badge-count {
+      font-size: 0.68rem;
+      padding: 0.05rem 0.35rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--rule);
+    }
+
+    .capacity-meter {
+      margin: 0 1.25rem;
+      padding: 0.85rem;
+      border: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+    }
+
+    .meter-bar {
+      height: 6px;
+      background: var(--bg-subtle);
+      margin: 0.5rem 0;
+      display: flex;
+    }
+
+    .meter-fill-1 { width: 62%; background: var(--forest); }
+    .meter-fill-2 { width: 21%; background: var(--amber); }
+
+    /* App Center Ledger */
+    .app-center {
+      border-right: 1px solid var(--rule-dark);
+      display: flex;
+      flex-direction: column;
+      overflow-x: auto;
+    }
+
+    .sub-filter-bar {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--rule-dark);
+      background: var(--bg-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      gap: 1rem;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg-paper);
+    }
+
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    .ledger-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--rule-dark);
+      background: var(--bg-paper);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .ledger-row {
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .ledger-row:hover {
+      background: #F1ECE1;
+    }
+
+    .ledger-row.selected {
+      background: #FCEEE9;
+    }
+
+    .ledger-row td {
+      padding: 0.8rem 1rem;
+      vertical-align: middle;
+    }
+
+    .id-cell {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+
+    .title-cell {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .title-sub {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      font-weight: 400;
+      margin-top: 0.15rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.18rem 0.5rem;
+      border: 1px solid currentColor;
+      text-transform: uppercase;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .status-active { color: var(--forest); background: #E9F3ED; }
+    .status-blocked { color: var(--accent); background: #FCEAE6; }
+    .status-review { color: var(--amber); background: #FDF3E7; }
+    .status-queued { color: var(--ink-muted); background: var(--bg-subtle); }
+
+    .owner-cell {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .est-cell {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Timeline Gantt Subview (hidden unless toggled) */
+    .gantt-view {
+      display: none;
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+    }
+
+    .gantt-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      border: 1px solid var(--rule-dark);
+      background: var(--bg-paper);
+    }
+
+    .gantt-header-row {
+      display: contents;
+    }
+
+    .gantt-cell-label {
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid var(--rule);
+      border-right: 1px solid var(--rule-dark);
+      font-size: 0.75rem;
+      background: var(--bg-card);
+    }
+
+    .gantt-track {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+      background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px);
+      background-size: 20% 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .gantt-bar {
+      height: 22px;
+      font-size: 0.68rem;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* App Right Inspector */
+    .app-inspector {
+      padding: 1.35rem;
+      background: var(--bg-paper);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .inspector-top {
+      border-bottom: 1px solid var(--rule-dark);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .inspector-id {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+
+    .inspector-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+    }
+
+    .inspector-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: var(--bg-card);
+      padding: 0.75rem;
+      border: 1px solid var(--rule);
+      margin-bottom: 1rem;
+    }
+
+    .meta-box span {
+      display: block;
+      color: var(--ink-muted);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+    }
+
+    .meta-box strong {
+      color: var(--ink);
+    }
+
+    .inspector-body {
+      font-size: 0.83rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .inspector-log {
+      border-top: 1px solid var(--rule);
+      padding-top: 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+    }
+
+    .log-entry {
+      margin-bottom: 0.6rem;
+      padding-left: 0.65rem;
+      border-left: 2px solid var(--rule-dark);
+    }
+
+    .log-time {
+      color: var(--ink-faint);
+      display: block;
+    }
+
+    .inspector-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-mini {
+      flex: 1;
+      padding: 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      border: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .btn-mini:hover {
+      background: var(--ink);
+      color: var(--bg-paper);
+    }
+
+    /* Section Header Component */
+    .section-banner {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .section-index {
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--rule-dark);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .section-heading-wrap {
+      padding: 2.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .section-heading-wrap h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 24ch;
+    }
+
+    .section-heading-wrap p {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+      max-width: 44ch;
+    }
+
+    /* Architectural Blueprints Grid (Features) */
+    .mechanics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .mechanic-card {
+      padding: 2.5rem 2.25rem;
+      border-right: 1px solid var(--rule-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--bg-paper);
+    }
+
+    .mechanic-card:last-child {
+      border-right: none;
+    }
+
+    .mechanic-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 0.5rem;
+    }
+
+    .mechanic-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 0.85rem;
+      line-height: 1.2;
+    }
+
+    .mechanic-card p {
+      font-size: 0.94rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .diagram-box {
+      border: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+
+    .diff-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0.4rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .diff-del {
+      background: #FCEAE6;
+      color: #9E2811;
+      text-decoration: line-through;
+    }
+
+    .diff-add {
+      background: #E9F3ED;
+      color: var(--forest);
+      font-weight: 500;
+    }
+
+    /* Anti-Bloat Comparison Table */
+    .comparison-section {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .comparison-copy {
+      padding: 3rem;
+      border-right: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .comparison-copy h3 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .comparison-copy p {
+      color: var(--ink-muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .audit-table-wrap {
+      padding: 2.5rem 3rem;
+      background: var(--bg-paper);
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      border: 1px solid var(--rule-dark);
+    }
+
+    .audit-table th {
+      background: var(--ink);
+      color: var(--bg-paper);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .audit-table td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      border-right: 1px solid var(--rule);
+      background: var(--bg-card);
+    }
+
+    .audit-table tr td:last-child {
+      background: #F4F9F5;
+      color: var(--forest);
+      font-weight: 600;
+    }
+
+    /* Field Reports (Customer Proof) */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .report-card {
+      padding: 2.75rem 3rem;
+      border-right: 1px solid var(--rule-dark);
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .report-card:last-child {
+      border-right: none;
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .report-quote {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .report-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+
+    .report-metric {
+      background: var(--bg-paper);
+      border: 1px solid var(--rule-dark);
+      padding: 0.4rem 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Pricing / Licensing Ledger */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--rule-dark);
+    }
+
+    .price-col {
+      padding: 2.75rem 2.5rem;
+      border-right: 1px solid var(--rule-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--bg-paper);
+    }
+
+    .price-col:last-child {
+      border-right: none;
+    }
+
+    .price-col.featured {
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .tier-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tier-badge {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    .price-amount {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .price-amount span {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .price-desc {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      margin: 1rem 0 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .spec-list {
+      list-style: none;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .spec-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--rule);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .spec-list li strong {
+      color: var(--ink);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--ink);
+      color: var(--bg-paper);
+      padding: 4rem 3rem 2.5rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid #33322E;
+      margin-bottom: 2rem;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #9E9B91;
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .footer-col li {
+      margin-bottom: 0.65rem;
+    }
+
+    .footer-col a {
+      color: var(--bg-paper);
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #8C8980;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1080px) {
+      .hero,
+      .comparison-section,
+      .app-frame,
+      .mechanics-grid,
+      .pricing-grid,
+      .reports-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main,
+      .mechanic-card,
+      .price-col,
+      .report-card,
+      .comparison-copy,
+      .app-sidebar,
+      .app-center {
+        border-right: none;
+        border-bottom: 1px solid var(--rule-dark);
+      }
+
+      .section-banner {
+        grid-template-columns: 1fr;
+      }
+
+      .section-index {
+        border-right: none;
+        border-bottom: 1px solid var(--rule-dark);
+        padding: 1rem 1.5rem;
+        flex-direction: row;
+      }
+
+      header {
+        grid-template-columns: 1fr auto;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-main,
+      .section-heading-wrap,
+      .comparison-copy,
+      .audit-table-wrap,
+      .report-card {
+        padding: 1.75rem 1.25rem;
+      }
+
+      .hero-footnotes,
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .bulletin {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="shell">
+    <!-- Top Bulletin -->
+    <div class="bulletin">
+      <div>
+        <span class="bulletin-tag">FIELD RELEASE 4.14</span>
+        <span>Deterministic Critical-Path Engine + Offline SQLite Sync now in general availability.</span>
+      </div>
+      <div>
+        <a href="#interactive-ledger">Inspect live ledger ↓</a>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+      <a href="#" class="brand">
+        <div class="brand-mark">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="brand-name">QUARRY</span>
+        <span class="brand-rev">SYS.04</span>
+      </a>
+
+      <nav>
+        <a href="#interactive-ledger">01 / Ledger</a>
+        <a href="#architecture">02 / Mechanics</a>
+        <a href="#audit">03 / Audit</a>
+        <a href="#reports">04 / Field Logs</a>
+        <a href="#licensing">05 / Licensing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#licensing" class="btn-ghost">Sign In</a>
+        <a href="#interactive-ledger" class="btn-primary">Deploy Workspace →</a>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-main">
+        <div>
+          <div class="index-meta">DOC.REF // PROJECT EXECUTION LEDGER FOR ENGINEERING & HARDWARE TEAMS</div>
+          <h1>Stop managing the tool.<br>Run the <em>actual</em> schedule.</h1>
+          <p class="hero-lead">
+            Most project software is theatre: nested subtasks, stale story points, and 400-notification inbox rot. Quarry treats work like an engineering ledger—every scope change has a timestamped cost, every dependency has a critical path, and every keyboard action executes in under 16 milliseconds.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#interactive-ledger" class="btn-primary btn-large">
+              Provision Team Ledger — Free 30 Days
+            </a>
+            <a href="#architecture" class="btn-secondary-large">
+              <span>Read Technical Spec</span>
+              <span class="kbd-hint">⌘K</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-footnotes">
+          <div class="footnote-item">
+            <strong>11.4 ms</strong>
+            <span>Local-first state mutation latency</span>
+          </div>
+          <div class="footnote-item">
+            <strong>Two-Way Git</strong>
+            <span>PR branches reconcile schedule dates</span>
+          </div>
+          <div class="footnote-item">
+            <strong>Zero Story Points</strong>
+            <span>Real cycle-time & Monte Carlo forecasts</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <div class="spec-sheet">
+          <div class="spec-header">
+            <span>SYSTEM SPECIFICATION</span>
+            <span>REV. 2026-Q4</span>
+          </div>
+          <table class="spec-table">
+            <tr>
+              <td>Storage Engine</td>
+              <td>Local SQLite + CRDT Delta Sync</td>
+            </tr>
+            <tr>
+              <td>Data Portability</td>
+              <td>Plaintext Markdown & Parquet Export</td>
+            </tr>
+            <tr>
+              <td>Keyboard Navigation</td>
+              <td>100% Vim / Emacs Chord Support</td>
+            </tr>
+            <tr>
+              <td>Git Integration</td>
+              <td>GitHub, GitLab, Gitea, Jujutsu</td>
+            </tr>
+            <tr>
+              <td>Self-Hosted Binary</td>
+              <td>Single Go Binary / Docker Image</td>
+            </tr>
+            <tr>
+              <td>Compliance</td>
+              <td>SOC2 Type II / HIPAA / Air-Gapped</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="editorial-note">
+          <p class="editorial-quote">
+            “We deleted 1,900 backlog tickets when we moved to Quarry. Because the ledger forces explicit capacity trade-offs, product and firmware finally look at the same release date.”
+          </p>
+          <div class="editorial-author">
+            <span>MARA VANCE — VP ENGINEERING, KESTREL ORBITAL</span>
+            <span>[VERIFIED LOG]</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Interactive Workspace Demo -->
+    <section id="interactive-ledger" class="workspace-section">
+      <div class="workspace-toolbar">
+        <div class="toolbar-left">
+          <span class="live-dot"></span>
+          <span><strong>INTERACTIVE WORKSPACE:</strong> KESTREL-AVIONICS // RELEASE CYCLE 19 (CLICK ANY ROW OR FILTER)</span>
+        </div>
+        <div class="view-switcher">
+          <button class="view-btn active" id="btn-view-ledger" onclick="switchView('ledger')">Ledger View</button>
+          <button class="view-btn" id="btn-view-gantt" onclick="switchView('gantt')">Critical Path Map</button>
+        </div>
+      </div>
+
+      <div class="app-frame">
+        <!-- Left Sidebar -->
+        <div class="app-sidebar">
+          <div>
+            <div class="sidebar-group-title">Active Streams</div>
+            <ul class="sidebar-list">
+              <li class="sidebar-item active" onclick="filterByStream('all', this)">
+                <span>All Work Packages</span>
+                <span class="badge-count">6</span>
+              </li>
+              <li class="sidebar-item" onclick="filterByStream('Propulsion', this)">
+                <span>01 / Propulsion Bus</span>
+                <span class="badge-count">2</span>
+              </li>
+              <li class="sidebar-item" onclick="filterByStream('Telemetry', this)">
+                <span>02 / Telemetry Kernel</span>
+                <span class="badge-count">2</span>
+              </li>
+              <li class="sidebar-item" onclick="filterByStream('Ground', this)">
+                <span>03 / Ground Station</span>
+                <span class="badge-count">2</span>
+              </li>
+            </ul>
+
+            <div class="sidebar-group-title">Saved Audits</div>
+            <ul class="sidebar-list">
+              <li class="sidebar-item" onclick="filterByStatus('BLOCKED')">
+                <span>! Hard Blockers</span>
+                <span class="badge-count" style="color:var(--accent);border-color:var(--accent);">2</span>
+              </li>
+              <li class="sidebar-item" onclick="filterByStatus('ALL')">
+                <span>↻ Scope Deltas (+4d)</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="capacity-meter">
+            <div style="display:flex;justify-content:space-between;font-size:0.7rem;">
+              <span>CYCLE 19 LOAD</span>
+              <strong>83% COMMITTED</strong>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill-1"></div>
+              <div class="meter-fill-2"></div>
+            </div>
+            <div style="font-size:0.68rem;color:var(--ink-muted);">
+              14.5 engineer-days buffer remaining before November 28 freeze.
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Table / Gantt -->
+        <div class="app-center">
+          <div class="sub-filter-bar">
+            <div class="filter-pills">
+              <button class="filter-pill active" onclick="filterByStatus('ALL', this)">ALL (6)</button>
+              <button class="filter-pill" onclick="filterByStatus('ACTIVE', this)">IN PROGRESS</button>
+              <button class="filter-pill" onclick="filterByStatus('BLOCKED', this)">BLOCKED</button>
+              <button class="filter-pill" onclick="filterByStatus('REVIEW', this)">IN REVIEW</button>
+            </div>
+            <div style="color:var(--ink-muted);">
+              SORT: <strong>CRITICAL PATH SLACK ↑</strong>
+            </div>
+          </div>
+
+          <!-- Table View -->
+          <div id="ledger-table-container">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>PKG ID</th>
+                  <th>Work Package & Upstream Dependency</th>
+                  <th>Stream</th>
+                  <th>State</th>
+                  <th>Lead</th>
+                  <th style="text-align:right;">Slip / Est</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Gantt View -->
+          <div id="gantt-view-container" class="gantt-view">
+            <div style="margin-bottom:1rem;font-size:0.78rem;color:var(--ink-muted);display:flex;justify-content:space-between;">
+              <span>CRITICAL PATH SEQUENCE (NOV 02 — NOV 30)</span>
+              <span style="color:var(--accent);">■ RED BARS = ZERO SLACK ON LAUNCH GATE</span>
+            </div>
+            <div class="gantt-grid">
+              <div class="gantt-cell-label"><strong>QRY-104</strong> Valve PWM Driver</div>
+              <div class="gantt-track">
+                <div class="gantt-bar" style="margin-left:0%;width:38%;background:var(--forest);">100% MERGED</div>
+              </div>
+              <div class="gantt-cell-label"><strong>QRY-108</strong> CAN-Bus Isolation</div>
+              <div class="gantt-track">
+                <div class="gantt-bar" style="margin-left:28%;width:35%;background:var(--accent);">BLOCKED (+2.5d)</div>
+              </div>
+              <div class="gantt-cell-label"><strong>QRY-112</strong> Cold-Start Watchdog</div>
+              <div class="gantt-track">
+                <div class="gantt-bar" style="margin-left:38%;width:30%;background:var(--amber);">PR #418 REVIEW</div>
+              </div>
+              <div class="gantt-cell-label"><strong>QRY-119</strong> RS-485 Packet Framer</div>
+              <div class="gantt-track">
+                <div class="gantt-bar" style="margin-left:52%;width:28%;background:var(--forest);">ACTIVE (ON TRACK)</div>
+              </div>
+              <div class="gantt-cell-label"><strong>QRY-124</strong> Downlink Replay CLI</div>
+              <div class="gantt-track">
+                <div class="gantt-bar" style="margin-left:64%;width:32%;background:var(--accent);">WAIT ON QRY-108</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Inspector Panel -->
+        <div class="app-inspector" id="inspector-panel">
+          <div>
+            <div class="inspector-top">
+              <div class="inspector-id">
+                <span id="insp-id">QRY-108</span>
+                <span id="insp-stream">STREAM // PROPULSION</span>
+              </div>
+              <h3 class="inspector-title" id="insp-title">Galvanic isolation harness & CAN-Bus frame retry logic</h3>
+              <span class="status-pill status-blocked" id="insp-status">BLOCKED</span>
+            </div>
+
+            <div class="inspector-meta-grid">
+              <div class="meta-box">
+                <span>DRI / Owner</span>
+                <strong id="insp-owner">H. Lindqvist</strong>
+              </div>
+              <div class="meta-box">
+                <span>Cycle Delta</span>
+                <strong id="insp-est">+2.5d slip / 6.0d</strong>
+              </div>
+              <div class="meta-box">
+                <span>Git Branch</span>
+                <strong id="insp-branch">fix/can-iso-retry</strong>
+              </div>
+              <div class="meta-box">
+                <span>Downstream Impact</span>
+                <strong id="insp-impact">2 Packages Held</strong>
+              </div>
+            </div>
+
+            <div class="inspector-body" id="insp-desc">
+              Bench test on Rev-C board revealed ground bounce during 48V solenoid actuation. Firmware retry queue saturates after 14ms without optocoupler populated.
+            </div>
+
+            <div class="inspector-log">
+              <div style="font-weight:600;margin-bottom:0.5rem;text-transform:uppercase;">Ledger Audit Trail</div>
+              <div class="log-entry">
+                <span class="log-time">TODAY 09:42 UTC — H. LINDQVIST</span>
+                <span id="insp-log-1">Linked commit 8f3a91c: Added circular buffer backpressure.</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-time">YESTERDAY 17:15 UTC — SYSTEM</span>
+                <span id="insp-log-2">Shifted downstream gate QRY-124 by +2.5 days automatically.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="inspector-actions">
+            <button class="btn-mini" onclick="cycleStatus()">Cycle State ↻</button>
+            <button class="btn-mini" onclick="acknowledgeSlip()">Acknowledge Delta</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 02: Core Mechanics -->
+    <div id="architecture" class="section-banner">
+      <div class="section-index">
+        <span>SECTION // 02</span>
+        <span>ARCHITECTURAL PRIMITIVES</span>
+      </div>
+      <div class="section-heading-wrap">
+        <h2>Built like a compiler, not a sticky-note board.</h2>
+        <p>
+          Kanban columns hide schedule risk until Friday afternoon. Quarry models work as a directed acyclic graph tied directly to your repository and calendar capacity.
+        </p>
+      </div>
+    </div>
+
+    <section class="mechanics-grid">
+      <article class="mechanic-card">
+        <div>
+          <div class="mechanic-num">
+            <span>PRIMITIVE 02.1</span>
+            <span>SCOPE ACCOUNTING</span>
+          </div>
+          <h3>Double-Entry Scope Ledgers</h3>
+          <p>
+            You cannot add five days of work to a fixed milestone without debiting five days elsewhere. When a stakeholder inserts an urgent requirement, Quarry calculates the exact slip across every dependent package before the ticket is committed.
+          </p>
+        </div>
+        <div class="diagram-box">
+          <div style="color:var(--ink-muted);margin-bottom:0.4rem;">// SCOPE MUTATION #882</div>
+          <div class="diff-line diff-del">
+            <span>- Release 19 Freeze: Nov 24</span>
+            <span>0d slack</span>
+          </div>
+          <div class="diff-line diff-add">
+            <span>+ Insert QRY-131 (SSO Audit)</span>
+            <span>+3.5d load</span>
+          </div>
+          <div style="border-top:1px solid var(--rule);padding-top:0.4rem;margin-top:0.4rem;font-weight:600;">
+            ACTION REQUIRED: Defer QRY-127 or slip freeze to Nov 29.
+          </div>
+        </div>
+      </article>
+
+      <article class="mechanic-card">
+        <div>
+          <div class="mechanic-num">
+            <span>PRIMITIVE 02.2</span>
+            <span>GIT-DERIVED STATE</span>
+          </div>
+          <h3>Zero Status-Meeting Overhead</h3>
+          <p>
+            Engineers shouldn't drag cards across columns to prove they worked. Quarry parses branch creation, draft PRs, CI test failures, and merge events directly from Git to update package status and burn-down trajectories automatically.
+          </p>
+        </div>
+        <div class="diagram-box">
+          <div style="color:var(--ink-muted);margin-bottom:0.4rem;">$ git commit -m "calibrate ADC [QRY-112]"</div>
+          <div style="padding:0.3rem 0;border-bottom:1px dashed var(--rule);">
+            ↳ Webhook parsed in <strong>4ms</strong>
+          </div>
+          <div style="padding:0.3rem 0;border-bottom:1px dashed var(--rule);">
+            ↳ State: <strong>ACTIVE → IN REVIEW</strong>
+          </div>
+          <div style="padding:0.3rem 0;color:var(--forest);">
+            ↳ Reviewer assigned: @m-vance (CODEOWNERS)
+          </div>
+        </div>
+      </article>
+
+      <article class="mechanic-card">
+        <div>
+          <div class="mechanic-num">
+            <span>PRIMITIVE 02.3</span>
+            <span>LOCAL-FIRST SQLITE</span>
+          </div>
+          <h3>Air-Gapped Speed & Plaintext Ownership</h3>
+          <p>
+            Every workspace is mirrored to a local SQLite database in your browser or desktop app. Filter 50,000 issues with zero network spinner, work on a flight without Wi-Fi, and export your entire history to clean Markdown files at any time.
+          </p>
+        </div>
+        <div class="diagram-box">
+          <div style="display:flex;justify-content:space-between;margin-bottom:0.35rem;">
+            <span>Query: 42,000 records</span>
+            <strong>1.8 ms</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:0.35rem;">
+            <span>Command Palette Boot</span>
+            <strong>0.4 ms</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--ink-muted);">
+            <span>Vendor Lock-In Risk</span>
+            <strong>0% (Raw .sql/.md)</strong>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Section 03: Audit / Comparison -->
+    <section id="audit" class="comparison-section">
+      <div class="comparison-copy">
+        <div>
+          <div class="index-meta">OPERATIONAL AUDIT // 03</div>
+          <h3>Why senior teams defect from legacy trackers.</h3>
+          <p>
+            Legacy trackers optimize for middle-management reporting: custom fields nobody fills out, mandatory story point poker, and bloated web views that take six seconds to load a single comment.
+          </p>
+          <p>
+            Quarry strips out the ceremony so technical leads and individual contributors can see what is blocked, why it is blocked, and what date the build actually ships.
+          </p>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;padding:1rem;border:1px solid var(--rule-dark);background:var(--bg-paper);">
+          <strong>MIGRATION CLI INCLUDED:</strong> Import full Jira, Linear, or GitHub Issues history—preserving IDs and dependency links—in under 90 seconds.
+        </div>
+      </div>
+
+      <div class="audit-table-wrap">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Operational Dimension</th>
+              <th>Enterprise Bloated Suites</th>
+              <th>Lightweight Card Boards</th>
+              <th>QUARRY (SYS.04)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ticket Load Latency</strong></td>
+              <td>2,400 – 5,800 ms</td>
+              <td>180 – 450 ms</td>
+              <td>&lt; 16 ms (Local SQLite)</td>
+            </tr>
+            <tr>
+              <td><strong>Dependency Math</strong></td>
+              <td>Manual Gantt plugins</td>
+              <td>Cosmetic "blocks" label</td>
+              <td>Live Critical-Path DAG</td>
+            </tr>
+            <tr>
+              <td><strong>Scope Creep Visibility</strong></td>
+              <td>Buried in sprint velocity charts</td>
+              <td>Silent date pushbacks</td>
+              <td>Explicit double-entry ledger</td>
+            </tr>
+            <tr>
+              <td><strong>Estimation Model</strong></td>
+              <td>Fictional story points</td>
+              <td>T-shirt sizes</td>
+              <td>Historical cycle-time ranges</td>
+            </tr>
+            <tr>
+              <td><strong>Data Ownership</strong></td>
+              <td>Proprietary cloud schema</td>
+              <td>JSON API pagination</td>
+              <td>Bidirectional Git &amp; SQLite file</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 04: Field Logs -->
+    <div id="reports" class="section-banner">
+      <div class="section-index">
+        <span>SECTION // 04</span>
+        <span>PRODUCTION DEPLOYMENTS</span>
+      </div>
+      <div class="section-heading-wrap">
+        <h2>Field reports from teams shipping hard systems.</h2>
+        <p>
+          Used by robotics labs, compiler engineers, fintech infrastructure groups, and game studios where missed dependencies cost real money.
+        </p>
+      </div>
+    </div>
+
+    <section class="reports-grid">
+      <div class="report-card">
+        <div>
+          <div class="report-header">
+            <span>LOG #019 // VECTRA SEMICONDUCTOR</span>
+            <span>140 ENGINEERS — AUSTIN, TX</span>
+          </div>
+          <p class="report-quote">
+            “Tape-out schedules combine RTL verification, board bring-up, and Linux driver work. Cards on a Kanban board couldn't show that a two-day PCB layout delay stalled twelve firmware engineers. Quarry’s critical-path view caught three fatal bottlenecks in our first month.”
+          </p>
+        </div>
+        <div class="report-footer">
+          <div>
+            <strong>DEVON KOWALSKI</strong><br>
+            <span>Director of Silicon Engineering</span>
+          </div>
+          <div class="report-metric">-38% Weekly Coordination Meetings</div>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div>
+          <div class="report-header">
+            <span>LOG #024 // MONOLITH FINANCIAL LEDGERS</span>
+            <span>65 ENGINEERS — ZÜRICH / LONDON</span>
+          </div>
+          <p class="report-quote">
+            “Our security team required an air-gapped tracker that lived inside our VPC and produced immutable audit logs for every scope change. Quarry deployed as a single binary on our Nomad cluster in twenty minutes and feels faster than our text editor.”
+          </p>
+        </div>
+        <div class="report-footer">
+          <div>
+            <strong>CLAIRE VANDENBERG</strong><br>
+            <span>Principal Systems Architect</span>
+          </div>
+          <div class="report-metric">100% Audit Compliance Pass</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 05: Licensing -->
+    <div id="licensing" class="section-banner">
+      <div class="section-index">
+        <span>SECTION // 05</span>
+        <span>TRANSPARENT LICENSING</span>
+      </div>
+      <div class="section-heading-wrap">
+        <h2>Flat ledger pricing. No per-automation taxes.</h2>
+        <p>
+          Every tier includes unlimited read-only observers, full local SQLite sync, and unrestricted API/CLI access.
+        </p>
+      </div>
+    </div>
+
+    <section class="pricing-grid">
+      <div class="price-col">
+        <div>
+          <div class="tier-label">
+            <span>01 // WORKBENCH</span>
+            <span>SMALL CREWS</span>
+          </div>
+          <div class="price-amount">$0 <span>/ forever up to 8 seats</span></div>
+          <p class="price-desc">Full execution ledger for early-stage hardware and software teams who refuse to start with messy spreadsheets.</p>
+          <ul class="spec-list">
+            <li><span>Active Contributors</span><strong>Up to 8</strong></li>
+            <li><span>Read-Only Stakeholders</span><strong>Unlimited</strong></li>
+            <li><span>Critical-Path DAG Engine</span><strong>Included</strong></li>
+            <li><span>Git &amp; PR Sync</span><strong>GitHub / GitLab</strong></li>
+            <li><span>Local SQLite &amp; CLI</span><strong>Included</strong></li>
+          </ul>
+        </div>
+        <a href="#interactive-ledger" class="btn-secondary-large" style="justify-content:center;">Initialize Free Ledger</a>
+      </div>
+
+      <div class="price-col featured">
+        <div>
+          <div class="tier-label">
+            <span>02 // PRODUCTION</span>
+            <span class="tier-badge">MOST DEPLOYED</span>
+          </div>
+          <div class="price-amount">$14 <span>/ contributor / month</span></div>
+          <p class="price-desc">Multi-stream capacity forecasting, cross-repo dependency tracking, and automated Monte Carlo slip alerts.</p>
+          <ul class="spec-list">
+            <li><span>Active Contributors</span><strong>Unlimited</strong></li>
+            <li><span>Monte Carlo Date Simulations</span><strong>Included</strong></li>
+            <li><span>Double-Entry Scope Gates</span><strong>Enforced</strong></li>
+            <li><span>Parquet / DuckDB Analytics</span><strong>Live Feed</strong></li>
+            <li><span>SAML SSO &amp; Audit Trail</span><strong>Included</strong></li>
+          </ul>
+        </div>
+        <a href="#interactive-ledger" class="btn-primary btn-large" style="width:100%;">Start 30-Day Production Trial</a>
+      </div>
+
+      <div class="price-col">
+        <div>
+          <div class="tier-label">
+            <span>03 // SOVEREIGN / VPC</span>
+            <span>SELF-HOSTED</span>
+          </div>
+          <div class="price-amount">$2,400 <span>/ flat annual site license</span></div>
+          <p class="price-desc">Single statically-linked binary or container for air-gapped defense, silicon, and regulated financial networks.</p>
+          <ul class="spec-list">
+            <li><span>Seat Cap</span><strong>Uncapped up to 250</strong></li>
+            <li><span>Deployment Target</span><strong>On-Prem / AWS / GovCloud</strong></li>
+            <li><span>Source-Available License</span><strong>Escrow Included</strong></li>
+            <li><span>Custom Git / Gerrit Hooks</span><strong>Supported</strong></li>
+            <li><span>Dedicated Engineer Slack</span><strong>2-Hour SLA</strong></li>
+          </ul>
+        </div>
+        <a href="#interactive-ledger" class="btn-secondary-large" style="justify-content:center;">Download Self-Hosted Binary</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-top">
+        <div class="footer-col">
+          <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:1rem;">
+            <div class="brand-mark" style="border-color:var(--bg-paper);">
+              <span style="background:var(--bg-paper);"></span><span></span><span></span><span style="background:var(--accent);"></span>
+            </div>
+            <span style="font-family:var(--font-mono);font-weight:600;font-size:1.1rem;">QUARRY SYSTEMS INC.</span>
+          </div>
+          <p style="font-size:0.86rem;color:#9E9B91;max-width:36ch;line-height:1.6;margin-bottom:1.25rem;">
+            Deterministic project execution software built for teams that ship physical and digital infrastructure.
+          </p>
+          <div style="font-family:var(--font-mono);font-size:0.75rem;color:#8C8980;">
+            STATUS: ALL SYNC CLUSTERS NOMINAL (99.994%)
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>System</h4>
+          <ul>
+            <li><a href="#interactive-ledger">Live Ledger Demo</a></li>
+            <li><a href="#architecture">DAG Scheduling Engine</a></li>
+            <li><a href="#architecture">Local-First Architecture</a></li>
+            <li><a href="#audit">Jira &amp; Linear Importer</a></li>
+            <li><a href="#licensing">CLI Reference (qry)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="#architecture">Double-Entry Scope Spec</a></li>
+            <li><a href="#architecture">SQLite Schema Reference</a></li>
+            <li><a href="#licensing">Self-Hosting Guide</a></li>
+            <li><a href="#reports">Security &amp; SOC2 Report</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Field Dispatch</h4>
+          <p style="font-size:0.8rem;color:#9E9B91;margin-bottom:0.85rem;">
+            Monthly engineering notes on scheduling math, CRDTs, and software estimation. No marketing fluff.
+          </p>
+          <form onsubmit="event.preventDefault(); this.querySelector('button').textContent = 'REGISTERED ✓';">
+            <input type="email" placeholder="engineer@domain.com" required style="width:100%;padding:0.6rem 0.75rem;font-family:var(--font-mono);font-size:0.75rem;background:#222220;border:1px solid #4A4944;color:var(--bg-paper);margin-bottom:0.5rem;" />
+            <button type="submit" class="btn-primary" style="width:100%;padding:0.6rem;">Subscribe to Dispatch</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 QUARRY SYSTEMS INC. // SAN FRANCISCO &amp; STOCKHOLM</span>
+        <span>BUILD 4.14.2-RELEASE // SHA: 94F1C0B</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const workPackages = [
+      {
+        id: 'QRY-108',
+        title: 'Galvanic isolation harness & CAN-Bus frame retry logic',
+        dep: 'Blocks QRY-124, QRY-129',
+        stream: 'Propulsion',
+        status: 'BLOCKED',
+        owner: 'H. Lindqvist',
+        est: '+2.5d / 6.0d',
+        branch: 'fix/can-iso-retry',
+        impact: '2 Packages Held',
+        desc: 'Bench test on Rev-C board revealed ground bounce during 48V solenoid actuation. Firmware retry queue saturates after 14ms without optocoupler populated.',
+        log1: 'Linked commit 8f3a91c: Added circular buffer backpressure.',
+        log2: 'Shifted downstream gate QRY-124 by +2.5 days automatically.'
+      },
+      {
+        id: 'QRY-104',
+        title: 'Cryogenic propellant valve PWM closed-loop PID controller',
+        dep: 'Critical Path Root',
+        stream: 'Propulsion',
+        status: 'ACTIVE',
+        owner: 'M. Vance',
+        est: '0.0d / 4.5d',
+        branch: 'feat/pwm-pid-loop',
+        impact: 'On Critical Path',
+        desc: 'Implementing 2kHz control loop on STM32H7 with hardware watchdog fallback if pressure transducer reading drifts >3% over 5ms window.',
+        log1: 'CI Hardware-in-the-loop suite passed 412/412 assertions.',
+        log2: 'Scope locked for Cycle 19 freeze.'
+      },
+      {
+        id: 'QRY-112',
+        title: 'Cold-start radiation watchdog & brownout recovery vector',
+        dep: 'Depends on QRY-104',
+        stream: 'Telemetry',
+        status: 'REVIEW',
+        owner: 'A. Okafor',
+        est: '-0.5d / 3.0d',
+        branch: 'pr/418-watchdog-isr',
+        impact: '0.5d Buffer Gained',
+        desc: 'Ensures flight computer restores state from FRAM ring buffer within 8ms of unexpected rail drop below 3.1V.',
+        log1: 'PR #418 opened — awaiting sign-off from @h-lindqvist.',
+        log2: 'Cycle time 0.5 days ahead of Monte Carlo P50 estimate.'
+      },
+      {
+        id: 'QRY-119',
+        title: 'Zero-copy RS-485 telemetry packet framer & CRC32 offload',
+        dep: 'Depends on QRY-112',
+        stream: 'Telemetry',
+        status: 'ACTIVE',
+        owner: 'S. Takahashi',
+        est: '0.0d / 5.0d',
+        branch: 'feat/dma-crc32-framer',
+        impact: '1.0d Float Available',
+        desc: 'Offloads packet framing from Cortex-M7 core to DMA controller, reducing CPU utilization from 34% to 6% during peak telemetry burst.',
+        log1: 'Benchmark logged: 1.84 Mbps sustained throughput with 0 drops.',
+        log2: 'Branch synced with main (0 conflicts).'
+      },
+      {
+        id: 'QRY-124',
+        title: 'Ground station downlink replay CLI & Parquet exporter',
+        dep: 'Blocked by QRY-108',
+        stream: 'Ground',
+        status: 'BLOCKED',
+        owner: 'K. Solberg',
+        est: '+2.5d / 4.0d',
+        branch: 'feat/parquet-downlink',
+        impact: 'Release Gate Item',
+        desc: 'Rust CLI utility allowing test engineers to query raw CAN and RS-485 captures locally via DuckDB SQL immediately after hot-fire tests.',
+        log1: 'Awaiting finalized CAN error frame header spec from QRY-108.',
+        log2: 'Flagged automatically by DAG engine as Release 19 bottleneck.'
+      },
+      {
+        id: 'QRY-127',
+        title: 'Operator console dark-room high-contrast alert thresholds',
+        dep: 'Independent Package',
+        stream: 'Ground',
+        status: 'REVIEW',
+        owner: 'D. Chen',
+        est: '0.0d / 2.0d',
+        branch: 'ui/annunciator-thresholds',
+        impact: 'Non-Critical Path',
+        desc: 'Configures acoustic and visual caution/warning bounds for chamber pressure, LOX manifold temp, and battery bus voltage.',
+        log1: 'Reviewed by Flight Director; minor label hysteresis tweak merged.',
+        log2: 'Ready to merge upon Cycle 19 integration build.'
+      }
+    ];
+
+    let currentStream = 'all';
+    let currentStatus = 'ALL';
+    let selectedId = 'QRY-108';
+
+    function getStatusClass(status) {
+      if (status === 'ACTIVE') return 'status-active';
+      if (status === 'BLOCKED') return 'status-blocked';
+      if (status === 'REVIEW') return 'status-review';
+      return 'status-queued';
+    }
+
+    function renderLedger() {
+      const tbody = document.getElementById('ledger-tbody');
+      tbody.innerHTML = '';
+
+      const filtered = workPackages.filter(pkg => {
+        const streamMatch = currentStream === 'all' || pkg.stream === currentStream;
+        const statusMatch = currentStatus === 'ALL' || pkg.status === currentStatus;
+        return streamMatch && statusMatch;
+      });
+
+      filtered.forEach(pkg => {
+        const tr = document.createElement('tr');
+        tr.className = 'ledger-row' + (pkg.id === selectedId ? ' selected' : '');
+        tr.onclick = () => selectPackage(pkg.id);
+
+        tr.innerHTML = `
+          <td class="id-cell"><strong>${pkg.id}</strong></td>
+          <td class="title-cell">
+            ${pkg.title}
+            <span class="title-sub">${pkg.dep} · git:${pkg.branch}</span>
+          </td>
+          <td class="owner-cell">${pkg.stream}</td>
+          <td><span class="status-pill ${getStatusClass(pkg.status)}">${pkg.status}</span></td>
+          <td class="owner-cell">${pkg.owner}</td>
+          <td class="est-cell" style="color:${pkg.est.startsWith('+') ? 'var(--accent)' : 'var(--ink)'};font-weight:${pkg.est.startsWith('+') ? '600' : '400'};">${pkg.est}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function selectPackage(id) {
+      selectedId = id;
+      const pkg = workPackages.find(p => p.id === id);
+      if (!pkg) return;
+
+      document.getElementById('insp-id').textContent = pkg.id;
+      document.getElementById('insp-stream').textContent = 'STREAM // ' + pkg.stream.toUpperCase();
+      document.getElementById('insp-title').textContent = pkg.title;
+
+      const statusEl = document.getElementById('insp-status');
+      statusEl.textContent = pkg.status;
+      statusEl.className = 'status-pill ' + getStatusClass(pkg.status);
+
+      document.getElementById('insp-owner').textContent = pkg.owner;
+      document.getElementById('insp-est').textContent = pkg.est;
+      document.getElementById('insp-branch').textContent = pkg.branch;
+      document.getElementById('insp-impact').textContent = pkg.impact;
+      document.getElementById('insp-desc').textContent = pkg.desc;
+      document.getElementById('insp-log-1').textContent = pkg.log1;
+      document.getElementById('insp-log-2').textContent = pkg.log2;
+
+      renderLedger();
+    }
+
+    function filterByStream(stream, el) {
+      currentStream = stream;
+      document.querySelectorAll('.app-sidebar .sidebar-item').forEach(item => item.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderLedger();
+    }
+
+    function filterByStatus(status, btnEl) {
+      currentStatus = status;
+      if (btnEl) {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btnEl.classList.add('active');
+      }
+      renderLedger();
+    }
+
+    function cycleStatus() {
+      const order = ['BLOCKED', 'ACTIVE', 'REVIEW'];
+      const pkg = workPackages.find(p => p.id === selectedId);
+      if (!pkg) return;
+      const nextIndex = (order.indexOf(pkg.status) + 1) % order.length;
+      pkg.status = order[nextIndex];
+      pkg.log1 = `Manual state override → ${pkg.status} via Inspector.`;
+      selectPackage(pkg.id);
+    }
+
+    function acknowledgeSlip() {
+      const pkg = workPackages.find(p => p.id === selectedId);
+      if (!pkg) return;
+      pkg.est = '0.0d / Rebaselined';
+      pkg.log2 = 'Scope delta acknowledged and reconciled against cycle buffer.';
+      selectPackage(pkg.id);
+    }
+
+    function switchView(view) {
+      const tableWrap = document.getElementById('ledger-table-container');
+      const ganttWrap = document.getElementById('gantt-view-container');
+      const btnLedger = document.getElementById('btn-view-ledger');
+      const btnGantt = document.getElementById('btn-view-gantt');
+
+      if (view === 'gantt') {
+        tableWrap.style.display = 'none';
+        ganttWrap.style.display = 'block';
+        btnLedger.classList.remove('active');
+        btnGantt.classList.add('active');
+      } else {
+        tableWrap.style.display = 'block';
+        ganttWrap.style.display = 'none';
+        btnGantt.classList.remove('active');
+        btnLedger.classList.add('active');
+      }
+    }
+
+    // Initial render
+    renderLedger();
+  </script>
+</body>
+</html>

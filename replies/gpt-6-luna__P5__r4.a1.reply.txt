@@ -1,0 +1,540 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="Keep projects moving with Fieldwork: a calmer place to plan, share progress, and get the work done.">
+  <title>Fieldwork — Make room for the work</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f7f4;
+      --ink: #20251f;
+      --muted: #6e756c;
+      --line: #e4e7df;
+      --green: #345e43;
+      --green-dark: #274734;
+      --lime: #d9e9a1;
+      --white: #fff;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+    header {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(32, 37, 31, .08);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+      font-weight: 720;
+      letter-spacing: -.7px;
+    }
+    .mark {
+      width: 27px;
+      height: 27px;
+      position: relative;
+      border-radius: 9px 9px 9px 4px;
+      background: var(--green);
+      transform: rotate(-8deg);
+    }
+    .mark::before, .mark::after {
+      content: "";
+      position: absolute;
+      background: var(--lime);
+      border-radius: 2px;
+      transform: rotate(8deg);
+    }
+    .mark::before { width: 13px; height: 3px; left: 7px; top: 8px; }
+    .mark::after { width: 9px; height: 3px; left: 7px; top: 14px; }
+    .links { display: flex; align-items: center; gap: 34px; color: #50584f; font-size: 13px; }
+    .links a:hover { color: var(--green); }
+    .nav-actions { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    .nav-actions > a:first-child { color: #50584f; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 0 19px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--green);
+      color: white;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background .18s ease, transform .18s ease;
+    }
+    .button:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .button svg { width: 15px; height: 15px; }
+
+    .hero {
+      padding: 91px 0 74px;
+      display: grid;
+      grid-template-columns: .93fr 1.07fr;
+      align-items: center;
+      gap: 64px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 23px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 720;
+      letter-spacing: 1.15px;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 21px;
+      height: 1px;
+      background: #829c67;
+    }
+    h1 {
+      max-width: 525px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(48px, 6vw, 72px);
+      font-weight: 400;
+      line-height: .99;
+      letter-spacing: -2.8px;
+    }
+    h1 em { color: var(--green); font-weight: 400; }
+    .hero-copy {
+      max-width: 440px;
+      margin: 23px 0 27px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 17px; }
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #515b50;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .text-link svg { width: 15px; }
+    .note { margin-top: 17px; color: #888f85; font-size: 11px; }
+
+    .preview {
+      position: relative;
+      min-height: 410px;
+      padding: 17px;
+      border: 1px solid #e5e6df;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 24px 64px rgba(43, 52, 42, .09), 0 3px 10px rgba(43, 52, 42, .03);
+      transform: rotate(.6deg);
+    }
+    .app-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px 16px;
+      border-bottom: 1px solid #eef0ea;
+    }
+    .crumb { color: #8c9288; font-size: 10px; }
+    .crumb strong { color: #434a42; font-weight: 650; }
+    .app-tools { display: flex; align-items: center; gap: 12px; color: #8a9087; font-size: 10px; }
+    .avatar-stack { display: flex; padding-left: 4px; }
+    .avatar {
+      width: 22px;
+      height: 22px;
+      margin-left: -5px;
+      display: grid;
+      place-items: center;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: #405442;
+      background: #dce7d3;
+      font-size: 7px;
+      font-weight: 700;
+    }
+    .avatar:nth-child(2) { background: #ead8ca; color: #775442; }
+    .avatar:nth-child(3) { background: #d7dced; color: #485372; }
+    .board-heading { display: flex; align-items: end; justify-content: space-between; padding: 18px 2px 14px; }
+    .board-heading h2 { margin: 0 0 4px; font-size: 17px; letter-spacing: -.5px; }
+    .board-heading p { margin: 0; color: #8a9087; font-size: 10px; }
+    .week { color: #748070; font-size: 10px; }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .column { padding: 10px 8px; border-radius: 7px; background: #f7f8f5; }
+    .column-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 9px;
+      color: #626b60;
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .count {
+      display: grid;
+      place-items: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      background: #ebeee7;
+      color: #7a8176;
+      font-size: 8px;
+    }
+    .task {
+      padding: 10px 9px;
+      margin-bottom: 7px;
+      border: 1px solid #eceee9;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(34, 44, 32, .025);
+    }
+    .task:last-child { margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      padding: 3px 5px;
+      border-radius: 3px;
+      background: #edf3e5;
+      color: #547344;
+      font-size: 7px;
+      font-weight: 650;
+    }
+    .tag.peach { background: #f7ece5; color: #9a684d; }
+    .tag.blue { background: #e9edf7; color: #5e6e9d; }
+    .task p { margin: 7px 0 11px; color: #333b32; font-size: 9px; font-weight: 600; line-height: 1.4; }
+    .task-foot { display: flex; align-items: center; justify-content: space-between; color: #91978e; font-size: 8px; }
+    .tiny-avatar {
+      display: inline-grid;
+      place-items: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #dce7d3;
+      color: #466047;
+      font-size: 6px;
+      font-weight: 700;
+    }
+    .tiny-avatar.rose { background: #f0ded7; color: #855c4b; }
+    .tiny-avatar.blue { background: #dce2ef; color: #506080; }
+    .floating {
+      position: absolute;
+      right: -27px;
+      bottom: 37px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+      border: 1px solid #e7e9e3;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 10px 28px rgba(35, 45, 35, .1);
+      transform: rotate(-1deg);
+    }
+    .check {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: #eaf1df;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .floating strong { display: block; font-size: 10px; }
+    .floating small { display: block; margin-top: 3px; color: #81887d; font-size: 9px; }
+
+    .proof {
+      padding: 25px 0 30px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .proof-inner { display: flex; justify-content: space-between; align-items: center; gap: 22px; }
+    .proof-label { max-width: 180px; color: #7a8176; font-size: 11px; line-height: 1.5; }
+    .logos { flex: 1; display: flex; justify-content: space-around; align-items: center; gap: 25px; color: #687066; }
+    .logo-word { font-family: var(--serif); font-size: 19px; font-weight: 700; letter-spacing: -.6px; }
+    .logo-word:nth-child(2) { font-family: var(--sans); font-size: 14px; font-weight: 800; letter-spacing: 1.6px; }
+    .logo-word:nth-child(3) { font-style: italic; font-size: 20px; }
+    .logo-word:nth-child(4) { font-family: var(--sans); font-size: 14px; font-weight: 750; letter-spacing: -.4px; }
+
+    .section { padding: 88px 0 93px; }
+    .section-head { max-width: 530px; margin: 0 auto 42px; text-align: center; }
+    .section-head .eyebrow { margin-bottom: 14px; }
+    h2 { margin: 0; font-family: var(--serif); font-size: clamp(34px, 4vw, 46px); font-weight: 400; letter-spacing: -1.5px; line-height: 1.1; }
+    .section-head p { max-width: 430px; margin: 15px auto 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .feature {
+      min-height: 205px;
+      padding: 23px 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.55);
+    }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 26px;
+      border-radius: 9px;
+      background: #e9eee3;
+      color: var(--green);
+    }
+    .icon svg { width: 18px; height: 18px; }
+    .feature h3 { margin: 0 0 8px; font-size: 15px; letter-spacing: -.3px; }
+    .feature p { max-width: 280px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+    .quote-section { padding: 60px 0; background: #eaf0e5; }
+    .quote-inner { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; }
+    blockquote { margin: 0; font-family: var(--serif); font-size: clamp(25px, 3.2vw, 36px); line-height: 1.25; letter-spacing: -.8px; }
+    .quote-attribution { display: flex; align-items: center; gap: 12px; margin-top: 23px; }
+    .portrait { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #cfb7a2; color: #503e32; font-size: 11px; font-weight: 700; }
+    .quote-attribution strong { display: block; font-size: 11px; }
+    .quote-attribution small { display: block; margin-top: 3px; color: #727b6f; font-size: 10px; }
+    .quote-aside { padding-left: 35px; border-left: 1px solid #cbd5c5; }
+    .quote-aside p { margin: 0 0 18px; color: #626e60; font-size: 13px; line-height: 1.75; }
+    .metric { color: var(--green); font-family: var(--serif); font-size: 41px; letter-spacing: -1.5px; }
+    .metric-label { margin-left: 9px; color: #697366; font-size: 11px; }
+
+    .cta { padding: 82px 0; text-align: center; }
+    .cta h2 { max-width: 570px; margin: 0 auto; }
+    .cta p { margin: 16px auto 24px; color: var(--muted); font-size: 13px; }
+    .cta .button { min-width: 158px; }
+
+    footer { padding: 24px 0; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
+    .footer-inner .brand { font-size: 15px; }
+    .footer-inner .mark { width: 22px; height: 22px; border-radius: 7px 7px 7px 3px; }
+    .footer-inner .mark::before { width: 11px; left: 6px; top: 6px; }
+    .footer-inner .mark::after { width: 7px; left: 6px; top: 12px; }
+    .copyright, .footer-links { color: #81887f; font-size: 10px; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a:hover { color: var(--green); }
+
+    @media (max-width: 850px) {
+      .hero { gap: 35px; }
+      .preview { min-height: 380px; padding: 13px; }
+      .floating { right: -9px; }
+      .links { gap: 20px; }
+    }
+    @media (max-width: 680px) {
+      .wrap { width: min(100% - 36px, 520px); }
+      header { height: 65px; }
+      .links, .nav-actions > a:first-child { display: none; }
+      .nav-actions { gap: 0; }
+      .nav-actions .button { min-height: 39px; padding: 0 13px; font-size: 12px; }
+      .hero { grid-template-columns: 1fr; padding: 64px 0 48px; gap: 40px; }
+      h1 { max-width: 470px; font-size: clamp(48px, 12vw, 67px); }
+      .hero-copy { font-size: 14px; }
+      .preview { min-height: 366px; transform: none; }
+      .floating { right: 5px; bottom: 22px; }
+      .proof-inner { flex-direction: column; align-items: flex-start; }
+      .proof-label { max-width: none; }
+      .logos { width: 100%; justify-content: space-between; gap: 10px; }
+      .logo-word { font-size: 16px; }
+      .logo-word:nth-child(2), .logo-word:nth-child(4) { font-size: 11px; }
+      .logo-word:nth-child(3) { font-size: 17px; }
+      .section { padding: 65px 0; }
+      .section-head { margin-bottom: 30px; }
+      .features { grid-template-columns: 1fr; gap: 10px; }
+      .feature { min-height: 0; padding: 20px; }
+      .icon { margin-bottom: 18px; }
+      .quote-inner { grid-template-columns: 1fr; gap: 30px; }
+      .quote-aside { padding: 22px 0 0; border-left: 0; border-top: 1px solid #cbd5c5; }
+      .cta { padding: 65px 0; }
+      .footer-inner { flex-wrap: wrap; gap: 18px; }
+      .copyright { order: 3; width: 100%; }
+    }
+    @media (max-width: 400px) {
+      .board { gap: 6px; }
+      .column { padding: 8px 6px; }
+      .task { padding: 8px 6px; }
+      .task p { font-size: 8px; }
+      .app-tools .app-tool-label { display: none; }
+      .week { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#" aria-label="Fieldwork home">
+        <span class="mark" aria-hidden="true"></span>
+        <span>fieldwork</span>
+      </a>
+      <nav class="links" aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#teams">For teams</a>
+        <a href="#stories">Customer stories</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="#start">Sign in</a>
+        <a class="button" href="#start">Try Fieldwork <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <div class="eyebrow">A little more room to think</div>
+        <h1>Make room for <em>the work.</em></h1>
+        <p class="hero-copy">A project space for people who like doing good work more than talking about doing good work. Keep the plan clear, the team in sync, and the busywork somewhere else.</p>
+        <div class="hero-actions">
+          <a class="button" href="#start">Start your free trial
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="text-link" href="#how-it-works">Take a look <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="note">Free for 14 days. No card needed.</div>
+      </div>
+
+      <div class="preview" aria-label="Preview of a Fieldwork project board">
+        <div class="app-top">
+          <div class="crumb">Studio / <strong>Spring launch</strong></div>
+          <div class="app-tools">
+            <div class="avatar-stack" aria-label="Three project members">
+              <span class="avatar">JM</span><span class="avatar">AL</span><span class="avatar">SK</span>
+            </div>
+            <span class="app-tool-label">Share</span>
+            <span aria-hidden="true">···</span>
+          </div>
+        </div>
+        <div class="board-heading">
+          <div><h2>Spring launch</h2><p>A good week to get the details right.</p></div>
+          <span class="week">Week of Apr 14</span>
+        </div>
+        <div class="board">
+          <div class="column">
+            <div class="column-title">Up next <span class="count">3</span></div>
+            <article class="task"><span class="tag peach">Planning</span><p>Write the launch story</p><div class="task-foot"><span>Apr 15</span><span class="tiny-avatar rose">JM</span></div></article>
+            <article class="task"><span class="tag blue">Design</span><p>Review first pass of the site</p><div class="task-foot"><span>Apr 16</span><span class="tiny-avatar blue">AL</span></div></article>
+          </div>
+          <div class="column">
+            <div class="column-title">In progress <span class="count">2</span></div>
+            <article class="task"><span class="tag">Content</span><p>Pull together customer notes</p><div class="task-foot"><span>Apr 14</span><span class="tiny-avatar">SK</span></div></article>
+            <article class="task"><span class="tag peach">Planning</span><p>Map the launch checklist</p><div class="task-foot"><span>Apr 17</span><span class="tiny-avatar rose">JM</span></div></article>
+          </div>
+          <div class="column">
+            <div class="column-title">Done <span class="count">2</span></div>
+            <article class="task"><span class="tag blue">Research</span><p>Talk to five new customers</p><div class="task-foot"><span>Apr 11</span><span class="tiny-avatar blue">AL</span></div></article>
+            <article class="task"><span class="tag">Content</span><p>Agree on the main message</p><div class="task-foot"><span>Apr 10</span><span class="tiny-avatar">SK</span></div></article>
+          </div>
+        </div>
+        <div class="floating">
+          <span class="check" aria-hidden="true">✓</span>
+          <span><strong>Nice work, team.</strong><small>Everything’s moving along.</small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-label="Teams using Fieldwork">
+      <div class="wrap proof-inner">
+        <div class="proof-label">Good work is happening<br>at teams like these</div>
+        <div class="logos" aria-label="Customer names">
+          <span class="logo-word">northstar</span>
+          <span class="logo-word">COMMON<br>GROUND</span>
+          <span class="logo-word">grove.</span>
+          <span class="logo-word">Morrow &amp; Co.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="how-it-works">
+      <div class="section-head">
+        <div class="eyebrow">The useful bits</div>
+        <h2>Less chasing. More making.</h2>
+        <p>Everything your team needs to keep a project moving, with enough breathing room to do it well.</p>
+      </div>
+      <div class="features" id="teams">
+        <article class="feature">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M12 14.5h5m-2.5-2.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <h3>A plan everyone can follow</h3>
+          <p>Break the big idea into clear next steps. See who’s doing what and what needs a little attention.</p>
+        </article>
+        <article class="feature">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M4 5.5h12M4 10h8m-8 4.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="15.5" cy="10" r="1.5" fill="currentColor"/></svg></div>
+          <h3>Updates in the right place</h3>
+          <p>Decisions, notes, and useful context stay with the work, so nobody has to dig through old threads.</p>
+        </article>
+        <article class="feature">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M4 14.5 8 10l2.5 2.5L16 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Progress you can actually see</h3>
+          <p>Spot what’s moving, what’s stuck, and where a quick conversation would help the most.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="quote-section" id="stories">
+      <div class="wrap quote-inner">
+        <div>
+          <blockquote>“We got our Monday mornings back. That’s the feature I didn’t know I wanted.”</blockquote>
+          <div class="quote-attribution">
+            <div class="portrait" aria-hidden="true">EC</div>
+            <div><strong>Ellie Chen</strong><small>Creative Director, Common Ground</small></div>
+          </div>
+        </div>
+        <div class="quote-aside">
+          <p>Common Ground is an independent design studio with people working across three time zones. Fieldwork gave their projects a shared rhythm without adding another meeting to the calendar.</p>
+          <span class="metric">6 hrs</span><span class="metric-label">saved per team, every week</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap cta" id="start">
+      <div class="eyebrow">Go on, get started</div>
+      <h2>Your next good week starts here.</h2>
+      <p>Bring your team in and get the project out of your head.</p>
+      <a class="button" href="mailto:hello@fieldwork.example?subject=Fieldwork%20trial">Try Fieldwork free <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <a class="brand" href="#" aria-label="Fieldwork home"><span class="mark" aria-hidden="true"></span><span>fieldwork</span></a>
+      <div class="copyright">© 2025 Fieldwork, Inc.</div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="mailto:hello@fieldwork.example">Contact</a>
+        <a href="#start">Privacy</a>
+        <a href="#start">Terms</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
+```

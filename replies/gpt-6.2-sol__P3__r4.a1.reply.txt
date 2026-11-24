@@ -1,0 +1,348 @@
+Save this as `index.html`. It works offline and uses generated landscape studies as placeholders for the photographer’s own images. The name and email address are sample content.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The portfolio of Mara Ellis, a freelance photographer working in landscapes and editorial commissions.">
+  <title>Mara Ellis — Freelance Photographer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f1e9;
+      --ink: #25261f;
+      --muted: #57594d;
+      --rule: #bdbdaf;
+      --accent: #e8eea9;
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans: system-ui, sans-serif;
+      --gutter: clamp(1.25rem, 5vw, 5rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; }
+    button { font: inherit; }
+    :focus-visible { outline: 2px solid #56601b; outline-offset: 5px; }
+    .wrap { width: min(100%, 96rem); padding-inline: var(--gutter); margin-inline: auto; }
+    .skip { position: fixed; z-index: 5; top: .5rem; left: .5rem; padding: .75rem; background: var(--paper); transform: translateY(-150%); }
+    .skip:focus { transform: none; }
+
+    .header { min-height: 5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .wordmark { font: bold 1.3rem var(--serif); text-decoration: none; white-space: nowrap; }
+    nav { display: flex; gap: clamp(.9rem, 3vw, 2.5rem); font-size: .85rem; }
+    nav a { text-decoration: none; }
+    nav a:hover, .email:hover { text-decoration: underline; text-underline-offset: .25em; }
+
+    .hero { padding-top: clamp(2.5rem, 7vw, 7rem); }
+    .eyebrow { margin: 0; font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 650; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    h1 { margin: .22em 0 .26em -.055em; font-size: clamp(4.15rem, 12.3vw, 12rem); line-height: .83; letter-spacing: -.085em; }
+    .intro { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1.6rem; }
+    .intro p { max-width: 30rem; margin: 0; color: var(--muted); line-height: 1.55; }
+    .text-link { display: inline-block; padding-bottom: .3em; border-bottom: 1px solid; text-decoration: none; font-size: .84rem; }
+    .text-link:hover { border-bottom-width: 2px; padding-bottom: calc(.3em - 1px); }
+    .cover { margin: 0; }
+    canvas { display: block; width: 100%; height: auto; background: #5e6858; }
+    .cover canvas { aspect-ratio: 2.18; object-fit: cover; }
+    .cover figcaption { padding: .7rem 0; color: var(--muted); font-size: .72rem; }
+
+    .work { padding-block: clamp(4rem, 9vw, 8rem); }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--rule); padding-top: 1.3rem; margin-bottom: 2rem; }
+    h2 { margin: 0; font-size: clamp(2.8rem, 6.5vw, 6rem); line-height: .95; letter-spacing: -.06em; }
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2.25rem 1.5rem; }
+    .project { margin: 0; grid-column: span 6; }
+    .project:nth-child(3) { grid-column: 3 / span 8; }
+    .project button { display: block; position: relative; width: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+    .project canvas { aspect-ratio: 1.36; object-fit: cover; }
+    .project:nth-child(3) canvas { aspect-ratio: 1.7; }
+    .open-mark { position: absolute; right: .65rem; bottom: .65rem; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--paper); color: var(--ink); }
+    .project button:hover .open-mark { background: var(--accent); }
+    .project figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .25rem 1rem; padding-top: .65rem; }
+    .project h3 { margin: 0; font-size: clamp(1.45rem, 3vw, 2.4rem); letter-spacing: -.045em; }
+    .project figcaption span { color: var(--muted); font-size: .72rem; }
+
+    .about { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; border-top: 1px solid var(--rule); padding-block: 2rem clamp(4rem, 8vw, 7rem); }
+    .about p { margin: 0; max-width: 32rem; color: var(--muted); line-height: 1.65; font-size: clamp(1rem, 2vw, 1.22rem); }
+    .contact { background: var(--accent); padding-block: clamp(3rem, 7vw, 6rem) 1.5rem; }
+    .contact h2 { margin-block: .3em .4em; }
+    .email { text-decoration-thickness: 1px; text-underline-offset: .3em; overflow-wrap: anywhere; }
+    .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #a7ac72; font-size: .75rem; }
+
+    dialog { width: min(92vw, 75rem); max-height: 92vh; padding: 1rem; border: 0; background: var(--paper); color: var(--ink); }
+    dialog::backdrop { background: #191b15dc; }
+    .dialog-head { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: .75rem; }
+    .dialog-head h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+    .dialog-head button { background: transparent; border: 1px solid var(--rule); border-radius: 50%; width: 2.5rem; height: 2.5rem; cursor: pointer; color: inherit; }
+    #preview { max-height: 72vh; object-fit: contain; background: #25261f; }
+
+    @media (max-width: 42rem) {
+      .hero { padding-top: 3rem; }
+      .cover canvas { aspect-ratio: 1.3; }
+      .project, .project:nth-child(3) { grid-column: 1 / -1; }
+      .about { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="header wrap">
+    <a class="wordmark" href="#top">Mara Ellis</a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Freelance photographer</p>
+      <h1 id="hero-title">Mara Ellis</h1>
+      <div class="intro">
+        <p>Landscape and editorial photography shaped by weather, natural light, and a sense of place.</p>
+        <a class="text-link" href="#work">View selected work <span aria-hidden="true">↘</span></a>
+      </div>
+      <figure class="cover">
+        <canvas width="1400" height="640" data-scene="coast" role="img"
+          aria-label="A landscape study of a dark headland above silver-green water."></canvas>
+        <figcaption>Where the Land Ends · Coastal study</figcaption>
+      </figure>
+    </section>
+
+    <section id="work" class="work" aria-labelledby="work-title">
+      <div class="section-head">
+        <h2 id="work-title">Selected work</h2>
+        <span class="eyebrow">Landscape studies</span>
+      </div>
+      <div class="grid">
+        <figure class="project">
+          <button type="button" data-title="Where the Land Ends" aria-label="Enlarge Where the Land Ends">
+            <canvas width="1000" height="735" data-scene="coast" role="img"
+              aria-label="A steep coastal bluff descending into pale surf."></canvas>
+            <span class="open-mark" aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>Where the Land Ends</h3><span>Coast</span></figcaption>
+        </figure>
+        <figure class="project">
+          <button type="button" data-title="Above the Tree Line" aria-label="Enlarge Above the Tree Line">
+            <canvas width="1000" height="735" data-scene="mountains" role="img"
+              aria-label="Layers of blue mountain ridges under a pale morning sky."></canvas>
+            <span class="open-mark" aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>Above the Tree Line</h3><span>Mountains</span></figcaption>
+        </figure>
+        <figure class="project">
+          <button type="button" data-title="The Last Warm Hour" aria-label="Enlarge The Last Warm Hour">
+            <canvas width="1190" height="700" data-scene="desert" role="img"
+              aria-label="Ochre and rust-colored ridges catching the last light of the day."></canvas>
+            <span class="open-mark" aria-hidden="true">↗</span>
+          </button>
+          <figcaption><h3>The Last Warm Hour</h3><span>Desert</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">Behind the lens</h2>
+      <p>I’m Mara, a freelance photographer working outdoors and on location. I take on editorial assignments and commissions for people who want to show what it feels like to be somewhere.</p>
+    </section>
+  </main>
+
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <p class="eyebrow">Assignments &amp; commissions</p>
+      <h2 id="contact-title">Let’s work together.</h2>
+      <a class="email" href="mailto:hello@maraellis.example">hello@maraellis.example</a>
+      <footer class="footer">
+        <span>Mara Ellis Photography</span>
+        <a href="#top">Back to top ↑</a>
+      </footer>
+    </div>
+  </section>
+
+  <dialog id="lightbox" aria-labelledby="preview-title">
+    <div class="dialog-head">
+      <h2 id="preview-title"></h2>
+      <form method="dialog"><button aria-label="Close image preview" autofocus>×</button></form>
+    </div>
+    <canvas id="preview" role="img"></canvas>
+  </dialog>
+
+  <script>
+    const scenes = {
+      coast: {
+        seed: 97, sky: ['#8d9b91', '#e6ddbc'], horizon: .47,
+        water: ['#728a81', '#344d48'],
+        ridges: [
+          { points: [[0,.39],[.13,.42],[.22,.49],[.34,.48],[.47,.61],[.51,.65],[.36,.72],[.29,.84],[.16,.94],[0,1]], colors: ['#6b7250','#303d31'], rough: .018 },
+          { points: [[0,.47],[.09,.49],[.19,.56],[.29,.63],[.39,.65],[.35,.73],[.23,.8],[.19,.91],[.24,1],[0,1]], colors: ['#717653','#212f27'], rough: .025 }
+        ]
+      },
+      mountains: {
+        seed: 178, sky: ['#8295a1', '#ede2cb'],
+        ridges: [
+          { points: [[0,.56],[.12,.5],[.25,.57],[.37,.39],[.46,.48],[.56,.54],[.68,.39],[.81,.52],[.93,.46],[1,.5]], colors: ['#839397','#c1c6b8'], rough: .023 },
+          { points: [[0,.64],[.13,.55],[.24,.63],[.39,.52],[.46,.57],[.55,.64],[.66,.54],[.77,.48],[.89,.59],[1,.54]], colors: ['#576f76','#a2aeab'], rough: .027 },
+          { points: [[0,.62],[.13,.65],[.27,.71],[.38,.66],[.51,.78],[.64,.72],[.77,.6],[.89,.57],[1,.51]], colors: ['#40565a','#677c7a'], rough: .021 },
+          { points: [[0,.72],[.11,.76],[.28,.87],[.42,.91],[.56,.87],[.72,.83],[.9,.72],[1,.68]], colors: ['#364b4d','#1e3032'], rough: .025 }
+        ]
+      },
+      desert: {
+        seed: 216, sky: ['#a5a3a0', '#f5d0a3'],
+        ridges: [
+          { points: [[0,.57],[.12,.54],[.26,.61],[.42,.48],[.51,.53],[.59,.45],[.66,.46],[.8,.57],[.92,.53],[1,.55]], colors: ['#a38376','#c0a18d'], rough: .014 },
+          { points: [[0,.62],[.14,.69],[.3,.64],[.46,.71],[.59,.59],[.72,.61],[.83,.52],[.94,.54],[1,.62]], colors: ['#bc8a64','#8c5d52'], rough: .016 },
+          { points: [[0,.68],[.14,.65],[.3,.74],[.38,.76],[.52,.87],[.67,.81],[.83,.72],[1,.78]], colors: ['#c88d5d','#824c37'], rough: .021 },
+          { points: [[0,.87],[.14,.83],[.3,.9],[.46,.96],[.63,.9],[.8,.83],[.9,.83],[1,.88]], colors: ['#855438','#563729'], rough: .017 }
+        ]
+      }
+    };
+
+    function drawScene(canvas, scene) {
+      const ctx = canvas.getContext('2d');
+      const { width, height } = canvas;
+      let state = scene.seed;
+
+      function random() {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        return state / 4294967296;
+      }
+
+      function gradient(top, bottom, colors) {
+        const fill = ctx.createLinearGradient(0, top * height, 0, bottom * height);
+        fill.addColorStop(0, colors[0]);
+        fill.addColorStop(1, colors[1]);
+        return fill;
+      }
+
+      ctx.fillStyle = gradient(0, .64, scene.sky);
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.save();
+      ctx.scale(width, height);
+      for (let i = 0; i < 150; i++) {
+        const x = random();
+        const y = random() * .55;
+        const spread = .025 + random() * .22;
+        const haze = ctx.createRadialGradient(x, y, 0, x, y, spread);
+        haze.addColorStop(0, i % 5 === 0 ? '#58626e12' : '#fff0cb16');
+        haze.addColorStop(1, '#fff0cb00');
+        ctx.fillStyle = haze;
+        ctx.save();
+        ctx.translate(0, y);
+        ctx.scale(1, .15);
+        ctx.translate(0, -y);
+        ctx.fillRect(x - spread, y - spread, spread * 2, spread * 2);
+        ctx.restore();
+      }
+      ctx.restore();
+
+      if (scene.water) {
+        const horizon = scene.horizon * height;
+        ctx.fillStyle = gradient(scene.horizon, 1, scene.water);
+        ctx.fillRect(0, horizon, width, height - horizon);
+        for (let i = 0; i < 1500; i++) {
+          const depth = random();
+          const x = random() * width;
+          const y = horizon + depth * (height - horizon);
+          ctx.fillStyle = i % 4 === 0 ? '#eff1d455' : '#d7e1cd1d';
+          ctx.fillRect(x, y, (3 + random() * width * .05) * (.15 + depth), .5 + depth);
+        }
+        ctx.save();
+        ctx.scale(width, height);
+        for (let i = 0; i < 7; i++) {
+          const offset = i * .012;
+          ctx.beginPath();
+          ctx.moveTo(.45 + offset, .56);
+          ctx.bezierCurveTo(.69 + offset, .68, .35 + offset, .7, .31 + offset, 1);
+          ctx.strokeStyle = i % 2 ? '#ebf1db42' : '#dfe8d56b';
+          ctx.lineWidth = .0015 + random() * .002;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      for (const ridge of scene.ridges) {
+        const first = ridge.points[0];
+        const last = ridge.points[ridge.points.length - 1];
+        ctx.beginPath();
+        ctx.moveTo(first[0] * width, first[1] * height);
+
+        for (let i = 1; i < ridge.points.length; i++) {
+          const [x0, y0] = ridge.points[i - 1];
+          const [x1, y1] = ridge.points[i];
+          const steps = Math.max(3, Math.ceil(Math.hypot(x1 - x0, y1 - y0) * 155));
+          for (let j = 1; j <= steps; j++) {
+            const t = j / steps;
+            const roughness = Math.sin(Math.PI * t) * ridge.rough;
+            const y = y0 + (y1 - y0) * t + (random() - .5) * roughness;
+            ctx.lineTo((x0 + (x1 - x0) * t) * width, y * height);
+          }
+        }
+        ctx.lineTo(last[0] * width, height);
+        ctx.lineTo(first[0] * width, height);
+        ctx.closePath();
+        ctx.fillStyle = gradient(.39, 1, ridge.colors);
+        ctx.fill();
+
+        ctx.save();
+        ctx.clip();
+        for (let i = 0; i < 4700; i++) {
+          const x = random() * width;
+          const y = (.36 + random() * .64) * height;
+          ctx.fillStyle = i % 3 ? '#181c1b13' : '#fff4d320';
+          ctx.fillRect(x, y, 1 + random() * width * .015, .6 + random() * 2);
+        }
+        ctx.restore();
+      }
+
+      const pixels = ctx.getImageData(0, 0, width, height);
+      for (let i = 0; i < pixels.data.length; i += 4) {
+        const grain = (random() - .5) * 17;
+        pixels.data[i] += grain;
+        pixels.data[i + 1] += grain;
+        pixels.data[i + 2] += grain;
+      }
+      ctx.putImageData(pixels, 0, 0);
+    }
+
+    for (const canvas of document.querySelectorAll('canvas[data-scene]')) {
+      drawScene(canvas, scenes[canvas.dataset.scene]);
+    }
+
+    const dialog = document.querySelector('#lightbox');
+    const preview = document.querySelector('#preview');
+    const title = document.querySelector('#preview-title');
+
+    for (const button of document.querySelectorAll('button[data-title]')) {
+      button.addEventListener('click', () => {
+        const original = button.querySelector('canvas');
+        preview.width = original.width;
+        preview.height = original.height;
+        preview.setAttribute('aria-label', original.getAttribute('aria-label'));
+        preview.getContext('2d').drawImage(original, 0, 0);
+        title.textContent = button.dataset.title;
+        dialog.showModal();
+      });
+    }
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target !== dialog) return;
+      const bounds = dialog.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right ||
+          event.clientY < bounds.top || event.clientY > bounds.bottom) {
+        dialog.close();
+      }
+    });
+  </script>
+</body>
+</html>
+```

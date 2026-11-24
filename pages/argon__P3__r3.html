@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Søren Lindqvist — Editorial, Architecture & Portrait Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #F6F4F0;
+      --bg-surface: #EFECE6;
+      --text-primary: #141312;
+      --text-secondary: #5C5954;
+      --text-muted: #8C8881;
+      --accent: #B84A39;
+      --border: #DDD9D0;
+      --border-strong: #141312;
+      
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #111110;
+      --bg-surface: #1A1918;
+      --text-primary: #F2EFE9;
+      --text-secondary: #A39E96;
+      --text-muted: #6E6A63;
+      --accent: #D15B47;
+      --border: #262523;
+      --border-strong: #F2EFE9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Layout Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 3.5vw, 3.5rem);
+    }
+
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(1rem, 2.2vw, 2.25rem);
+    }
+
+    /* Typography Helpers */
+    .mono-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .serif-display {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.85rem, 6.2vw, 6.25rem);
+      line-height: 0.96;
+      letter-spacing: -0.025em;
+    }
+
+    .serif-h2 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.1rem, 3.8vw, 3.6rem);
+      line-height: 1.06;
+      letter-spacing: -0.015em;
+    }
+
+    /* Header & Navigation */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: var(--bg-primary);
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.85rem;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-coords {
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .brand-coords {
+        display: inline-block;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      transition: color 0.2s ease;
+      position: relative;
+      padding: 0.25rem 0;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--text-primary);
+    }
+
+    .theme-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--accent);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(4rem, 7vw, 6.5rem);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 2rem;
+      margin-bottom: clamp(2rem, 4vw, 3.5rem);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .hero-content {
+      grid-column: 1 / 6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-kicker::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background-color: var(--accent);
+    }
+
+    .hero-title {
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 44ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-editorial {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--text-primary);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-editorial:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .hero-plate {
+      grid-column: 6 / 13;
+      position: relative;
+    }
+
+    .hero-image-frame {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-surface);
+      aspect-ratio: 4 / 5;
+      max-height: 76vh;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .hero-image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-image-frame:hover img {
+      transform: scale(1.025);
+    }
+
+    .plate-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 0.85rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border);
+      gap: 1rem;
+    }
+
+    @media (max-width: 960px) {
+      .hero-content {
+        grid-column: 1 / -1;
+        margin-bottom: 2.5rem;
+      }
+      .hero-plate {
+        grid-column: 1 / -1;
+      }
+      .hero-image-frame {
+        max-height: none;
+      }
+    }
+
+    /* Section Header & Filter Bar */
+    .works-section {
+      padding: clamp(4rem, 8vw, 7.5rem) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .works-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding-bottom: 2rem;
+      margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.85rem;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+      background-color: var(--bg-surface);
+    }
+
+    .filter-count {
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+      font-size: 0.68rem;
+    }
+
+    /* Asymmetric Editorial Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: clamp(1rem, 2.2vw, 2.25rem);
+      row-gap: clamp(3rem, 6vw, 5.5rem);
+      align-items: start;
+    }
+
+    .work-item {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .work-item.hidden {
+      display: none;
+    }
+
+    /* Editorial pacing spans when unfiltered */
+    .span-7 { grid-column: span 7; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: 3 / 11; }
+    .span-4 { grid-column: span 4; }
+    .offset-top { margin-top: clamp(0rem, 4.5vw, 4.5rem); }
+
+    /* When filtered, make layout clean 6-col pairs so no awkward holes appear */
+    .gallery-grid.is-filtered .work-item {
+      grid-column: span 6;
+      margin-top: 0;
+    }
+
+    @media (max-width: 860px) {
+      .span-7, .span-5, .span-6, .span-8, .span-4,
+      .gallery-grid.is-filtered .work-item {
+        grid-column: 1 / -1;
+        margin-top: 0;
+      }
+    }
+
+    .work-media {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--bg-surface);
+      width: 100%;
+    }
+
+    .aspect-4-5 { aspect-ratio: 4 / 5; }
+    .aspect-3-2 { aspect-ratio: 3 / 2; }
+    .aspect-16-10 { aspect-ratio: 16 / 10; }
+    .aspect-1-1 { aspect-ratio: 1 / 1; }
+
+    .work-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+    }
+
+    .work-item:hover .work-media img {
+      transform: scale(1.025);
+    }
+
+    .work-caption {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: baseline;
+      gap: 1rem;
+      padding-top: 0.85rem;
+      margin-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      transition: border-color 0.25s ease;
+    }
+
+    .work-item:hover .work-caption {
+      border-color: var(--text-primary);
+    }
+
+    .work-number {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+    }
+
+    .work-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .work-location {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: right;
+    }
+
+    .work-submeta {
+      grid-column: 2 / 4;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-top: -0.2rem;
+    }
+
+    /* Exhibition & Monograph Strip (About) */
+    .practice-section {
+      padding: clamp(4rem, 8vw, 7.5rem) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .practice-intro {
+      grid-column: 1 / 6;
+    }
+
+    .practice-portrait {
+      margin-top: 2.25rem;
+      max-width: 340px;
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      background-color: var(--bg-surface);
+    }
+
+    .practice-portrait img {
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.06);
+    }
+
+    .practice-details {
+      grid-column: 7 / 13;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .bio-copy {
+      font-family: var(--font-serif);
+      font-size: clamp(1.45rem, 2.2vw, 1.95rem);
+      line-height: 1.38;
+      color: var(--text-primary);
+    }
+
+    .bio-secondary {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin-top: -1rem;
+    }
+
+    .cv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cv-list {
+      list-style: none;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .cv-list li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      gap: 1rem;
+    }
+
+    .cv-list span:last-child {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 960px) {
+      .practice-intro, .practice-details {
+        grid-column: 1 / -1;
+      }
+      .cv-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Commission & Contact Section */
+    .commission-section {
+      padding: clamp(4rem, 8vw, 7.5rem) 0;
+    }
+
+    .commission-left {
+      grid-column: 1 / 6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .representation-box {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .rep-card h4 {
+      margin-bottom: 0.4rem;
+    }
+
+    .rep-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .commission-right {
+      grid-column: 7 / 13;
+      background-color: var(--bg-surface);
+      padding: clamp(1.75rem, 3.5vw, 3.25rem);
+      border: 1px solid var(--border);
+    }
+
+    .inquiry-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .commission-left, .commission-right {
+        grid-column: 1 / -1;
+      }
+      .commission-right {
+        margin-top: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-row, .representation-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .field-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .field-input,
+    .field-select,
+    .field-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 0.65rem 0;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.98rem;
+      transition: border-color 0.2s ease;
+      border-radius: 0;
+    }
+
+    .field-select {
+      cursor: pointer;
+    }
+
+    .field-select option {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .field-input:focus,
+    .field-select:focus,
+    .field-textarea:focus {
+      outline: none;
+      border-bottom-color: var(--accent);
+    }
+
+    .field-textarea {
+      resize: vertical;
+      min-height: 95px;
+    }
+
+    .submit-btn {
+      align-self: flex-start;
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.95rem 2rem;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent);
+      color: #F6F4F0;
+    }
+
+    .form-status {
+      display: none;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-primary);
+    }
+
+    .form-status.visible {
+      display: block;
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Lightbox Overlay */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background-color: rgba(14, 14, 13, 0.96);
+      color: #F2EFE9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(1rem, 2.5vw, 2rem);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(242, 239, 233, 0.16);
+      padding-bottom: 1rem;
+    }
+
+    .lightbox-close {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.85rem;
+      border: 1px solid rgba(242, 239, 233, 0.3);
+      color: #F2EFE9;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      border-color: #F2EFE9;
+      background-color: rgba(242, 239, 233, 0.1);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 1.5rem 0;
+    }
+
+    .lightbox-img {
+      max-width: 88vw;
+      max-height: 72vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+      transition: opacity 0.2s ease;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(242, 239, 233, 0.22);
+      background-color: rgba(17, 17, 16, 0.75);
+      color: #F2EFE9;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .lightbox-nav:hover {
+      border-color: #F2EFE9;
+      background-color: rgba(17, 17, 16, 0.95);
+    }
+
+    .lightbox-prev { left: 0; }
+    .lightbox-next { right: 0; }
+
+    .lightbox-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 1px solid rgba(242, 239, 233, 0.16);
+      padding-top: 1rem;
+    }
+
+    .lightbox-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .lightbox-exif {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #A39E96;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 640px) {
+      .lightbox-nav {
+        top: auto;
+        bottom: 0.5rem;
+        transform: none;
+      }
+      .lightbox-prev { left: 25%; }
+      .lightbox-next { right: 25%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Architectural Header -->
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a href="#" class="brand">
+        <span class="brand-name">Søren Lindqvist</span>
+        <span class="mono-meta brand-coords">55.6761° N, 12.5683° E — CPH / PAR</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#index" class="nav-link">Index</a>
+        <a href="#practice" class="nav-link">Practice</a>
+        <a href="#commissions" class="nav-link">Commissions</a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle Darkroom Mode">
+          <span class="theme-dot"></span>
+          <span id="themeLabel">Darkroom</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Spread -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-top-meta">
+          <span class="mono-meta">FOLIO ARCHIVE // 2021—2026</span>
+          <span class="mono-meta">MEDIUM FORMAT &amp; ARCHIVAL PIGMENT PRINTS</span>
+          <span class="mono-meta">BOOKING Q1/Q2 EUROPE &amp; JAPAN</span>
+        </div>
+
+        <div class="grid-12">
+          <div class="hero-content">
+            <div>
+              <div class="mono-meta hero-kicker">Editorial &amp; Architectural Monograph</div>
+              <h1 class="serif-display hero-title">
+                Quiet geometry,<br />
+                <em>human stillness</em> &amp;<br />
+                northern light.
+              </h1>
+              <p class="hero-lead">
+                Søren Lindqvist is a Danish visual artist and commissioned photographer working across brutalist architecture, intimate portraiture, and slow observational travel essays.
+              </p>
+            </div>
+
+            <div class="hero-actions">
+              <a href="#index" class="btn-editorial">Explore Archive Plates (11) &rarr;</a>
+              <a href="#commissions" class="mono-meta">Request Print or Commission</a>
+            </div>
+          </div>
+
+          <div class="hero-plate">
+            <div class="hero-image-frame" id="heroPlateTrigger" role="button" tabindex="0" aria-label="Inspect Plate 00 in Lightbox">
+              <img
+                src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1500&q=85"
+                alt="Morning sun cutting across a minimalist Nordic concrete room"
+              />
+            </div>
+            <div class="plate-caption">
+              <span class="mono-meta" style="color: var(--accent);">PLATE 00</span>
+              <span class="mono-meta">Silence in Concrete IV — Aarhus, Denmark</span>
+              <span class="mono-meta">Hasselblad 500C/M · 80mm f/2.8 · Ilford Delta 400</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Works / Filterable Archive -->
+    <section class="works-section" id="index">
+      <div class="container">
+        <div class="works-header">
+          <div>
+            <span class="mono-meta">SELECTED PLATES // 01 — 10</span>
+            <h2 class="serif-h2" style="margin-top: 0.4rem;">Curated Index</h2>
+          </div>
+
+          <div class="filter-controls" role="tablist" aria-label="Filter photography categories">
+            <button type="button" class="filter-btn active" data-filter="all">
+              All Works <span class="filter-count" id="count-all">10</span>
+            </button>
+            <button type="button" class="filter-btn" data-filter="Editorial">
+              Editorial <span class="filter-count">3</span>
+            </button>
+            <button type="button" class="filter-btn" data-filter="Architecture">
+              Architecture <span class="filter-count">3</span>
+            </button>
+            <button type="button" class="filter-btn" data-filter="Portraiture">
+              Portraiture <span class="filter-count">2</span>
+            </button>
+            <button type="button" class="filter-btn" data-filter="Analog 35mm">
+              Analog 35mm <span class="filter-count">2</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Populated dynamically from curated plates array for seamless Lightbox synchronization -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Practice, Exhibitions & Monograph Strip -->
+    <section class="practice-section" id="practice">
+      <div class="container grid-12">
+        <div class="practice-intro">
+          <span class="mono-meta">THE PRACTICE // BIOGRAPHY</span>
+          <h2 class="serif-h2" style="margin-top: 0.5rem;">Between structure &amp; solitude.</h2>
+          <figure class="practice-portrait">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80"
+              alt="Portrait of Søren Lindqvist in natural side light"
+              loading="lazy"
+            />
+            <figcaption class="mono-meta" style="margin-top: 0.65rem; display: flex; justify-content: space-between;">
+              <span>SØREN LINDQVIST</span>
+              <span>STUDIO VESTERBRO, CPH</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="practice-details">
+          <p class="bio-copy">
+            Working primarily with medium-format film and natural high-latitude light, my practice studies how weathered architecture frames human presence—and how silence registers on silver gelatin and cotton rag paper.
+          </p>
+          <p class="bio-secondary">
+            Over the past decade, Søren has collaborated with architectural practices, independent publishing houses, and design studios across Scandinavia, France, and Japan. Each commission is approached as an extended visual essay rather than an isolated campaign.
+          </p>
+
+          <div class="cv-grid">
+            <div>
+              <span class="mono-meta">SELECTED CLIENTS &amp; PUBLICATIONS</span>
+              <ul class="cv-list">
+                <li><span>ARK JOURNAL (Copenhagen)</span><span>2024—26</span></li>
+                <li><span>Cereal Magazine (Vol. 24)</span><span>2025</span></li>
+                <li><span>Kengo Kuma &amp; Associates</span><span>2024</span></li>
+                <li><span>Kinfolk — The Architecture Issue</span><span>2023</span></li>
+                <li><span>Studio Frama / Edition Prints</span><span>2022</span></li>
+              </ul>
+            </div>
+
+            <div>
+              <span class="mono-meta">EXHIBITIONS &amp; MONOGRAPHS</span>
+              <ul class="cv-list">
+                <li><span>Charlottenborg Spring Exhibition</span><span>CPH · 2026</span></li>
+                <li><span>‘Low Sun, Basalt’ (Mack Books)</span><span>LON · 2025</span></li>
+                <li><span>Fotografiska Group Showcase</span><span>STO · 2024</span></li>
+                <li><span>Maison Européenne de la Photo</span><span>PAR · 2023</span></li>
+                <li><span>Foam Talent Shortlist</span><span>AMS · 2022</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commission & Representation Section -->
+    <section class="commission-section" id="commissions">
+      <div class="container grid-12">
+        <div class="commission-left">
+          <div>
+            <span class="mono-meta">INQUIRIES // LICENSING &amp; ASSIGNMENTS</span>
+            <h2 class="serif-h2" style="margin-top: 0.5rem; margin-bottom: 1.25rem;">
+              Initiate a commission or archival print order.
+            </h2>
+            <p style="color: var(--text-secondary); max-width: 44ch;">
+              Available for international editorial assignments, architectural documentation, and private fine-art print editions signed verso.
+            </p>
+          </div>
+
+          <div class="representation-box">
+            <div class="rep-card">
+              <span class="mono-meta">COPENHAGEN STUDIO</span>
+              <p style="margin-top: 0.4rem;">
+                Slagtehusgade 11, 2. TV<br />
+                1715 København V<br />
+                studio@sorenlindqvist.dk
+              </p>
+            </div>
+            <div class="rep-card">
+              <span class="mono-meta">SYNDICATION &amp; AGENT</span>
+              <p style="margin-top: 0.4rem;">
+                Atelier Nord Representation<br />
+                Paris / Stockholm<br />
+                booking@ateliernord.eu
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="commission-right">
+          <form class="inquiry-form" id="inquiryForm">
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label" for="clientName">Name / Studio *</label>
+                <input class="field-input" type="text" id="clientName" name="clientName" required placeholder="e.g. Clara Vestergaard / Snøhetta" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="clientEmail">Email Address *</label>
+                <input class="field-input" type="email" id="clientEmail" name="clientEmail" required placeholder="clara@studio.dk" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label class="field-label" for="projectType">Engagement Type</label>
+                <select class="field-select" id="projectType" name="projectType">
+                  <option value="Architectural Monograph">Architectural Documentation</option>
+                  <option value="Editorial Feature">Editorial / Publication Commission</option>
+                  <option value="Brand Campaign">Art Direction &amp; Brand Campaign</option>
+                  <option value="Fine Art Print">Signed Archival Pigment Print</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="projectWindow">Target Window &amp; Location</label>
+                <input class="field-input" type="text" id="projectWindow" name="projectWindow" placeholder="e.g. March 2027 · Oslo" />
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="projectBrief">Project Brief or Plate Reference *</label>
+              <textarea class="field-textarea" id="projectBrief" name="projectBrief" required placeholder="Share scope, shooting dates, usage rights, or specific plate numbers..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Transmit Inquiry &rarr;</button>
+            <div class="form-status" id="formStatus" role="status"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="mono-meta">&copy; 2026 SØREN LINDQVIST. ALL RIGHTS RESERVED.</span>
+      <span class="mono-meta">PRINTED ON DIGITAL COTTON RAG · COLOPHON: CORMORANT &amp; IBM PLEX</span>
+    </div>
+  </footer>
+
+  <!-- Full-Screen Archival Lightbox Modal -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image Inspection Lightbox">
+    <div class="lightbox-top">
+      <span class="mono-meta" id="lbCounter" style="color: #F2EFE9;">PLATE 01 / 11</span>
+      <span class="mono-meta" id="lbCategory" style="color: #A39E96;">ARCHITECTURE</span>
+      <button type="button" class="lightbox-close" id="lbClose">Close [ESC]</button>
+    </div>
+
+    <div class="lightbox-stage">
+      <button type="button" class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous Plate">&larr; Prev</button>
+      <img class="lightbox-img" id="lbImage" src="" alt="" />
+      <button type="button" class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next Plate">Next &rarr;</button>
+    </div>
+
+    <div class="lightbox-footer">
+      <div>
+        <h3 class="lightbox-title" id="lbTitle">Title</h3>
+        <span class="mono-meta" id="lbLocation" style="color: #A39E96;">Location</span>
+      </div>
+      <div class="lightbox-exif" id="lbExif">Camera &amp; Film Metadata</div>
+    </div>
+  </div>
+
+  <script>
+    // Curated Fine-Art Photography Plates
+    const heroPlate = {
+      id: "00",
+      title: "Silence in Concrete IV",
+      category: "Architecture",
+      location: "Aarhus, Denmark · 2026",
+      exif: "Hasselblad 500C/M · 80mm f/2.8 · Ilford Delta 400",
+      src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=85"
+    };
+
+    const plates = [
+      {
+        id: "01",
+        title: "Brutalist Pavilion at Low Tide",
+        category: "Architecture",
+        location: "Malmö, Sweden · 2026",
+        exif: "Linhof Technika 4x5 · 150mm f/5.6 · Kodak Tri-X 320",
+        aspect: "aspect-4-5",
+        layout: "span-7",
+        src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85"
+      },
+      {
+        id: "02",
+        title: "Portrait of Astrid in Winter Wool",
+        category: "Portraiture",
+        location: "Frederiksberg, CPH · 2025",
+        exif: "Pentax 67II · 105mm f/2.4 · Kodak Portra 400",
+        aspect: "aspect-4-5",
+        layout: "span-5 offset-top",
+        src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85"
+      },
+      {
+        id: "03",
+        title: "Basalt Ridge After November Rain",
+        category: "Analog 35mm",
+        location: "Vík í Mýrdal, Iceland · 2025",
+        exif: "Leica M6 · 35mm Summicron · Cinestill BWXX",
+        aspect: "aspect-16-10",
+        layout: "span-8",
+        src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85"
+      },
+      {
+        id: "04",
+        title: "Linen Study & Morning Dust",
+        category: "Editorial",
+        location: "Antwerp, Belgium · 2025",
+        exif: "Mamiya RZ67 · 110mm f/2.8 · Kodak Portra 160",
+        aspect: "aspect-3-2",
+        layout: "span-6",
+        src: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1300&q=85"
+      },
+      {
+        id: "05",
+        title: "Courtyard Shadow Geometry",
+        category: "Architecture",
+        location: "Naoshima, Japan · 2024",
+        exif: "Hasselblad 500C/M · 50mm f/4 · Ilford HP5 Plus",
+        aspect: "aspect-3-2",
+        layout: "span-6",
+        src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1300&q=85"
+      },
+      {
+        id: "06",
+        title: "The Cellist Before Rehearsal",
+        category: "Portraiture",
+        location: "Paris 11e, France · 2024",
+        exif: "Contax 645 · 80mm f/2 · Ilford Delta 100",
+        aspect: "aspect-4-5",
+        layout: "span-5",
+        src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=85"
+      },
+      {
+        id: "07",
+        title: "Monolith & Coastal Fog",
+        category: "Editorial",
+        location: "Faroe Islands · 2024",
+        exif: "Pentax 67II · 90mm f/2.8 · Kodak Portra 800",
+        aspect: "aspect-4-5",
+        layout: "span-7 offset-top",
+        src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=85"
+      },
+      {
+        id: "08",
+        title: "Night Tram on Gammel Kongevej",
+        category: "Analog 35mm",
+        location: "Copenhagen, Denmark · 2023",
+        exif: "Leica MP · 50mm Summilux · Kodak Tri-X @ 1600",
+        aspect: "aspect-16-10",
+        layout: "span-8",
+        src: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1500&q=85"
+      },
+      {
+        id: "09",
+        title: "Limestone Stairwell Inquiry",
+        category: "Architecture",
+        location: "Zurich, Switzerland · 2023",
+        exif: "Hasselblad SWC/M · 38mm Biogon · Ilford FP4",
+        aspect: "aspect-4-5",
+        layout: "span-6",
+        src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1300&q=85"
+      },
+      {
+        id: "10",
+        title: "Atelier Ceramicist Hands",
+        category: "Editorial",
+        location: "Bornholm, Denmark · 2023",
+        exif: "Mamiya 7II · 80mm f/4 · Kodak Portra 400",
+        aspect: "aspect-4-5",
+        layout: "span-6",
+        src: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1300&q=85"
+      }
+    ];
+
+    const galleryGrid = document.getElementById("galleryGrid");
+    let activeFilter = "all";
+    let currentLightboxList = [heroPlate, ...plates];
+    let currentLightboxIndex = 0;
+
+    // Render Gallery Cards
+    function renderGallery() {
+      galleryGrid.innerHTML = "";
+      plates.forEach((plate) => {
+        const matches = activeFilter === "all" || plate.category === activeFilter;
+        if (!matches) return;
+
+        const article = document.createElement("article");
+        article.className = `work-item ${plate.layout}`;
+        article.setAttribute("tabindex", "0");
+        article.setAttribute("role", "button");
+        article.setAttribute("aria-label", `Inspect Plate ${plate.id}: ${plate.title}`);
+
+        article.innerHTML = `
+          <div class="work-media ${plate.aspect}">
+            <img src="${plate.src}" alt="${plate.title}" loading="lazy" />
+          </div>
+          <div class="work-caption">
+            <span class="work-number">PL. ${plate.id}</span>
+            <h3 class="work-title">${plate.title}</h3>
+            <span class="work-location">${plate.category}</span>
+            <div class="work-submeta">
+              <span>${plate.location}</span>
+              <span>${plate.exif}</span>
+            </div>
+          </div>
+        `;
+
+        article.addEventListener("click", () => openLightboxById(plate.id));
+        article.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightboxById(plate.id);
+          }
+        });
+
+        galleryGrid.appendChild(article);
+      });
+
+      galleryGrid.classList.toggle("is-filtered", activeFilter !== "all");
+    }
+
+    // Category Filter Listeners
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeFilter = btn.getAttribute("data-filter");
+        renderGallery();
+      });
+    });
+
+    // Lightbox Inspection System
+    const lightbox = document.getElementById("lightbox");
+    const lbImage = document.getElementById("lbImage");
+    const lbTitle = document.getElementById("lbTitle");
+    const lbLocation = document.getElementById("lbLocation");
+    const lbExif = document.getElementById("lbExif");
+    const lbCounter = document.getElementById("lbCounter");
+    const lbCategory = document.getElementById("lbCategory");
+
+    function updateLightboxSlide() {
+      const item = currentLightboxList[currentLightboxIndex];
+      lbImage.src = item.src;
+      lbImage.alt = item.title;
+      lbTitle.textContent = item.title;
+      lbLocation.textContent = item.location;
+      lbExif.textContent = item.exif;
+      lbCategory.textContent = item.category;
+      lbCounter.textContent = `PLATE ${item.id} // ${currentLightboxIndex + 1} OF ${currentLightboxList.length}`;
+    }
+
+    function openLightboxById(id) {
+      const visiblePlates = activeFilter === "all"
+        ? [heroPlate, ...plates]
+        : plates.filter((p) => p.category === activeFilter);
+
+      currentLightboxList = visiblePlates.length ? visiblePlates : [heroPlate, ...plates];
+      const foundIdx = currentLightboxList.findIndex((p) => p.id === id);
+      currentLightboxIndex = foundIdx >= 0 ? foundIdx : 0;
+
+      updateLightboxSlide();
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function stepLightbox(dir) {
+      currentLightboxIndex = (currentLightboxIndex + dir + currentLightboxList.length) % currentLightboxList.length;
+      updateLightboxSlide();
+    }
+
+    document.getElementById("heroPlateTrigger").addEventListener("click", () => {
+      currentLightboxList = [heroPlate, ...plates];
+      currentLightboxIndex = 0;
+      updateLightboxSlide();
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    });
+
+    document.getElementById("lbClose").addEventListener("click", closeLightbox);
+    document.getElementById("lbPrev").addEventListener("click", () => stepLightbox(-1));
+    document.getElementById("lbNext").addEventListener("click", () => stepLightbox(1));
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox || e.target.classList.contains("lightbox-stage")) {
+        closeLightbox();
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("open")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowRight") stepLightbox(1);
+      if (e.key === "ArrowLeft") stepLightbox(-1);
+    });
+
+    // Gallery Light / Darkroom Theme Toggle
+    const themeToggle = document.getElementById("themeToggle");
+    const themeLabel = document.getElementById("themeLabel");
+    let isDarkroom = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkroom = !isDarkroom;
+      document.documentElement.setAttribute("data-theme", isDarkroom ? "dark" : "light");
+      themeLabel.textContent = isDarkroom ? "Gallery Light" : "Darkroom";
+    });
+
+    // Commission Inquiry Form Handler
+    const inquiryForm = document.getElementById("inquiryForm");
+    const formStatus = document.getElementById("formStatus");
+
+    inquiryForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("clientName").value.trim();
+      const type = document.getElementById("projectType").value;
+      formStatus.textContent = `DOSSIER RECEIVED // Thank you, ${name}. Your ${type.toLowerCase()} inquiry has been logged with the Copenhagen studio.`;
+      formStatus.classList.add("visible");
+      inquiryForm.reset();
+    });
+
+    // Initialize Gallery
+    renderGallery();
+  </script>
+</body>
+</html>

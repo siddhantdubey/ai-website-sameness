@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fortnight — plan two weeks at a time</title>
+<meta name="description" content="Fortnight is a project planner for small teams that works in two-week stretches. No Gantt charts, no story points.">
+<style>
+  :root {
+    --paper: #f3efe6; --ink: #1c1b18; --muted: #6b675e; --rule: #d6cfbf;
+    --accent: #c4421a; --done: #3d6b47;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Charter, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 var(--sans); }
+  a { color: inherit; }
+  ::selection { background: var(--accent); color: var(--paper); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; border-bottom: 1px solid var(--ink); }
+  .mark { font-family: var(--serif); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; display: flex; align-items: baseline; gap: 8px; }
+  .mark small { font: 11px var(--mono); color: var(--muted); }
+  .top nav { display: flex; gap: 26px; align-items: center; font-size: 15px; }
+  .top nav a { text-decoration: none; }
+  .top nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .btn { display: inline-block; background: var(--ink); color: var(--paper); padding: 10px 16px; text-decoration: none; font-size: 15px; border: 1px solid var(--ink); }
+  .btn:hover { background: var(--accent); border-color: var(--accent); text-decoration: none !important; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .hero { padding: 72px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 56px; align-items: end; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.4vw, 82px); line-height: 1.02; letter-spacing: -0.025em; margin: 0; }
+  h1 em { color: var(--accent); }
+  .hero-side p { margin: 0 0 22px; color: #3a3833; }
+  .hero-side .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-side .fine { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+  .mock { margin-top: 64px; background: #fbf9f4; border: 1px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); font-size: 14px; overflow-x: auto; }
+  .mock-inner { min-width: 820px; }
+  .mock-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+  .mock-head strong { font-family: var(--serif); font-size: 18px; font-weight: 600; }
+  .mock-head .meta { font: 12px var(--mono); color: var(--muted); }
+  .mock-head .pill { font: 12px var(--mono); border: 1px solid var(--accent); color: var(--accent); padding: 2px 8px; margin-left: 10px; }
+  .tl { --cols: 240px 44px repeat(10, 1fr); position: relative; }
+  .tl-row { display: grid; grid-template-columns: var(--cols); align-items: center; border-bottom: 1px solid #ece7dc; min-height: 44px; }
+  .tl-row:last-of-type { border-bottom: 0; }
+  .tl-days { font: 11px var(--mono); color: var(--muted); min-height: 34px; border-bottom: 1px solid var(--rule); }
+  .tl-days span { text-align: center; }
+  .tl-days span.wk { border-left: 1px dashed var(--rule); }
+  .tl-days span.today { color: var(--accent); font-weight: 700; }
+  .task { display: flex; align-items: center; gap: 10px; padding: 0 12px 0 18px; grid-column: 1; white-space: nowrap; overflow: hidden; }
+  .task input { appearance: none; -webkit-appearance: none; width: 15px; height: 15px; flex: none; border: 1.5px solid var(--ink); border-radius: 2px; margin: 0; cursor: pointer; position: relative; }
+  .task input:checked { background: var(--done); border-color: var(--done); }
+  .task input:checked::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .task label { cursor: pointer; overflow: hidden; text-overflow: ellipsis; }
+  .tl-row.is-done .task label { color: var(--muted); text-decoration: line-through; text-decoration-color: #a9a395; }
+  .who { grid-column: 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 10px var(--mono); color: var(--paper); }
+  .who.mk { background: #5b6e8a; } .who.jt { background: #8a6a3d; } .who.ar { background: #6d5a7a; } .who.ds { background: #44655a; } .who.all { background: var(--ink); }
+  .bar { grid-row: 1; height: 18px; margin: 0 3px; background: var(--ink); position: relative; font: 10.5px/18px var(--mono); color: var(--paper); padding-left: 6px; white-space: nowrap; transition: background-color .2s, color .2s; }
+  .bar.done, .tl-row.is-done .bar { background: #c9c2b2; color: #5a564d; border: 0; }
+  .bar.late { background: var(--accent); }
+  .bar.late::after { content: attr(data-late); position: absolute; left: calc(100% + 8px); top: 0; color: var(--accent); }
+  .tl-row.is-done .bar.late::after { content: ""; }
+  .bar.ghost { background: repeating-linear-gradient(-45deg, transparent 0 4px, #d6cfbf 4px 5px); border: 1px solid #b8b09e; color: var(--muted); }
+  .milestone { grid-row: 1; justify-self: center; width: 14px; height: 14px; background: var(--ink); transform: rotate(45deg); }
+  .today-line { position: absolute; top: 0; bottom: 0; border-left: 2px solid var(--accent); pointer-events: none; }
+  .mock-foot { display: flex; justify-content: space-between; padding: 11px 18px; border-top: 1px solid var(--rule); font: 12px var(--mono); color: var(--muted); }
+  .caption { font-size: 13px; color: var(--muted); margin: 18px 0 0; }
+  .caption::before { content: "↑ "; color: var(--accent); }
+
+  .usedby { margin-top: 80px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 18px 0; display: flex; flex-wrap: wrap; gap: 14px 40px; align-items: baseline; }
+  .usedby .lbl { font: 12px var(--mono); color: var(--muted); }
+  .usedby .n { font-family: var(--serif); font-size: 19px; }
+  .usedby .n:nth-child(3) { font-family: var(--sans); font-weight: 800; letter-spacing: -0.03em; font-size: 17px; }
+  .usedby .n:nth-child(5) { font-style: italic; }
+  .usedby .n:nth-child(6) { font-family: var(--mono); font-size: 15px; }
+
+  section { padding: 96px 0 0; }
+  .eyebrow { font: 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 14px; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 4vw, 48px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 18px; }
+  .split { display: grid; grid-template-columns: 340px 1fr; gap: 64px; }
+  .split > div:first-child { position: sticky; top: 28px; align-self: start; color: #3a3833; }
+  .week { list-style: none; margin: 0; padding: 0; }
+  .week li { display: grid; grid-template-columns: 130px 1fr; gap: 24px; padding: 28px 0; border-top: 1px solid var(--rule); }
+  .week li:first-child { border-top-color: var(--ink); }
+  .week time { font: 13px var(--mono); color: var(--muted); padding-top: 4px; }
+  .week h3 { font-family: var(--serif); font-size: 24px; font-weight: 600; margin: 0 0 6px; }
+  .week p { margin: 0; color: #3a3833; max-width: 56ch; }
+  .week kbd { font: 12px var(--mono); border: 1px solid var(--rule); border-bottom-width: 2px; padding: 1px 5px; background: #fbf9f4; }
+
+  .leftout { background: var(--ink); color: var(--paper); margin-top: 96px; padding: 88px 0; }
+  .leftout section { padding: 0; }
+  .leftout h2 { max-width: 18ch; }
+  .leftout .eyebrow { color: #e9835f; }
+  .leftout .intro { color: #bdb7a9; max-width: 52ch; margin: 0 0 48px; }
+  .nolist { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; list-style: none; margin: 0; padding: 0; }
+  .nolist li { border-top: 1px solid #3c3a35; padding: 20px 0 22px; }
+  .nolist s { font-family: var(--serif); font-size: 22px; text-decoration-color: #e9835f; text-decoration-thickness: 2px; display: block; margin-bottom: 4px; }
+  .nolist span { color: #bdb7a9; font-size: 15px; }
+
+  .quote { display: grid; grid-template-columns: 1fr 3fr; gap: 64px; margin: 0; }
+  .quote blockquote { margin: 0; font-family: var(--serif); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.3; text-indent: -0.42em; }
+  .quote figcaption { margin-top: 24px; font-size: 15px; color: var(--muted); }
+  .quote figcaption b { color: var(--ink); font-weight: 600; }
+  .stat { border-top: 1px solid var(--ink); padding-top: 14px; }
+  .stat div { font-family: var(--serif); font-size: 64px; line-height: 1; letter-spacing: -0.03em; }
+  .stat p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); margin-top: 36px; }
+  .tier { padding: 28px 28px 32px 0; border-right: 1px solid var(--rule); }
+  .tier + .tier { padding-left: 28px; }
+  .tier:last-child { border-right: 0; }
+  .tier h3 { font: 13px var(--mono); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 18px; }
+  .tier.pick h3 { color: var(--accent); }
+  .tier.pick h3::after { content: " — most teams"; color: var(--muted); text-transform: none; letter-spacing: 0; }
+  .price { font-family: var(--serif); font-size: 52px; line-height: 1; letter-spacing: -0.03em; }
+  .price small { font: 14px var(--sans); color: var(--muted); }
+  .tier p { color: #3a3833; font-size: 15px; min-height: 3.2em; }
+  .tier ul { padding: 0; margin: 18px 0 26px; list-style: none; font-size: 15px; }
+  .tier li { padding: 7px 0; border-bottom: 1px dotted var(--rule); }
+
+  .faq { max-width: 760px; }
+  details { border-top: 1px solid var(--rule); }
+  details:last-of-type { border-bottom: 1px solid var(--rule); }
+  summary { cursor: pointer; list-style: none; padding: 20px 40px 20px 0; font-family: var(--serif); font-size: 21px; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font: 24px var(--mono); color: var(--muted); }
+  details[open] summary::after { content: "–"; color: var(--accent); }
+  details p { margin: 0 0 22px; color: #3a3833; max-width: 62ch; }
+
+  .closing { margin-top: 110px; border-top: 1px solid var(--ink); padding: 64px 0 72px; display: flex; justify-content: space-between; align-items: end; gap: 40px; flex-wrap: wrap; }
+  .closing h2 { margin: 0; max-width: 16ch; }
+  footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; font-size: 14px; color: var(--muted); display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+  footer h4 { font: 12px var(--mono); color: var(--ink); margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { padding: 3px 0; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 900px) {
+    .hero-grid, .split, .quote { grid-template-columns: 1fr; gap: 32px; }
+    .split > div:first-child { position: static; }
+    .pricing, .nolist { grid-template-columns: 1fr; }
+    .tier, .tier + .tier { padding: 28px 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+    footer { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    .top nav a:not(.btn) { display: none; }
+    .hero { padding-top: 48px; }
+    .week li { grid-template-columns: 1fr; gap: 6px; }
+    .mock { box-shadow: 5px 5px 0 var(--ink); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="#" class="mark">Fortnight <small>v3.4</small></a>
+    <nav>
+      <a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">Questions</a><a href="#">Sign in</a>
+      <a href="#start" class="btn">Start free</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-grid">
+        <h1>Two weeks is about as far ahead as anyone can <em>honestly</em> plan.</h1>
+        <div class="hero-side">
+          <p>Fortnight is a planner for teams of 3 to 30. You lay out the next ten working days, everyone sees who's doing what, and anything slipping turns red before it becomes a Friday problem.</p>
+          <div class="actions">
+            <a href="#start" class="btn">Start a fortnight — free</a>
+            <a href="#how" class="btn ghost">See a week</a>
+          </div>
+          <p class="fine">Free for up to 3 people. No card. Imports from Trello, Asana and CSV.</p>
+        </div>
+      </div>
+
+      <div class="mock" role="figure" aria-label="Example Fortnight plan">
+        <div class="mock-inner">
+          <div class="mock-head">
+            <div><strong>Fortnight 23</strong> <span class="pill">1 late</span></div>
+            <div class="meta">Nov 17 – Nov 28 · Northwind Studio · 4 people</div>
+          </div>
+          <div class="tl" id="tl">
+            <div class="tl-row tl-days">
+              <span></span><span></span>
+              <span>M 17</span><span>T 18</span><span>W 19</span><span>T 20</span><span>F 21</span>
+              <span class="wk today">M 24</span><span>T 25</span><span>W 26</span><span>T 27</span><span>F 28</span>
+            </div>
+            <div class="tl-row is-done">
+              <div class="task"><input type="checkbox" id="t1" checked><label for="t1">Rewrite onboarding emails</label></div>
+              <div class="who mk">MK</div><div class="bar done" style="grid-column:3/7">4d</div>
+            </div>
+            <div class="tl-row is-done">
+              <div class="task"><input type="checkbox" id="t2" checked><label for="t2">Halverson invoice + scope call</label></div>
+              <div class="who jt">JT</div><div class="bar done" style="grid-column:5/6">1d</div>
+            </div>
+            <div class="tl-row">
+              <div class="task"><input type="checkbox" id="t3"><label for="t3">Fix Android sync bug (#218)</label></div>
+              <div class="who ds">DS</div><div class="bar late" data-late="due Fri · 1d over" style="grid-column:4/9">in progress</div>
+            </div>
+            <div class="tl-row">
+              <div class="task"><input type="checkbox" id="t4"><label for="t4">Pricing page — new hero photo</label></div>
+              <div class="who ar">AR</div><div class="bar" style="grid-column:8/11">in progress</div>
+            </div>
+            <div class="tl-row">
+              <div class="task"><input type="checkbox" id="t5"><label for="t5">Q1 roadmap, first draft</label></div>
+              <div class="who mk">MK</div><div class="bar ghost" style="grid-column:9/12">not started</div>
+            </div>
+            <div class="tl-row">
+              <div class="task"><input type="checkbox" id="t6"><label for="t6">Client review: Ostrander site</label></div>
+              <div class="who jt">JT</div><div class="bar ghost" style="grid-column:10/11">Wed</div>
+            </div>
+            <div class="tl-row">
+              <div class="task"><input type="checkbox" id="t7"><label for="t7">Ship 3.4 to the app stores</label></div>
+              <div class="who all">ALL</div><div class="milestone" style="grid-column:12/13" title="Milestone"></div>
+            </div>
+            <div class="today-line" id="todayLine"></div>
+          </div>
+          <div class="mock-foot">
+            <span id="tally">2 of 7 done · 38 of 80 person-days booked</span>
+            <span>Next fortnight starts Dec 1</span>
+          </div>
+        </div>
+      </div>
+      <p class="caption">That's the whole app, more or less. Tick a box above — it works.</p>
+
+      <div class="usedby">
+        <span class="lbl">Planning with Fortnight:</span>
+        <span class="n">Halverson &amp; Pike</span>
+        <span class="n">GRAINHOUSE</span>
+        <span class="n">Ostrander Architects</span>
+        <span class="n">the tidewater press</span>
+        <span class="n">kiln.studio</span>
+        <span class="n">Marrow Coffee Co.</span>
+      </div>
+    </div>
+
+    <section id="how">
+      <div class="split">
+        <div>
+          <p class="eyebrow">How a fortnight goes</p>
+          <h2>Ten minutes on Monday. Barely anything after.</h2>
+          <p>We built Fortnight after years of maintaining boards nobody looked at past Tuesday. The fix wasn't more features — it was a shorter horizon and fewer places to put things.</p>
+        </div>
+        <ol class="week">
+          <li><time>Mon, 9:40</time><div><h3>Lay out the ten days</h3><p>Drag work onto the timeline and put a face on each bar. Anything that won't fit goes to the Later pile — out of sight, not lost. If someone's booked past ten days, their row goes amber.</p></div></li>
+          <li><time>Every day</time><div><h3>Tick things off. That's the update.</h3><p>No stand-up notes, no status fields. A bar that runs past its end date turns red and the owner gets one quiet nudge — not a stream of notifications. Press <kbd>T</kbd> to jump to today.</p></div></li>
+          <li><time>Wed, 14:00</time><div><h3>Move things when reality shows up</h3><p>A client calls, a bug lands. Drag the bar, and Fortnight shows who that pushes into overtime before you let go. Plans are supposed to change; they just shouldn't change silently.</p></div></li>
+          <li><time>Fri, wk 2</time><div><h3>Close it out in one screen</h3><p>What shipped, what rolled over, what got dropped. Unfinished bars carry into the next fortnight with a small tally, so you notice the task that's been "almost done" for six weeks.</p></div></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="leftout">
+  <div class="wrap">
+    <section>
+      <p class="eyebrow">What we left out, on purpose</p>
+      <h2>Most of what makes project tools tiring.</h2>
+      <p class="intro">People ask for these every month. We've said no every month. If you need them, there are good tools that have them — Fortnight isn't trying to be those.</p>
+      <ul class="nolist">
+        <li><s>Gantt charts with dependencies</s><span>Ten days doesn't need a critical-path diagram. You can see the whole thing.</span></li>
+        <li><s>Story points &amp; velocity</s><span>We count days, because that's what people actually have.</span></li>
+        <li><s>Custom fields, 14 statuses</s><span>A task is not started, in progress, or done. And sometimes late.</span></li>
+        <li><s>Twelve-month roadmaps</s><span>There's a Later pile. It's a list. That's deliberate.</span></li>
+        <li><s>Time tracking</s><span>We'd rather you didn't feel watched. Export to Harvest if you bill hourly.</span></li>
+        <li><s>An AI that writes your tasks</s><span>You know what needs doing. Typing it takes four seconds.</span></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <figure class="quote">
+      <div class="stat"><div>4 min</div><p>Median time per person, per day, that teams spend in Fortnight. We think that's the right number.</p></div>
+      <div>
+        <blockquote>“We went from a Jira project with 340 open tickets to a page that fits on one screen. I was sure we'd lose track of things. We didn't — we just stopped pretending we'd get to the other 300.”</blockquote>
+        <figcaption><b>Priya Raman</b>, operations lead at Grainhouse, a 12-person design studio</figcaption>
+      </div>
+    </figure>
+  </section>
+
+  <section id="pricing">
+    <p class="eyebrow">Pricing</p>
+    <h2>Per person, per month. That's it.</h2>
+    <div class="pricing">
+      <div class="tier">
+        <h3>Small</h3><div class="price">$0</div>
+        <p>For freelancers and very small teams. Not a trial.</p>
+        <ul><li>Up to 3 people</li><li>Unlimited fortnights</li><li>6 months of history</li></ul>
+        <a href="#start" class="btn ghost">Start free</a>
+      </div>
+      <div class="tier pick">
+        <h3>Team</h3><div class="price">$7 <small>/ person / mo</small></div>
+        <p>Everything, for teams up to 30. Billed monthly, cancel whenever.</p>
+        <ul><li>Full history &amp; rollover tally</li><li>Slack + calendar sync</li><li>Client view links (read-only)</li></ul>
+        <a href="#start" class="btn">Try Team for 30 days</a>
+      </div>
+      <div class="tier">
+        <h3>Bigger</h3><div class="price">Let's talk</div>
+        <p>More than 30 people, or you need SSO and an invoice your finance team likes.</p>
+        <ul><li>SAML SSO</li><li>EU or US data residency</li><li>A human you can email</li></ul>
+        <a href="#" class="btn ghost">Write to us</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <p class="eyebrow">Questions</p>
+    <h2>Things people ask before signing up.</h2>
+    <div class="faq">
+      <details open><summary>What if our work doesn't fit in two weeks?</summary><p>Most of it doesn't, and that's fine. Big projects get broken into the next two weeks' worth of pieces. The rest sits in Later until it's time. Teams usually tell us this is the part that changed how they plan.</p></details>
+      <details><summary>Can we start a fortnight on a day other than Monday?</summary><p>Yes. Pick any weekday in settings. You can also set a four-day week, and holidays from your calendar are greyed out automatically.</p></details>
+      <details><summary>Can clients see the plan?</summary><p>On Team, you can share a read-only link per project. Clients see bars and dates, not your internal notes or anyone else's work.</p></details>
+      <details><summary>How do we get our stuff out if we leave?</summary><p>Settings → Export. You get CSV and JSON of everything, including history. No email to support, no waiting period.</p></details>
+      <details><summary>Is there a mobile app?</summary><p>iOS and Android, both free. They're built for ticking things off and checking today, not for planning — planning belongs on a bigger screen.</p></details>
+    </div>
+  </section>
+
+  <div class="closing" id="start">
+    <h2>Plan the next ten days. See if it sticks.</h2>
+    <a href="#" class="btn">Start a fortnight — free</a>
+  </div>
+
+  <footer>
+    <div>
+      <a href="#" class="mark" style="font-size:18px">Fortnight</a>
+      <p style="margin:8px 0 0;max-width:34ch">Made by a team of six who use it to plan building it. © 2026 Fortnight Software Ltd.</p>
+    </div>
+    <div><h4>Product</h4><ul><li><a href="#how">How it works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li><li><a href="#">Mobile apps</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">Guides</a></li><li><a href="#">Importing</a></li><li><a href="#">Status</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">DPA</a></li></ul></div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var tl = document.getElementById('tl');
+  var line = document.getElementById('todayLine');
+  var today = tl.querySelector('.tl-days .today');
+  function place() {
+    var a = tl.getBoundingClientRect(), b = today.getBoundingClientRect();
+    line.style.left = (b.left - a.left + b.width * 0.35) + 'px';
+  }
+  place();
+  window.addEventListener('resize', place);
+
+  var tally = document.getElementById('tally');
+  var pill = document.querySelector('.mock-head .pill');
+  tl.addEventListener('change', function () {
+    var rows = tl.querySelectorAll('.tl-row:not(.tl-days)'), done = 0, late = 0;
+    rows.forEach(function (r) {
+      var c = r.querySelector('input');
+      r.classList.toggle('is-done', c.checked);
+      if (c.checked) done++; else if (r.querySelector('.bar.late')) late++;
+    });
+    tally.textContent = done + ' of ' + rows.length + ' done · 38 of 80 person-days booked';
+    pill.textContent = late ? late + ' late' : 'on track';
+    pill.style.color = pill.style.borderColor = late ? '' : 'var(--done)';
+  });
+})();
+</script>
+</body>
+</html>

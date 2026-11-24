@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinetix — Precision Project Management for High-Velocity Teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void: #090A0F;
+      --bg-surface: #11131C;
+      --bg-elevated: #181B26;
+      --bg-hover: #1E2231;
+      --bg-glass: rgba(17, 19, 28, 0.78);
+      --text-primary: #F3F5F8;
+      --text-secondary: #949CB0;
+      --text-muted: #5E667A;
+      --accent: #FF5526;
+      --accent-hover: #FF6B42;
+      --accent-soft: rgba(255, 85, 38, 0.14);
+      --cyan: #00E5B0;
+      --cyan-soft: rgba(0, 229, 176, 0.14);
+      --indigo: #5E6AD2;
+      --indigo-soft: rgba(94, 106, 210, 0.16);
+      --amber: #FFB224;
+      --amber-soft: rgba(255, 178, 36, 0.15);
+      --crimson: #F23F5D;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      --border-highlight: rgba(255, 255, 255, 0.22);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(94, 106, 210, 0.13) 0%, rgba(255, 85, 38, 0.05) 32%, transparent 65%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 1000px, 24px 24px;
+      background-position: top center, 0 0;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ================= NAVBAR ================= */
+    .navbar-wrap {
+      position: fixed;
+      top: 16px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 24px;
+      pointer-events: none;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 58px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--accent) 0%, #FF8038 100%);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 16px rgba(255, 85, 38, 0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.18s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cmd-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      transition: all 0.18s ease;
+    }
+
+    .cmd-trigger:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 8px 15px;
+      border-radius: 7px;
+      box-shadow: 0 4px 16px rgba(255, 85, 38, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition: all 0.18s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(255, 85, 38, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 8px 15px;
+      border-radius: 7px;
+      border: 1px solid var(--border-strong);
+      transition: all 0.18s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-highlight);
+    }
+
+    /* ================= HERO SECTION ================= */
+    .hero {
+      padding: 140px 0 64px;
+    }
+
+    .hero-top {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: flex-end;
+      margin-bottom: 44px;
+    }
+
+    .release-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px 5px 8px;
+      background: rgba(94, 106, 210, 0.1);
+      border: 1px solid rgba(94, 106, 210, 0.3);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: #C4CAFF;
+      margin-bottom: 22px;
+    }
+
+    .release-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 4.8vw, 4.35rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.04;
+      color: var(--text-primary);
+    }
+
+    .hero h1 .accent-word {
+      background: linear-gradient(95deg, #FFFFFF 0%, #B4BEFF 45%, #FF6B42 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 24px;
+      padding-bottom: 4px;
+    }
+
+    .hero-sub {
+      font-size: 1.08rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta-row .btn-primary,
+    .hero-cta-row .btn-secondary {
+      padding: 12px 20px;
+      font-size: 0.92rem;
+    }
+
+    .telemetry-strip {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .telemetry-strip span strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* ================= INTERACTIVE WORKSPACE STAGE ================= */
+    .workspace-shell {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: 
+        0 32px 80px -16px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ws-topbar {
+      height: 46px;
+      background: #0C0E15;
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .ws-window-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .traffic-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .traffic-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .ws-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    .ws-breadcrumbs .crumb-active {
+      color: var(--text-primary);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .ws-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+    }
+
+    .ws-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 5px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .ws-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .ws-tab.active {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .ws-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+
+    .velocity-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(0, 229, 176, 0.09);
+      border: 1px solid rgba(0, 229, 176, 0.28);
+      color: var(--cyan);
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .ws-body {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      min-height: 450px;
+    }
+
+    /* Sidebar inside Workspace */
+    .ws-sidebar {
+      background: #0D0F17;
+      border-right: 1px solid var(--border);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ws-nav-group {
+      margin-bottom: 18px;
+    }
+
+    .ws-nav-title {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0 8px;
+      margin-bottom: 6px;
+    }
+
+    .ws-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 9px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .ws-nav-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+    }
+
+    .ws-nav-item.active {
+      background: rgba(94, 106, 210, 0.14);
+      color: #E0E4FF;
+      font-weight: 500;
+    }
+
+    .ws-nav-item .badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .ws-cycle-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+    }
+
+    .ws-cycle-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .progress-track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--indigo), var(--cyan));
+      border-radius: 99px;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Main Workspace Canvas */
+    .ws-main {
+      padding: 18px 20px;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ws-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      font-size: 0.74rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .filter-chip:hover,
+    .filter-chip.active {
+      background: rgba(255, 85, 38, 0.14);
+      border-color: rgba(255, 85, 38, 0.4);
+      color: #FF987A;
+    }
+
+    .ws-hint {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Kanban View */
+    .kanban-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      flex: 1;
+    }
+
+    .kanban-col {
+      background: #0D0F16;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .col-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-todo { border: 2px solid var(--text-muted); }
+    .dot-progress { background: var(--amber); box-shadow: 0 0 8px rgba(255, 178, 36, 0.5); }
+    .dot-done { background: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 176, 0.5); }
+
+    .col-count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .issue-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 11px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .issue-card:hover {
+      border-color: var(--border-highlight);
+      background: var(--bg-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .issue-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .issue-id {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .prio-tag {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .prio-p0 {
+      background: rgba(242, 63, 93, 0.16);
+      color: #FF7A90;
+      border: 1px solid rgba(242, 63, 93, 0.35);
+    }
+
+    .prio-p1 {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid rgba(255, 178, 36, 0.3);
+    }
+
+    .prio-p2 {
+      background: var(--indigo-soft);
+      color: #9EA8FF;
+      border: 1px solid rgba(94, 106, 210, 0.3);
+    }
+
+    .issue-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.38;
+    }
+
+    .issue-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+    }
+
+    .branch-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      max-width: 145px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 0.62rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    /* Timeline / Roadmap View inside Workspace */
+    .timeline-view {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .timeline-header {
+      display: grid;
+      grid-template-columns: 190px repeat(6, 1fr);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .timeline-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .timeline-label span {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      height: 24px;
+      border-radius: 5px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    /* ================= METRICS / TELEMETRY BAR ================= */
+    .metrics-bar {
+      padding: 36px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(17, 19, 28, 0.4);
+      margin-top: 24px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .metric-item {
+      padding-left: 18px;
+      border-left: 2px solid var(--border-strong);
+    }
+
+    .metric-item:first-child {
+      border-left-color: var(--accent);
+    }
+
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ================= SECTION HEADERS ================= */
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-header {
+      max-width: 660px;
+      margin-bottom: 52px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.14;
+      margin-bottom: 14px;
+    }
+
+    .section-desc {
+      font-size: 1.02rem;
+      color: var(--text-secondary);
+    }
+
+    /* ================= BENTO ARCHITECTURE GRID ================= */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition: border-color 0.2s ease;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .bento-col-7 { grid-column: span 7; }
+    .bento-col-5 { grid-column: span 5; }
+    .bento-col-6 { grid-column: span 6; }
+
+    .bento-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .bento-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.015em;
+    }
+
+    .bento-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      max-width: 52ch;
+    }
+
+    /* Mini Interactive Visuals inside Bento Cards */
+    .bento-stage {
+      background: #0B0D14;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: auto;
+    }
+
+    .cmd-preview-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .cmd-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .cmd-list-item.selected,
+    .cmd-list-item:hover {
+      background: rgba(94, 106, 210, 0.16);
+      color: var(--text-primary);
+    }
+
+    .git-pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .git-event {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: var(--bg-elevated);
+      border-radius: 7px;
+      border-left: 3px solid var(--indigo);
+    }
+
+    .git-event.merged {
+      border-left-color: var(--cyan);
+    }
+
+    .triage-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .triage-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 0.78rem;
+    }
+
+    /* ================= INTERACTIVE WORKFLOW SWITCHER ================= */
+    .workflow-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wf-step-btn {
+      text-align: left;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      transition: all 0.18s ease;
+    }
+
+    .wf-step-btn:hover {
+      border-color: var(--border-strong);
+    }
+
+    .wf-step-btn.active {
+      background: var(--bg-elevated);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .wf-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .wf-step-btn h4 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .wf-step-btn p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .workflow-display {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    /* ================= PRICING SECTION ================= */
+    .pricing-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 44px;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      padding: 4px;
+      border-radius: 9px;
+      gap: 4px;
+    }
+
+    .billing-btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+    }
+
+    .billing-btn.active {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .save-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--cyan);
+      background: var(--cyan-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .price-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .price-card.featured {
+      background: linear-gradient(180deg, rgba(24, 27, 38, 0.95) 0%, rgba(17, 19, 28, 0.95) 100%);
+      border-color: rgba(255, 85, 38, 0.5);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 85, 38, 0.25);
+    }
+
+    .featured-ribbon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: #FF7F5C;
+      border: 1px solid rgba(255, 85, 38, 0.35);
+    }
+
+    .tier-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .tier-sub {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+    }
+
+    .price-amount {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 24px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-number {
+      font-family: var(--font-mono);
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .price-period {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex: 1;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    .check-icon {
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    /* ================= FOOTER & CTA ================= */
+    .bottom-cta {
+      margin: 40px 0 80px;
+      background: radial-gradient(circle at 80% 20%, rgba(255, 85, 38, 0.16), transparent 55%),
+                  radial-gradient(circle at 20% 80%, rgba(94, 106, 210, 0.18), transparent 55%),
+                  var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      padding: 56px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .bottom-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 64px;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* ================= COMMAND PALETTE MODAL ================= */
+    .cmd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 10, 0.78);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 13vh;
+    }
+
+    .cmd-overlay.open {
+      display: flex;
+    }
+
+    .cmd-modal {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-highlight);
+      border-radius: 12px;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+    }
+
+    .cmd-input-wrap {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+
+    .cmd-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    .cmd-results {
+      padding: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .cmd-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 7px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .cmd-action:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-highlight);
+      color: var(--text-primary);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 980px) {
+      .hero-top { grid-template-columns: 1fr; gap: 24px; }
+      .ws-body { grid-template-columns: 1fr; }
+      .ws-sidebar { display: none; }
+      .kanban-grid { grid-template-columns: 1fr; }
+      .bento-col-7, .bento-col-5, .bento-col-6 { grid-column: span 12; }
+      .workflow-layout { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Glassmorphic Navbar -->
+  <div class="navbar-wrap">
+    <header class="navbar">
+      <a href="#" class="brand">
+        <span class="brand-mark">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </span>
+        KINETIX
+        <span class="brand-tag">v2.8</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#workspace">Workspace</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#workflows">Cycles</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cmd-trigger" id="openCmdBtn" title="Open Command Palette">
+          <span>Command</span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <a href="#pricing" class="btn-primary">Deploy Workspace</a>
+      </div>
+    </header>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-top">
+        <div>
+          <div class="release-pill">
+            <span class="release-dot"></span>
+            <span class="mono">RELEASE 2.8 // SUB-12MS LOCAL-FIRST SYNC ENGINE</span>
+          </div>
+          <h1>
+            Engineered for teams that <span class="accent-word">ship at velocity.</span>
+          </h1>
+        </div>
+
+        <div class="hero-right">
+          <p class="hero-sub">
+            Kinetix replaces bloated ticket backlogs with a keyboard-native project engine. Triage issues, automate Git branch lifecycles, and forecast cycle burn in real time.
+          </p>
+          <div class="hero-cta-row">
+            <a href="#pricing" class="btn-primary">
+              Start Free Workspace
+              <span>→</span>
+            </a>
+            <button class="btn-secondary" id="heroCmdBtn">
+              Try Command Bar <span class="kbd">⌘K</span>
+            </button>
+          </div>
+          <div class="telemetry-strip">
+            <span>LATENCY: <strong>11.4ms</strong></span>
+            <span>GIT SYNC: <strong>BI-DIRECTIONAL</strong></span>
+            <span>UPTIME: <strong>99.99%</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Live Workspace Mockup -->
+      <div class="workspace-shell" id="workspace">
+        <div class="ws-topbar">
+          <div class="ws-window-controls">
+            <div class="traffic-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="ws-breadcrumbs">
+              <span>kinetix-core</span>
+              <span>/</span>
+              <span class="crumb-active">CYCLE-42: Q4 ENGINE</span>
+            </div>
+          </div>
+
+          <div class="ws-tabs" role="tablist">
+            <button class="ws-tab active" data-view="board">
+              <span>▦</span> Active Board
+            </button>
+            <button class="ws-tab" data-view="timeline">
+              <span>▤</span> Roadmap Horizon
+            </button>
+          </div>
+
+          <div class="ws-status-bar">
+            <div class="velocity-pill">
+              <span>●</span>
+              <span id="cycleProgressText">72% Cycle Burn</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ws-body">
+          <!-- Workspace Left Sidebar -->
+          <aside class="ws-sidebar">
+            <div>
+              <div class="ws-nav-group">
+                <div class="ws-nav-title">Workspace</div>
+                <div class="ws-nav-item">
+                  <span>⚡ Inbox Triage</span>
+                  <span class="badge">3</span>
+                </div>
+                <div class="ws-nav-item active">
+                  <span>🎯 Active Cycle</span>
+                  <span class="badge" id="sidebarTotalCount">7</span>
+                </div>
+                <div class="ws-nav-item">
+                  <span>🗺️ Roadmaps</span>
+                  <span class="badge">Q4</span>
+                </div>
+                <div class="ws-nav-item">
+                  <span>📊 Velocity Insights</span>
+                </div>
+              </div>
+
+              <div class="ws-nav-group">
+                <div class="ws-nav-title">Streams</div>
+                <div class="ws-nav-item"><span># core-runtime</span></div>
+                <div class="ws-nav-item"><span># zero-sync-protocol</span></div>
+                <div class="ws-nav-item"><span># design-system</span></div>
+              </div>
+            </div>
+
+            <div class="ws-cycle-box">
+              <div class="ws-cycle-head">
+                <span>Cycle 42</span>
+                <span class="mono" id="cycleVelocityNum">38 / 52 pts</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="cycleProgressBar"></div>
+              </div>
+              <div class="mono" style="font-size: 0.68rem; color: var(--text-muted);">
+                4 days remaining • On track
+              </div>
+            </div>
+          </aside>
+
+          <!-- Workspace Main Canvas -->
+          <main class="ws-main">
+            <div class="ws-toolbar">
+              <div class="filter-chips">
+                <button class="filter-chip active" data-filter="all">All Issues (7)</button>
+                <button class="filter-chip" data-filter="P0">🔥 P0 Critical</button>
+                <button class="filter-chip" data-filter="P1">⚡ P1 High</button>
+                <button class="filter-chip" data-filter="P2">🔹 P2 Normal</button>
+              </div>
+              <div class="ws-hint">
+                <span>💡 Click any issue card to advance its state</span>
+              </div>
+            </div>
+
+            <!-- Kanban Board View -->
+            <div class="kanban-grid" id="boardView">
+              <div class="kanban-col" data-col="todo">
+                <div class="col-header">
+                  <div class="col-title">
+                    <span class="status-dot dot-todo"></span>
+                    <span>Backlog / Ready</span>
+                  </div>
+                  <span class="col-count" id="count-todo">0</span>
+                </div>
+                <div class="col-cards" id="col-todo" style="display:flex;flex-direction:column;gap:9px;"></div>
+              </div>
+
+              <div class="kanban-col" data-col="progress">
+                <div class="col-header">
+                  <div class="col-title">
+                    <span class="status-dot dot-progress"></span>
+                    <span>In Flight</span>
+                  </div>
+                  <span class="col-count" id="count-progress">0</span>
+                </div>
+                <div class="col-cards" id="col-progress" style="display:flex;flex-direction:column;gap:9px;"></div>
+              </div>
+
+              <div class="kanban-col" data-col="done">
+                <div class="col-header">
+                  <div class="col-title">
+                    <span class="status-dot dot-done"></span>
+                    <span>Merged & Verified</span>
+                  </div>
+                  <span class="col-count" id="count-done">0</span>
+                </div>
+                <div class="col-cards" id="col-done" style="display:flex;flex-direction:column;gap:9px;"></div>
+              </div>
+            </div>
+
+            <!-- Timeline Horizon View -->
+            <div class="timeline-view" id="timelineView">
+              <div class="timeline-header">
+                <span>INITIATIVE</span>
+                <span>W1</span>
+                <span>W2</span>
+                <span>W3</span>
+                <span>W4</span>
+                <span>W5</span>
+                <span>W6</span>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">
+                  Zero-Latency CRDT Sync
+                  <span>ENG-CORE • 94% COMPLETE</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="gantt-bar" style="left: 4%; width: 52%; background: linear-gradient(90deg, #5E6AD2, #00E5B0);">
+                    <span>crdt-delta-compression</span>
+                    <span>SHIPPED</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">
+                  Automated PR Triage Bot
+                  <span>AI-OPS • IN PROGRESS</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="gantt-bar" style="left: 26%; width: 48%; background: linear-gradient(90deg, #FF5526, #FF844B);">
+                    <span>webhook-ast-analyzer</span>
+                    <span>74%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">
+                  Multi-Region Edge Cache
+                  <span>INFRA • SCHEDULED</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="gantt-bar" style="left: 48%; width: 46%; background: rgba(94, 106, 210, 0.45); border: 1px solid #5E6AD2;">
+                    <span>edge-kv-replication</span>
+                    <span>Q4TARGET</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="timeline-label">
+                  SOC2 Continuous Audit Trail
+                  <span>SECURITY • SCOPING</span>
+                </div>
+                <div class="timeline-track">
+                  <div class="gantt-bar" style="left: 62%; width: 34%; background: rgba(255, 178, 36, 0.25); border: 1px solid var(--amber);">
+                    <span>immutable-ledger-v2</span>
+                    <span>READY</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telemetry Metrics Bar -->
+  <section class="metrics-bar">
+    <div class="container">
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-value">11.4ms</div>
+          <div class="metric-label">Local IndexedDB state mutation speed</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">3.4×</div>
+          <div class="metric-label">Faster cycle throughput vs legacy boards</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">100%</div>
+          <div class="metric-label">Keyboard-navigable action coverage</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">0clic</div>
+          <div class="metric-label">Automatic PR-to-Issue state transitions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Grid Architecture Section -->
+  <section class="section" id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">// 01. SYSTEM ARCHITECTURE</span>
+        <h2 class="section-title">Built like an IDE. Not a spreadsheet.</h2>
+        <p class="section-desc">
+          Every interaction in Kinetix is engineered to eliminate context switching between your code editor, terminal, and issue tracker.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Bento Card 1: Command Palette (7 cols) -->
+        <div class="bento-card bento-col-7">
+          <div>
+            <div class="bento-tag">KEYBOARD-FIRST ERGONOMICS</div>
+            <h3>Global Command Bar & Sub-Millisecond Search</h3>
+            <p>
+              Assign engineers, reprioritize blockers, link GitHub PRs, or jump across 50,000 issues without lifting your hands from the home row.
+            </p>
+          </div>
+          <div class="bento-stage">
+            <div class="cmd-preview-input">
+              <span>> assign @elena --priority P0 --cycle 42</span>
+              <span class="kbd">ENTER</span>
+            </div>
+            <div class="cmd-list-item selected">
+              <span>⚡ Set priority to <strong>P0 Critical</strong> on KIN-204</span>
+              <span class="kbd">P</span>
+            </div>
+            <div class="cmd-list-item">
+              <span>🌿 Copy git branch checkout command</span>
+              <span class="kbd">⇧C</span>
+            </div>
+            <div class="cmd-list-item">
+              <span>🔀 Move issue to Cycle 42 (Active)</span>
+              <span class="kbd">M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Card 2: Bi-directional Git Sync (5 cols) -->
+        <div class="bento-card bento-col-5">
+          <div>
+            <div class="bento-tag">ZERO MANUAL HOUSEKEEPING</div>
+            <h3>Bi-Directional Git Pipeline</h3>
+            <p>
+              Push a branch with the issue ID and Kinetix moves the ticket to <em>In Flight</em>. Merge to main and it closes automatically.
+            </p>
+          </div>
+          <div class="bento-stage">
+            <div class="git-pipeline">
+              <div class="git-event">
+                <span>git checkout -b feat/KIN-204-raft</span>
+                <span style="color:var(--amber)">→ IN FLIGHT</span>
+              </div>
+              <div class="git-event">
+                <span>PR #892 opened • CI Checks passing</span>
+                <span style="color:#9EA8FF">→ IN REVIEW</span>
+              </div>
+              <div class="git-event merged">
+                <span>Merged to main (sha: 9f3c1a)</span>
+                <span style="color:var(--cyan)">→ MERGED ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Card 3: Automated Cycle Velocity (6 cols) -->
+        <div class="bento-card bento-col-6">
+          <div>
+            <div class="bento-tag">PREDICTIVE TELEMETRY</div>
+            <h3>Monte Carlo Scope & Burn Forecasting</h3>
+            <p>
+              Stop guessing release dates. Kinetix models historical team throughput to alert you the moment scope creep threatens a target milestone.
+            </p>
+          </div>
+          <div class="bento-stage">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-family:var(--font-mono); font-size:0.75rem;">
+              <span style="color:var(--text-secondary)">CONFIDENCE INTERVAL</span>
+              <span style="color:var(--cyan)">94.2% ON SCHEDULE</span>
+            </div>
+            <svg viewBox="0 0 400 85" width="100%" height="85" style="display:block;">
+              <defs>
+                <linearGradient id="burnGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00E5B0" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#00E5B0" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="75" x2="400" y2="10" stroke="rgba(255,255,255,0.16)" stroke-dasharray="4 4" stroke-width="1.5"/>
+              <path d="M0,75 L70,64 L140,56 L210,38 L280,26 L350,15 L400,8 L400,85 L0,85 Z" fill="url(#burnGrad)"/>
+              <path d="M0,75 L70,64 L140,56 L210,38 L280,26 L350,15 L400,8" fill="none" stroke="#00E5B0" stroke-width="2.2"/>
+              <circle cx="280" cy="26" r="4" fill="#00E5B0"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Bento Card 4: Triage Inbox (6 cols) -->
+        <div class="bento-card bento-col-6">
+          <div>
+            <div class="bento-tag">NOISE SHIELD</div>
+            <h3>Structured Triage Gatekeeper</h3>
+            <p>
+              Bug reports from Sentry, Slack, and customer portals land in a dedicated Triage buffer—keeping your active sprint board pristine.
+            </p>
+          </div>
+          <div class="bento-stage">
+            <div class="triage-box">
+              <div class="triage-row">
+                <div>
+                  <span class="mono" style="color:var(--accent); font-size:0.7rem;">[SENTRY]</span>
+                  <span style="margin-left:6px;">Hydration mismatch in Edge Worker</span>
+                </div>
+                <span class="kbd">Accept → P1</span>
+              </div>
+              <div class="triage-row">
+                <div>
+                  <span class="mono" style="color:#9EA8FF; font-size:0.7rem;">[SLACK]</span>
+                  <span style="margin-left:6px;">Add SAML JIT group provisioning</span>
+                </div>
+                <span class="kbd">Route → Q1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Workflow Engine Switcher -->
+  <section class="section" id="workflows" style="padding-top: 24px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">// 02. EXECUTION LOOP</span>
+        <h2 class="section-title">Continuous momentum by design.</h2>
+        <p class="section-desc">
+          Explore how Kinetix structures engineering rituals from raw signal capture to post-deployment telemetry.
+        </p>
+      </div>
+
+      <div class="workflow-layout">
+        <div class="workflow-steps">
+          <button class="wf-step-btn active" data-step="0">
+            <span class="wf-num">STEP 01 // CAPTURE & DEDUPLICATE</span>
+            <h4>Instant Triage Buffer</h4>
+            <p>Ingest issues from CLI, Slack, or crash logs. Automatic semantic deduplication clusters identical stack traces.</p>
+          </button>
+          <button class="wf-step-btn" data-step="1">
+            <span class="wf-num">STEP 02 // TIMEBOXED CYCLES</span>
+            <h4>Auto-Rolling Sprint Cycles</h4>
+            <p>Unfinished work rolls over automatically while preserving historical velocity accuracy. Zero Monday morning admin rituals.</p>
+          </button>
+          <button class="wf-step-btn" data-step="2">
+            <span class="wf-num">STEP 03 // EXECUTIVE ALIGNMENT</span>
+            <h4>Live Initiative Rollups</h4>
+            <p>Leadership sees real-time progress rolled up from actual merged pull requests—never stale manual status reports.</p>
+          </button>
+        </div>
+
+        <div class="workflow-display" id="workflowDisplay">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="pricing-header-row">
+        <div>
+          <span class="eyebrow">// 03. TRANSPARENT PRICING</span>
+          <h2 class="section-title" style="margin-bottom:0;">Predictable scale for every stage.</h2>
+        </div>
+
+        <div class="billing-toggle">
+          <button class="billing-btn active" data-billing="annual">
+            Annual Billing <span class="save-badge">-20%</span>
+          </button>
+          <button class="billing-btn" data-billing="monthly">
+            Monthly
+          </button>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Tier 1 -->
+        <div class="price-card">
+          <div class="tier-name">Seed</div>
+          <div class="tier-sub">For early founding teams shipping fast.</div>
+          <div class="price-amount">
+            <span class="price-number">$0</span>
+            <span class="price-period">/ forever up to 10 seats</span>
+          </div>
+          <ul class="feature-list">
+            <li><span class="check-icon">✓</span> Unlimited active issues & cycles</li>
+            <li><span class="check-icon">✓</span> Sub-12ms local-first desktop & web app</li>
+            <li><span class="check-icon">✓</span> GitHub & GitLab PR automation</li>
+            <li><span class="check-icon">✓</span> Full keyboard command palette</li>
+          </ul>
+          <a href="#workspace" class="btn-secondary" style="justify-content:center;">Deploy Free Workspace</a>
+        </div>
+
+        <!-- Tier 2 (Featured) -->
+        <div class="price-card featured">
+          <span class="featured-ribbon">Most Popular</span>
+          <div class="tier-name">Velocity</div>
+          <div class="tier-sub">For scaling product & engineering orgs.</div>
+          <div class="price-amount">
+            <span class="price-number" id="proPrice">$12</span>
+            <span class="price-period">/ builder / month</span>
+          </div>
+          <ul class="feature-list">
+            <li><span class="check-icon">✓</span> Everything in Seed, plus unlimited seats</li>
+            <li><span class="check-icon">✓</span> Multi-team roadmaps & dependency graph</li>
+            <li><span class="check-icon">✓</span> Monte Carlo burn & scope forecasting</li>
+            <li><span class="check-icon">✓</span> Sentry, Slack & PagerDuty Triage webhooks</li>
+            <li><span class="check-icon">✓</span> Private guest links & read-only stakeholders</li>
+          </ul>
+          <a href="#workspace" class="btn-primary" style="justify-content:center;">Start 14-Day Velocity Trial</a>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="price-card">
+          <div class="tier-name">Enterprise</div>
+          <div class="tier-sub">For security-critical organizations at scale.</div>
+          <div class="price-amount">
+            <span class="price-number" id="entPrice">$28</span>
+            <span class="price-period">/ builder / month</span>
+          </div>
+          <ul class="feature-list">
+            <li><span class="check-icon">✓</span> SAML 2.0 SSO & SCIM directory sync</li>
+            <li><span class="check-icon">✓</span> Immutable audit logs & HIPAA / SOC2 BAA</li>
+            <li><span class="check-icon">✓</span> Dedicated regional data residency (EU / US)</li>
+            <li><span class="check-icon">✓</span> 99.99% SLA & dedicated solutions architect</li>
+          </ul>
+          <a href="#workspace" class="btn-secondary" style="justify-content:center;">Contact Architecture Team</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA Banner -->
+  <div class="container">
+    <div class="bottom-cta">
+      <div>
+        <h2>Ready to retire slow issue trackers?</h2>
+        <p style="color:var(--text-secondary); font-size:1rem;">
+          Import your existing Jira, Linear, or GitHub Issues workspace in under 90 seconds.
+        </p>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="#workspace" class="btn-primary" style="padding:12px 22px; font-size:0.95rem;">
+          Launch Live Sandbox →
+        </a>
+        <button class="btn-secondary" id="footerCmdBtn" style="padding:12px 18px;">
+          Press <span class="kbd">⌘K</span> to Explore
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-row">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="brand-mark" style="width:22px; height:22px;"></span>
+        <span style="color:var(--text-primary); font-weight:700;">KINETIX INC.</span>
+        <span class="mono">© 2026 ALL SYSTEMS OPERATIONAL</span>
+      </div>
+      <div class="mono" style="display:flex; gap:24px;">
+        <a href="#workspace">STATUS: 99.99%</a>
+        <a href="#architecture">SECURITY</a>
+        <a href="#pricing">DOCS</a>
+        <a href="#workspace">CHANGELOG</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Command Palette Modal (⌘K) -->
+  <div class="cmd-overlay" id="cmdOverlay">
+    <div class="cmd-modal" role="dialog" aria-label="Command Palette">
+      <div class="cmd-input-wrap">
+        <span class="mono" style="color:var(--accent);">❯</span>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command or search issues... (Esc to close)" autocomplete="off">
+        <span class="kbd">ESC</span>
+      </div>
+      <div class="cmd-results" id="cmdResults">
+        <div class="cmd-action" data-cmd="create-issue">
+          <span>➕ Create new P0 Critical issue in Active Cycle</span>
+          <span class="kbd">C</span>
+        </div>
+        <div class="cmd-action" data-cmd="switch-timeline">
+          <span>🗺️ Switch workspace to Roadmap Horizon view</span>
+          <span class="kbd">G R</span>
+        </div>
+        <div class="cmd-action" data-cmd="switch-board">
+          <span>▦ Switch workspace to Active Kanban Board</span>
+          <span class="kbd">G B</span>
+        </div>
+        <div class="cmd-action" data-cmd="ship-all">
+          <span>🚀 Advance all In-Flight issues to Merged</span>
+          <span class="kbd">⌘ ⏎</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast feedback -->
+  <div class="toast" id="toast">Action executed</div>
+
+  <script>
+    // ================= 1. LIVE WORKSPACE DATA & KANBAN ENGINE =================
+    const issues = [
+      { id: 'KIN-201', title: 'Implement WebSocket delta backpressure queue', priority: 'P0', status: 'todo', branch: 'fix/ws-backpressure', points: 8, assignee: 'EL', color: '#FF5526' },
+      { id: 'KIN-204', title: 'CRDT state snapshot compression in IndexedDB', priority: 'P1', status: 'todo', branch: 'feat/crdt-lz4', points: 5, assignee: 'MK', color: '#5E6AD2' },
+      { id: 'KIN-208', title: 'Keyboard shortcut chord parser for vim navigation', priority: 'P2', status: 'todo', branch: 'feat/vim-chords', points: 3, assignee: 'SR', color: '#00C49A' },
+      { id: 'KIN-198', title: 'Zero-downtime schema migration for cycle rollups', priority: 'P0', status: 'progress', branch: 'infra/zero-mig', points: 13, assignee: 'EL', color: '#FF5526' },
+      { id: 'KIN-202', title: 'GitHub webhook AST parser for auto-closing linked PRs', priority: 'P1', status: 'progress', branch: 'feat/ast-pr-link', points: 8, assignee: 'JD', color: '#E59900' },
+      { id: 'KIN-191', title: 'Sub-12ms command palette fuzzy matcher in WASM', priority: 'P0', status: 'done', branch: 'perf/wasm-fuzzy', points: 8, assignee: 'MK', color: '#5E6AD2' },
+      { id: 'KIN-195', title: 'End-to-end encrypted workspace audit log exporter', priority: 'P2', status: 'done', branch: 'sec/audit-export', points: 7, assignee: 'SR', color: '#00C49A' }
+    ];
+
+    let activeFilter = 'all';
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function renderBoard() {
+      const cols = {
+        todo: document.getElementById('col-todo'),
+        progress: document.getElementById('col-progress'),
+        done: document.getElementById('col-done')
+      };
+      cols.todo.innerHTML = '';
+      cols.progress.innerHTML = '';
+      cols.done.innerHTML = '';
+
+      const counts = { todo: 0, progress: 0, done: 0 };
+      let totalPoints = 0;
+      let earnedPoints = 0;
+
+      issues.forEach((issue) => {
+        totalPoints += issue.points;
+        if (issue.status === 'done') earnedPoints += issue.points;
+        else if (issue.status === 'progress') earnedPoints += Math.round(issue.points * 0.5);
+
+        if (activeFilter !== 'all' && issue.priority !== activeFilter) return;
+
+        counts[issue.status]++;
+
+        const card = document.createElement('div');
+        card.className = 'issue-card';
+        const prioClass = issue.priority === 'P0' ? 'prio-p0' : (issue.priority === 'P1' ? 'prio-p1' : 'prio-p2');
+
+        card.innerHTML = `
+          <div class="issue-top">
+            <span class="issue-id">${issue.id} • ${issue.points}pt</span>
+            <span class="prio-tag ${prioClass}">${issue.priority}</span>
+          </div>
+          <div class="issue-title">${issue.title}</div>
+          <div class="issue-meta">
+            <span class="branch-pill">⎇ ${issue.branch}</span>
+            <span class="avatar" style="background:${issue.color}">${issue.assignee}</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          const nextMap = { todo: 'progress', progress: 'done', done: 'todo' };
+          const labelMap = { todo: 'Backlog', progress: 'In Flight', done: 'Merged & Verified' };
+          issue.status = nextMap[issue.status];
+          renderBoard();
+          showToast(`${issue.id} transitioned → ${labelMap[issue.status]}`);
+        });
+
+        cols[issue.status].appendChild(card);
+      });
+
+      document.getElementById('count-todo').textContent = counts.todo;
+      document.getElementById('count-progress').textContent = counts.progress;
+      document.getElementById('count-done').textContent = counts.done;
+      document.getElementById('sidebarTotalCount').textContent = issues.length;
+
+      const pct = Math.min(100, Math.round((earnedPoints / totalPoints) * 100));
+      document.getElementById('cycleProgressText').textContent = `${pct}% Cycle Burn`;
+      document.getElementById('cycleProgressBar').style.width = `${pct}%`;
+      document.getElementById('cycleVelocityNum').textContent = `${earnedPoints} / ${totalPoints} pts`;
+    }
+
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderBoard();
+      });
+    });
+
+    // View Tabs (Board vs Roadmap Horizon)
+    function switchWorkspaceView(view) {
+      document.querySelectorAll('.ws-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.view === view);
+      });
+      document.getElementById('boardView').style.display = view === 'board' ? 'grid' : 'none';
+      document.getElementById('timelineView').style.display = view === 'timeline' ? 'flex' : 'none';
+    }
+
+    document.querySelectorAll('.ws-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchWorkspaceView(tab.dataset.view));
+    });
+
+    // ================= 2. WORKFLOW EXECUTION SWITCHER =================
+    const workflowStepsData = [
+      {
+        badge: 'INGESTION ENGINE // AUTO-DEDUP',
+        title: 'Turn chaotic inbound signals into structured specs',
+        desc: 'Kinetix intercepts production exceptions and Slack threads, clustering duplicate reports and attaching stack context before an engineer even opens the ticket.',
+        code: [
+          '❯ kinetix triage --source sentry --cluster-threshold 0.92',
+          '✔ Clustered 14 duplicate TypeError reports into KIN-219',
+          '✔ Auto-assigned @core-runtime owner • Priority escalated → P0'
+        ]
+      },
+      {
+        badge: 'AUTONOMOUS SPRINT CYCLES',
+        title: 'Momentum without administrative ceremony',
+        desc: 'Cycles lock scope automatically based on your team’s rolling 4-week velocity median. Unmerged branches calibrate next cycle capacity automatically.',
+        code: [
+          '❯ kinetix cycle status --id 42',
+          '✔ Capacity: 52 pts (Rolling average: 49.5 pts)',
+          '✔ 2 blockers detected on KIN-198 → Slack alert dispatched'
+        ]
+      },
+      {
+        badge: 'EXECUTIVE INITIATIVE TELEMETRY',
+        title: 'Real-time roadmap health backed by Git commits',
+        desc: 'Forget Friday status spreadsheets. Initiative progress bars compute directly from weighted story points merged to your production branch.',
+        code: [
+          '❯ kinetix roadmap forecast --initiative "Q4 Zero-Latency Sync"',
+          '✔ 94.2% Monte Carlo confidence for Nov 30 target date',
+          '✔ 18/21 milestones verified in production'
+        ]
+      }
+    ];
+
+    function renderWorkflowStep(idx) {
+      const data = workflowStepsData[idx];
+      const container = document.getElementById('workflowDisplay');
+      container.innerHTML = `
+        <div>
+          <span class="mono" style="font-size:0.72rem; color:var(--cyan); background:var(--cyan-soft); padding:4px 8px; border-radius:4px;">${data.badge}</span>
+          <h3 style="font-family:var(--font-display); font-size:1.5rem; margin:16px 0 10px;">${data.title}</h3>
+          <p style="color:var(--text-secondary); font-size:0.95rem; max-width:58ch;">${data.desc}</p>
+        </div>
+        <div style="background:#0B0D14; border:1px solid var(--border); border-radius:10px; padding:18px; margin-top:24px; font-family:var(--font-mono); font-size:0.8rem; line-height:1.8;">
+          <div style="color:var(--text-primary)">${data.code[0]}</div>
+          <div style="color:var(--cyan)">${data.code[1]}</div>
+          <div style="color:#9EA8FF">${data.code[2]}</div>
+        </div>
+      `;
+    }
+
+    document.querySelectorAll('.wf-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.wf-step-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderWorkflowStep(Number(btn.dataset.step));
+      });
+    });
+
+    // ================= 3. PRICING BILLING TOGGLE =================
+    document.querySelectorAll('.billing-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.billing-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const isAnnual = btn.dataset.billing === 'annual';
+        document.getElementById('proPrice').textContent = isAnnual ? '$12' : '$15';
+        document.getElementById('entPrice').textContent = isAnnual ? '$28' : '$35';
+      });
+    });
+
+    // ================= 4. COMMAND PALETTE (⌘K) =================
+    const cmdOverlay = document.getElementById('cmdOverlay');
+    const cmdInput = document.getElementById('cmdInput');
+
+    function openCmd() {
+      cmdOverlay.classList.add('open');
+      cmdInput.value = '';
+      setTimeout(() => cmdInput.focus(), 20);
+    }
+
+    function closeCmd() {
+      cmdOverlay.classList.remove('open');
+    }
+
+    document.getElementById('openCmdBtn').addEventListener('click', openCmd);
+    document.getElementById('heroCmdBtn').addEventListener('click', openCmd);
+    document.getElementById('footerCmdBtn').addEventListener('click', openCmd);
+
+    cmdOverlay.addEventListener('click', (e) => {
+      if (e.target === cmdOverlay) closeCmd();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        cmdOverlay.classList.contains('open') ? closeCmd() : openCmd();
+      } else if (e.key === 'Escape' && cmdOverlay.classList.contains('open')) {
+        closeCmd();
+      }
+    });
+
+    document.querySelectorAll('.cmd-action').forEach(action => {
+      action.addEventListener('click', () => {
+        const cmd = action.dataset.cmd;
+        if (cmd === 'create-issue') {
+          const newId = `KIN-${210 + issues.length}`;
+          issues.unshift({
+            id: newId,
+            title: 'Hotfix: Edge worker telemetry batching overflow',
+            priority: 'P0',
+            status: 'todo',
+            branch: `hotfix/${newId.toLowerCase()}`,
+            points: 5,
+            assignee: 'EL',
+            color: '#FF5526'
+          });
+          activeFilter = 'all';
+          switchWorkspaceView('board');
+          renderBoard();
+          showToast(`Created ${newId} in Active Cycle`);
+        } else if (cmd === 'switch-timeline') {
+          switchWorkspaceView('timeline');
+          showToast('Switched to Roadmap Horizon view');
+        } else if (cmd === 'switch-board') {
+          switchWorkspaceView('board');
+          showToast('Switched to Active Kanban Board');
+        } else if (cmd === 'ship-all') {
+          issues.forEach(i => { if (i.status === 'progress') i.status = 'done'; });
+          renderBoard();
+          showToast('All In-Flight issues marked as Merged ✓');
+        }
+        closeCmd();
+        document.getElementById('workspace').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // Initialize views
+    renderBoard();
+    renderWorkflowStep(0);
+  </script>
+</body>
+</html>

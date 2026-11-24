@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ee">
+  <meta name="description" content="Daymark is a shared project board for small teams. Plan the work, see who owns it, and keep deadlines in view.">
+  <title>Daymark — Project management for small teams</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f4ee;
+      --ink: #202820;
+      --muted: #535c51;
+      --line: #d1d7cb;
+      --forest: #233c30;
+      --lime: #dff18d;
+      --white: #fffefa;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    a { color: inherit; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible, a:focus-visible, main:focus-visible {
+      outline: 3px solid #537b36;
+      outline-offset: 4px;
+    }
+    [hidden] { display: none !important; }
+    .wrap { width: min(1160px, calc(100% - 64px)); margin-inline: auto; }
+    .skip {
+      position: fixed; top: 12px; left: 12px; z-index: 5;
+      padding: 12px; background: var(--white); transform: translateY(-150%);
+    }
+    .skip:focus { transform: none; }
+    .site-header { border-bottom: 1px solid var(--line); }
+    .nav {
+      min-height: 76px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none; font-size: 23px; font-weight: 750; letter-spacing: -.055em;
+    }
+    .mark {
+      width: 30px; height: 30px; padding: 6px;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+      background: var(--forest); border-radius: 7px;
+    }
+    .mark i { background: var(--lime); border-radius: 1px; }
+    .mark i:nth-child(2) { opacity: .45; }
+    .mark i:nth-child(4) { opacity: .7; }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+    .nav-links > a:first-child { text-decoration: none; }
+    .nav-links > a:first-child:hover, .site-footer a:hover { text-decoration: underline; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 16px;
+      min-height: 48px; padding: 0 18px; border: 1px solid var(--forest);
+      border-radius: 7px; background: var(--forest); color: var(--white);
+      text-decoration: none; font-size: 14px; font-weight: 650;
+    }
+    .button:hover { background: #365642; }
+    .button-light { min-height: 40px; background: transparent; color: var(--ink); }
+    .button-light:hover { background: #e7ebdf; }
+
+    .hero {
+      display: grid; grid-template-columns: 1fr 300px; align-items: end;
+      column-gap: 48px; padding-block: 78px 54px;
+    }
+    .eyebrow, .section-label {
+      margin: 0; color: var(--muted); font-family: ui-monospace, monospace;
+      font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
+    }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
+    h1 {
+      margin: 18px 0 0; max-width: 790px; font-size: clamp(54px, 7vw, 106px);
+      letter-spacing: -.075em; line-height: .96;
+    }
+    h1 em { color: #415f45; font-weight: inherit; }
+    .hero-copy { padding-bottom: 4px; }
+    .hero-copy p { margin: 0 0 23px; color: var(--muted); font-size: 17px; line-height: 1.6; }
+
+    .preview {
+      scroll-margin-top: 24px;
+      padding: 24px 26px 0; background: var(--forest);
+      color: var(--white); border-radius: 13px; overflow: hidden;
+    }
+    .preview-caption {
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      margin-bottom: 19px; font: 11px ui-monospace, monospace;
+      text-transform: uppercase; letter-spacing: .1em; color: #dfe8d9;
+    }
+    .preview-caption span:first-child { display: inline-flex; align-items: center; gap: 8px; }
+    .preview-caption span:first-child::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime);
+    }
+    .app {
+      display: grid; grid-template-columns: 198px minmax(0, 1fr);
+      min-height: 423px; border-radius: 8px 8px 0 0; overflow: hidden;
+      background: var(--white); color: var(--ink);
+    }
+    .sidebar { padding: 22px 15px; background: #edf0e7; border-right: 1px solid #dbe1d5; }
+    .workspace { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 730; }
+    .workspace-icon {
+      display: grid; place-items: center; width: 31px; height: 31px;
+      border-radius: 6px; background: #dce6d5; color: #34513d;
+    }
+    .sidebar-title { margin: 36px 8px 8px; font-size: 11px; color: var(--muted); }
+    .project { margin: 0; padding: 9px 8px; font-size: 12px; }
+    .project-current { background: #dce6d5; border-radius: 5px; font-weight: 700; }
+    .project-current::before { content: "◆"; color: #48634a; margin-right: 6px; font-size: 9px; }
+    .app-main { min-width: 0; padding: 23px 22px 20px; }
+    .breadcrumb { margin: 0 0 8px; font-size: 11px; color: var(--muted); }
+    .app-title { margin: 0; font-size: 25px; font-weight: 730; letter-spacing: -.045em; }
+    .views { display: flex; gap: 18px; margin-top: 14px; border-bottom: 1px solid #e2e5dc; }
+    .views button {
+      padding: 8px 4px 9px; border: 0; border-bottom: 2px solid transparent;
+      color: var(--muted); background: transparent; font-size: 12px;
+    }
+    .views button:hover { color: var(--ink); }
+    .views [aria-pressed="true"] { border-color: #48634a; color: var(--ink); font-weight: 750; }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin-top: 15px; }
+    .lane { min-width: 0; padding: 10px; border-radius: 7px; background: #f0f1eb; }
+    .lane h3 {
+      display: flex; align-items: center; gap: 6px;
+      margin: 0 0 10px; font-size: 11px;
+    }
+    .lane h3 span:last-child { margin-left: auto; font-weight: 450; color: var(--muted); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #858d7d; }
+    .progress .status-dot { background: #ae741c; }
+    .done .status-dot { background: #4c754c; }
+    .task { padding: 10px; background: var(--white); border: 1px solid #dce0d7; border-radius: 5px; }
+    .task + .task { margin-top: 8px; }
+    .tag {
+      display: inline-block; padding: 2px 5px; border-radius: 3px;
+      background: #e1eadc; color: #2f5137; font-size: 9px; font-weight: 650;
+    }
+    .tag-copy { background: #f4e7cf; color: #68491b; }
+    .tag-ops { background: #ebe6f2; color: #55446a; }
+    .task-name { margin: 7px 0 9px; font-size: 12px; line-height: 1.35; font-weight: 650; }
+    .task-meta {
+      display: flex; justify-content: space-between; align-items: center; gap: 4px;
+      color: var(--muted); font-size: 10px;
+    }
+    .avatar {
+      display: grid; place-items: center; flex: none; width: 20px; height: 20px;
+      border-radius: 50%; background: #e2e8d9; color: #384f3c; font-size: 8px; font-weight: 750;
+    }
+    .avatar-warm { background: #f3dfd5; color: #734338; }
+    .avatar-lilac { background: #ebe6f2; color: #55446a; }
+    .list-scroll { overflow-x: auto; margin-top: 11px; }
+    .task-list { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    .task-list th, .task-list td { padding: 9px 10px; border-bottom: 1px solid #e2e5dc; }
+    .task-list th { color: var(--muted); font-size: 11px; }
+    .task-list td:first-child { font-weight: 650; }
+    .task-list td:nth-child(3), .task-list td:last-child { white-space: nowrap; }
+
+    .workflow { padding-block: 70px 76px; }
+    .workflow h2 {
+      margin: 12px 0 30px; font-size: clamp(38px, 5vw, 60px);
+      line-height: 1; letter-spacing: -.06em;
+    }
+    .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+    .feature { border-top: 1px solid var(--line); padding-top: 17px; }
+    .feature h3 { margin: 0 0 8px; font-size: 17px; letter-spacing: -.02em; }
+    .feature p { margin: 0; max-width: 31ch; color: var(--muted); font-size: 15px; line-height: 1.6; }
+    .site-footer { border-top: 1px solid var(--line); }
+    .footer-row {
+      display: flex; justify-content: space-between; align-items: center;
+      min-height: 78px; gap: 20px; font-size: 13px; color: var(--muted);
+    }
+    .footer-row strong { color: var(--ink); }
+
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; row-gap: 24px; padding-top: 58px; }
+      .hero-copy { max-width: 480px; }
+      .app { grid-template-columns: 145px minmax(0, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: calc(100% - 32px); }
+      .nav { min-height: 65px; }
+      .nav-links { gap: 12px; }
+      .nav-links > a:first-child { display: none; }
+      .hero { padding-block: 46px 34px; }
+      h1 { font-size: clamp(46px, 10vw, 64px); }
+      .preview { padding: 15px 10px 0; }
+      .preview-caption { margin: 0 3px 13px; }
+      .app { display: block; min-height: auto; }
+      .sidebar { display: none; }
+      .app-main { padding: 16px 12px; }
+      .board { grid-template-columns: 1fr; }
+      .lane { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .lane h3 { grid-column: 1 / -1; margin-bottom: 2px; }
+      .task + .task { margin-top: 0; }
+      .workflow { padding-block: 48px; }
+      .features { grid-template-columns: 1fr; gap: 20px; }
+      .footer-row { min-height: 66px; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="wrap nav" aria-label="Main navigation">
+      <a class="brand" href="#top">
+        <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        Daymark
+      </a>
+      <div class="nav-links">
+        <a href="#workflow">How it works</a>
+        <a class="button button-light" href="#demo">View demo <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="wrap hero" aria-labelledby="headline">
+      <div>
+        <p class="eyebrow">Project management for small teams</p>
+        <h1 id="headline">Know what’s next.<br><em>Know who’s on it.</em></h1>
+      </div>
+      <div class="hero-copy">
+        <p>Give every task an owner, a due date, and a place on the board. Then get back to the work.</p>
+        <a class="button" href="#demo">Explore the demo <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
+
+    <section class="wrap preview" id="demo" aria-labelledby="demo-label">
+      <div class="preview-caption">
+        <span id="demo-label">Interactive demo</span>
+        <span>Sample workspace</span>
+      </div>
+
+      <div class="app">
+        <aside class="sidebar" aria-label="Sample workspace projects">
+          <div class="workspace"><span class="workspace-icon" aria-hidden="true">M</span> Marrow Studio</div>
+          <p class="sidebar-title">Projects</p>
+          <p class="project project-current">Spring catalog</p>
+          <p class="project">Studio operations</p>
+          <p class="project">Retail updates</p>
+        </aside>
+
+        <div class="app-main">
+          <p class="breadcrumb">Marrow Studio / Projects</p>
+          <h2 class="app-title">Spring catalog</h2>
+
+          <div class="views" role="group" aria-label="Project view" hidden>
+            <button type="button" data-view="board" aria-pressed="true" aria-controls="board">Board</button>
+            <button type="button" data-view="list" aria-pressed="false" aria-controls="list">List</button>
+          </div>
+
+          <div class="board" id="board">
+            <section class="lane">
+              <h3><i class="status-dot" aria-hidden="true"></i> To do <span>2</span></h3>
+              <article class="task" data-owner="Maya Chen">
+                <span class="tag tag-copy">Copy</span>
+                <p class="task-name">Write product descriptions</p>
+                <div class="task-meta"><span>Apr 16</span><span class="avatar avatar-warm" title="Maya Chen" aria-label="Maya Chen">MC</span></div>
+              </article>
+              <article class="task" data-owner="Theo Reed">
+                <span class="tag tag-ops">Production</span>
+                <p class="task-name">Book the print proof</p>
+                <div class="task-meta"><span>Apr 18</span><span class="avatar avatar-lilac" title="Theo Reed" aria-label="Theo Reed">TR</span></div>
+              </article>
+            </section>
+
+            <section class="lane progress">
+              <h3><i class="status-dot" aria-hidden="true"></i> In progress <span>2</span></h3>
+              <article class="task" data-owner="Jules Santos">
+                <span class="tag">Design</span>
+                <p class="task-name">Lay out the opening spread</p>
+                <div class="task-meta"><span>Apr 12</span><span class="avatar" title="Jules Santos" aria-label="Jules Santos">JS</span></div>
+              </article>
+              <article class="task" data-owner="Maya Chen">
+                <span class="tag tag-copy">Copy</span>
+                <p class="task-name">Edit the founder’s letter</p>
+                <div class="task-meta"><span>Apr 15</span><span class="avatar avatar-warm" title="Maya Chen" aria-label="Maya Chen">MC</span></div>
+              </article>
+            </section>
+
+            <section class="lane done">
+              <h3><i class="status-dot" aria-hidden="true"></i> Done <span>1</span></h3>
+              <article class="task" data-owner="Jules Santos">
+                <span class="tag">Design</span>
+                <p class="task-name">Select cover photography</p>
+                <div class="task-meta"><span>Apr 9</span><span class="avatar" title="Jules Santos" aria-label="Jules Santos">JS</span></div>
+              </article>
+            </section>
+          </div>
+
+          <div class="list-scroll" id="list" hidden>
+            <table class="task-list" aria-label="Spring catalog tasks">
+              <thead>
+                <tr>
+                  <th scope="col">Task</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Due</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap workflow" id="workflow" aria-labelledby="workflow-heading">
+      <p class="section-label">How it works</p>
+      <h2 id="workflow-heading">From plan to done.</h2>
+      <div class="features">
+        <article class="feature">
+          <h3>Put the plan on the board</h3>
+          <p>Break a project into tasks your team can pick up and finish.</p>
+        </article>
+        <article class="feature">
+          <h3>Give each task an owner</h3>
+          <p>Assign the work and set a due date so everyone knows what they’re responsible for.</p>
+        </article>
+        <article class="feature">
+          <h3>See where things stand</h3>
+          <p>Scan the board for progress or switch to the list to check owners and deadlines together.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <strong>Daymark</strong>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const board = document.getElementById("board");
+    const list = document.getElementById("list");
+    const rows = list.querySelector("tbody");
+    const controls = document.querySelector(".views");
+    const viewButtons = controls.querySelectorAll("button");
+
+    for (const lane of board.querySelectorAll(".lane")) {
+      const status = lane.querySelector("h3").childNodes;
+      const label = Array.from(status)
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .map(node => node.textContent.trim())
+        .join("").trim();
+
+      for (const task of lane.querySelectorAll(".task")) {
+        const row = rows.insertRow();
+        const fields = [
+          task.querySelector(".task-name").textContent,
+          label,
+          task.dataset.owner,
+          task.querySelector(".task-meta span").textContent
+        ];
+
+        for (const field of fields) {
+          row.insertCell().textContent = field;
+        }
+      }
+    }
+
+    for (const button of viewButtons) {
+      button.addEventListener("click", () => {
+        const showBoard = button.dataset.view === "board";
+        board.hidden = !showBoard;
+        list.hidden = showBoard;
+
+        for (const option of viewButtons) {
+          option.setAttribute("aria-pressed", String(option === button));
+        }
+      });
+    }
+
+    controls.hidden = false;
+  </script>
+</body>
+</html>

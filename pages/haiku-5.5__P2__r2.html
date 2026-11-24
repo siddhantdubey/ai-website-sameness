@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Trattoria Rosa — a neighborhood Italian kitchen serving handmade pasta, wood-fired pizza, and seasonal plates since 1987.">
+<title>Trattoria Rosa | Neighborhood Italian Kitchen</title>
+<style>
+  :root {
+    --cream: #faf6ee;
+    --paper: #f3ecdc;
+    --ink: #2b2118;
+    --muted: #6d5d4d;
+    --red: #9e2a2b;
+    --red-dark: #7a1f20;
+    --green: #3d5a3a;
+    --gold: #c9a24a;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(43, 33, 24, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 17px;
+  }
+
+  h1, h2, h3 {
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    margin-bottom: 0.5rem;
+  }
+
+  a { color: var(--red); }
+
+  .container {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .section {
+    padding: 5.5rem 0;
+  }
+
+  .section-alt {
+    background: var(--paper);
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 3rem;
+  }
+
+  .section-head p {
+    color: var(--muted);
+  }
+
+  /* ---------- Header ---------- */
+  header.site {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 246, 238, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(43, 33, 24, 0.08);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .nav-links a:hover { color: var(--red); }
+
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.2s, color 0.2s;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--red-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: transparent;
+  }
+
+  .btn-outline:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .btn-small {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: calc(100vh - 72px);
+    min-height: 620px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--cream);
+    background:
+      linear-gradient(180deg, rgba(43, 33, 24, 0.55) 0%, rgba(43, 33, 24, 0.75) 100%),
+      radial-gradient(circle at 20% 30%, #b5543a 0%, transparent 45%),
+      radial-gradient(circle at 80% 70%, #3d5a3a 0%, transparent 50%),
+      linear-gradient(135deg, #7a3b2e 0%, #3a2a20 100%);
+    padding: 4rem 0;
+  }
+
+  .hero-content {
+    max-width: 760px;
+    padding: 0 1rem;
+  }
+
+  .hero .eyebrow {
+    color: var(--gold);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 7vw, 4.8rem);
+    margin-bottom: 1rem;
+  }
+
+  .hero p.lead {
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    opacity: 0.92;
+    margin-bottom: 2.25rem;
+  }
+
+  .hero .btn-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero .btn-outline {
+    border-color: var(--cream);
+    color: var(--cream);
+  }
+
+  .hero .btn-outline:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  /* ---------- About ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-art {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+    background:
+      radial-gradient(circle at 30% 25%, #e8c77a 0%, transparent 40%),
+      linear-gradient(160deg, #9e2a2b 0%, #5c2a20 60%, #3d5a3a 100%);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    color: var(--cream);
+  }
+
+  .about-art::after {
+    content: "Est. 1987";
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .about-text p {
+    margin-bottom: 1.1rem;
+    color: var(--muted);
+  }
+
+  .signature {
+    font-style: italic;
+    color: var(--ink) !important;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ---------- Menu ---------- */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .menu-card {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--red);
+  }
+
+  .menu-card:nth-child(2) { border-top-color: var(--green); }
+  .menu-card:nth-child(3) { border-top-color: var(--gold); }
+
+  .menu-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed rgba(43, 33, 24, 0.15);
+  }
+
+  .menu-item:last-child { border-bottom: none; }
+
+  .menu-item-info strong {
+    display: block;
+    font-size: 1.02rem;
+  }
+
+  .menu-item-info small {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-style: italic;
+  }
+
+  .price {
+    font-weight: 700;
+    color: var(--red);
+    white-space: nowrap;
+  }
+
+  .menu-cta {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* ---------- Gallery / Quote strip ---------- */
+  .quote {
+    text-align: center;
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  .quote blockquote {
+    font-size: clamp(1.3rem, 2.8vw, 1.8rem);
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .quote cite {
+    color: var(--muted);
+    font-style: normal;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+
+  .stars {
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  /* ---------- Visit / Hours ---------- */
+  .visit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .info-block {
+    margin-bottom: 2rem;
+  }
+
+  .info-block h3 {
+    font-size: 1.15rem;
+    color: var(--red);
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.9rem;
+  }
+
+  .hours-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .hours-table td {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(43, 33, 24, 0.15);
+  }
+
+  .hours-table td:last-child {
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .map-placeholder {
+    border-radius: var(--radius);
+    min-height: 260px;
+    background:
+      repeating-linear-gradient(45deg, rgba(61, 90, 58, 0.08) 0 12px, transparent 12px 24px),
+      var(--paper);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-align: center;
+    padding: 1.5rem;
+    font-style: italic;
+  }
+
+  /* ---------- Reservations ---------- */
+  .reserve-box {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: var(--radius);
+    padding: 3.5rem 3rem;
+    box-shadow: var(--shadow);
+  }
+
+  .reserve-box .eyebrow { color: var(--gold); }
+  .reserve-box h2 { color: var(--cream); }
+  .reserve-box p { opacity: 0.85; margin-bottom: 2rem; }
+
+  form.reserve-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  form.reserve-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    gap: 0.4rem;
+  }
+
+  form.reserve-form .full { grid-column: 1 / -1; }
+
+  form.reserve-form input,
+  form.reserve-form select,
+  form.reserve-form textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0.8rem 0.95rem;
+    border-radius: 8px;
+    border: 1px solid rgba(250, 246, 238, 0.25);
+    background: rgba(250, 246, 238, 0.06);
+    color: var(--cream);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  form.reserve-form select option { color: var(--ink); }
+
+  form.reserve-form input:focus,
+  form.reserve-form select:focus,
+  form.reserve-form textarea:focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+
+  form.reserve-form textarea { min-height: 90px; resize: vertical; }
+
+  form.reserve-form button {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .form-note {
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+    color: var(--gold);
+    min-height: 1.2em;
+  }
+
+  /* ---------- Footer ---------- */
+  footer.site {
+    background: #1d1611;
+    color: rgba(250, 246, 238, 0.75);
+    padding: 3rem 0 2rem;
+    font-size: 0.92rem;
+  }
+
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .footer-grid .logo { color: var(--cream); }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: rgba(250, 246, 238, 0.75);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .copyright {
+    border-top: 1px solid rgba(250, 246, 238, 0.12);
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 880px) {
+    .about-grid,
+    .visit-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .about-art { aspect-ratio: 16 / 10; }
+    .reserve-box { padding: 2.5rem 1.5rem; }
+  }
+
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+    .section { padding: 4rem 0; }
+  }
+
+  @media (max-width: 560px) {
+    form.reserve-form { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site">
+  <div class="container nav">
+    <a href="#top" class="logo">Trattoria <span>Rosa</span></a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#visit">Hours &amp; Location</a></li>
+        <li><a href="#reserve">Reservations</a></li>
+      </ul>
+    </nav>
+    <a href="#reserve" class="btn btn-primary btn-small">Book a Table</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-content">
+    <span class="eyebrow">Your neighborhood Italian kitchen</span>
+    <h1 id="hero-title">Handmade pasta.<br>Fire&#8209;kissed pizza.</h1>
+    <p class="lead">Family recipes, local ingredients, and a warm room where regulars greet you by name. Come hungry, stay for the second bottle.</p>
+    <div class="btn-group">
+      <a href="#reserve" class="btn btn-primary">Reserve a Table</a>
+      <a href="#menu" class="btn btn-outline">View the Menu</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div class="about-art" role="img" aria-label="Decorative illustration of the restaurant's warm color palette"></div>
+    <div class="about-text">
+      <span class="eyebrow">Our Story</span>
+      <h2>Three generations, one table.</h2>
+      <p>Trattoria Rosa opened in 1987 as a six-table room on the corner of Maple and Fourth. Nonna Rosa rolled the first batch of tagliatelle by hand, and her recipe for Sunday ragù is still the one we simmer for eight hours every week.</p>
+      <p>Today the kitchen is run by her grandson, Marco, who still makes the pasta every morning before service. We source flour from a mill two hours north, tomatoes from a family farm in the valley, and olive oil from a grove our cousins tend in Puglia.</p>
+      <p>We are a neighborhood restaurant. Walk-ins are welcome, kids get crayons, and the staff knows what you ordered last time.</p>
+      <p class="signature">— Marco &amp; the Rosa family</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MENU ============ -->
+<section class="section section-alt" id="menu">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The Menu</span>
+      <h2>Made today, served tonight.</h2>
+      <p>A selection of our most-loved dishes. The full menu changes with the seasons and the market.</p>
+    </div>
+
+    <div class="menu-grid">
+      <article class="menu-card">
+        <h3>Antipasti &amp; Pizza</h3>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Burrata &amp; Roasted Tomato</strong>
+            <small>Basil oil, grilled sourdough</small>
+          </div>
+          <span class="price">$14</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Polpette al Sugo</strong>
+            <small>Nonna&rsquo;s veal &amp; pork meatballs</small>
+          </div>
+          <span class="price">$13</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Margherita</strong>
+            <small>San Marzano, fior di latte, basil</small>
+          </div>
+          <span class="price">$16</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Diavola</strong>
+            <small>Spicy salami, chili honey, mozzarella</small>
+          </div>
+          <span class="price">$18</span>
+        </div>
+      </article>
+
+      <article class="menu-card">
+        <h3>Handmade Pasta</h3>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Tagliatelle al Ragù</strong>
+            <small>Eight-hour Sunday ragù, Parmigiano</small>
+          </div>
+          <span class="price">$22</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Cacio e Pepe</strong>
+            <small>Pecorino romano, cracked black pepper</small>
+          </div>
+          <span class="price">$19</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Gnocchi Sorrentina</strong>
+            <small>Potato gnocchi, tomato, smoked mozzarella</small>
+          </div>
+          <span class="price">$20</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Ravioli di Ricotta</strong>
+            <small>Spinach &amp; ricotta, brown butter, sage</small>
+          </div>
+          <span class="price">$21</span>
+        </div>
+      </article>
+
+      <article class="menu-card">
+        <h3>Secondi &amp; Dolci</h3>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Pollo alla Diavola</strong>
+            <small>Charcoal chicken, lemon, herbs</small>
+          </div>
+          <span class="price">$26</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Branzino al Forno</strong>
+            <small>Whole roasted sea bass, fennel, citrus</small>
+          </div>
+          <span class="price">$31</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Tiramisù</strong>
+            <small>Espresso, mascarpone, cocoa</small>
+          </div>
+          <span class="price">$9</span>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <strong>Panna Cotta</strong>
+            <small>Vanilla bean, seasonal berries</small>
+          </div>
+          <span class="price">$8</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="menu-cta">
+      <a href="#" class="btn btn-outline">Download Full Menu (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEW ============ -->
+<section class="section" aria-label="Guest review">
+  <div class="container quote">
+    <div class="stars" aria-label="Rated five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <blockquote>&ldquo;The closest thing to eating in someone&rsquo;s Italian grandmother&rsquo;s kitchen. The tagliatelle alone is worth the walk.&rdquo;</blockquote>
+    <cite>&mdash; A regular since 2009</cite>
+  </div>
+</section>
+
+<!-- ============ VISIT ============ -->
+<section class="section section-alt" id="visit">
+  <div class="container visit-grid">
+    <div>
+      <span class="eyebrow">Hours &amp; Location</span>
+      <h2 style="margin-bottom:2rem;">Come see us.</h2>
+
+      <div class="info-block">
+        <h3>Address</h3>
+        <p>214 Maple Street<br>Brookvale, NY 10021</p>
+      </div>
+
+      <div class="info-block">
+        <h3>Hours</h3>
+        <table class="hours-table">
+          <tr><td>Monday</td><td>Closed</td></tr>
+          <tr><td>Tuesday &ndash; Thursday</td><td>5:00 pm &ndash; 10:00 pm</td></tr>
+          <tr><td>Friday &ndash; Saturday</td><td>5:00 pm &ndash; 11:00 pm</td></tr>
+          <tr><td>Sunday</td><td>12:00 pm &ndash; 9:30 pm</td></tr>
+        </table>
+      </div>
+
+      <div class="info-block">
+        <h3>Contact</h3>
+        <p>Phone: <a href="tel:+15555550142">(555) 555-0142</a><br>
+        Email: <a href="mailto:hello@trattoriarosa.example">hello@trattoriarosa.example</a></p>
+      </div>
+    </div>
+
+    <div>
+      <div class="map-placeholder" role="img" aria-label="Map placeholder">
+        Map embed goes here.<br>We&rsquo;re on the corner of Maple &amp; Fourth.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESERVATIONS ============ -->
+<section class="section" id="reserve">
+  <div class="container">
+    <div class="reserve-box">
+      <span class="eyebrow">Reservations</span>
+      <h2>Save your seat.</h2>
+      <p>Parties of up to eight can book online. For larger groups, please call us directly.</p>
+
+      <form class="reserve-form" id="reserve-form" novalidate>
+        <label>
+          Name
+          <input type="text" name="name" autocomplete="name" required>
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label>
+          Date
+          <input type="date" name="date" required>
+        </label>
+        <label>
+          Time
+          <select name="time" required>
+            <option value="">Select a time</option>
+            <option>5:00 pm</option>
+            <option>5:30 pm</option>
+            <option>6:00 pm</option>
+            <option>6:30 pm</option>
+            <option>7:00 pm</option>
+            <option>7:30 pm</option>
+            <option>8:00 pm</option>
+            <option>8:30 pm</option>
+            <option>9:00 pm</option>
+          </select>
+        </label>
+        <label>
+          Party size
+          <select name="party" required>
+            <option value="">Select</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option>
+          </select>
+        </label>
+        <label>
+          Phone (optional)
+          <input type="tel" name="phone" autocomplete="tel">
+        </label>
+        <label class="full">
+          Notes (allergies, celebrations, seating preferences)
+          <textarea name="notes"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Request Reservation</button>
+        <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="logo">Trattoria <span>Rosa</span></a>
+        <p style="margin-top:0.5rem;">214 Maple Street &middot; Brookvale, NY</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#visit">Hours</a></li>
+        <li><a href="#reserve">Reservations</a></li>
+        <li><a href="#">Private Events</a></li>
+        <li><a href="#">Gift Cards</a></li>
+      </ul>
+    </div>
+    <p class="copyright">&copy; 2026 Trattoria Rosa. Buon appetito.</p>
+  </div>
+</footer>
+
+<script>
+  // Front-end only: shows a confirmation message. Connect to your booking
+  // provider or backend by replacing the handler below.
+  (function () {
+    var form = document.getElementById('reserve-form');
+    var note = document.getElementById('form-note');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      note.textContent = '';
+
+      var name = form.elements['name'].value.trim();
+      var email = form.elements['email'].value.trim();
+      var date = form.elements['date'].value;
+      var time = form.elements['time'].value;
+      var party = form.elements['party'].value;
+
+      if (!name || !email || !date || !time || !party) {
+        note.textContent = 'Please fill in name, email, date, time, and party size.';
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        note.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      note.textContent = 'Thanks, ' + name.split(' ')[0] + '! We\'ll confirm your table for ' +
+        party + ' on ' + date + ' at ' + time + ' shortly.';
+      form.reset();
+    });
+  })();
+</script>
+
+</body>
+</html>

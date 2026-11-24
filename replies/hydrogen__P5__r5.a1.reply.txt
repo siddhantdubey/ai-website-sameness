@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plumb — Project tracking without the meeting theater</title>
+  <meta name="description" content="A fast, opinionated project ledger for product and engineering teams. Built around real deadlines, clear ownership, and quiet software." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F5F2EB;
+      --bg-alt: #ECE8DF;
+      --surface: #FCFBF8;
+      --surface-pure: #FFFFFF;
+      --ink: #171614;
+      --ink-2: #4A4740;
+      --ink-3: #6E6A61;
+      --line: #DBD6CA;
+      --line-strong: #C4BEB0;
+      --accent: #C43C1D;
+      --accent-hover: #A93116;
+      --accent-soft: #F9E8E3;
+
+      --status-done-bg: #E5F0EA;
+      --status-done-fg: #1F5B3D;
+      --status-active-bg: #FCECD8;
+      --status-active-fg: #9A4109;
+      --status-review-bg: #E4ECFA;
+      --status-review-fg: #1E448A;
+      --status-queued-bg: #EAE7DF;
+      --status-queued-fg: #545048;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-serif: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --shadow-frame: 0 1px 2px rgba(23, 22, 20, 0.05), 0 16px 40px -16px rgba(23, 22, 20, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      line-height: 1.55;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    body.compact-mode .issue-row {
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .serif {
+      font-family: var(--font-serif);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top utility strip */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(245, 242, 235, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      color: var(--surface);
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kbd-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 10px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink-3);
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .kbd-trigger:hover {
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+
+    .kbd-cap {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 1px 5px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: var(--bg);
+      color: var(--ink-2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 15px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .btn-primary:hover {
+      background: #2C2A26;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-2);
+      border-color: var(--line);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
+    .btn-lg {
+      height: 44px;
+      padding: 0 20px;
+      font-size: 15px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 56px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 18px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 4.8vw, 4.1rem);
+      line-height: 1.03;
+      letter-spacing: -0.038em;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .hero h1 em {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      font-size: 1.06em;
+    }
+
+    .hero-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero-copy {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--ink-2);
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-note {
+      font-size: 12.5px;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+    }
+
+    /* Interactive Workspace Window */
+    .workspace-shell {
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-frame);
+      overflow: hidden;
+    }
+
+    .ws-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ws-crumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .ws-crumb strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .ws-cycle-pill {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 2px 8px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink-2);
+    }
+
+    .ws-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+    }
+
+    .segmented button {
+      border: none;
+      background: transparent;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-3);
+      padding: 4px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .segmented button.active {
+      background: var(--surface-pure);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .ws-body {
+      display: grid;
+      grid-template-columns: 232px 1fr;
+      min-height: 410px;
+    }
+
+    .ws-sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .ws-side-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      padding: 0 8px;
+      margin-bottom: 6px;
+    }
+
+    .ws-nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 8px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      color: var(--ink-2);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .ws-nav-item:hover {
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .ws-nav-item.active {
+      background: var(--bg-alt);
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .ws-nav-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .proj-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .ws-count {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    .ws-sidebar-foot {
+      padding: 10px 8px 2px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .ws-main {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface-pure);
+    }
+
+    .ws-project-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ws-project-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .ws-project-meta {
+      font-size: 12.5px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+
+    .ws-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ws-progress-track {
+      width: 120px;
+      height: 6px;
+      background: var(--bg-alt);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .ws-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .ws-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #FAF9F5;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink-3);
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .filter-chip:hover {
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    .filter-chip.active {
+      background: var(--surface-pure);
+      color: var(--ink);
+      border-color: var(--line);
+      font-weight: 500;
+    }
+
+    .ws-hint {
+      font-size: 12px;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+    }
+
+    .issue-list {
+      flex: 1;
+    }
+
+    .issue-row {
+      display: grid;
+      grid-template-columns: 28px 78px 1fr auto auto auto;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 20px;
+      border-bottom: 1px solid #EFECE4;
+      font-size: 13.5px;
+      transition: background-color 0.1s;
+    }
+
+    .issue-row:hover {
+      background: #FAF8F3;
+    }
+
+    .issue-row.is-done .issue-title {
+      text-decoration: line-through;
+      color: var(--ink-3);
+    }
+
+    .status-btn {
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .status-btn:hover {
+      background: var(--bg-alt);
+    }
+
+    .issue-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .issue-title {
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .status-pill[data-status="Queued"] { background: var(--status-queued-bg); color: var(--status-queued-fg); }
+    .status-pill[data-status="Active"] { background: var(--status-active-bg); color: var(--status-active-fg); }
+    .status-pill[data-status="Review"] { background: var(--status-review-bg); color: var(--status-review-fg); }
+    .status-pill[data-status="Shipped"] { background: var(--status-done-bg); color: var(--status-done-fg); }
+
+    .avatar-chip {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-2);
+    }
+
+    .due-tag {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      min-width: 44px;
+      text-align: right;
+    }
+
+    /* Board view */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 16px 20px;
+      background: #FAF9F5;
+      flex: 1;
+    }
+
+    .board-col {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 240px;
+    }
+
+    .board-col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-2);
+      padding: 2px 4px 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .board-card {
+      background: var(--surface-pure);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .board-card:hover {
+      border-color: var(--line-strong);
+    }
+
+    .board-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .board-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    /* Quick add footer inside demo */
+    .quick-add-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .quick-add-input {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: var(--surface-pure);
+      border-radius: var(--radius-sm);
+      height: 34px;
+      padding: 0 12px;
+      font-size: 13.5px;
+      color: var(--ink);
+    }
+
+    .quick-add-input:focus {
+      outline: 2px solid rgba(196, 60, 29, 0.25);
+      border-color: var(--accent);
+    }
+
+    .quick-add-select {
+      height: 34px;
+      border: 1px solid var(--line);
+      background: var(--surface-pure);
+      border-radius: var(--radius-sm);
+      padding: 0 8px;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    /* Proof Strip */
+    .proof-strip {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .proof-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .proof-caption {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .team-marks {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .team-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink-2);
+    }
+
+    .team-mark svg {
+      color: var(--ink-3);
+    }
+
+    /* Editorial Sections */
+    .section {
+      padding: 84px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-alt {
+      background: var(--bg-alt);
+    }
+
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: 0.38fr 0.62fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .section-index {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .section-heading {
+      margin: 0;
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+
+    .section-lead {
+      margin: 14px 0 0;
+      font-size: 16px;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    .prose-stack p {
+      margin: 0 0 18px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-2);
+    }
+
+    .prose-stack p strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Comparison Ledger */
+    .ledger-table {
+      margin-top: 32px;
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .ledger-table th,
+    .ledger-table td {
+      text-align: left;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .ledger-table th {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      background: var(--surface);
+      font-weight: 500;
+    }
+
+    .ledger-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ledger-table td:first-child {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .ledger-table td:nth-child(2) {
+      color: var(--ink-3);
+    }
+
+    .ledger-table td:nth-child(3) {
+      font-weight: 500;
+      color: var(--ink);
+      background: #FAF8F3;
+    }
+
+    /* Interactive Mechanics Showcase */
+    .mechanics-grid {
+      margin-top: 44px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .panel-full {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .panel-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* Cycle Scrubber Widget */
+    .scrubber-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .scrubber-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .scrubber-day {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .scrubber-metrics {
+      display: flex;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-2);
+    }
+
+    .scrubber-range {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+      margin: 10px 0 14px;
+    }
+
+    .scrubber-note {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      padding: 10px 12px;
+      background: var(--surface-pure);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* Decision Log Snippet */
+    .decision-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-size: 13.5px;
+    }
+
+    .decision-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .decision-badge {
+      padding: 2px 7px;
+      background: var(--status-done-bg);
+      color: var(--status-done-fg);
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    .decision-body {
+      color: var(--ink-2);
+      line-height: 1.55;
+    }
+
+    .decision-body strong {
+      color: var(--ink);
+    }
+
+    /* Shortcut strip */
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    /* Field Notes / Customer Quotes */
+    .quotes-grid {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .quote-card {
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    .quote-meta {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .quote-author {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .quote-role {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+    }
+
+    /* Pricing */
+    .pricing-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .billing-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .billing-toggle button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-3);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .billing-toggle button.active {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .price-card {
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .price-card.featured {
+      border-color: var(--ink);
+      box-shadow: inset 0 3px 0 var(--accent);
+    }
+
+    .price-tier {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .price-num {
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-unit {
+      font-size: 13.5px;
+      color: var(--ink-3);
+    }
+
+    .price-desc {
+      margin: 0;
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+
+    .price-list {
+      list-style: none;
+      margin: 0;
+      padding: 18px 0 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .price-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .price-list li::before {
+      content: "—";
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    /* Seat Estimator Bar */
+    .estimator-bar {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .estimator-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    .estimator-controls input[type="range"] {
+      width: 150px;
+      accent-color: var(--accent);
+    }
+
+    .estimator-output {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 56px 0 40px;
+      background: var(--bg);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 0.7fr);
+      gap: 36px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer-col h4 {
+      margin: 0 0 14px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .footer-col a:hover {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .footer-bottom {
+      padding-top: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    .status-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status-online-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #276749;
+    }
+
+    /* Command Palette Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(23, 22, 20, 0.42);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 14vh;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .cmd-palette {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 16px;
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 64px -12px rgba(23, 22, 20, 0.28);
+      overflow: hidden;
+    }
+
+    .cmd-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cmd-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .cmd-results {
+      max-height: 290px;
+      overflow-y: auto;
+      padding: 6px;
+    }
+
+    .cmd-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .cmd-item:hover,
+    .cmd-item.selected {
+      background: var(--bg);
+    }
+
+    .cmd-item-hint {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--ink);
+      color: var(--surface);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.18s, transform 0.18s;
+      z-index: 120;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Waitlist / Create Workspace Modal */
+    .dialog-card {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 16px;
+      background: var(--surface-pure);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 24px 64px -12px rgba(23, 22, 20, 0.28);
+    }
+
+    .dialog-card h3 {
+      margin: 0 0 6px;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
+
+    .dialog-card p {
+      margin: 0 0 18px;
+      font-size: 14px;
+      color: var(--ink-2);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .field-group label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+
+    .field-group input {
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .editorial-grid,
+      .mechanics-grid,
+      .panel-full,
+      .quotes-grid,
+      .pricing-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ws-body {
+        grid-template-columns: 1fr;
+      }
+
+      .ws-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .board-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 40px 0 40px;
+      }
+
+      .section {
+        padding: 56px 0;
+      }
+
+      .issue-row {
+        grid-template-columns: 24px 68px 1fr auto;
+      }
+
+      .avatar-chip,
+      .due-tag {
+        display: none;
+      }
+
+      .board-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kbd-trigger {
+        display: none;
+      }
+
+      .shortcut-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="top-bar">
+    <div class="container nav-inner">
+      <a href="#" class="brand" aria-label="Plumb home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1.5V9.5M7 9.5L4.5 7M7 9.5L9.5 7M3 12.5H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>Plumb</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#ledger">The Ledger</a>
+        <a href="#mechanics">Cycles</a>
+        <a href="#field-notes">Field Notes</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="kbd-trigger" id="openCmdBtn" aria-label="Open command palette">
+          <span>Command</span>
+          <span class="kbd-cap">⌘K</span>
+        </button>
+        <button type="button" class="btn btn-ghost" onclick="openSignupModal('Sign in')">Sign in</button>
+        <button type="button" class="btn btn-primary" onclick="openSignupModal('Start workspace')">Start free</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero + Live Interactive Workspace -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">
+              <span class="eyebrow-dot" aria-hidden="true"></span>
+              <span>Release 2.4 · Built for product &amp; engineering</span>
+            </div>
+            <h1>Project tracking without the <em>theater.</em></h1>
+          </div>
+
+          <div class="hero-aside">
+            <p class="hero-copy">
+              Plumb replaces sprawling boards and Monday status calls with one shared ledger of specs, deadlines, and blockers. Under 16ms per click, even at 50,000 issues.
+            </p>
+            <div class="hero-cta-row">
+              <button type="button" class="btn btn-accent btn-lg" onclick="openSignupModal('Start workspace')">Create workspace</button>
+              <a href="#ledger" class="btn btn-ghost btn-lg">Read the manifesto</a>
+            </div>
+            <div class="hero-note">Free up to 5 seats · Imports CSV, Linear &amp; Jira in 90s</div>
+          </div>
+        </div>
+
+        <!-- Interactive App Canvas -->
+        <div class="workspace-shell" id="demo-workspace" aria-label="Interactive Plumb workspace preview">
+          <div class="ws-topbar">
+            <div class="ws-crumb">
+              <strong>Northstar Studio</strong>
+              <span aria-hidden="true">/</span>
+              <span id="wsActiveProjectCrumb">Sync Engine v2</span>
+              <span class="ws-cycle-pill">Cycle 47 · Nov 18–Dec 1</span>
+            </div>
+
+            <div class="ws-controls">
+              <div class="segmented" role="tablist" aria-label="Workspace view">
+                <button type="button" role="tab" aria-selected="true" class="active" data-view="list">List</button>
+                <button type="button" role="tab" aria-selected="false" data-view="board">Board</button>
+              </div>
+              <button type="button" class="kbd-trigger" id="demoCmdShortcut" title="Open command palette">
+                <span>Actions</span>
+                <span class="kbd-cap">⌘K</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ws-body">
+            <aside class="ws-sidebar">
+              <div>
+                <div class="ws-side-label">Active Projects</div>
+                <div id="wsProjectList"></div>
+              </div>
+
+              <div class="ws-sidebar-foot">
+                <div>Try it: click any status pill or checkbox, switch to Board view, or add an issue below.</div>
+              </div>
+            </aside>
+
+            <div class="ws-main">
+              <div class="ws-project-head">
+                <div>
+                  <h2 class="ws-project-title" id="wsProjectTitle">Sync Engine v2</h2>
+                  <div class="ws-project-meta" id="wsProjectMeta">Lead: M. Kowalski · Target Dec 1</div>
+                </div>
+                <div class="ws-progress-wrap">
+                  <span class="mono" style="font-size: 12px; color: var(--ink-2);" id="wsProgressLabel">1 / 4 shipped</span>
+                  <div class="ws-progress-track">
+                    <div class="ws-progress-fill" id="wsProgressFill" style="width: 25%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ws-filter-bar">
+                <div class="filter-chips" id="wsStatusFilters">
+                  <button type="button" class="filter-chip active" data-filter="All">All</button>
+                  <button type="button" class="filter-chip" data-filter="Queued">Queued</button>
+                  <button type="button" class="filter-chip" data-filter="Active">Active</button>
+                  <button type="button" class="filter-chip" data-filter="Review">Review</button>
+                  <button type="button" class="filter-chip" data-filter="Shipped">Shipped</button>
+                </div>
+                <span class="ws-hint">Click status to advance →</span>
+              </div>
+
+              <div id="wsContentArea" class="issue-list"></div>
+
+              <form class="quick-add-form" id="quickAddForm">
+                <input
+                  type="text"
+                  class="quick-add-input"
+                  id="quickAddInput"
+                  placeholder="Add an issue to this project and press Enter..."
+                  aria-label="New issue title"
+                />
+                <select class="quick-add-select" id="quickAddStatus" aria-label="Initial status">
+                  <option value="Queued">Queued</option>
+                  <option value="Active">Active</option>
+                  <option value="Review">Review</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="height: 34px; font-size: 13px;">Add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Understated Social Proof Strip -->
+    <div class="proof-strip">
+      <div class="container proof-inner">
+        <span class="proof-caption">Used daily by 1,400+ small, stubborn teams</span>
+        <div class="team-marks" aria-label="Selected teams using Plumb">
+          <span class="team-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" stroke="currentColor" stroke-width="1.5"/><path d="M2 8H14" stroke="currentColor" stroke-width="1.5"/></svg>
+            Kanso Hardware
+          </span>
+          <span class="team-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>
+            Meridian Type
+          </span>
+          <span class="team-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13L8 3L13 13H3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Fieldnote
+          </span>
+          <span class="team-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4H13M3 8H10M3 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Bramble Labs
+          </span>
+          <span class="team-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3H7V7H3V3ZM9 9H13V13H9V9ZM9 3H13V7H9V3Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            Tidewater Audio
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 01: Editorial Manifesto & Comparison -->
+    <section class="section" id="ledger">
+      <div class="container editorial-grid">
+        <div>
+          <div class="section-index">01 / Why we built this</div>
+          <h2 class="section-heading">Most trackers collapse under their own settings.</h2>
+          <p class="section-lead">
+            Somewhere along the way, keeping track of twelve tasks turned into administering a database.
+          </p>
+        </div>
+
+        <div class="prose-stack">
+          <p>
+            You don't lose a week because someone forgot to estimate a story point. You lose a week because a blocking decision sat buried in a Slack thread, two people built the same API endpoint, and nobody noticed a milestone slipped until Friday afternoon.
+          </p>
+          <p>
+            <strong>Plumb is intentionally opinionated.</strong> There are four issue states, a hard cap of three custom fields per workspace, and zero story-point poker widgets. Every screen loads from a local SQLite cache in your browser, so navigating between projects feels instantaneous.
+          </p>
+
+          <table class="ledger-table" aria-label="Comparison between typical trackers and Plumb">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Typical enterprise tracker</th>
+                <th>Plumb</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Initial workspace setup</td>
+                <td>2–4 weeks of admin configuration</td>
+                <td>4 minutes, zero required workflows</td>
+              </tr>
+              <tr>
+                <td>Median click latency</td>
+                <td>420ms – 1.8s server roundtrip</td>
+                <td>&lt;16ms local-first sync engine</td>
+              </tr>
+              <tr>
+                <td>Where specs &amp; decisions live</td>
+                <td>Scattered across docs and chat</td>
+                <td>Attached inline as DEC-### records</td>
+              </tr>
+              <tr>
+                <td>Seat billing</td>
+                <td>Every collaborator &amp; stakeholder</td>
+                <td>Active builders only; viewers free</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 02: Interactive Mechanics -->
+    <section class="section section-alt" id="mechanics">
+      <div class="container">
+        <div style="max-width: 640px;">
+          <div class="section-index">02 / How the tool behaves</div>
+          <h2 class="section-heading">Built around real constraints, not endless backlogs.</h2>
+        </div>
+
+        <div class="mechanics-grid">
+          <!-- Full width panel: Cycle Scrubber -->
+          <div class="panel panel-full">
+            <div>
+              <div class="panel-tag">Cycle Mechanics</div>
+              <h3>Cycles lock scope and surface drift early.</h3>
+              <p>
+                A Plumb cycle runs for one or two weeks. When new work gets dragged in mid-cycle, the ledger flags the exact tradeoff—so you either drop an equivalent item or consciously extend the date. Scrub through a real 10-day cycle on the right to see how it tracks.
+              </p>
+            </div>
+
+            <div class="scrubber-box">
+              <div class="scrubber-top">
+                <span class="scrubber-day" id="scrubberDayLabel">Day 4 of 10 · Thu Nov 21</span>
+                <div class="scrubber-metrics">
+                  <span id="scrubberDone">6 shipped</span>
+                  <span id="scrubberLeft">5 remaining</span>
+                </div>
+              </div>
+              <div class="ws-progress-track" style="width: 100%; height: 8px;">
+                <div class="ws-progress-fill" id="scrubberBar" style="width: 55%;"></div>
+              </div>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value="4"
+                class="scrubber-range"
+                id="cycleScrubber"
+                aria-label="Scrub through days 1 to 10 of Cycle 47"
+              />
+              <div class="scrubber-note" id="scrubberNote">
+                <strong>Day 4 log:</strong> Scope check triggered—2 polish tickets deferred to Cycle 48 so iOS build stays green for Friday QA.
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 2: Inline Decision Log -->
+          <div class="panel">
+            <div>
+              <div class="panel-tag">Decision Ledger</div>
+              <h3>Stop losing "why" inside chat history.</h3>
+              <p>
+                Every milestone links directly to numbered decisions. When a new engineer joins six months later, the reasoning is two clicks away from the code.
+              </p>
+            </div>
+
+            <div class="decision-card">
+              <div class="decision-head">
+                <span>DEC-042 · Sync Conflict Policy</span>
+                <span class="decision-badge">Accepted · Nov 19</span>
+              </div>
+              <div class="decision-body">
+                <strong>Resolution:</strong> Offline edits win at field-level via LWW timestamps rather than whole-document overwrite. Revisit if collaborative rich text ships in Q2.
+                <div class="mono" style="margin-top: 8px; font-size: 11px; color: var(--ink-3);">
+                  Linked: PLB-101, PLB-104 · Signed off by M. Kowalski, S. Okafor
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Keyboard First -->
+          <div class="panel">
+            <div>
+              <div class="panel-tag">Keyboard First</div>
+              <h3>Keep your hands off the mouse.</h3>
+              <p>
+                Every action in Plumb—changing status, assigning an owner, jumping projects—works from the keyboard. Press <span class="kbd-cap">⌘K</span> right now to test it on this page.
+              </p>
+            </div>
+
+            <div class="shortcut-grid">
+              <div class="shortcut-row"><span>Command palette</span><span class="kbd-cap">⌘ K</span></div>
+              <div class="shortcut-row"><span>New issue</span><span class="kbd-cap">C</span></div>
+              <div class="shortcut-row"><span>Change status</span><span class="kbd-cap">S</span></div>
+              <div class="shortcut-row"><span>Toggle Board</span><span class="kbd-cap">⌘ B</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 03: Field Notes (Authentic Quotes) -->
+    <section class="section" id="field-notes">
+      <div class="container">
+        <div style="max-width: 620px;">
+          <div class="section-index">03 / Field Notes</div>
+          <h2 class="section-heading">What teams noticed after switching.</h2>
+        </div>
+
+        <div class="quotes-grid">
+          <article class="quote-card">
+            <blockquote>
+              “We deleted 1,100 stale Jira tickets the morning we moved over. Having our firmware milestones and iOS bugs in one quiet list cut our weekly standup from 45 minutes to twelve.”
+            </blockquote>
+            <div class="quote-meta">
+              <span class="quote-author">Hannah Lindqvist</span>
+              <span class="quote-role">VP Engineering, Kanso Hardware · 14 seats</span>
+            </div>
+          </article>
+
+          <article class="quote-card">
+            <blockquote>
+              “It's the first project tool our designers actually open without being reminded. It behaves like a well-typeset spreadsheet rather than an enterprise portal.”
+            </blockquote>
+            <div class="quote-meta">
+              <span class="quote-author">Devon Alverez</span>
+              <span class="quote-role">Founding Partner, Meridian Type · 6 seats</span>
+            </div>
+          </article>
+
+          <article class="quote-card">
+            <blockquote>
+              “The decision log alone paid for the year. Whenever someone asks why billing retries work a certain way, we link DEC-018 and move on.”
+            </blockquote>
+            <div class="quote-meta">
+              <span class="quote-author">Tariq Mensah</span>
+              <span class="quote-role">Staff Engineer, Bramble Labs · 28 seats</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 04: Transparent Pricing -->
+    <section class="section section-alt" id="pricing">
+      <div class="container">
+        <div class="pricing-head">
+          <div>
+            <div class="section-index">04 / Pricing</div>
+            <h2 class="section-heading">Simple math. Viewers are always free.</h2>
+          </div>
+
+          <div class="billing-toggle" role="group" aria-label="Billing interval">
+            <button type="button" class="active" data-billing="annual">Annual (save 20%)</button>
+            <button type="button" data-billing="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div>
+              <div class="price-tier">Studio</div>
+              <div class="price-amount">
+                <span class="price-num">$0</span>
+                <span class="price-unit">forever</span>
+              </div>
+              <p class="price-desc">For small teams, side projects, and early-stage studios shipping together.</p>
+              <ul class="price-list">
+                <li>Up to 5 active builders</li>
+                <li>Unlimited viewer &amp; client guests</li>
+                <li>Unlimited issues &amp; decision logs</li>
+                <li>Full CSV / JSON export anytime</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-ghost" onclick="openSignupModal('Start Studio (Free)')">Start with Studio</button>
+          </div>
+
+          <div class="price-card featured">
+            <div>
+              <div class="price-tier">Team</div>
+              <div class="price-amount">
+                <span class="price-num" id="teamPriceNum">$8</span>
+                <span class="price-unit" id="teamPriceUnit">per builder / month</span>
+              </div>
+              <p class="price-desc">Everything in Studio, scaled for product, design, and engineering orgs.</p>
+              <ul class="price-list">
+                <li>Unlimited active builders</li>
+                <li>GitHub &amp; GitLab PR auto-linking</li>
+                <li>Cycle velocity &amp; scope drift alerts</li>
+                <li>Priority email support from engineers</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-accent" onclick="openSignupModal('Start Team Trial')">Start 14-day free trial</button>
+          </div>
+
+          <div class="price-card">
+            <div>
+              <div class="price-tier">Self-Hosted</div>
+              <div class="price-amount">
+                <span class="price-num" id="selfPriceNum">$1,800</span>
+                <span class="price-unit">flat / year</span>
+              </div>
+              <p class="price-desc">Run Plumb inside your own VPC or air-gapped network via a single container.</p>
+              <ul class="price-list">
+                <li>Up to 100 builders included</li>
+                <li>SAML 2.0 SSO &amp; SCIM provisioning</li>
+                <li>Postgres + S3 backup hooks</li>
+                <li>Signed audit log exports</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-ghost" onclick="openSignupModal('Request Self-Hosted License')">Request license</button>
+          </div>
+        </div>
+
+        <!-- Honest Seat Estimator -->
+        <div class="estimator-bar">
+          <div class="estimator-controls">
+            <label for="builderSlider"><strong>Builders:</strong> <span class="mono" id="builderCountLabel">10</span></label>
+            <input type="range" id="builderSlider" min="5" max="60" value="10" />
+            <label for="viewerSlider"><strong>Viewer guests (free):</strong> <span class="mono" id="viewerCountLabel">6</span></label>
+            <input type="range" id="viewerSlider" min="0" max="40" value="6" />
+          </div>
+          <div class="estimator-output" id="estimatorTotal">
+            Estimated total: $80 / month (billed yearly)
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand" style="margin-bottom: 12px;">
+            <span class="brand-mark" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1.5V9.5M7 9.5L4.5 7M7 9.5L9.5 7M3 12.5H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Plumb</span>
+          </a>
+          <p style="margin: 0; font-size: 14px; color: var(--ink-2); max-width: 300px; line-height: 1.55;">
+            Independent software made in Portland &amp; Copenhagen. Zero third-party ad trackers. Your data belongs to you.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#demo-workspace">Live sandbox</a></li>
+            <li><a href="#ledger">Manifesto</a></li>
+            <li><a href="#mechanics">Cycles &amp; Decisions</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="#" onclick="showToast('Changelog: v2.4.1 shipped Nov 20'); return false;">Changelog</a></li>
+            <li><a href="#" onclick="showToast('CLI & REST API docs available in workspace'); return false;">API &amp; Webhooks</a></li>
+            <li><a href="#" onclick="showToast('Importers: CSV, Linear, Jira XML'); return false;">Migration guide</a></li>
+            <li><a href="#" onclick="showToast('SOC2 Type II report available on request'); return false;">Security</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#" onclick="openSignupModal('Contact team'); return false;">Contact</a></li>
+            <li><a href="#" onclick="showToast('No open roles right now — check back in Q1'); return false;">Careers</a></li>
+            <li><a href="#" onclick="showToast('Terms & Privacy: plain English, 2 pages'); return false;">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="status-online">
+          <span class="status-online-dot" aria-hidden="true"></span>
+          All systems operational · 99.98% 90-day uptime
+        </span>
+        <span>Press ⌘K for quick commands · © 2026 Plumb Software Co.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Command Palette Modal -->
+  <div class="modal-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="cmd-palette">
+      <div class="cmd-input-wrap">
+        <span class="mono" style="color: var(--ink-3); font-size: 13px;">&gt;</span>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command or jump to section..." />
+        <span class="kbd-cap">ESC</span>
+      </div>
+      <div class="cmd-results" id="cmdResults"></div>
+    </div>
+  </div>
+
+  <!-- Workspace / Sign-in Modal -->
+  <div class="modal-backdrop" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+    <div class="dialog-card">
+      <h3 id="signupTitle">Start your workspace</h3>
+      <p id="signupSubtitle">Enter your work email and team name. No credit card required.</p>
+      <form id="signupForm">
+        <div class="field-group">
+          <label for="wsNameInput">Workspace name</label>
+          <input type="text" id="wsNameInput" placeholder="e.g. Northstar Studio" required />
+        </div>
+        <div class="field-group">
+          <label for="wsEmailInput">Work email</label>
+          <input type="email" id="wsEmailInput" placeholder="you@company.com" required />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px;">
+          <button type="button" class="btn btn-ghost" onclick="closeSignupModal()">Cancel</button>
+          <button type="submit" class="btn btn-accent">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ---------- State for Interactive Demo Workspace ----------
+    const STATUS_ORDER = ["Queued", "Active", "Review", "Shipped"];
+
+    const projects = [
+      {
+        id: "sync",
+        name: "Sync Engine v2",
+        color: "#C43C1D",
+        lead: "M. Kowalski",
+        target: "Dec 1",
+        issues: [
+          { id: "PLB-101", title: "Field-level LWW merge for offline edits", status: "Shipped", owner: "MK", due: "Nov 19" },
+          { id: "PLB-104", title: "Throttle IndexedDB compaction during scroll", status: "Review", owner: "SO", due: "Nov 22" },
+          { id: "PLB-107", title: "Retry queue backoff on flaky cellular", status: "Active", owner: "AL", due: "Nov 25" },
+          { id: "PLB-112", title: "Expose sync diagnostics in settings modal", status: "Queued", owner: "JR", due: "Nov 28" }
+        ]
+      },
+      {
+        id: "billing",
+        name: "Billing Migration",
+        color: "#1E448A",
+        lead: "S. Okafor",
+        target: "Dec 6",
+        issues: [
+          { id: "PLB-088", title: "Exclude viewer-only seats from Stripe count", status: "Shipped", owner: "SO", due: "Nov 18" },
+          { id: "PLB-091", title: "Prorated mid-cycle seat downgrade webhook", status: "Shipped", owner: "JR", due: "Nov 20" },
+          { id: "PLB-095", title: "Downloadable PDF VAT receipts", status: "Active", owner: "MK", due: "Nov 26" },
+          { id: "PLB-099", title: "Dunning email copy without dark patterns", status: "Queued", owner: "AL", due: "Dec 2" }
+        ]
+      },
+      {
+        id: "docs",
+        name: "Field Guide Docs",
+        color: "#1F5B3D",
+        lead: "A. Lind",
+        target: "Dec 10",
+        issues: [
+          { id: "PLB-114", title: "Document Linear & Jira CSV column mapping", status: "Review", owner: "AL", due: "Nov 24" },
+          { id: "PLB-115", title: "CLI examples for automated decision logs", status: "Active", owner: "JR", due: "Nov 27" },
+          { id: "PLB-118", title: "Self-hosted Docker Compose reference", status: "Queued", owner: "MK", due: "Dec 4" }
+        ]
+      }
+    ];
+
+    let activeProjectId = "sync";
+    let activeView = "list";
+    let activeFilter = "All";
+    let nextIssueNum = 119;
+
+    function getActiveProject() {
+      return projects.find(p => p.id === activeProjectId);
+    }
+
+    function statusIcon(status) {
+      if (status === "Shipped") {
+        return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#1F5B3D"/><path d="M5.2 8.1L7.1 10L10.8 6.2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      }
+      if (status === "Review") {
+        return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#1E448A" stroke-width="1.5"/><path d="M8 4.5V8L10.3 9.5" stroke="#1E448A" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+      }
+      if (status === "Active") {
+        return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#9A4109" stroke-width="1.5"/><path d="M8 1.75A6.25 6.25 0 0 1 8 14.25Z" fill="#9A4109"/></svg>`;
+      }
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.25" stroke="#8C867A" stroke-width="1.5" stroke-dasharray="2.5 2.5"/></svg>`;
+    }
+
+    function cycleStatus(issueId) {
+      const proj = getActiveProject();
+      const issue = proj.issues.find(i => i.id === issueId);
+      if (!issue) return;
+      const idx = STATUS_ORDER.indexOf(issue.status);
+      issue.status = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+      renderWorkspace();
+      showToast(`${issue.id} moved to ${issue.status}`);
+    }
+
+    function toggleDone(issueId) {
+      const proj = getActiveProject();
+      const issue = proj.issues.find(i => i.id === issueId);
+      if (!issue) return;
+      issue.status = issue.status === "Shipped" ? "Active" : "Shipped";
+      renderWorkspace();
+    }
+
+    function renderWorkspace() {
+      const proj = getActiveProject();
+
+      // Sidebar
+      const sideList = document.getElementById("wsProjectList");
+      sideList.innerHTML = projects.map(p => {
+        const openCount = p.issues.filter(i => i.status !== "Shipped").length;
+        return `
+          <button type="button" class="ws-nav-item ${p.id === activeProjectId ? "active" : ""}" data-proj="${p.id}">
+            <span class="ws-nav-left">
+              <span class="proj-dot" style="background:${p.color};"></span>
+              <span>${p.name}</span>
+            </span>
+            <span class="ws-count">${openCount}</span>
+          </button>
+        `;
+      }).join("");
+
+      sideList.querySelectorAll("[data-proj]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeProjectId = btn.dataset.proj;
+          activeFilter = "All";
+          updateFilterChips();
+          renderWorkspace();
+        });
+      });
+
+      // Header & Progress
+      document.getElementById("wsActiveProjectCrumb").textContent = proj.name;
+      document.getElementById("wsProjectTitle").textContent = proj.name;
+      document.getElementById("wsProjectMeta").textContent = `Lead: ${proj.lead} · Target ${proj.target}`;
+
+      const shippedCount = proj.issues.filter(i => i.status === "Shipped").length;
+      const totalCount = proj.issues.length || 1;
+      const pct = Math.round((shippedCount / totalCount) * 100);
+      document.getElementById("wsProgressLabel").textContent = `${shippedCount} / ${proj.issues.length} shipped`;
+      document.getElementById("wsProgressFill").style.width = `${pct}%`;
+
+      // Content area
+      const container = document.getElementById("wsContentArea");
+      const filtered = activeFilter === "All"
+        ? proj.issues
+        : proj.issues.filter(i => i.status === activeFilter);
+
+      if (activeView === "list") {
+        container.className = "issue-list";
+        if (filtered.length === 0) {
+          container.innerHTML = `<div style="padding: 40px 20px; text-align: center; color: var(--ink-3); font-size: 14px;">No issues in <strong>${activeFilter}</strong> for ${proj.name}.</div>`;
+          return;
+        }
+        container.innerHTML = filtered.map(issue => `
+          <div class="issue-row ${issue.status === "Shipped" ? "is-done" : ""}">
+            <button type="button" class="status-btn" title="Toggle shipped" aria-label="Toggle ${issue.id} shipped" data-toggle="${issue.id}">
+              ${statusIcon(issue.status)}
+            </button>
+            <span class="issue-id">${issue.id}</span>
+            <span class="issue-title">${escapeHtml(issue.title)}</span>
+            <button type="button" class="status-pill" data-status="${issue.status}" data-cycle="${issue.id}" title="Click to advance status">
+              ${issue.status}
+            </button>
+            <span class="avatar-chip" title="Owner">${issue.owner}</span>
+            <span class="due-tag">${issue.due}</span>
+          </div>
+        `).join("");
+      } else {
+        container.className = "board-grid";
+        container.innerHTML = STATUS_ORDER.map(col => {
+          const colIssues = filtered.filter(i => i.status === col);
+          return `
+            <div class="board-col">
+              <div class="board-col-head">
+                <span>${col}</span>
+                <span class="mono" style="color: var(--ink-3); font-weight: 400;">${colIssues.length}</span>
+              </div>
+              ${colIssues.map(issue => `
+                <div class="board-card" data-cycle="${issue.id}" title="Click to advance column">
+                  <div class="board-card-top">
+                    <span class="issue-id">${issue.id}</span>
+                    <span class="avatar-chip">${issue.owner}</span>
+                  </div>
+                  <div class="board-card-title">${escapeHtml(issue.title)}</div>
+                </div>
+              `).join("")}
+            </div>
+          `;
+        }).join("");
+      }
+
+      container.querySelectorAll("[data-toggle]").forEach(el => {
+        el.addEventListener("click", () => toggleDone(el.dataset.toggle));
+      });
+      container.querySelectorAll("[data-cycle]").forEach(el => {
+        el.addEventListener("click", () => cycleStatus(el.dataset.cycle));
+      });
+    }
+
+    function updateFilterChips() {
+      document.querySelectorAll("#wsStatusFilters .filter-chip").forEach(chip => {
+        chip.classList.toggle("active", chip.dataset.filter === activeFilter);
+      });
+    }
+
+    function setWorkspaceView(view) {
+      activeView = view;
+      document.querySelectorAll("[data-view]").forEach(btn => {
+        const isCurrent = btn.dataset.view === view;
+        btn.classList.toggle("active", isCurrent);
+        btn.setAttribute("aria-selected", String(isCurrent));
+      });
+      renderWorkspace();
+    }
+
+    document.querySelectorAll("[data-view]").forEach(btn => {
+      btn.addEventListener("click", () => setWorkspaceView(btn.dataset.view));
+    });
+
+    document.querySelectorAll("#wsStatusFilters .filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        activeFilter = chip.dataset.filter;
+        updateFilterChips();
+        renderWorkspace();
+      });
+    });
+
+    document.getElementById("quickAddForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const input = document.getElementById("quickAddInput");
+      const statusSel = document.getElementById("quickAddStatus");
+      const title = input.value.trim();
+      if (!title) return;
+      const proj = getActiveProject();
+      const newId = `PLB-${nextIssueNum++}`;
+      proj.issues.push({
+        id: newId,
+        title,
+        status: statusSel.value,
+        owner: "YO",
+        due: "Dec 1"
+      });
+      input.value = "";
+      if (activeFilter !== "All" && activeFilter !== statusSel.value) {
+        activeFilter = "All";
+        updateFilterChips();
+      }
+      renderWorkspace();
+      showToast(`Added ${newId} to ${proj.name}`);
+    });
+
+    // ---------- Cycle Day Scrubber ----------
+    const cycleNotes = {
+      1: { label: "Day 1 of 10 · Mon Nov 18", done: 1, left: 10, note: "Cycle 47 locked with 11 committed issues. Kickoff async in ledger—no planning call needed." },
+      2: { label: "Day 2 of 10 · Tue Nov 19", done: 3, left: 8, note: "DEC-042 ratified on sync conflict policy; unblocked two mobile tasks." },
+      3: { label: "Day 3 of 10 · Wed Nov 20", done: 4, left: 7, note: "Urgent customer Safari IndexedDB fix added (+1 scope). Flagged in ledger." },
+      4: { label: "Day 4 of 10 · Thu Nov 21", done: 6, left: 5, note: "Scope check triggered—2 polish tickets deferred to Cycle 48 so iOS build stays green for Friday QA." },
+      5: { label: "Day 5 of 10 · Fri Nov 22", done: 7, left: 4, note: "Mid-cycle build tagged v2.4.0-rc1. Zero unassigned blockers heading into weekend." },
+      6: { label: "Day 6 of 10 · Mon Nov 25", done: 8, left: 3, note: "Retry queue backoff merged; staging latency holding at 11ms p95." },
+      7: { label: "Day 7 of 10 · Tue Nov 26", done: 9, left: 2, note: "VAT receipt template signed off by finance without leaving the issue thread." },
+      8: { label: "Day 8 of 10 · Wed Nov 27", done: 9, left: 2, note: "Final two issues in Review; code freeze for Cycle 47 begins tomorrow at 17:00." },
+      9: { label: "Day 9 of 10 · Thu Nov 28", done: 10, left: 1, note: "One doc mapping task carried over cleanly to Cycle 48 draft; release notes compiled." },
+      10: { label: "Day 10 of 10 · Fri Nov 29", done: 11, left: 0, note: "Cycle 47 closed at 100% committed scope. Shipped on time, zero crunch." }
+    };
+
+    const scrubberEl = document.getElementById("cycleScrubber");
+    scrubberEl.addEventListener("input", () => {
+      const day = cycleNotes[scrubberEl.value];
+      const total = day.done + day.left;
+      document.getElementById("scrubberDayLabel").textContent = day.label;
+      document.getElementById("scrubberDone").textContent = `${day.done} shipped`;
+      document.getElementById("scrubberLeft").textContent = `${day.left} remaining`;
+      document.getElementById("scrubberBar").style.width = `${Math.round((day.done / total) * 100)}%`;
+      document.getElementById("scrubberNote").innerHTML = `<strong>Day ${scrubberEl.value} log:</strong> ${day.note}`;
+    });
+
+    // ---------- Pricing Toggle & Seat Estimator ----------
+    let billingMode = "annual";
+
+    function updatePricing() {
+      const rate = billingMode === "annual" ? 8 : 10;
+      document.getElementById("teamPriceNum").textContent = `$${rate}`;
+      document.getElementById("teamPriceUnit").textContent = billingMode === "annual"
+        ? "per builder / month (billed yearly)"
+        : "per builder / month";
+
+      const builders = Number(document.getElementById("builderSlider").value);
+      const viewers = Number(document.getElementById("viewerSlider").value);
+      document.getElementById("builderCountLabel").textContent = builders;
+      document.getElementById("viewerCountLabel").textContent = viewers;
+
+      const total = builders * rate;
+      document.getElementById("estimatorTotal").textContent = billingMode === "annual"
+        ? `Estimated total: $${total} / month ($${total * 12} billed yearly)`
+        : `Estimated total: $${total} / month`;
+    }
+
+    document.querySelectorAll("[data-billing]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        billingMode = btn.dataset.billing;
+        document.querySelectorAll("[data-billing]").forEach(b => b.classList.toggle("active", b === btn));
+        updatePricing();
+      });
+    });
+
+    document.getElementById("builderSlider").addEventListener("input", updatePricing);
+    document.getElementById("viewerSlider").addEventListener("input", updatePricing);
+
+    // ---------- Command Palette (⌘K) ----------
+    const commands = [
+      { label: "Switch demo to Board view", hint: "⌘B", action: () => { setWorkspaceView("board"); scrollToEl("#demo-workspace"); } },
+      { label: "Switch demo to List view", hint: "L", action: () => { setWorkspaceView("list"); scrollToEl("#demo-workspace"); } },
+      { label: "Focus new issue input", hint: "C", action: () => { scrollToEl("#demo-workspace"); setTimeout(() => document.getElementById("quickAddInput").focus(), 250); } },
+      { label: "Toggle compact row density", hint: "View", action: () => { document.body.classList.toggle("compact-mode"); showToast("Toggled compact density"); } },
+      { label: "Jump to Manifesto", hint: "01", action: () => scrollToEl("#ledger") },
+      { label: "Jump to Cycle Mechanics", hint: "02", action: () => scrollToEl("#mechanics") },
+      { label: "Jump to Pricing & Estimator", hint: "04", action: () => scrollToEl("#pricing") },
+      { label: "Create a workspace", hint: "Free", action: () => openSignupModal("Start workspace") }
+    ];
+
+    const cmdModal = document.getElementById("cmdModal");
+    const cmdInput = document.getElementById("cmdInput");
+    const cmdResults = document.getElementById("cmdResults");
+    let selectedCmdIdx = 0;
+
+    function openCmdPalette() {
+      cmdModal.classList.add("open");
+      cmdInput.value = "";
+      selectedCmdIdx = 0;
+      renderCmdResults("");
+      setTimeout(() => cmdInput.focus(), 20);
+    }
+
+    function closeCmdPalette() {
+      cmdModal.classList.remove("open");
+    }
+
+    function renderCmdResults(query) {
+      const q = query.trim().toLowerCase();
+      const matches = commands.filter(c => c.label.toLowerCase().includes(q));
+      if (selectedCmdIdx >= matches.length) selectedCmdIdx = 0;
+      if (matches.length === 0) {
+        cmdResults.innerHTML = `<div style="padding: 16px; text-align: center; color: var(--ink-3); font-size: 13px;">No matching commands</div>`;
+        return;
+      }
+      cmdResults.innerHTML = matches.map((c, idx) => `
+        <button type="button" class="cmd-item ${idx === selectedCmdIdx ? "selected" : ""}" data-cmd-idx="${idx}">
+          <span>${c.label}</span>
+          <span class="cmd-item-hint">${c.hint}</span>
+        </button>
+      `).join("");
+
+      cmdResults.querySelectorAll("[data-cmd-idx]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = matches[Number(btn.dataset.cmdIdx)];
+          closeCmdPalette();
+          item.action();
+        });
+      });
+    }
+
+    cmdInput.addEventListener("input", () => {
+      selectedCmdIdx = 0;
+      renderCmdResults(cmdInput.value);
+    });
+
+    cmdInput.addEventListener("keydown", e => {
+      const matches = commands.filter(c => c.label.toLowerCase().includes(cmdInput.value.trim().toLowerCase()));
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        selectedCmdIdx = (selectedCmdIdx + 1) % Math.max(matches.length, 1);
+        renderCmdResults(cmdInput.value);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        selectedCmdIdx = (selectedCmdIdx - 1 + Math.max(matches.length, 1)) % Math.max(matches.length, 1);
+        renderCmdResults(cmdInput.value);
+      } else if (e.key === "Enter" && matches[selectedCmdIdx]) {
+        e.preventDefault();
+        const item = matches[selectedCmdIdx];
+        closeCmdPalette();
+        item.action();
+      }
+    });
+
+    document.getElementById("openCmdBtn").addEventListener("click", openCmdPalette);
+    document.getElementById("demoCmdShortcut").addEventListener("click", openCmdPalette);
+    cmdModal.addEventListener("click", e => {
+      if (e.target === cmdModal) closeCmdPalette();
+    });
+
+    // Global keyboard shortcuts
+    document.addEventListener("keydown", e => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        cmdModal.classList.contains("open") ? closeCmdPalette() : openCmdPalette();
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setWorkspaceView(activeView === "list" ? "board" : "list");
+      } else if (e.key === "Escape") {
+        closeCmdPalette();
+        closeSignupModal();
+      }
+    });
+
+    // ---------- Signup Modal ----------
+    const signupModal = document.getElementById("signupModal");
+
+    function openSignupModal(heading) {
+      document.getElementById("signupTitle").textContent = heading || "Start your workspace";
+      signupModal.classList.add("open");
+      setTimeout(() => document.getElementById("wsNameInput").focus(), 20);
+    }
+
+    function closeSignupModal() {
+      signupModal.classList.remove("open");
+    }
+
+    signupModal.addEventListener("click", e => {
+      if (e.target === signupModal) closeSignupModal();
+    });
+
+    document.getElementById("signupForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const ws = document.getElementById("wsNameInput").value.trim();
+      closeSignupModal();
+      e.target.reset();
+      showToast(`Invite link dispatched for "${ws}"`);
+    });
+
+    // ---------- Utilities ----------
+    let toastTimer;
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+    }
+
+    function scrollToEl(selector) {
+      const el = document.querySelector(selector);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Initial render
+    renderWorkspace();
+    updatePricing();
+  </script>
+</body>
+</html>

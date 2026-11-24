@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odile Brandt — Architecture & landscape photographer, Porto</title>
+<meta name="description" content="Odile Brandt is a freelance photographer in Porto working with architects, hotels and magazines. Buildings, and the weather around them.">
+<style>
+  :root {
+    --bg: #dcdcd7;
+    --bg-raised: #e7e7e2;
+    --ink: #15181b;
+    --muted: #5a6065;
+    --line: rgba(21, 24, 27, .2);
+    --mark: #d93a16;
+    --sans: "Helvetica Neue", Helvetica, "Nimbus Sans", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    --pad: clamp(1.1rem, 4vw, 3.5rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111315; --bg-raised: #1a1d20; --ink: #e8e7e2; --muted: #92979b;
+      --line: rgba(232, 231, 226, .2); --mark: #ff5c33;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111315; --bg-raised: #1a1d20; --ink: #e8e7e2; --muted: #92979b;
+    --line: rgba(232, 231, 226, .2); --mark: #ff5c33;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5;
+    transition: background-color .4s, color .4s;
+  }
+  a { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+  a:hover { color: var(--mark); }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--mark); outline-offset: 3px; }
+  ul, ol { list-style: none; margin: 0; padding: 0; }
+  h1, h2, h3, p, figure, dl, dd { margin: 0; }
+
+  .mono {
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .skip { position: absolute; left: -999px; }
+  .skip:focus { left: var(--pad); top: .5rem; background: var(--ink); color: var(--bg); padding: .5rem .8rem; z-index: 20; }
+
+  /* ── Header ── */
+  .top {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .4rem 2rem;
+    padding: .9rem var(--pad);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .top .name { font-weight: 500; letter-spacing: -.01em; text-decoration: none; }
+  .top nav { display: flex; flex-wrap: wrap; gap: .3rem 1.6rem; align-items: baseline; }
+  .top nav a { text-decoration: none; }
+  .lights { font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .lights:hover { color: var(--mark); }
+  .lights::before { content: ""; display: inline-block; width: .55em; height: .55em; border-radius: 50%; border: 1px solid currentColor; margin-right: .5em; }
+  .lights[aria-pressed="true"]::before { background: currentColor; }
+
+  /* ── Hero ── */
+  .hero { padding: clamp(2.5rem, 7vw, 6rem) var(--pad) 0; }
+  .hero h1 {
+    font-weight: 500; font-size: clamp(2.7rem, 10.4vw, 10.5rem);
+    line-height: .92; letter-spacing: -.045em; text-wrap: balance; max-width: 12ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--muted); }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 2rem;
+    margin: clamp(1.6rem, 4vw, 3rem) 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--line);
+  }
+  .hero-meta b { font-weight: 400; color: var(--mark); }
+  .hero figure figcaption { padding: .6rem 0 0; }
+
+  /* ── Photographs ── */
+  .shot { display: block; width: 100%; position: relative; cursor: zoom-in; }
+  .frame { display: block; position: relative; aspect-ratio: var(--r); overflow: hidden; background: #8a8a86; }
+  .frame > svg { display: block; width: 100%; height: 100%; transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+  .shot:hover .frame > svg { transform: scale(1.025); }
+  .frame::before { /* lens falloff */
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, .2) 100%);
+  }
+  .frame::after { /* film grain */
+    content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    opacity: .38; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* grease-pencil selection mark, as on a contact sheet */
+  .mark {
+    position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px);
+    pointer-events: none; opacity: 0; transform: rotate(-.6deg) scale(.985);
+    transition: opacity .25s, transform .35s cubic-bezier(.2, .7, .2, 1);
+  }
+  .mark path { fill: none; stroke: var(--mark); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .shot:hover .mark, .shot:focus-visible .mark { opacity: 1; transform: none; }
+  .shot:focus-visible { outline: none; }
+
+  figcaption {
+    display: grid; grid-template-columns: 2.4em 1fr auto; gap: .8em; align-items: baseline;
+    padding: .65rem 0 0; font-family: var(--mono); font-size: .75rem; letter-spacing: .03em; color: var(--muted);
+  }
+  figcaption .ttl { color: var(--ink); }
+  figcaption .meta { text-align: right; }
+
+  /* ── Work ── */
+  section { padding: clamp(4rem, 10vw, 9rem) var(--pad) 0; }
+  .sec-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem 2rem;
+    padding-bottom: 1rem; margin-bottom: clamp(1.5rem, 3vw, 2.5rem); border-bottom: 1px solid var(--line);
+  }
+  h2 { font-weight: 500; font-size: clamp(1.7rem, 3.6vw, 2.8rem); letter-spacing: -.03em; line-height: 1; }
+  .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .filters button {
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase;
+    padding: .5em .9em; border: 1px solid var(--line); border-radius: 99px; color: var(--muted);
+    transition: background-color .2s, color .2s, border-color .2s;
+  }
+  .filters button:hover { border-color: var(--ink); color: var(--ink); }
+  .filters button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 2.4vw, 2rem); align-items: end; }
+  @media (min-width: 620px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 960px) {
+    .grid { grid-template-columns: repeat(12, 1fr); }
+    .grid > li { grid-column: span 4; }
+    .grid:not(.is-filtered) > .c5 { grid-column: span 5; }
+    .grid:not(.is-filtered) > .c7 { grid-column: span 7; }
+    .grid:not(.is-filtered) > .c8 { grid-column: span 8; }
+  }
+  .empty { display: none; }
+
+  /* ── About ── */
+  .about { display: grid; gap: clamp(2rem, 5vw, 5rem); }
+  @media (min-width: 900px) { .about { grid-template-columns: 7fr 5fr; } }
+  .lede { font-size: clamp(1.35rem, 2.5vw, 2.05rem); line-height: 1.22; letter-spacing: -.02em; max-width: 26ch * 2; text-wrap: pretty; }
+  .lede + p { margin-top: 1.4rem; max-width: 58ch; color: var(--muted); }
+  .facts div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .8rem 0; border-top: 1px solid var(--line); }
+  .facts div:last-child { border-bottom: 1px solid var(--line); }
+  .facts dt { font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding-top: .25em; }
+
+  .steps { display: grid; gap: 1.5rem clamp(1rem, 2.4vw, 2rem); margin-top: clamp(3rem, 6vw, 5rem); counter-reset: s; }
+  @media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .steps li { counter-increment: s; border-top: 1px solid var(--ink); padding-top: .8rem; }
+  .steps li::before { content: "0" counter(s); font-family: var(--mono); font-size: .75rem; color: var(--mark); }
+  .steps h3 { font-size: 1.15rem; font-weight: 500; letter-spacing: -.01em; margin: .5rem 0 .35rem; }
+  .steps p { color: var(--muted); max-width: 40ch; }
+
+  /* ── Contact ── */
+  .contact { padding-bottom: clamp(4rem, 9vw, 8rem); }
+  .mail {
+    display: inline-block; font-weight: 500; font-size: clamp(1.5rem, 6.2vw, 6rem);
+    letter-spacing: -.04em; line-height: 1; text-decoration: none; overflow-wrap: anywhere;
+    border-bottom: .06em solid var(--mark); padding-bottom: .08em;
+  }
+  .contact-row { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: baseline; margin-top: 1.8rem; }
+  .copy { border: 1px solid var(--ink); border-radius: 99px; padding: .55em 1.1em; transition: background-color .2s, color .2s; }
+  .copy:hover { background: var(--ink); color: var(--bg); }
+  .contact-row p { color: var(--muted); max-width: 46ch; }
+
+  footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 2rem; padding: 1rem var(--pad) 1.4rem; border-top: 1px solid var(--line); }
+
+  /* ── Viewer ── */
+  dialog {
+    width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    background: var(--bg); color: var(--ink);
+  }
+  dialog::backdrop { background: var(--bg); }
+  dialog[open] { display: grid; grid-template-rows: auto 1fr auto; animation: fade .25s; }
+  @keyframes fade { from { opacity: 0; } }
+  .lb-bar { display: flex; justify-content: space-between; align-items: baseline; padding: .9rem var(--pad); }
+  .lb-bar button, .lb-foot button { font-family: var(--mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; padding: .5em 0; }
+  .lb-bar button:hover, .lb-foot button:hover { color: var(--mark); }
+  .lb-stage { display: grid; place-items: center; min-height: 0; padding: 0 var(--pad); cursor: zoom-out; }
+  .lb-stage .frame { width: min(100%, calc((100dvh - 9.5rem) * var(--ratio))); cursor: default; }
+  .lb-foot { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: baseline; padding: .9rem var(--pad) 1.1rem; }
+  .lb-foot p { text-align: center; font-family: var(--mono); font-size: .75rem; letter-spacing: .03em; color: var(--muted); }
+  .lb-foot p span { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to photographs</a>
+
+<header class="top">
+  <a class="name" href="#top">Odile Brandt</a>
+  <nav aria-label="Sections">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <button class="lights" id="lights" type="button" aria-pressed="false">Lights off</button>
+  </nav>
+</header>
+
+<main id="top">
+
+  <div class="hero">
+    <h1>Buildings, <em>and the weather around them.</em></h1>
+    <div class="hero-meta mono">
+      <span>Freelance photographer — Porto, Portugal</span>
+      <span>Architecture · Landscape · Editorial</span>
+      <span><b>●</b> Booking commissions from January 2027</span>
+    </div>
+    <figure>
+      <button class="shot" type="button" style="--r:1200/520" aria-label="View photograph: Lifeguard station, Moledo">
+        <span class="frame">
+          <svg viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="h-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f97b8"/><stop offset=".75" stop-color="#c4d6de"/><stop offset="1" stop-color="#dfe3dc"/></linearGradient>
+              <linearGradient id="h-sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d3c6ae"/><stop offset="1" stop-color="#b3a388"/></linearGradient>
+              <filter id="h-blur"><feGaussianBlur stdDeviation="14"/></filter>
+            </defs>
+            <rect width="1200" height="520" fill="url(#h-sky)"/>
+            <g filter="url(#h-blur)" fill="#fff" opacity=".55"><ellipse cx="210" cy="150" rx="190" ry="22"/><ellipse cx="930" cy="96" rx="240" ry="18"/><ellipse cx="640" cy="230" rx="300" ry="14"/></g>
+            <rect y="388" width="1200" height="14" fill="#557b90"/>
+            <rect y="400" width="1200" height="120" fill="url(#h-sand)"/>
+            <polygon points="260,400 890,400 990,436 360,436" fill="#2a2620" opacity=".34"/>
+            <rect x="700" y="196" width="74" height="110" fill="#f1ece2"/><polygon points="774,196 796,208 796,306 774,306" fill="#9c968b"/>
+            <rect x="260" y="298" width="630" height="102" fill="#e9e3d8"/>
+            <rect x="238" y="286" width="676" height="14" fill="#f7f3eb"/>
+            <rect x="260" y="300" width="630" height="20" fill="#4d4a45" opacity=".55"/>
+            <rect x="300" y="334" width="384" height="36" fill="#22303a"/>
+            <g fill="#e9e3d8"><rect x="394" y="334" width="4" height="36"/><rect x="492" y="334" width="4" height="36"/><rect x="590" y="334" width="4" height="36"/></g>
+            <rect x="300" y="334" width="384" height="9" fill="#000" opacity=".3"/>
+            <rect x="806" y="346" width="28" height="54" fill="#d93a16"/>
+            <rect x="1004" y="386" width="5" height="18" fill="#1d1d1c"/><circle cx="1006.5" cy="382" r="3.2" fill="#1d1d1c"/>
+            <polygon points="1004,404 1009,404 1032,412 1026,412" fill="#2a2620" opacity=".4"/>
+          </svg>
+        </span>
+        <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.2,2.6 L98.6,1 L99,97.6 L1,99 L1.6,.6"/></svg>
+      </button>
+      <figcaption><span class="no">00</span><span class="ttl">Lifeguard station, Moledo</span><span class="meta">Minho coast, 2026</span></figcaption>
+    </figure>
+  </div>
+
+  <section id="work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <h2 id="work-h">Selected work</h2>
+      <div class="filters" role="group" aria-label="Filter photographs">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="buildings" aria-pressed="false">Buildings</button>
+        <button type="button" data-filter="coast" aria-pressed="false">Coast</button>
+        <button type="button" data-filter="interiors" aria-pressed="false">Interiors</button>
+      </div>
+    </div>
+
+    <ul class="grid" id="grid">
+
+      <li class="c5" data-cat="buildings"><figure>
+        <button class="shot" type="button" style="--r:4/5" aria-label="View photograph: Stair, Bloco C">
+          <span class="frame">
+            <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="a-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb0c8"/><stop offset="1" stop-color="#d3dfe3"/></linearGradient>
+                <linearGradient id="a-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2dcd0"/><stop offset="1" stop-color="#c9c2b4"/></linearGradient>
+                <pattern id="a-board" width="400" height="26" patternUnits="userSpaceOnUse"><rect width="400" height="1" fill="#000" opacity=".09"/></pattern>
+              </defs>
+              <rect width="400" height="500" fill="url(#a-sky)"/>
+              <polygon points="0,128 400,58 400,500 0,500" fill="url(#a-wall)"/>
+              <polygon points="0,128 400,58 400,500 0,500" fill="url(#a-board)"/>
+              <polygon points="96,500 344,268 344,356 196,500" fill="#6d685f" opacity=".7"/>
+              <polygon points="56,500 56,424 344,172 344,268 96,500" fill="#cfc8ba"/>
+              <polygon points="56,424 344,172 344,184 56,436" fill="#f3efe6"/>
+              <line x1="56" y1="398" x2="344" y2="146" stroke="#3a3936" stroke-width="2.5"/>
+              <g stroke="#3a3936" stroke-width="1.5"><line x1="104" y1="356" x2="104" y2="382"/><line x1="176" y1="293" x2="176" y2="319"/><line x1="248" y1="230" x2="248" y2="256"/><line x1="320" y1="167" x2="320" y2="193"/></g>
+              <rect x="300" y="398" width="44" height="102" fill="#24282b"/>
+              <rect x="226" y="474" width="5" height="19" fill="#191919"/><circle cx="228.5" cy="470" r="3.3" fill="#191919"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.6,2 L98.4,1.2 L99,98 L1,98.8 L2,.6"/></svg>
+        </button>
+        <figcaption><span class="no">01</span><span class="ttl">Stair, Bloco C</span><span class="meta">Porto, 2025</span></figcaption>
+      </figure></li>
+
+      <li class="c7" data-cat="coast"><figure>
+        <button class="shot" type="button" style="--r:3/2" aria-label="View photograph: Salt works, first light">
+          <span class="frame">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="b-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9c3cf"/><stop offset=".7" stop-color="#ecd9cf"/><stop offset="1" stop-color="#f4d3bd"/></linearGradient>
+                <linearGradient id="b-pan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9cdbd"/><stop offset=".5" stop-color="#b3b6c0"/><stop offset="1" stop-color="#75889a"/></linearGradient>
+              </defs>
+              <rect width="600" height="400" fill="url(#b-sky)"/>
+              <rect y="232" width="600" height="168" fill="url(#b-pan)"/>
+              <rect y="230" width="600" height="3" fill="#6f6a70" opacity=".6"/>
+              <g stroke="#4c4a52" stroke-width="1.6" opacity=".55"><line x1="300" y1="232" x2="-120" y2="400"/><line x1="300" y1="232" x2="170" y2="400"/><line x1="300" y1="232" x2="460" y2="400"/><line x1="300" y1="232" x2="760" y2="400"/><line x1="0" y1="288" x2="600" y2="288"/><line x1="0" y1="338" x2="600" y2="338" stroke-width="2.4"/></g>
+              <g opacity=".3" fill="#fff"><polygon points="92,234 128,270 164,234"/><polygon points="212,234 262,286 312,234"/><polygon points="362,234 396,266 430,234"/><polygon points="470,234 492,254 514,234"/></g>
+              <g fill="#fbf8f3"><polygon points="92,232 128,196 164,232"/><polygon points="212,232 262,180 312,232"/><polygon points="362,232 396,200 430,232"/><polygon points="470,232 492,212 514,232"/></g>
+              <g fill="#a9a7b3"><polygon points="128,196 164,232 140,232"/><polygon points="262,180 312,232 280,232"/><polygon points="396,200 430,232 408,232"/><polygon points="492,212 514,232 500,232"/></g>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1,2.4 L98.8,1.4 L98.6,98.4 L1.4,98 L1.4,.8"/></svg>
+        </button>
+        <figcaption><span class="no">02</span><span class="ttl">Salt works, first light</span><span class="meta">Aveiro, 2024</span></figcaption>
+      </figure></li>
+
+      <li data-cat="interiors"><figure>
+        <button class="shot" type="button" style="--r:1/1" aria-label="View photograph: Municipal pool, closed Mondays">
+          <span class="frame">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="c-water" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7ccac3"/><stop offset="1" stop-color="#2a8791"/></linearGradient>
+                <pattern id="c-tile" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="28" height="28" fill="#e7e0d3"/><path d="M0,0H28M0,0V28" stroke="#bfb7a8" stroke-width="1.2"/></pattern>
+              </defs>
+              <rect width="500" height="500" fill="url(#c-tile)"/>
+              <polygon points="0,150 500,40 500,500 0,500" fill="#b8b0a2" opacity=".28"/>
+              <rect x="70" y="120" width="430" height="380" fill="#f5f1e8"/>
+              <rect x="88" y="138" width="412" height="362" fill="url(#c-water)"/>
+              <g stroke="#1d5e6b" stroke-width="5" opacity=".45"><line x1="212" y1="138" x2="212" y2="500"/><line x1="336" y1="138" x2="336" y2="500"/><line x1="460" y1="138" x2="460" y2="500"/></g>
+              <polygon points="88,138 300,138 88,330" fill="#fff" opacity=".2"/>
+              <polygon points="250,60 310,60 310,250 250,250" fill="#12333a" opacity=".42" transform="skewX(-18) translate(104,26)"/>
+              <rect x="250" y="40" width="60" height="170" fill="#f8f5ee"/><rect x="250" y="40" width="60" height="6" fill="#bdb6a8"/>
+              <g fill="none" stroke="#c9ced0" stroke-width="5" stroke-linecap="round"><path d="M112,168 V118 a12,12 0 0 1 24,0"/><path d="M150,168 V118 a12,12 0 0 1 24,0"/></g>
+              <circle cx="46" cy="404" r="21" fill="none" stroke="#d93a16" stroke-width="12"/>
+              <circle cx="52" cy="411" r="21" fill="none" stroke="#000" stroke-width="12" opacity=".12"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M2,1.6 L98.6,2 L98.2,98.6 L1.2,98 L2.2,.8"/></svg>
+        </button>
+        <figcaption><span class="no">03</span><span class="ttl">Municipal pool, closed Mondays</span><span class="meta">Braga, 2025</span></figcaption>
+      </figure></li>
+
+      <li class="c8" data-cat="buildings"><figure>
+        <button class="shot" type="button" style="--r:3/2" aria-label="View photograph: Car park, level four">
+          <span class="frame">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="d-slab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dcd7cc"/><stop offset="1" stop-color="#bdb7ab"/></linearGradient>
+                <linearGradient id="d-void" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1113"/><stop offset="1" stop-color="#2b3034"/></linearGradient>
+              </defs>
+              <rect width="600" height="400" fill="url(#d-void)"/>
+              <rect width="600" height="34" fill="#a9bfcc"/>
+              <g fill="url(#d-slab)"><rect y="34" width="600" height="40"/><rect y="124" width="600" height="40"/><rect y="214" width="600" height="40"/><rect y="304" width="600" height="40"/><rect y="390" width="600" height="10"/></g>
+              <g fill="#000" opacity=".22"><rect y="68" width="600" height="6"/><rect y="158" width="600" height="6"/><rect y="248" width="600" height="6"/><rect y="338" width="600" height="6"/></g>
+              <g fill="#8f8a80"><rect x="60" y="74" width="16" height="50"/><rect x="230" y="74" width="16" height="50"/><rect x="400" y="74" width="16" height="50"/><rect x="570" y="74" width="16" height="50"/><rect x="60" y="164" width="16" height="50"/><rect x="230" y="164" width="16" height="50"/><rect x="400" y="164" width="16" height="50"/><rect x="570" y="164" width="16" height="50"/><rect x="60" y="254" width="16" height="50"/><rect x="230" y="254" width="16" height="50"/><rect x="400" y="254" width="16" height="50"/><rect x="570" y="254" width="16" height="50"/><rect x="60" y="344" width="16" height="46"/><rect x="230" y="344" width="16" height="46"/><rect x="400" y="344" width="16" height="46"/><rect x="570" y="344" width="16" height="46"/></g>
+              <path d="M286,214 v-14 q0,-5 6,-6 l12,-2 q8,-12 18,-12 h22 q10,0 16,12 l8,2 q6,1 6,6 v14 z" fill="#c9341a"/>
+              <path d="M310,192 q6,-8 12,-8 h20 q7,0 11,8 z" fill="#1a1d20" opacity=".75"/>
+              <g fill="#111"><circle cx="306" cy="214" r="5"/><circle cx="362" cy="214" r="5"/></g>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.2,1.8 L98.8,2.4 L99,97.8 L1.6,98.6 L1.4,.6"/></svg>
+        </button>
+        <figcaption><span class="no">04</span><span class="ttl">Car park, level four</span><span class="meta">Matosinhos, 2023</span></figcaption>
+      </figure></li>
+
+      <li class="c7" data-cat="coast"><figure>
+        <button class="shot" type="button" style="--r:3/2" aria-label="View photograph: Breakwater, ninety seconds">
+          <span class="frame">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="e-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfd6d9"/><stop offset="1" stop-color="#e6e7e3"/></linearGradient>
+                <linearGradient id="e-sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d5dadb"/><stop offset="1" stop-color="#788b96"/></linearGradient>
+                <filter id="e-blur" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+              </defs>
+              <rect width="600" height="400" fill="url(#e-sky)"/>
+              <rect y="212" width="600" height="188" fill="url(#e-sea)"/>
+              <rect x="-20" y="200" width="640" height="26" fill="#e3e6e4" filter="url(#e-blur)"/>
+              <g filter="url(#e-blur)" fill="#fff" opacity=".35"><ellipse cx="420" cy="300" rx="240" ry="10"/><ellipse cx="140" cy="352" rx="200" ry="8"/></g>
+              <polygon points="-10,400 190,400 338,217 331,217" fill="#23282c"/>
+              <polygon points="96,400 190,400 338,217 335,217" fill="#3c4347"/>
+              <g fill="#1a1e21"><rect x="62" y="318" width="9" height="46"/><rect x="143" y="286" width="7" height="34"/><rect x="204" y="262" width="5" height="26"/><rect x="250" y="244" width="4" height="20"/><rect x="284" y="231" width="3" height="15"/><rect x="308" y="223" width="2" height="10"/></g>
+              <rect x="333" y="196" width="4" height="21" fill="#1a1e21"/>
+              <circle cx="335" cy="194" r="3.4" fill="#ff5c33"/><circle cx="335" cy="194" r="12" fill="#ff5c33" opacity=".22" filter="url(#e-blur)"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.4,2.2 L98.4,1.2 L99,98.2 L1,98.4 L1.8,.8"/></svg>
+        </button>
+        <figcaption><span class="no">05</span><span class="ttl">Breakwater, ninety seconds</span><span class="meta">Leça da Palmeira, 2026</span></figcaption>
+      </figure></li>
+
+      <li class="c5" data-cat="buildings"><figure>
+        <button class="shot" type="button" style="--r:4/5" aria-label="View photograph: Grain silos, noon">
+          <span class="frame">
+            <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="f-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#234f80"/><stop offset="1" stop-color="#86acc8"/></linearGradient>
+                <linearGradient id="f-cyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9d4c9"/><stop offset=".22" stop-color="#f6f3ec"/><stop offset=".62" stop-color="#b5afa3"/><stop offset="1" stop-color="#5f5b55"/></linearGradient>
+              </defs>
+              <rect width="400" height="500" fill="url(#f-sky)"/>
+              <rect x="34" y="150" width="112" height="320" fill="url(#f-cyl)"/><ellipse cx="90" cy="150" rx="56" ry="9" fill="#efebe2"/>
+              <rect x="254" y="176" width="112" height="294" fill="url(#f-cyl)"/><ellipse cx="310" cy="176" rx="56" ry="9" fill="#efebe2"/>
+              <rect x="134" y="92" width="132" height="378" fill="url(#f-cyl)"/><ellipse cx="200" cy="92" rx="66" ry="10" fill="#f4f0e8"/>
+              <polygon points="134,300 146,300 146,470 134,470" fill="#000" opacity=".16"/>
+              <g stroke="#2c2c2a" stroke-width="1.4" fill="none"><path d="M176,96 V470 M186,96 V470"/><path d="M176,120h10M176,144h10M176,168h10M176,192h10M176,216h10M176,240h10M176,264h10M176,288h10M176,312h10M176,336h10M176,360h10M176,384h10M176,408h10M176,432h10M176,456h10"/></g>
+              <rect y="468" width="400" height="32" fill="#8d8478"/>
+              <polygon points="34,468 366,468 400,484 400,500 110,500" fill="#000" opacity=".28"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.8,1.4 L98.6,2.2 L98.4,98.8 L1.2,98.2 L2,.6"/></svg>
+        </button>
+        <figcaption><span class="no">06</span><span class="ttl">Grain silos, noon</span><span class="meta">Beja, 2024</span></figcaption>
+      </figure></li>
+
+      <li data-cat="interiors"><figure>
+        <button class="shot" type="button" style="--r:4/5" aria-label="View photograph: Reading room, 16:40">
+          <span class="frame">
+            <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="g-wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5a45"/><stop offset="1" stop-color="#4a362b"/></linearGradient>
+                <linearGradient id="g-light" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd9a0"/><stop offset="1" stop-color="#eeb271"/></linearGradient>
+              </defs>
+              <rect width="400" height="500" fill="url(#g-wall)"/>
+              <polygon points="96,70 286,128 286,356 96,298" fill="url(#g-light)"/>
+              <g stroke="#5d4435" stroke-width="7"><line x1="191" y1="99" x2="191" y2="327"/><line x1="96" y1="184" x2="286" y2="242"/></g>
+              <rect y="400" width="400" height="100" fill="#2c211b"/>
+              <rect y="392" width="400" height="9" fill="#3b2c23"/>
+              <polygon points="150,400 330,400 400,440 400,500 250,500" fill="#eeb271" opacity=".16"/>
+              <g fill="none" stroke="#16110e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M236,300 V376 H300 M236,376 V452 M300,376 V452 M226,300 q4,-10 14,-10"/></g>
+              <rect x="232" y="370" width="72" height="9" rx="2" fill="#16110e"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.2,2 L98.8,1.6 L98.8,98 L1.6,98.8 L1.6,.6"/></svg>
+        </button>
+        <figcaption><span class="no">07</span><span class="ttl">Reading room, 16:40</span><span class="meta">Casa Norte, 2025</span></figcaption>
+      </figure></li>
+
+      <li data-cat="buildings"><figure>
+        <button class="shot" type="button" style="--r:1/1" aria-label="View photograph: Façade study, one blind">
+          <span class="frame">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <pattern id="i-win" x="30" y="24" width="94" height="100" patternUnits="userSpaceOnUse"><rect x="12" y="14" width="58" height="68" fill="#232a2f"/><rect x="12" y="14" width="58" height="10" fill="#000" opacity=".45"/><rect x="8" y="82" width="66" height="5" fill="#efe7da"/></pattern>
+              </defs>
+              <rect width="500" height="500" fill="#d2c3b0"/>
+              <rect width="500" height="500" fill="url(#i-win)"/>
+              <rect x="230" y="238" width="58" height="68" fill="#e1481f"/><rect x="230" y="238" width="58" height="8" fill="#000" opacity=".3"/>
+              <rect x="324" y="138" width="58" height="40" fill="#efe9dd"/>
+              <rect x="136" y="338" width="28" height="68" fill="#efe9dd" opacity=".85"/>
+              <polygon points="0,0 210,0 0,330" fill="#3a2f2a" opacity=".36"/>
+              <polygon points="500,500 500,410 380,500" fill="#3a2f2a" opacity=".3"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.6,1.6 L98.4,2 L99,98.4 L1.2,98.2 L2,.8"/></svg>
+        </button>
+        <figcaption><span class="no">08</span><span class="ttl">Façade study, one blind</span><span class="meta">Lisbon, 2023</span></figcaption>
+      </figure></li>
+
+      <li data-cat="coast"><figure>
+        <button class="shot" type="button" style="--r:3/2" aria-label="View photograph: Dune road, wind from the west">
+          <span class="frame">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="j-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b4c7d2"/><stop offset="1" stop-color="#efe7d8"/></linearGradient>
+                <linearGradient id="j-sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4d1af"/><stop offset="1" stop-color="#c1a67d"/></linearGradient>
+              </defs>
+              <rect width="600" height="400" fill="url(#j-sky)"/>
+              <path d="M0,236 Q120,180 250,222 T600,196 V400 H0 Z" fill="#cdb893"/>
+              <path d="M0,268 Q160,214 330,262 T600,244 V400 H0 Z" fill="url(#j-sand)"/>
+              <path d="M330,262 Q470,300 600,244 V400 H250 Z" fill="#8e7656" opacity=".4"/>
+              <path d="M210,400 Q330,330 392,258 L398,259 Q372,336 330,400 Z" fill="#33312e"/>
+              <path d="M268,400 Q352,332 395,259" stroke="#e9e1d0" stroke-width="1.6" stroke-dasharray="14 12" fill="none"/>
+              <g stroke="#24211e" stroke-linecap="round"><line x1="470" y1="160" x2="470" y2="330" stroke-width="4"/><line x1="456" y1="176" x2="484" y2="176" stroke-width="3"/><line x1="436" y1="196" x2="436" y2="284" stroke-width="2.6"/><line x1="427" y1="204" x2="445" y2="204" stroke-width="2"/><line x1="416" y1="216" x2="416" y2="266" stroke-width="1.8"/><line x1="404" y1="228" x2="404" y2="258" stroke-width="1.2"/></g>
+              <path d="M600,150 Q530,186 470,176 Q452,200 436,204 Q424,214 416,220 Q408,228 404,232" stroke="#24211e" stroke-width=".9" fill="none"/>
+            </svg>
+          </span>
+          <svg class="mark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1.4,1.8 L98.6,1.4 L98.8,98.6 L1.4,98.2 L1.6,.6"/></svg>
+        </button>
+        <figcaption><span class="no">09</span><span class="ttl">Dune road, wind from the west</span><span class="meta">Comporta, 2024</span></figcaption>
+      </figure></li>
+
+    </ul>
+  </section>
+
+  <section id="about" aria-labelledby="about-h">
+    <div class="sec-head"><h2 id="about-h">About</h2><span class="mono">Freelance since 2017</span></div>
+    <div class="about">
+      <div>
+        <p class="lede">I photograph buildings for the people who design them and the magazines that write about them. Most of the work happens in the hour when a façade stops being a drawing and starts being weather.</p>
+        <p>Low sun, sea fog, the shadow of the block next door. I plan a shoot around those the way an architect plans around a site, then wait. I'm based in Porto and work anywhere a train or a short flight will take a tripod.</p>
+      </div>
+      <dl class="facts">
+        <div><dt>Based</dt><dd>Porto, Portugal. Travelling across Iberia and northern Europe.</dd></div>
+        <div><dt>Commissions</dt><dd>Architecture and interiors, hotel and hospitality, editorial features.</dd></div>
+        <div><dt>Cameras</dt><dd>Digital medium format with tilt-shift lenses. 4×5 film when the schedule allows.</dd></div>
+        <div><dt>Clients</dt><dd>Atelier Formiga, Kvarn Arkitekter, Hotel Miradouro, Casa Norte, <i>Plinth</i> magazine.</dd></div>
+        <div><dt>Prints</dt><dd>Editions of 12, pigment on cotton rag, signed. Ask for the list.</dd></div>
+      </dl>
+    </div>
+
+    <ol class="steps" aria-label="How a commission works">
+      <li><h3>Walk-through</h3><p>We go round the building together, or over drawings on a call. You tell me what matters; I work out where the sun will be.</p></li>
+      <li><h3>Two lights</h3><p>I shoot each project across a morning and an evening, so every elevation gets its best hour. Weather days are built into the quote.</p></li>
+      <li><h3>Delivery</h3><p>An edited set of 25–40 images within ten working days, licensed for your own press, web and awards submissions.</p></li>
+    </ol>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="sec-head"><h2 id="contact-h">Contact</h2><span class="mono">Replies within two working days</span></div>
+    <a class="mail" id="mail" href="mailto:studio@odilebrandt.example">studio@odilebrandt.example</a>
+    <div class="contact-row">
+      <button class="copy" id="copy" type="button">Copy address</button>
+      <p>Send the location, rough dates and what the pictures are for. A site plan or a few phone snaps help more than a long brief.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="mono">
+  <span>© 2026 Odile Brandt. All photographs reserved.</span>
+  <span>41.15° N, 8.61° W</span>
+</footer>
+
+<dialog id="viewer" aria-label="Photograph viewer">
+  <div class="lb-bar">
+    <span class="mono" id="lb-count"></span>
+    <button type="button" id="lb-close">Close ✕</button>
+  </div>
+  <div class="lb-stage" id="lb-stage"></div>
+  <div class="lb-foot">
+    <button type="button" id="lb-prev" aria-label="Previous photograph">← Prev</button>
+    <p id="lb-cap" aria-live="polite"></p>
+    <button type="button" id="lb-next" aria-label="Next photograph">Next →</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const root = document.documentElement;
+
+  /* Lights: follows the system setting until the visitor chooses. */
+  const lights = document.getElementById('lights');
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : systemDark.matches;
+  const syncLights = () => {
+    lights.setAttribute('aria-pressed', isDark());
+    lights.textContent = isDark() ? 'Lights on' : 'Lights off';
+  };
+  lights.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; syncLights(); });
+  systemDark.addEventListener('change', syncLights);
+  syncLights();
+
+  /* Filters */
+  const grid = document.getElementById('grid');
+  const filterButtons = [...document.querySelectorAll('[data-filter]')];
+  filterButtons.forEach(btn => btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    filterButtons.forEach(b => b.setAttribute('aria-pressed', b === btn));
+    [...grid.children].forEach(li => { li.hidden = f !== 'all' && li.dataset.cat !== f; });
+    grid.classList.toggle('is-filtered', f !== 'all');
+  }));
+
+  /* Viewer */
+  const viewer = document.getElementById('viewer');
+  const stage = document.getElementById('lb-stage');
+  const cap = document.getElementById('lb-cap');
+  const count = document.getElementById('lb-count');
+  let set = [], at = 0;
+
+  const show = i => {
+    at = (i + set.length) % set.length;
+    const shot = set[at];
+    const src = shot.querySelector('.frame > svg');
+    const vb = src.viewBox.baseVal;
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.style.setProperty('--r', `${vb.width}/${vb.height}`);
+    frame.style.setProperty('--ratio', vb.width / vb.height);
+    frame.append(src.cloneNode(true));
+    stage.replaceChildren(frame);
+    const fig = shot.closest('figure');
+    cap.innerHTML = '';
+    const t = document.createElement('span');
+    t.textContent = fig.querySelector('.ttl').textContent;
+    cap.append(t, ' — ' + fig.querySelector('.meta').textContent);
+    count.textContent = `${String(at + 1).padStart(2, '0')} / ${String(set.length).padStart(2, '0')}`;
+  };
+
+  document.querySelectorAll('.shot').forEach(shot => shot.addEventListener('click', () => {
+    set = [...document.querySelectorAll('.shot')].filter(s => !s.closest('[hidden]'));
+    show(set.indexOf(shot));
+    viewer.showModal();
+  }));
+  document.getElementById('lb-close').addEventListener('click', () => viewer.close());
+  document.getElementById('lb-prev').addEventListener('click', () => show(at - 1));
+  document.getElementById('lb-next').addEventListener('click', () => show(at + 1));
+  stage.addEventListener('click', e => { if (e.target === stage) viewer.close(); });
+  viewer.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') show(at - 1);
+    if (e.key === 'ArrowRight') show(at + 1);
+  });
+
+  /* Copy address */
+  const copy = document.getElementById('copy');
+  copy.addEventListener('click', async () => {
+    const address = document.getElementById('mail').textContent;
+    try { await navigator.clipboard.writeText(address); copy.textContent = 'Copied'; }
+    catch { copy.textContent = 'Select the address above'; }
+    setTimeout(() => { copy.textContent = 'Copy address'; }, 2200);
+  });
+})();
+</script>
+</body>
+</html>

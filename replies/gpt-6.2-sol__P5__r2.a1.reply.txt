@@ -1,0 +1,300 @@
+Save this as `index.html`. It includes the styles, icons, and interactive project preview in one file, with no external dependencies.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f6ef">
+<title>Fieldwork — Project management for small teams</title>
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f8f6ef;
+    --white: #fffefa;
+    --ink: #252822;
+    --muted: #5d6257;
+    --line: #deded3;
+    --accent: #f4ae88;
+    --green: #e4ebdb;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid #855033; outline-offset: 4px; }
+  .wrap { width: min(1120px, calc(100% - 64px)); margin-inline: auto; }
+  .site-header { border-bottom: 1px solid var(--line); }
+  .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .brand { display: inline-flex; gap: 10px; align-items: center; text-decoration: none; font-weight: 750; letter-spacing: -.04em; font-size: 23px; }
+  .mark { width: 29px; height: 29px; flex: none; }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; }
+  .nav-links > a:not(.button) { text-decoration: none; }
+  .nav-links > a:not(.button):hover { text-decoration: underline; text-underline-offset: 4px; }
+  .button { display: inline-flex; align-items: center; justify-content: center; gap: 16px; padding: 12px 18px; border: 1px solid var(--ink); border-radius: 6px; background: var(--accent); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .button:hover { background: #ffc6a6; }
+  .button.quiet { background: transparent; padding: 8px 13px; }
+  .button.quiet:hover { background: var(--green); }
+  .hero { padding-block: clamp(66px, 9vw, 122px) 56px; }
+  .hero-grid { display: grid; grid-template-columns: 1.6fr 1fr; align-items: end; gap: 40px; }
+  .overline { margin: 0 0 19px; color: var(--muted); font-size: 12px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+  h1, h2 { font-family: var(--serif); font-weight: 400; line-height: .99; letter-spacing: -.055em; }
+  h1 { margin: 0; font-size: clamp(58px, 8.4vw, 124px); }
+  h1 em { font-weight: 400; color: #3a4c32; }
+  .hero-copy { max-width: 345px; padding-bottom: 7px; }
+  .hero-copy p { margin: 0 0 23px; color: var(--muted); font-size: 17px; }
+
+  .preview { scroll-margin-top: 24px; }
+  .app { border: 1px solid #b9bdb0; border-radius: 12px; overflow: hidden; background: var(--white); box-shadow: 0 18px 36px -27px #333d3280; }
+  .app-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; background: #ecede4; border-bottom: 1px solid var(--line); font-size: 12px; }
+  .app-top strong { display: flex; align-items: center; gap: 8px; }
+  .workspace-mark { display: grid; place-items: center; width: 24px; height: 24px; background: #40523b; color: white; border-radius: 5px; font-family: var(--serif); }
+  .demo-label { color: var(--muted); }
+  .app-body { display: grid; grid-template-columns: 174px minmax(0, 1fr); }
+  .sidebar { background: #f6f6ef; border-right: 1px solid var(--line); padding: 24px 12px; }
+  .sidebar-label { margin: 0 8px 8px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .project { width: 100%; border: 1px solid transparent; background: transparent; border-radius: 5px; padding: 7px; text-align: left; font-size: 12px; }
+  .project:hover { background: #eef0e7; }
+  .project[aria-pressed="true"] { background: var(--green); border-color: #d5dfce; font-weight: 700; }
+  .project::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 2px; margin-right: 8px; background: #a76144; }
+  .project + .project::before { background: #657857; }
+  .app-main { min-width: 0; padding: 25px 24px 27px; }
+  .project-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .project-header h2 { font: 750 clamp(21px, 3vw, 29px)/1.15 var(--sans); letter-spacing: -.045em; margin: 0; }
+  .view-controls { display: inline-flex; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: 2px; }
+  .view-controls button { border: 0; border-radius: 4px; background: transparent; padding: 4px 10px; font-size: 12px; }
+  .view-controls button[aria-pressed="true"] { background: #e9ece1; font-weight: 700; }
+  .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .column { min-width: 0; min-height: 206px; background: #f3f3ec; border-radius: 7px; padding: 10px; }
+  .column h3 { display: flex; align-items: center; gap: 7px; margin: 0 0 10px; font-size: 12px; }
+  .column h3 span { color: var(--muted); font-weight: 400; margin-left: auto; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #8c8e80; flex: none; }
+  .dot[data-stage="1"] { background: #ac613d; }
+  .dot[data-stage="2"] { background: #58734c; }
+  .task { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 9px; }
+  .task + .task { margin-top: 7px; }
+  .task h4 { margin: 0 0 8px; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+  .task-meta { display: flex; justify-content: space-between; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+  .tag { background: #efe9da; border-radius: 3px; padding: 2px 5px; }
+  .avatar { display: inline-grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #e1e8da; color: #35432c; font-size: 9px; font-weight: 750; flex: none; }
+  .task-list { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+  .task-list th, .task-list td { padding: 7px 5px; border-bottom: 1px solid var(--line); }
+  .task-list th { color: var(--muted); }
+  .task-list .dot { margin-right: 6px; }
+  figcaption { margin: 11px 0 0; color: var(--muted); font-size: 13px; }
+  figure { margin: 0; }
+
+  .features { padding-block: 83px 78px; scroll-margin-top: 15px; }
+  .features h2 { margin: 0 0 30px; font-size: clamp(38px, 5vw, 64px); }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .feature-grid article { padding: 20px 24px 0 0; }
+  .feature-grid article + article { border-left: 1px solid var(--line); padding-left: 24px; }
+  .feature-grid h3 { margin: 0 0 6px; font-size: 16px; }
+  .feature-grid p { margin: 0; color: var(--muted); font-size: 14px; max-width: 30ch; }
+  footer { border-top: 1px solid var(--line); }
+  .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 21px; }
+  .footer-inner .brand { font-size: 18px; }
+  .footer-inner > a:last-child { font-size: 13px; text-underline-offset: 4px; }
+
+  @media (max-width: 760px) {
+    .wrap { width: calc(100% - 36px); }
+    .hero-grid { grid-template-columns: 1fr; gap: 23px; }
+    .hero { padding-bottom: 34px; }
+    .hero-copy { padding: 0; }
+    .app-body { grid-template-columns: 1fr; }
+    .sidebar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; border-right: 0; border-bottom: 1px solid var(--line); padding: 8px; }
+    .sidebar-label { margin: 0 4px; }
+    .project { width: auto; }
+    .app-main { padding: 15px 10px; }
+    .features { padding-block: 58px; }
+  }
+
+  @media (max-width: 460px) {
+    .nav { min-height: 64px; }
+    .nav-links { gap: 10px; }
+    .nav-links > a:not(.button) { display: none; }
+    .brand { font-size: 20px; }
+    .board { grid-template-columns: 1fr; }
+    .column { min-height: 0; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .feature-grid article, .feature-grid article + article { padding: 15px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body id="top">
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main navigation">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#40523b"/>
+        <path d="M8 23c3-7 6-11 10-14M14 23c2-5 5-8 10-11M20 23c1-2 3-4 5-5" fill="none" stroke="#f8f6ef" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      Fieldwork
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a class="button quiet" href="#preview">Live demo <span aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="headline">
+    <p class="overline">Project management for small teams</p>
+    <div class="hero-grid">
+      <h1 id="headline">Good work.<br><em>Less chasing.</em></h1>
+      <div class="hero-copy">
+        <p>Keep tasks, owners, and deadlines in one place so everyone knows what’s moving and what needs a hand.</p>
+        <a class="button" href="#preview">Explore the demo <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </section>
+
+  <figure class="preview" id="preview" aria-labelledby="preview-caption">
+    <div class="app">
+      <div class="app-top">
+        <strong><span class="workspace-mark" aria-hidden="true">J</span> Juniper Studio</strong>
+        <span class="demo-label">Demo workspace</span>
+      </div>
+      <div class="app-body">
+        <aside class="sidebar" aria-label="Projects">
+          <p class="sidebar-label">Projects</p>
+          <button class="project" type="button" data-project="0" aria-pressed="true" aria-controls="task-view">Website refresh</button>
+          <button class="project" type="button" data-project="1" aria-pressed="false" aria-controls="task-view">Spring catalog</button>
+        </aside>
+        <div class="app-main">
+          <div class="project-header">
+            <h2 id="project-name" aria-live="polite">Website refresh</h2>
+            <div class="view-controls" role="group" aria-label="Task view">
+              <button type="button" data-view="board" aria-pressed="true" aria-controls="task-view">Board</button>
+              <button type="button" data-view="list" aria-pressed="false" aria-controls="task-view">List</button>
+            </div>
+          </div>
+          <div id="task-view" aria-labelledby="project-name" role="region"></div>
+          <noscript>Enable JavaScript to explore the demo workspace.</noscript>
+        </div>
+      </div>
+    </div>
+    <figcaption id="preview-caption">Try switching projects or viewing the same tasks as a list.</figcaption>
+  </figure>
+
+  <section class="features" id="features" aria-labelledby="features-title">
+    <h2 id="features-title">A place for the moving parts.</h2>
+    <div class="feature-grid">
+      <article>
+        <h3>See where work stands</h3>
+        <p>Scan the board to see what’s queued, what’s in progress, and what’s wrapped up.</p>
+      </article>
+      <article>
+        <h3>Know who’s on it</h3>
+        <p>Give each task an owner so teammates know who to ask when a detail changes.</p>
+      </article>
+      <article>
+        <h3>Keep deadlines in view</h3>
+        <p>Switch to the list for a quick look at what’s due across the project.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <a class="brand" href="#top">Fieldwork</a>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+  const projects = [
+    {
+      name: "Website refresh",
+      tasks: [
+        { title: "Audit the mobile navigation", stage: 0, tag: "Design", owner: "Maya Chen", initials: "MC", day: 12 },
+        { title: "Write the About page", stage: 0, tag: "Copy", owner: "Ellis Reed", initials: "ER", day: 15 },
+        { title: "Build the homepage", stage: 1, tag: "Development", owner: "Sam Patel", initials: "SP", day: 13 },
+        { title: "Select launch photography", stage: 1, tag: "Design", owner: "Maya Chen", initials: "MC", day: 14 },
+        { title: "Approve the page outline", stage: 2, tag: "Planning", owner: "Ellis Reed", initials: "ER", day: 9 }
+      ]
+    },
+    {
+      name: "Spring catalog",
+      tasks: [
+        { title: "Proof the print layout", stage: 0, tag: "Design", owner: "Maya Chen", initials: "MC", day: 19 },
+        { title: "Draft product descriptions", stage: 1, tag: "Copy", owner: "Ellis Reed", initials: "ER", day: 15 },
+        { title: "Confirm the shot list", stage: 2, tag: "Planning", owner: "Sam Patel", initials: "SP", day: 10 }
+      ]
+    }
+  ];
+
+  const stages = ["To do", "In progress", "Done"];
+  const projectButtons = [...document.querySelectorAll("[data-project]")];
+  const viewButtons = [...document.querySelectorAll("[data-view]")];
+  const projectName = document.querySelector("#project-name");
+  const taskView = document.querySelector("#task-view");
+  let selectedProject = 0;
+  let selectedView = "board";
+
+  function dot(stage) {
+    return `<i class="dot" data-stage="${stage}" aria-hidden="true"></i>`;
+  }
+
+  function dueDate(day) {
+    return `<time datetime="2027-05-${String(day).padStart(2, "0")}">May ${day}</time>`;
+  }
+
+  function renderBoard(tasks) {
+    return `<div class="board">${stages.map((stage, index) => {
+      const cards = tasks.filter(task => task.stage === index);
+      return `<section class="column">
+        <h3>${dot(index)}${stage}<span>${cards.length}</span></h3>
+        ${cards.map(task => `<article class="task">
+          <h4>${task.title}</h4>
+          <div class="task-meta">
+            <span class="tag">${task.tag}</span>
+            <span class="avatar" title="${task.owner}" aria-label="${task.owner}" role="img">${task.initials}</span>
+          </div>
+        </article>`).join("")}
+      </section>`;
+    }).join("")}</div>`;
+  }
+
+  function renderList(tasks) {
+    const byDeadline = [...tasks].sort((first, second) => first.day - second.day);
+    return `<table class="task-list">
+      <thead><tr><th scope="col">Task</th><th scope="col">Status</th><th scope="col">Owner</th><th scope="col">Due</th></tr></thead>
+      <tbody>${byDeadline.map(task => `<tr>
+        <th scope="row">${task.title}</th>
+        <td>${dot(task.stage)}${stages[task.stage]}</td>
+        <td>${task.owner}</td>
+        <td>${dueDate(task.day)}</td>
+      </tr>`).join("")}</tbody>
+    </table>`;
+  }
+
+  function render() {
+    const project = projects[selectedProject];
+    if (projectName.textContent !== project.name) projectName.textContent = project.name;
+    taskView.innerHTML = selectedView === "board" ? renderBoard(project.tasks) : renderList(project.tasks);
+    projectButtons.forEach(button => button.setAttribute("aria-pressed", Number(button.dataset.project) === selectedProject));
+    viewButtons.forEach(button => button.setAttribute("aria-pressed", button.dataset.view === selectedView));
+  }
+
+  projectButtons.forEach(button => button.addEventListener("click", () => {
+    selectedProject = Number(button.dataset.project);
+    render();
+  }));
+
+  viewButtons.forEach(button => button.addEventListener("click", () => {
+    selectedView = button.dataset.view;
+    render();
+  }));
+
+  render();
+</script>
+</body>
+</html>
+```

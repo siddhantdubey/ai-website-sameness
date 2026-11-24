@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Harbor & Vale LLP — trusted counsel for individuals and businesses. Business law, real estate, estate planning, and litigation.">
+<title>Harbor &amp; Vale LLP | Trusted Legal Counsel</title>
+<style>
+  :root {
+    --navy: #1b2a41;
+    --navy-dark: #111c2d;
+    --gold: #b8914a;
+    --gold-light: #d9b872;
+    --ivory: #faf8f4;
+    --stone: #efebe3;
+    --text: #2b2f36;
+    --muted: #5d6470;
+    --white: #ffffff;
+    --radius: 6px;
+    --shadow: 0 10px 30px rgba(17, 28, 45, 0.08);
+    --serif: Georgia, "Times New Roman", Times, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--ivory);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: var(--navy); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--navy); color: var(--white);
+    padding: 0.75rem 1rem; z-index: 200;
+  }
+  .skip-link:focus { left: 1rem; top: 1rem; }
+
+  .container { width: min(1120px, 92%); margin: 0 auto; }
+  h1, h2, h3 { font-family: var(--serif); color: var(--navy); line-height: 1.2; margin: 0 0 0.6em; font-weight: 700; }
+  h1 { font-size: clamp(2.2rem, 4.5vw, 3.6rem); }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+  h3 { font-size: 1.3rem; }
+  p { margin: 0 0 1em; }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 0.9rem;
+  }
+  .section { padding: clamp(4rem, 8vw, 6.5rem) 0; }
+  .section-head { max-width: 680px; margin-bottom: 3rem; }
+  .section-head p { color: var(--muted); font-size: 1.05rem; }
+
+  .btn {
+    display: inline-block;
+    padding: 0.9rem 1.6rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-gold { background: var(--gold); color: var(--navy-dark); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline { border-color: var(--white); color: var(--white); background: transparent; }
+  .btn-outline:hover { background: var(--white); color: var(--navy); }
+  .btn-navy { background: var(--navy); color: var(--white); }
+  .btn-navy:hover { background: var(--navy-dark); }
+
+  /* Header */
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250, 248, 244, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(27, 42, 65, 0.08);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px;
+  }
+  .brand { text-decoration: none; color: var(--navy); line-height: 1.15; }
+  .brand strong { display: block; font-family: var(--serif); font-size: 1.35rem; }
+  .brand span { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; margin: 0; padding: 0; }
+  .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta { padding: 0.6rem 1.2rem; font-size: 0.92rem; }
+  .menu-toggle {
+    display: none; background: none; border: 0; padding: 0.5rem; cursor: pointer; color: var(--navy);
+  }
+  .menu-toggle svg { width: 28px; height: 28px; }
+
+  /* Hero */
+  .hero {
+    background:
+      linear-gradient(135deg, rgba(17,28,45,0.94) 0%, rgba(27,42,65,0.88) 60%, rgba(27,42,65,0.8) 100%),
+      repeating-linear-gradient(45deg, transparent 0 24px, rgba(184,145,74,0.04) 24px 25px);
+    color: var(--white);
+    padding: clamp(5rem, 10vw, 8.5rem) 0 clamp(4.5rem, 9vw, 7rem);
+  }
+  .hero h1 { color: var(--white); max-width: 15ch; }
+  .hero .eyebrow { color: var(--gold-light); }
+  .hero p.lead { font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: #d7dce5; max-width: 620px; margin-bottom: 2.25rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .hero-meta {
+    margin-top: 3.5rem; padding-top: 1.75rem;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 720px;
+  }
+  .hero-meta strong { display: block; font-family: var(--serif); font-size: 1.8rem; color: var(--gold-light); }
+  .hero-meta span { font-size: 0.9rem; color: #c3cad6; }
+
+  /* Practice areas */
+  .practice-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid rgba(27,42,65,0.08);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(17,28,45,0.12); }
+  .icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--stone); color: var(--gold);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
+  }
+  .icon svg { width: 24px; height: 24px; }
+  .card p { color: var(--muted); font-size: 0.97rem; margin: 0; }
+
+  /* About */
+  .about-grid {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center;
+  }
+  .about-copy p { color: var(--muted); }
+  .checklist { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+  .checklist li {
+    position: relative; padding-left: 2rem; margin-bottom: 0.9rem; color: var(--text);
+  }
+  .checklist li::before {
+    content: ""; position: absolute; left: 0; top: 0.45rem;
+    width: 14px; height: 8px;
+    border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
+    transform: rotate(-45deg);
+  }
+  .about-panel {
+    background: var(--navy); color: var(--white);
+    border-radius: var(--radius); padding: clamp(2rem, 4vw, 3rem);
+    box-shadow: var(--shadow);
+  }
+  .about-panel h3 { color: var(--white); }
+  .about-panel p { color: #cfd6e0; }
+  .quote {
+    font-family: var(--serif); font-style: italic; font-size: 1.2rem; color: var(--gold-light);
+    border-left: 3px solid var(--gold); padding-left: 1.25rem; margin: 1.5rem 0 0;
+  }
+
+  /* Attorneys */
+  .attorneys { background: var(--stone); }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.75rem; }
+  .person { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .avatar {
+    height: 230px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, var(--navy) 0%, #2f4666 100%);
+    color: var(--gold-light); font-family: var(--serif); font-size: 2.6rem; font-weight: 700;
+  }
+  .person-body { padding: 1.5rem; }
+  .person-body h3 { margin-bottom: 0.2rem; }
+  .role { color: var(--gold); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.8rem; }
+  .person-body p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+
+  /* Process */
+  .steps { counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; list-style: none; padding: 0; margin: 0; }
+  .steps li { position: relative; padding-top: 1rem; border-top: 2px solid var(--gold); }
+  .steps li::before {
+    counter-increment: step; content: "0" counter(step);
+    display: block; font-family: var(--serif); font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .steps h3 { font-size: 1.15rem; }
+  .steps p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+
+  /* Testimonials */
+  .testimonials { background: var(--navy-dark); color: var(--white); }
+  .testimonials h2 { color: var(--white); }
+  .testimonials .eyebrow { color: var(--gold-light); }
+  .testimonials .section-head p { color: #aab4c3; }
+  .quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .quote-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius); padding: 2rem;
+  }
+  .quote-card blockquote { margin: 0 0 1.25rem; font-family: var(--serif); font-size: 1.1rem; font-style: italic; color: #e6eaf1; }
+  .quote-card cite { font-style: normal; font-size: 0.9rem; color: var(--gold-light); }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 5vw, 4rem); }
+  .contact-info dl { margin: 2rem 0 0; }
+  .contact-info dt { font-weight: 600; color: var(--navy); margin-top: 1.25rem; }
+  .contact-info dd { margin: 0.2rem 0 0; color: var(--muted); }
+  .contact-info a { color: var(--navy); text-decoration: none; border-bottom: 1px solid var(--gold); }
+  form.intake {
+    background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field { margin-bottom: 1.1rem; }
+  .field label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--navy); }
+  .field input, .field select, .field textarea {
+    width: 100%; font: inherit; color: var(--text);
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #cfd4dc; border-radius: var(--radius); background: var(--ivory);
+  }
+  .field textarea { min-height: 130px; resize: vertical; }
+  .field .error { color: #a23b2c; font-size: 0.85rem; margin-top: 0.35rem; display: none; }
+  .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: #a23b2c; }
+  .field.invalid .error { display: block; }
+  .consent { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
+  .consent input { margin-top: 0.3rem; }
+  .form-note { font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+  .form-success {
+    display: none; padding: 1rem 1.25rem; border-radius: var(--radius);
+    background: #e9f3ea; color: #235a2b; margin-bottom: 1.25rem;
+  }
+  .form-success.show { display: block; }
+
+  /* Footer */
+  .site-footer { background: var(--navy-dark); color: #aab4c3; padding: 3.5rem 0 2rem; font-size: 0.92rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+  .site-footer h4 { color: var(--white); font-family: var(--sans); font-size: 0.95rem; margin: 0 0 0.9rem; }
+  .site-footer ul { list-style: none; padding: 0; margin: 0; }
+  .site-footer li { margin-bottom: 0.5rem; }
+  .site-footer a { color: #aab4c3; text-decoration: none; }
+  .site-footer a:hover { color: var(--gold-light); }
+  .site-footer .brand strong { color: var(--white); }
+  .site-footer .brand span { color: var(--gold-light); }
+  .disclaimer {
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;
+    font-size: 0.8rem; color: #7d879a; line-height: 1.6;
+  }
+  .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; font-size: 0.82rem; color: #7d879a; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-meta { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  @media (max-width: 760px) {
+    .menu-toggle { display: block; }
+    .nav-links {
+      position: absolute; top: 76px; left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: var(--ivory); border-bottom: 1px solid rgba(27,42,65,0.1);
+      display: none; padding: 0.5rem 0 1rem;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-top: 1px solid rgba(27,42,65,0.06); }
+    .nav-links a { display: block; padding: 0.9rem 4%; }
+    .nav-cta { margin: 0.75rem 4% 0; text-align: center; display: block; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 540px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-actions .btn { width: 100%; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="#top" class="brand" aria-label="Harbor &amp; Vale LLP home">
+      <strong>Harbor &amp; Vale</strong>
+      <span>Attorneys at Law</span>
+    </a>
+
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <nav aria-label="Primary">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#practice">Practice Areas</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#team">Attorneys</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#contact" class="btn btn-navy nav-cta">Free Consultation</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="container">
+      <span class="eyebrow">Trusted counsel since 2009</span>
+      <h1>Clear answers. Capable advocacy. Real results.</h1>
+      <p class="lead">Harbor &amp; Vale is a small, senior-led law firm serving individuals and growing businesses. We take the time to understand your situation and build a plan you can act on.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-gold">Schedule a Consultation</a>
+        <a href="#practice" class="btn btn-outline">Explore Our Practice</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>15+</strong><span>Years of combined practice</span></div>
+        <div><strong>1,200+</strong><span>Matters handled for clients</span></div>
+        <div><strong>Same-week</strong><span>Consultations available</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice Areas -->
+  <section class="section" id="practice">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Practice Areas</span>
+        <h2>Focused expertise where it matters most</h2>
+        <p>We concentrate on a defined set of practices so every client gets attorneys who know their area deeply, not generalists stretched thin.</p>
+      </div>
+
+      <div class="practice-grid">
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+          </div>
+          <h3>Business Law</h3>
+          <p>Entity formation, contracts, partnership agreements, and day-to-day counsel that keeps your company running and protected.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>
+          </div>
+          <h3>Real Estate</h3>
+          <p>Residential and commercial transactions, lease review and negotiation, and title issues handled with careful attention to detail.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M7 7l-3 6a3 3 0 0 0 6 0L7 7z"/><path d="M17 7l-3 6a3 3 0 0 0 6 0l-3-6z"/></svg>
+          </div>
+          <h3>Estate Planning</h3>
+          <p>Wills, trusts, powers of attorney, and succession planning that protect your family and honor your wishes.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6"/><path d="M4 20l8-8"/><path d="M10 4l10 10-4 4L6 8z"/></svg>
+          </div>
+          <h3>Civil Litigation</h3>
+          <p>Thoughtful, disciplined representation in contract disputes and commercial matters, pursuing resolution in or out of court.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 11l2 2 4-4"/></svg>
+          </div>
+          <h3>Employment Law</h3>
+          <p>Advice for employers on policies and compliance, and representation for employees facing wrongful termination or workplace disputes.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h3>Family Law</h3>
+          <p>Compassionate guidance through divorce, custody, and support matters, with a clear view of your options and goals.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about" style="background: var(--white);">
+    <div class="container about-grid">
+      <div class="about-copy">
+        <span class="eyebrow">About the Firm</span>
+        <h2>A firm built on direct attention</h2>
+        <p>Harbor &amp; Vale was founded on a simple idea: clients deserve to speak with the attorney handling their case, and they deserve straight answers about cost, timing, and risk.</p>
+        <p>Our team is intentionally small. That means your matter is never handed off to a junior associate you have never met, and every decision is made by someone who knows your file.</p>
+        <ul class="checklist">
+          <li>Partner-level attention on every matter</li>
+          <li>Transparent fee structures with written estimates</li>
+          <li>Responsive communication, typically within one business day</li>
+          <li>Serving clients across the region, in person and remotely</li>
+        </ul>
+      </div>
+      <aside class="about-panel" aria-label="Firm principles">
+        <h3>Our Principles</h3>
+        <p>Honesty before optimism. We will tell you when a case is strong, when it is weak, and what we would do in your position.</p>
+        <p>Preparation over posturing. Good outcomes come from careful work, not theatrics.</p>
+        <p>Your interests first. We take on matters we believe we can handle well, and we say so when we cannot.</p>
+        <p class="quote">"The best legal advice is the advice you can actually use."</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Attorneys -->
+  <section class="section attorneys" id="team">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Our Attorneys</span>
+        <h2>Meet the people behind your case</h2>
+        <p>Our attorneys bring experience from both private practice and the courtroom, and they work as a single team on every matter.</p>
+      </div>
+
+      <div class="team-grid">
+        <article class="person">
+          <div class="avatar" aria-hidden="true">EV</div>
+          <div class="person-body">
+            <h3>Eleanor Vance</h3>
+            <p class="role">Managing Partner</p>
+            <p>Focuses on business formation, commercial contracts, and real estate transactions. Admitted to practice since 2009.</p>
+          </div>
+        </article>
+
+        <article class="person">
+          <div class="avatar" aria-hidden="true">MT</div>
+          <div class="person-body">
+            <h3>Marcus Thorne</h3>
+            <p class="role">Partner, Litigation</p>
+            <p>Leads civil litigation and employment matters with a focus on early case assessment and efficient resolution.</p>
+          </div>
+        </article>
+
+        <article class="person">
+          <div class="avatar" aria-hidden="true">PD</div>
+          <div class="person-body">
+            <h3>Priya Desai</h3>
+            <p class="role">Partner, Estates &amp; Family</p>
+            <p>Guides families through estate planning, probate, and family law with discretion and a practical, human approach.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section" id="process">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How We Work</span>
+        <h2>A straightforward path forward</h2>
+        <p>From first call to final resolution, you will always know what happens next.</p>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <h3>Consultation</h3>
+          <p>We listen to your situation, identify the key issues, and tell you honestly whether we can help.</p>
+        </li>
+        <li>
+          <h3>Strategy</h3>
+          <p>You receive a written plan outlining options, likely timeline, and a clear fee estimate.</p>
+        </li>
+        <li>
+          <h3>Execution</h3>
+          <p>We handle the work with regular updates, so you are never left guessing where things stand.</p>
+        </li>
+        <li>
+          <h3>Resolution</h3>
+          <p>We close the matter carefully and make sure you understand what comes next and how to protect it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section testimonials" aria-labelledby="testimonials-heading">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Client Experiences</span>
+        <h2 id="testimonials-heading">What our clients say</h2>
+        <p>Names and details are placeholders. Replace with approved client testimonials before launch.</p>
+      </div>
+
+      <div class="quotes">
+        <figure class="quote-card" style="margin:0">
+          <blockquote>"They explained every option in plain language and never pushed us toward anything we did not need. Our business is in far better shape because of them."</blockquote>
+          <figcaption><cite>— Client Name, Business Owner</cite></figcaption>
+        </figure>
+        <figure class="quote-card" style="margin:0">
+          <blockquote>"During a difficult time, Priya was patient, organized, and genuinely kind. We always knew what was happening and what to expect."</blockquote>
+          <figcaption><cite>— Client Name, Family Matter</cite></figcaption>
+        </figure>
+        <figure class="quote-card" style="margin:0">
+          <blockquote>"Marcus evaluated our dispute honestly and found a resolution that saved us months and a considerable amount of money."</blockquote>
+          <figcaption><cite>— Client Name, Commercial Dispute</cite></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info">
+        <span class="eyebrow">Get in Touch</span>
+        <h2>Schedule your free consultation</h2>
+        <p style="color: var(--muted);">Tell us a little about your matter. A member of our team will respond within one business day to confirm next steps. Submitting this form does not create an attorney-client relationship.</p>
+
+        <dl>
+          <dt>Office</dt>
+          <dd>100 Market Street, Suite 400<br>Anytown, ST 00000</dd>
+
+          <dt>Phone</dt>
+          <dd><a href="tel:+15555550100">(555) 555-0100</a></dd>
+
+          <dt>Email</dt>
+          <dd><a href="mailto:info@example.com">info@example.com</a></dd>
+
+          <dt>Hours</dt>
+          <dd>Monday to Friday, 8:30 AM to 6:00 PM<br>Evening and weekend appointments by request</dd>
+        </dl>
+      </div>
+
+      <form class="intake" id="intake-form" novalidate>
+        <div class="form-success" role="status" id="form-success">Thank you. Your message has been received, and we will be in touch within one business day.</div>
+
+        <div class="form-row">
+          <div class="field" id="field-name">
+            <label for="name">Full name <span aria-hidden="true">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="err-name">
+            <div class="error" id="err-name">Please enter your name.</div>
+          </div>
+          <div class="field" id="field-email">
+            <label for="email">Email <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="err-email">
+            <div class="error" id="err-email">Please enter a valid email address.</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+          </div>
+          <div class="field" id="field-area">
+            <label for="area">Practice area <span aria-hidden="true">*</span></label>
+            <select id="area" name="area" required aria-describedby="err-area">
+              <option value="">Select one</option>
+              <option>Business Law</option>
+              <option>Real Estate</option>
+              <option>Estate Planning</option>
+              <option>Civil Litigation</option>
+              <option>Employment Law</option>
+              <option>Family Law</option>
+              <option>Not sure</option>
+            </select>
+            <div class="error" id="err-area">Please select a practice area.</div>
+          </div>
+        </div>
+
+        <div class="field" id="field-message">
+          <label for="message">How can we help? <span aria-hidden="true">*</span></label>
+          <textarea id="message" name="message" required aria-describedby="err-message"></textarea>
+          <div class="error" id="err-message">Please briefly describe your matter.</div>
+        </div>
+
+        <label class="consent" for="consent">
+          <input type="checkbox" id="consent" name="consent" required>
+          <span>I understand that this form is not confidential until an attorney-client relationship is formed, and I agree to be contacted about my inquiry.</span>
+        </label>
+
+        <button type="submit" class="btn btn-navy" style="width:100%;">Request Consultation</button>
+        <p class="form-note">Please do not include sensitive information such as Social Security or account numbers in this form.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="brand">
+          <strong>Harbor &amp; Vale LLP</strong>
+          <span>Attorneys at Law</span>
+        </a>
+        <p style="margin-top:1rem; max-width: 340px;">Thoughtful counsel for individuals and businesses. Serving our community with integrity since 2009.</p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <ul>
+          <li><a href="#practice">Business Law</a></li>
+          <li><a href="#practice">Real Estate</a></li>
+          <li><a href="#practice">Estate Planning</a></li>
+          <li><a href="#practice">Litigation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Firm</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#team">Attorneys</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#contact">Book a Consultation</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <p>The information on this website is for general informational purposes only and does not constitute legal advice. Reading this site or contacting the firm does not create an attorney-client relationship. Prior results do not guarantee a similar outcome. Attorney advertising.</p>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> Harbor &amp; Vale LLP. All rights reserved.</span>
+      <span><a href="#top">Privacy Policy</a> &middot; <a href="#top">Terms of Use</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile navigation
+    var toggle = document.querySelector('.menu-toggle');
+    var links = document.getElementById('nav-links');
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    links.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Contact form validation
+    var form = document.getElementById('intake-form');
+    var success = document.getElementById('form-success');
+
+    function setInvalid(fieldId, invalid) {
+      var wrap = document.getElementById(fieldId);
+      if (!wrap) return;
+      wrap.classList.toggle('invalid', invalid);
+      var input = wrap.querySelector('input, select, textarea');
+      if (input) input.setAttribute('aria-invalid', String(invalid));
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      success.classList.remove('show');
+
+      var name = form.name.value.trim();
+      var email = form.email.value.trim();
+      var area = form.area.value;
+      var message = form.message.value.trim();
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      setInvalid('field-name', !name);
+      setInvalid('field-email', !emailOk);
+      setInvalid('field-area', !area);
+      setInvalid('field-message', !message);
+
+      var firstInvalid = form.querySelector('.field.invalid input, .field.invalid select, .field.invalid textarea');
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
+      // No backend is connected in this template. Wire the submission
+      // to your form service or CRM here.
+      form.reset();
+      success.classList.add('show');
+      success.focus && success.setAttribute('tabindex', '-1');
+    });
+
+    // Clear error state as the user corrects a field
+    form.querySelectorAll('input, select, textarea').forEach(function (el) {
+      el.addEventListener('input', function () {
+        var wrap = el.closest('.field');
+        if (wrap && wrap.classList.contains('invalid')) {
+          wrap.classList.remove('invalid');
+          el.setAttribute('aria-invalid', 'false');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

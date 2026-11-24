@@ -1,0 +1,159 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f5ee">
+<title>Mara Vale — Freelance Photographer</title>
+<style>
+  :root{--paper:#f7f5ee;--ink:#242820;--line:#c9c9bc;--accent:#ad452b}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+  a{color:inherit;text-underline-offset:5px}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+  .page{max-width:1600px;margin:auto;padding:0 clamp(20px,5vw,80px)}
+  header,nav,.caption,.section-head,footer{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  header{min-height:80px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:bold;text-decoration:none;letter-spacing:-.05em;font-size:22px}
+  .mark{font:34px/1 Georgia;color:var(--accent)}
+  nav{gap:clamp(15px,3vw,45px)}
+  nav a{font-size:14px;text-decoration:none}
+  nav a:hover,.project:hover .title{text-decoration:underline}
+  .intro{display:grid;grid-template-columns:1fr minmax(210px,320px);align-items:end;gap:25px;padding:clamp(40px,6vw,90px) 0 34px}
+  h1,h2,h3,p,figure{margin:0}
+  h1,h2,.title,dialog h3{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+  h1{font-size:clamp(74px,10.8vw,175px);letter-spacing:-.085em;line-height:.88}
+  .intro p{font-size:clamp(16px,1.5vw,22px);line-height:1.35;letter-spacing:-.025em;max-width:28ch}
+  .art{display:block;width:100%;height:100%}
+  .cover{height:clamp(280px,37vw,565px);background:#cbb79c}
+  .caption,.meta,.type{font:11px/1.5 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase}
+  .caption{padding:11px 0;border-bottom:1px solid var(--line)}
+  .caption span:first-child:before{content:'●';color:var(--accent);margin-right:9px}
+  section{scroll-margin-top:25px}
+  .section-head{margin:56px 0 24px;align-items:baseline}
+  h2{font-size:clamp(38px,5vw,75px);line-height:1.04;letter-spacing:-.065em}
+  .projects{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(15px,2vw,32px)}
+  .project{background:none;border:0;color:inherit;padding:0;text-align:left;cursor:pointer}
+  .thumb{display:block;aspect-ratio:1.42;overflow:hidden}
+  .thumb svg{transition:transform .45s}
+  .project:hover svg{transform:scale(1.035)}
+  .title{display:flex;justify-content:space-between;align-items:center;font-size:clamp(23px,2.6vw,39px);letter-spacing:-.05em;margin:10px 0 2px}
+  .arrow{font:19px Arial}
+  .about{margin:70px 0 0;padding:45px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1.2fr;gap:25px}
+  .about p{max-width:51ch;font-size:19px}
+  footer{border-top:1px solid var(--line);padding:30px 0 40px;flex-wrap:wrap}
+  dialog{background:var(--paper);color:var(--ink);border:0;padding:20px;width:min(850px,93vw);max-height:92vh}
+  dialog::backdrop{background:#181c18cc}
+  dialog form{text-align:right;margin-bottom:12px}
+  dialog button{font:inherit;color:inherit;border:1px solid var(--line);background:none;padding:5px 13px;cursor:pointer}
+  dialog svg{width:100%;height:min(49vh,440px);display:block}
+  dialog h3{font-size:40px;letter-spacing:-.06em;margin:12px 0 3px}
+  .library{position:absolute;width:0;height:0;overflow:hidden}
+  @media(max-width:700px){
+    header{min-height:65px}.intro,.about{grid-template-columns:1fr}.intro{gap:20px}
+    .intro p{max-width:35ch}.projects{grid-template-columns:1fr;gap:30px}.section-head{margin-top:38px}
+    .about{margin-top:45px}.caption{align-items:start;gap:10px}.caption span:last-child{text-align:right}
+    nav{gap:13px}.brand{gap:5px;font-size:19px}
+  }
+  @media(prefers-reduced-motion:reduce){.thumb svg{transition:none}}
+</style>
+</head>
+<body>
+<!-- Embedded landscape studies keep the portfolio fully usable offline. -->
+<svg class="library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs>
+  <linearGradient id="sky" x2=".2" y2="1" gradientUnits="objectBoundingBox">
+    <stop stop-color="#879799"/><stop offset=".62" stop-color="#ead7bb"/><stop offset="1" stop-color="#e3bb95"/>
+  </linearGradient>
+  <linearGradient id="hill" x1="0" x2=".85" y2="1">
+    <stop stop-color="#cd9b65"/><stop offset=".45" stop-color="#a87a4b"/><stop offset="1" stop-color="#554b36"/>
+  </linearGradient>
+  <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#b2c6c0"/><stop offset="1" stop-color="#526e70"/></linearGradient>
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".54" numOctaves="3" stitchTiles="stitch"/></filter>
+  <pattern id="texture" width="180" height="180" patternUnits="userSpaceOnUse"><rect width="180" height="180" filter="url(#grain)" opacity=".24"/></pattern>
+  <g id="pine" fill="#28382f"><path d="M-1 0v-58h2V0zM0-60l-5 15 4-2-8 14 6-2-10 15 8-2-13 14q18-4 36 0L5-23l8 3-10-15 6 2-8-14 4 2z"/></g>
+  <symbol id="valley" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice">
+    <rect width="1200" height="500" fill="url(#sky)"/>
+    <path fill="#a6a399" d="M0 235l100-28 70 10 120-51 83 22 123-41 83 25 122-35 104 35 65-11 130 42 100-22v160H0z"/>
+    <path fill="#8d9186" d="M0 260q140-82 280-28t290-9q145-76 276-26t354-20v200H0z"/>
+    <path fill="#777f70" d="M0 232q150-30 310 38t320-12q178-54 314-24t256-7v140H0z"/>
+    <path fill="#b29168" d="M0 216q133-76 307 10l190 91q85 39 180 42L0 500z"/>
+    <path fill="#6b705a" d="M1200 178q-131 6-227 64t-223 70q-99 2-187 59l637 82z"/>
+    <path fill="url(#hill)" d="M0 241q141-40 273 39t287 79q97-2 182 42t245 99H0z"/>
+    <path fill="#515641" d="M1200 274q-134-39-283 36t-245 77q-139 8-247 113h775z"/>
+    <path fill="#b89b70" d="M502 500q87-77 187-104t132-52q-34 36-129 62t-156 94z"/>
+    <path fill="#414a37" d="M0 374q187-26 395 126H0z"/>
+    <path fill="#333e30" d="M1200 359q-89-21-169 30t-174 42q-63-2-153 69h496z"/>
+    <g><use href="#pine" transform="translate(98 384) scale(.77)"/><use href="#pine" transform="translate(115 390) scale(.52)"/><use href="#pine" transform="translate(1070 397) scale(.8)"/><use href="#pine" transform="translate(1086 398) scale(.58)"/></g>
+    <rect width="1200" height="500" fill="url(#texture)"/>
+  </symbol>
+  <symbol id="shore" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+    <rect width="600" height="400" fill="#cdd2c8"/><rect y="154" width="600" height="246" fill="url(#sea)"/>
+    <path fill="#798480" d="M0 144l70 2 47-19 45 11 38 17H0z"/>
+    <path fill="#424e49" d="M0 203l55-22 60 6 32 15 58 11-55 10-87-8-63 16z"/>
+    <path fill="#dce0ce" d="M0 250q110-38 205-16t209-8q-99 40-215 17T0 259z"/>
+    <path fill="#beaf93" d="M0 290q138-56 272-26t328-18v154H0z"/>
+    <path fill="#e6e1ca" d="M0 282q136-54 268-24t332-18v8q-179 49-332 17T0 292z"/>
+    <rect width="600" height="400" fill="url(#texture)"/>
+  </symbol>
+  <symbol id="room" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+    <rect width="600" height="400" fill="#b79c78"/><path fill="#7d715b" d="M0 0h160v311L0 400z"/>
+    <path fill="#8c745a" d="M160 311h440v89H0z"/><path fill="#dcc8a1" d="M160 87l240-67v182l-240 72z"/>
+    <path fill="#9d8667" d="M269 54l9-2v186l-9 3zM160 166l240-69v8l-240 70z"/>
+    <ellipse cx="388" cy="336" rx="93" ry="11" fill="#77664e"/>
+    <path fill="#564e3a" d="M341 289h9l-6 57h-7zm79 0h8l7 52h-7z"/>
+    <ellipse cx="385" cy="288" rx="64" ry="11" fill="#716049"/>
+    <path fill="#93593c" d="M370 215h23q-3 18 9 38t-4 34h-34q-13-13-2-32t8-40z"/>
+    <rect width="600" height="400" fill="url(#texture)"/>
+  </symbol>
+</defs>
+</svg>
+<div class="page">
+<header>
+  <a class="brand" href="#" aria-label="Mara Vale home"><span class="mark" aria-hidden="true">✳</span> Mara Vale</a>
+  <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+</header>
+<main>
+  <div class="intro"><h1>Mara Vale</h1><p>Freelance photographer drawn to quiet places and the light that finds them.</p></div>
+  <figure>
+    <svg class="art cover" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Layers of ochre foothills descending into a misty valley"><use href="#valley"/></svg>
+    <figcaption class="caption"><span>From the series “Inland”</span><span>Central California · 2025</span></figcaption>
+  </figure>
+  <section id="work">
+    <div class="section-head"><h2>Selected work</h2><span class="meta">2024–2026</span></div>
+    <div class="projects">
+      <button class="project" data-scene="valley" data-note="Along California’s inland roads, the dry grass holds the last light long after the valley floor slips into shade." aria-haspopup="dialog">
+        <span class="thumb"><svg class="art" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#valley" width="600" height="400"/></svg></span><span class="title">Inland <span class="arrow" aria-hidden="true">↗</span></span><span class="type">Landscape · 2025</span>
+      </button>
+      <button class="project" data-scene="shore" data-note="A study of the Oregon coast at low tide, when the water pulls back and leaves a thin silver edge on the sand." aria-haspopup="dialog">
+        <span class="thumb"><svg class="art" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#shore"/></svg></span><span class="title">Tide Line <span class="arrow" aria-hidden="true">↗</span></span><span class="type">Coastal · 2024</span>
+      </button>
+      <button class="project" data-scene="room" data-note="An afternoon in a potter’s studio. A single window kept changing the relationship between the clay, the stool, and the bare wall." aria-haspopup="dialog">
+        <span class="thumb"><svg class="art" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#room"/></svg></span><span class="title">A Still Room <span class="arrow" aria-hidden="true">↗</span></span><span class="type">Interiors · 2026</span>
+      </button>
+    </div>
+  </section>
+  <section class="about" id="about"><h2>Behind the lens</h2><p>I’m Mara, a California-based photographer working across landscape, interiors, and editorial commissions. I often return to the same place for several days, watching how a shift in light changes what catches my eye.</p></section>
+</main>
+<footer id="contact"><span class="meta">Commission enquiries</span><a href="mailto:hello@maravale.example">hello@maravale.example ↗</a></footer>
+</div>
+<dialog id="viewer" aria-labelledby="project-name">
+  <form method="dialog"><button autofocus>Close ×</button></form>
+  <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="project-name"><use id="detail-art" width="600" height="400"/></svg>
+  <h3 id="project-name"></h3><p id="project-note"></p>
+</dialog>
+<script>
+  const viewer = document.querySelector('#viewer');
+  for (const project of document.querySelectorAll('.project')) {
+    project.addEventListener('click', () => {
+      document.querySelector('#detail-art').setAttribute('href', '#' + project.dataset.scene);
+      document.querySelector('#project-name').textContent = project.querySelector('.title').firstChild.textContent.trim();
+      document.querySelector('#project-note').textContent = project.dataset.note;
+      viewer.showModal();
+    });
+  }
+</script>
+</body>
+</html>
+```

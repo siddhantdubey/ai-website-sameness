@@ -1,0 +1,497 @@
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/sonnet-5.5__P5__r5.a2.an5ul99u/index.html</parameter>
+<parameter name="content"><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn — Project management that notices what's stuck</title>
+<meta name="description" content="Cairn tracks what your projects are waiting on, not just what's on the list. Blockers, honest timelines, and a Friday update that writes itself.">
+<style>
+  :root {
+    --paper: #f3efe6;
+    --paper-2: #ebe5d8;
+    --card: #fbf9f4;
+    --ink: #1b1a17;
+    --muted: #6a655a;
+    --rule: #cfc7b5;
+    --accent: #c0391a;
+    --moss: #3f5d3b;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --wrap: 1120px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.02em; }
+
+  /* Nav */
+  header.top { padding: 22px 0; }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--serif); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+  .brand svg { width: 22px; height: 26px; }
+  nav ul { display: flex; align-items: center; gap: 30px; list-style: none; margin: 0; padding: 0; font-size: 0.95rem; }
+  nav a { text-decoration: none; color: var(--muted); }
+  nav a:hover { color: var(--ink); }
+  .btn {
+    display: inline-block; background: var(--ink); color: var(--paper) !important;
+    padding: 10px 18px; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    border: 0; cursor: pointer; font-family: inherit; transition: background .15s;
+  }
+  .btn:hover { background: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 64px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 56px; }
+  .kicker { color: var(--accent); margin: 0 0 22px; text-transform: uppercase; }
+  h1 {
+    font-family: var(--serif); font-weight: 700; margin: 0;
+    font-size: clamp(2.7rem, 7vw, 5.6rem); line-height: 0.98; letter-spacing: -0.03em; max-width: 14ch;
+  }
+  h1 em { color: var(--accent); font-style: italic; font-weight: 600; }
+  .hero-sub { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: end; }
+  .lede { font-size: 1.25rem; line-height: 1.5; max-width: 34ch; margin: 0; color: #35332d; }
+  form.signup { display: flex; flex-wrap: wrap; gap: 10px; }
+  form.signup label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  form.signup input {
+    flex: 1 1 220px; padding: 12px 14px; font: inherit; background: var(--card);
+    border: 1px solid var(--ink); border-radius: 3px; color: var(--ink);
+  }
+  form.signup input::placeholder { color: #8c8678; }
+  .fine { flex-basis: 100%; margin: 4px 0 0; color: var(--muted); font-size: 0.85rem; min-height: 1.3em; }
+
+  /* Product mock */
+  .mock {
+    background: var(--card); border: 1px solid var(--ink); border-radius: 4px;
+    box-shadow: 10px 10px 0 -1px var(--paper-2), 10px 10px 0 0 var(--rule);
+    overflow: hidden;
+  }
+  .mock-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--rule); gap: 16px; flex-wrap: wrap; }
+  .mock-title { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; }
+  .mock-title span { font-family: var(--mono); font-weight: 400; font-size: 0.75rem; color: var(--muted); margin-left: 10px; }
+  .tabs { display: flex; gap: 4px; }
+  .tabs button {
+    font: inherit; font-size: 0.85rem; background: none; border: 1px solid transparent; padding: 5px 12px;
+    border-radius: 99px; cursor: pointer; color: var(--muted);
+  }
+  .tabs button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+  .tabs b { font-family: var(--mono); font-weight: 400; margin-left: 4px; }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .row {
+    display: grid; grid-template-columns: 28px 1fr 190px 70px; align-items: center; gap: 16px;
+    padding: 14px 20px; border-bottom: 1px solid var(--paper-2); font-size: 0.95rem;
+  }
+  .row:last-child { border-bottom: 0; }
+  .row[hidden] { display: none; }
+  .av { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 0.7rem; font-weight: 700; color: var(--card); }
+  .state { font-size: 0.85rem; color: var(--muted); }
+  .state.wait { color: var(--accent); font-weight: 600; }
+  .state.done { color: var(--moss); }
+  .wait-bar { display: flex; gap: 2px; justify-content: flex-end; }
+  .wait-bar i { width: 6px; height: 16px; background: var(--rule); display: block; }
+  .wait-bar i.on { background: var(--accent); }
+  .row.is-done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--rule); }
+  .mock-foot { padding: 12px 20px; background: var(--paper); border-top: 1px solid var(--rule); color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  /* Statement */
+  .statement { padding: 120px 0 100px; }
+  .statement p {
+    font-family: var(--serif); font-size: clamp(1.7rem, 3.6vw, 2.9rem); line-height: 1.2; letter-spacing: -0.015em;
+    max-width: 24em; margin: 0;
+  }
+  .statement p span { color: var(--muted); }
+
+  /* Features */
+  .features { border-top: 1px solid var(--ink); padding: 72px 0 96px; }
+  .split { display: grid; grid-template-columns: 340px 1fr; gap: 72px; }
+  .split h2, .section-h {
+    font-family: var(--serif); font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1.08; letter-spacing: -0.02em; margin: 0;
+  }
+  .sticky { position: sticky; top: 32px; align-self: start; }
+  .sticky p { color: var(--muted); margin: 16px 0 0; max-width: 28ch; }
+  .feat { display: grid; grid-template-columns: 48px 1fr; gap: 12px; padding: 0 0 44px; margin: 0 0 44px; border-bottom: 1px solid var(--rule); }
+  .feat:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+  .feat .n { font-family: var(--mono); color: var(--accent); font-size: 0.85rem; padding-top: 8px; }
+  .feat h3 { font-family: var(--serif); font-size: 1.6rem; line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .feat p { margin: 0 0 16px; max-width: 52ch; color: #35332d; }
+  .feat .detail { color: var(--muted); border-left: 2px solid var(--rule); padding-left: 12px; display: block; max-width: 56ch; }
+
+  /* Timeline sketch */
+  .ghost { margin-top: 20px; max-width: 460px; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+  .ghost .line { position: relative; height: 22px; margin-bottom: 8px; }
+  .ghost .line span { position: absolute; top: 0; height: 100%; border-radius: 2px; }
+  .ghost .orig { background: transparent; border: 1px dashed var(--muted); }
+  .ghost .now { background: var(--ink); }
+  .ghost .late { background: var(--accent); }
+
+  /* Quote */
+  .quote { background: var(--ink); color: var(--paper); padding: 96px 0; }
+  .quote blockquote { margin: 0; max-width: 820px; }
+  .quote p { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.3rem); line-height: 1.25; margin: 0 0 28px; letter-spacing: -0.01em; }
+  .quote cite { font-style: normal; color: #b9b2a0; font-size: 0.95rem; }
+  .quote cite b { color: var(--paper); }
+
+  /* Pricing */
+  .pricing { padding: 96px 0; }
+  .plans { margin-top: 44px; border-top: 1px solid var(--ink); }
+  .plan { display: grid; grid-template-columns: 200px 1fr 220px; gap: 32px; padding: 32px 0; border-bottom: 1px solid var(--rule); align-items: start; }
+  .plan h3 { font-family: var(--serif); font-size: 1.7rem; margin: 0; }
+  .price { font-family: var(--serif); font-size: 2.4rem; line-height: 1; letter-spacing: -0.02em; }
+  .price small { font-family: var(--sans); font-size: 0.85rem; color: var(--muted); letter-spacing: 0; display: block; margin-top: 8px; }
+  .plan ul { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 32px; }
+  .plan li { padding: 3px 0 3px 20px; position: relative; break-inside: avoid; font-size: 0.97rem; }
+  .plan li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 9px; height: 1px; background: var(--accent); }
+  .plan .note { grid-column: 2 / 4; color: var(--muted); font-size: 0.88rem; margin: -8px 0 0; }
+
+  /* FAQ */
+  .faq { padding: 24px 0 100px; }
+  details { border-bottom: 1px solid var(--rule); padding: 20px 0; }
+  details:first-of-type { border-top: 1px solid var(--rule); }
+  summary { cursor: pointer; font-family: var(--serif); font-size: 1.25rem; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--mono); color: var(--accent); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin: 12px 0 0; max-width: 60ch; color: #35332d; }
+
+  /* Closing */
+  .closing { background: var(--paper-2); padding: 96px 0; border-top: 1px solid var(--rule); }
+  .closing .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; }
+  .closing h2 { font-family: var(--serif); font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; }
+
+  footer { padding: 36px 0 48px; color: var(--muted); font-size: 0.88rem; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--ink); text-decoration: underline; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-sub, .split, .closing .wrap { grid-template-columns: 1fr; gap: 32px; }
+    .sticky { position: static; }
+    .plan { grid-template-columns: 1fr; gap: 14px; }
+    .plan .note { grid-column: auto; margin: 0; }
+    .plan ul { columns: 1; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    nav li:not(:last-child) { display: none; }
+    .row { grid-template-columns: 28px 1fr 56px; }
+    .row .state { grid-column: 2 / 3; grid-row: 2; }
+    .row .wait-bar { grid-column: 3; grid-row: 1 / 3; }
+    .feat { grid-template-columns: 1fr; }
+    .hero { padding-top: 32px; }
+    .statement { padding: 72px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Cairn home">
+      <svg viewBox="0 0 22 26" aria-hidden="true">
+        <ellipse cx="11" cy="22.5" rx="10" ry="3.4" fill="#1b1a17"/>
+        <ellipse cx="11.6" cy="14.5" rx="7" ry="3" fill="#1b1a17"/>
+        <ellipse cx="10.6" cy="7.6" rx="4.2" ry="2.5" fill="#c0391a"/>
+      </svg>
+      Cairn
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a class="btn" href="#start">Start free</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker mono">Project management for teams of 4–40</p>
+        <h1>Find out what’s <em>stuck</em> before standup does.</h1>
+      </div>
+
+      <div class="hero-sub">
+        <p class="lede">Most project tools track what people are doing. Cairn tracks what everyone is <em>waiting on</em> — which is where your deadlines actually go to die.</p>
+        <form class="signup" id="start" novalidate>
+          <label for="email">Work email</label>
+          <input id="email" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+          <button class="btn" type="submit">Get started</button>
+          <p class="fine" id="fine" role="status">Free for up to five people. No card.</p>
+        </form>
+      </div>
+
+      <div class="mock" aria-label="Example of a Cairn project view">
+        <div class="mock-bar">
+          <div class="mock-title">Harbor site relaunch <span>WEEK 7 OF 10</span></div>
+          <div class="tabs" role="group" aria-label="Filter tasks">
+            <button type="button" data-filter="all" aria-pressed="false">Everything<b>7</b></button>
+            <button type="button" data-filter="wait" aria-pressed="true">Waiting<b>3</b></button>
+          </div>
+        </div>
+        <ul class="rows" id="rows">
+          <li class="row is-done" data-s="ok">
+            <span class="av" style="background:#3f5d3b">DK</span>
+            <span class="t">Final navigation copy</span>
+            <span class="state done">Done Tuesday</span>
+            <span></span>
+          </li>
+          <li class="row" data-s="wait">
+            <span class="av" style="background:#7a5a2e">LO</span>
+            <span class="t">Legal review of terms page</span>
+            <span class="state wait">Waiting on Okafor &amp; Lund</span>
+            <span class="wait-bar" aria-label="6 days"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+          </li>
+          <li class="row" data-s="ok">
+            <span class="av" style="background:#34506b">MR</span>
+            <span class="t">Checkout error states</span>
+            <span class="state">In progress</span>
+            <span></span>
+          </li>
+          <li class="row" data-s="wait">
+            <span class="av" style="background:#8a3b52">PS</span>
+            <span class="t">Hero photography licensing</span>
+            <span class="state wait">Waiting on Priya S.</span>
+            <span class="wait-bar" aria-label="4 days"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+          </li>
+          <li class="row" data-s="ok">
+            <span class="av" style="background:#555">SO</span>
+            <span class="t">Redirect map for old URLs</span>
+            <span class="state">In progress</span>
+            <span></span>
+          </li>
+          <li class="row" data-s="wait">
+            <span class="av" style="background:#34506b">MR</span>
+            <span class="t">Staging credentials for vendor</span>
+            <span class="state wait">Waiting on IT (Tomás)</span>
+            <span class="wait-bar" aria-label="3 days"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></span>
+          </li>
+          <li class="row" data-s="ok">
+            <span class="av" style="background:#3f5d3b">DK</span>
+            <span class="t">Analytics events spec</span>
+            <span class="state">In review</span>
+            <span></span>
+          </li>
+        </ul>
+        <div class="mock-foot mono">
+          <span>Launch: Dec 12 → at risk (legal)</span>
+          <span>Friday update drafts at 3:00 pm</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement">
+    <div class="wrap">
+      <p>A project is rarely late because someone worked slowly. It’s late because a thing sat in someone’s inbox for six days and nobody could see it. <span>We built the tool that makes that visible.</span></p>
+    </div>
+  </section>
+
+  <section class="features" id="how">
+    <div class="wrap split">
+      <div class="sticky">
+        <h2>Four things we got opinionated about</h2>
+        <p>Everything else is a board, a list, and a calendar, and you’ve seen those.</p>
+      </div>
+      <div>
+        <article class="feat">
+          <span class="n">01</span>
+          <div>
+            <h3>Blockers are a field, not a comment</h3>
+            <p>Mark any task as waiting on a person or an outside party. Cairn starts a quiet clock, nudges them once by email — no account needed on their end — and tells you when the wait goes past what you said you’d tolerate.</p>
+            <span class="detail mono">Default patience: 3 working days. Set it per project, or per person if you must.</span>
+          </div>
+        </article>
+        <article class="feat">
+          <span class="n">02</span>
+          <div>
+            <h3>A timeline that admits when it slipped</h3>
+            <p>Original dates stay behind the current ones as a dashed outline. You can see how a three-week plan became seven without having to ask anyone to explain it.</p>
+            <div class="ghost" aria-hidden="true">
+              <div class="line"><span class="orig" style="left:0;width:38%"></span><span class="now" style="left:22%;width:30%"></span><span class="late" style="left:52%;width:18%"></span></div>
+              <div>Dashed = planned. Red = time beyond plan.</div>
+            </div>
+          </div>
+        </article>
+        <article class="feat">
+          <span class="n">03</span>
+          <div>
+            <h3>The Friday update, already drafted</h3>
+            <p>At 3 pm every Friday Cairn writes what moved, what didn’t, and what it was waiting on, using actual activity. You change a couple of sentences and send it. Stakeholders stop pinging you on Thursday.</p>
+          </div>
+        </article>
+        <article class="feat">
+          <span class="n">04</span>
+          <div>
+            <h3>Imports that don’t ask you to start over</h3>
+            <p>Bring in a CSV, a Trello board, or projects from Asana and Linear. Your column names and statuses come across as they are. We’d rather you rename things later than all at once.</p>
+            <span class="detail mono">Typical import: under two minutes. Nothing is deleted from the source.</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Placeholder testimonial: replace with a real customer quote before publishing -->
+  <section class="quote">
+    <div class="wrap">
+      <blockquote>
+        <p>“We didn’t get faster. We just stopped finding out about problems eleven days after they started.”</p>
+        <cite><b>Name Surname</b> · Head of Delivery, Studio Name</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <h2 class="section-h">Priced per person, not per feature</h2>
+      <div class="plans">
+        <div class="plan">
+          <h3>Small</h3>
+          <ul>
+            <li>Up to 5 people</li>
+            <li>3 active projects</li>
+            <li>Blockers &amp; wait clocks</li>
+            <li>Friday update</li>
+          </ul>
+          <div class="price">$0<small>forever, not a trial</small></div>
+        </div>
+        <div class="plan">
+          <h3>Team</h3>
+          <ul>
+            <li>Unlimited people &amp; projects</li>
+            <li>Timeline with slip history</li>
+            <li>Imports from Asana, Linear, Trello</li>
+            <li>Guests who never need a login</li>
+            <li>SSO and audit log</li>
+            <li>Priority support from a human</li>
+          </ul>
+          <div class="price">$9<small>per person / month, billed yearly<br>$11 month to month</small></div>
+          <p class="note">Guests (clients, vendors, lawyers) are free and don’t count as seats.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="wrap split">
+      <div class="sticky"><h2>Questions people ask</h2></div>
+      <div>
+        <details>
+          <summary>Does the person I’m waiting on need an account?</summary>
+          <p>No. They get a plain email with a single button to say “done” or “need more time.” That reply updates your task.</p>
+        </details>
+        <details>
+          <summary>Isn’t this just a status field?</summary>
+          <p>A status field says “Blocked.” Cairn records by whom, since when, and what you decided to do about it, and then reports on it across every project. That’s the part that changes behavior.</p>
+        </details>
+        <details>
+          <summary>Can I export everything if I leave?</summary>
+          <p>Yes: CSV and JSON, any time, on every plan, including the free one.</p>
+        </details>
+        <details>
+          <summary>Where is my data stored?</summary>
+          <p>In the US or EU, your choice when you create the workspace. It’s encrypted at rest and we don’t train models on it.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <h2>Your next project will wait on something. Know what.</h2>
+      <div>
+        <p style="margin:0 0 18px;color:var(--muted);max-width:38ch">Set up a workspace in a few minutes and import the project that’s currently keeping you up.</p>
+        <a class="btn" href="#start">Start free</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Cairn Software, Inc.</span>
+    <ul>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Changelog</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Filter tabs in the product mock
+  (function () {
+    var tabs = document.querySelectorAll('.tabs button');
+    var rows = document.querySelectorAll('#rows .row');
+    function apply(f) {
+      tabs.forEach(function (t) { t.setAttribute('aria-pressed', String(t.dataset.filter === f)); });
+      rows.forEach(function (r) { r.hidden = (f === 'wait' && r.dataset.s !== 'wait'); });
+    }
+    tabs.forEach(function (t) { t.addEventListener('click', function () { apply(t.dataset.filter); }); });
+    apply('wait');
+  })();
+
+  // Signup form (front-end only: wire to your backend)
+  (function () {
+    var form = document.getElementById('start');
+    var email = document.getElementById('email');
+    var msg = document.getElementById('fine');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!email.value || !email.checkValidity()) {
+        msg.textContent = 'That doesn’t look like an email address.';
+        email.focus();
+        return;
+      }
+      msg.textContent = 'Thanks. Check your inbox for a link to set up your workspace.';
+      email.value = '';
+    });
+  })();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/sonnet-5.5__P5__r5.a2.an5ul99u && wc -c index.html && grep -c "http" index.html</parameter>
+</invoke>
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/sonnet-5.5__P5__r5.a2.an5ul99u && python3 -I -c "
+import html.parser,sys
+class P(html.parser.HTMLParser):
+    pass
+P().feed(open('index.html').read()); print('parsed ok')"</parameter>
+</invoke>
+
+
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/sonnet-5.5__P5__r5.a2.an5ul99u && grep -nE "https?://" index.html | head</parameter>
+</invoke>

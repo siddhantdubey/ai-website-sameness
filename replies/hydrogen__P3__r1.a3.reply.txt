@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clara Moreau — Editorial, Architectural &amp; Documentary Photography</title>
+  <meta name="description" content="Portfolio of Clara Moreau, an independent editorial, architectural, and documentary photographer working on 35mm, medium format film, and digital across Paris and Reykjavík." />
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & THEME SYSTEM
+       ========================================================================== */
+    :root {
+      --bg-primary: #0c0c0b;
+      --bg-elevated: #141412;
+      --bg-surface: #1b1a17;
+      --bg-glass: rgba(12, 12, 11, 0.82);
+      --border-subtle: rgba(242, 239, 233, 0.11);
+      --border-strong: rgba(242, 239, 233, 0.26);
+
+      --text-primary: #f2efe9;
+      --text-secondary: #a8a399;
+      --text-muted: #726e65;
+
+      --accent: #c99b63;
+      --accent-soft: rgba(201, 155, 99, 0.14);
+      --accent-contrast: #0c0c0b;
+
+      --film-border: #191815;
+      --film-text: #d6a45e;
+
+      --font-serif: "Didot", "Bodoni MT", "Playfair Display", "Iowan Old Style", Georgia, "Times New Roman", serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+      --max-width: 1380px;
+      --header-height: 72px;
+      --radius-sm: 2px;
+      --radius-md: 4px;
+      --shadow-frame: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f4f1ea;
+      --bg-elevated: #ece7dd;
+      --bg-surface: #ffffff;
+      --bg-glass: rgba(244, 241, 234, 0.86);
+      --border-subtle: rgba(20, 19, 17, 0.12);
+      --border-strong: rgba(20, 19, 17, 0.28);
+
+      --text-primary: #151412;
+      --text-secondary: #545048;
+      --text-muted: #7c776c;
+
+      --accent: #9a652d;
+      --accent-soft: rgba(154, 101, 45, 0.11);
+      --accent-contrast: #ffffff;
+
+      --film-border: #1a1917;
+      --film-text: #d8a65f;
+      --shadow-frame: 0 22px 50px rgba(24, 21, 16, 0.14);
+    }
+
+    /* ==========================================================================
+       2. BASE & RESET
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      transition: background-color 0.35s var(--ease-editorial), color 0.35s var(--ease-editorial);
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 48px);
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    /* Subtle darkroom grain overlay */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ==========================================================================
+       3. HEADER & NAVIGATION
+       ========================================================================== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      height: var(--header-height);
+      background: var(--bg-glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.35s var(--ease-editorial), border-color 0.35s var(--ease-editorial);
+    }
+
+    .header-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand-meta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      position: relative;
+      padding: 4px 0;
+      transition: color 0.25s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s var(--ease-editorial);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text-primary);
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #6cc070;
+      box-shadow: 0 0 8px rgba(108, 192, 112, 0.7);
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 24px clamp(20px, 4vw, 48px) 32px;
+      z-index: 49;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mobile-drawer.open {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION
+       ========================================================================== */
+    .hero {
+      padding-top: calc(var(--header-height) + clamp(36px, 6vw, 72px));
+      padding-bottom: clamp(56px, 8vw, 100px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 5.4vw, 5.1rem);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      margin: 0;
+      max-width: 52ch;
+      font-size: clamp(1rem, 1.25vw, 1.15rem);
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 26px;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: var(--radius-sm);
+      transition: transform 0.25s var(--ease-editorial), background-color 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      color: var(--accent-contrast);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 24px;
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: var(--radius-sm);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      padding-top: 24px;
+      margin-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .metric-val {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Hero Viewfinder Plate */
+    .hero-frame-wrap {
+      position: relative;
+    }
+
+    .viewfinder-card {
+      position: relative;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 16px;
+      box-shadow: var(--shadow-frame);
+      transition: transform 0.45s var(--ease-editorial);
+    }
+
+    .viewfinder-media {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #111;
+      cursor: pointer;
+    }
+
+    .viewfinder-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease-editorial);
+    }
+
+    .viewfinder-card:hover .viewfinder-media img {
+      transform: scale(1.03);
+    }
+
+    /* Reticle corners */
+    .reticle {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-color: rgba(242, 239, 233, 0.72);
+      border-style: solid;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .reticle.tl { top: 14px; left: 14px; border-width: 1px 0 0 1px; }
+    .reticle.tr { top: 14px; right: 14px; border-width: 1px 1px 0 0; }
+    .reticle.bl { bottom: 14px; left: 14px; border-width: 0 0 1px 1px; }
+    .reticle.br { bottom: 14px; right: 14px; border-width: 0 1px 1px 0; }
+
+    .viewfinder-hud {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      color: rgba(242, 239, 233, 0.88);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .viewfinder-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       5. SELECTED WORKS GALLERY & CONTACT SHEET
+       ========================================================================== */
+    .section {
+      padding: clamp(64px, 8vw, 112px) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .section-title {
+      margin: 10px 0 0;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2rem, 3.6vw, 3.1rem);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+    }
+
+    .section-subtitle {
+      max-width: 44ch;
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+    }
+
+    .gallery-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      border-color: var(--text-primary);
+    }
+
+    .view-switcher {
+      display: inline-flex;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .view-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .view-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* Editorial Grid Mode */
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 28px;
+    }
+
+    .work-card {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      transition: opacity 0.35s ease, transform 0.35s var(--ease-editorial);
+    }
+
+    .work-card.featured-wide {
+      grid-column: span 8;
+    }
+
+    .work-card.featured-half {
+      grid-column: span 6;
+    }
+
+    .work-media {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      aspect-ratio: 4 / 5;
+    }
+
+    .work-card.featured-wide .work-media {
+      aspect-ratio: 16 / 10;
+    }
+
+    .work-card.featured-half .work-media {
+      aspect-ratio: 4 / 3;
+    }
+
+    .work-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease-editorial), filter 0.4s ease;
+    }
+
+    .work-card:hover .work-media img {
+      transform: scale(1.035);
+    }
+
+    .work-hover-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      background: rgba(12, 12, 11, 0.75);
+      color: #f2efe9;
+      border: 1px solid rgba(242, 239, 233, 0.22);
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .work-card:hover .work-hover-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .work-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .work-title {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+    }
+
+    .work-specs {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .work-sub {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Contact Sheet Mode */
+    .works-grid.contact-sheet {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      background: #090908;
+      padding: 24px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .works-grid.contact-sheet .work-card,
+    .works-grid.contact-sheet .work-card.featured-wide,
+    .works-grid.contact-sheet .work-card.featured-half {
+      grid-column: span 1;
+      background: var(--film-border);
+      padding: 18px 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .works-grid.contact-sheet .work-card::before {
+      content: attr(data-frame) "   KODAK PORTRA / ILFORD";
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      color: var(--film-text);
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    .works-grid.contact-sheet .work-media {
+      aspect-ratio: 3 / 2 !important;
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .works-grid.contact-sheet .work-title {
+      color: #f2efe9;
+      font-size: 1rem;
+    }
+
+    .works-grid.contact-sheet .work-sub {
+      color: #a8a399;
+      font-size: 0.76rem;
+    }
+
+    /* ==========================================================================
+       6. PHOTO MONOGRAPH / SERIES SECTION
+       ========================================================================== */
+    .monograph-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: clamp(24px, 4vw, 56px);
+      align-items: start;
+    }
+
+    .monograph-stage {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 16px;
+    }
+
+    .monograph-stage-img-wrap {
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: #111;
+      cursor: pointer;
+    }
+
+    .monograph-stage-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-editorial);
+    }
+
+    .monograph-stage-img-wrap:hover img {
+      transform: scale(1.02);
+    }
+
+    .monograph-stage-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    .monograph-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .monograph-essay {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.96rem;
+      line-height: 1.75;
+    }
+
+    .plate-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .plate-item {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
+      text-align: left;
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .plate-item:hover {
+      border-color: var(--border-strong);
+    }
+
+    .plate-item.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .plate-thumb {
+      width: 64px;
+      height: 44px;
+      object-fit: cover;
+    }
+
+    .plate-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      display: block;
+    }
+
+    .plate-loc {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .plate-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    /* ==========================================================================
+       7. ABOUT, EXHIBITIONS & CLIENTS
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: start;
+    }
+
+    .about-portrait-frame {
+      position: relative;
+      border: 1px solid var(--border-subtle);
+      padding: 14px;
+      background: var(--bg-elevated);
+    }
+
+    .about-portrait-frame img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .about-portrait-caption {
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .about-bio {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .about-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .info-heading {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 14px;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    .info-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .info-list span:last-child {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .clients-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .client-tag {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      padding: 7px 14px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       8. CONTACT & COMMISSION SECTION
+       ========================================================================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: start;
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .email-copy-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-elevated);
+      max-width: 400px;
+    }
+
+    .email-address {
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+    }
+
+    .copy-btn {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      border: 1px solid var(--border-subtle);
+      color: var(--accent);
+    }
+
+    .studio-locations {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .studio-loc-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .studio-loc-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .commission-form {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: clamp(24px, 4vw, 38px);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .inquiry-types {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .inquiry-chip {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 13px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .inquiry-chip.active {
+      background: var(--accent);
+      color: var(--accent-contrast);
+      border-color: var(--accent);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.94rem;
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-status {
+      padding: 18px;
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-status.visible {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       9. LIGHTBOX MODAL & EXIF DRAWER
+       ========================================================================== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(8, 8, 7, 0.96);
+      color: #f2efe9;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+    }
+
+    .lightbox.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(242, 239, 233, 0.12);
+    }
+
+    .lightbox-counter {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      color: #a8a399;
+    }
+
+    .lightbox-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lb-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 13px;
+      border: 1px solid rgba(242, 239, 233, 0.2);
+      color: #f2efe9;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .lb-btn:hover {
+      border-color: var(--accent);
+      background: rgba(201, 155, 99, 0.14);
+    }
+
+    .lightbox-main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+    }
+
+    .lightbox-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 64px;
+      min-height: 0;
+    }
+
+    .lightbox-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.8);
+    }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(242, 239, 233, 0.22);
+      background: rgba(12, 12, 11, 0.72);
+      color: #f2efe9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .lb-nav:hover {
+      border-color: var(--accent);
+      transform: translateY(-50%) scale(1.06);
+    }
+
+    .lb-nav.prev { left: 16px; }
+    .lb-nav.next { right: 16px; }
+
+    .lightbox-sidebar {
+      border-left: 1px solid rgba(242, 239, 233, 0.12);
+      padding: 28px 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #11110f;
+    }
+
+    .lb-title {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+
+    .lb-note {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #a8a399;
+    }
+
+    .exif-table {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(242, 239, 233, 0.12);
+      border-bottom: 1px solid rgba(242, 239, 233, 0.12);
+    }
+
+    .exif-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .exif-row span:first-child {
+      color: #78736a;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .exif-row span:last-child {
+      color: #f2efe9;
+      text-align: right;
+    }
+
+    .lightbox-strip {
+      display: flex;
+      gap: 8px;
+      padding: 12px 24px;
+      border-top: 1px solid rgba(242, 239, 233, 0.12);
+      overflow-x: auto;
+      background: #0b0b0a;
+    }
+
+    .strip-thumb {
+      width: 64px;
+      height: 46px;
+      flex: 0 0 auto;
+      padding: 2px;
+      border: 1px solid transparent;
+      opacity: 0.5;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+    }
+
+    .strip-thumb.active {
+      opacity: 1;
+      border-color: var(--accent);
+    }
+
+    .strip-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ==========================================================================
+       10. FOOTER
+       ========================================================================== */
+    .site-footer {
+      padding: 36px 0;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      text-transform: uppercase;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       11. REVEAL ANIMATION & RESPONSIVE
+       ========================================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--ease-editorial), transform 0.7s var(--ease-editorial);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .monograph-grid,
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .work-card,
+      .work-card.featured-wide,
+      .work-card.featured-half {
+        grid-column: span 6;
+      }
+
+      .lightbox-main {
+        grid-template-columns: 1fr;
+      }
+
+      .lightbox-sidebar {
+        border-left: none;
+        border-top: 1px solid rgba(242, 239, 233, 0.12);
+        max-height: 240px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links,
+      .status-pill,
+      .brand-meta {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .work-card,
+      .work-card.featured-wide,
+      .work-card.featured-half {
+        grid-column: span 12;
+      }
+
+      .form-row,
+      .about-columns,
+      .studio-locations {
+        grid-template-columns: 1fr;
+      }
+
+      .lightbox-stage {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       HEADER
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand">
+        <span class="brand-name">Clara Moreau</span>
+        <span class="brand-meta">Paris · Reykjavík</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#work" class="nav-link">Archive</a>
+        <a href="#series" class="nav-link">Monograph</a>
+        <a href="#about" class="nav-link">Practice</a>
+        <a href="#contact" class="nav-link">Commission</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="status-pill" title="Available for editorial & commercial commissions">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Booking Q1–Q2</span>
+        </div>
+
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle Darkroom or Paper mode">
+          <span id="themeIcon">◐</span>
+          <span id="themeLabel">Paper</span>
+        </button>
+
+        <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <line x1="3" y1="7" x2="21" y2="7"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="17" x2="21" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation">
+    <a href="#work" class="nav-link mobile-nav-item">Archive</a>
+    <a href="#series" class="nav-link mobile-nav-item">Monograph</a>
+    <a href="#about" class="nav-link mobile-nav-item">Practice</a>
+    <a href="#contact" class="nav-link mobile-nav-item">Commission</a>
+  </nav>
+
+  <!-- ========================================================================
+       HERO
+       ======================================================================== -->
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">35mm · Medium Format · Digital</span>
+          <h1 class="hero-title">
+            Quiet geometry in <em>natural light</em> and silver grain.
+          </h1>
+          <p class="hero-lead">
+            Independent freelance photographer crafting architectural studies, editorial portraiture, and slow documentary essays for cultural institutions, design studios, and international publications.
+          </p>
+          <div class="hero-actions">
+            <a href="#work" class="btn-primary">
+              <span>Explore Selected Works</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="#contact" class="btn-secondary">
+              <span>Inquire for Commission</span>
+            </a>
+          </div>
+
+          <div class="hero-metrics">
+            <div>
+              <div class="metric-val">11 yrs</div>
+              <div class="metric-label">Field &amp; Darkroom</div>
+            </div>
+            <div>
+              <div class="metric-val">38+</div>
+              <div class="metric-label">Editorial Features</div>
+            </div>
+            <div>
+              <div class="metric-val">Ed. 15</div>
+              <div class="metric-label">Archival Prints</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-frame-wrap">
+          <div class="viewfinder-card" id="heroTiltCard">
+            <div class="viewfinder-media" id="heroPlateTrigger" role="button" tabindex="0" aria-label="Open featured photograph in lightbox">
+              <div class="reticle tl"></div>
+              <div class="reticle tr"></div>
+              <div class="reticle bl"></div>
+              <div class="reticle br"></div>
+              <img id="heroImg" alt="Brutalist concrete colonnade in raking golden afternoon light" />
+              <div class="viewfinder-hud">
+                <span>HASSELBLAD 500C/M · 80MM</span>
+                <span id="heroExposureHud">1/250s · f/5.6 · PORTRA 400</span>
+              </div>
+            </div>
+            <div class="viewfinder-caption">
+              <span>PLATE 01 — BRUTALIST LIGHT STUDY, MARSEILLE</span>
+              <span>CLICK TO INSPECT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         SELECTED WORKS ARCHIVE
+         ====================================================================== -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="eyebrow">01 / Selected Works</span>
+            <h2 class="section-title">Index of Plates (2022–2026)</h2>
+          </div>
+          <p class="section-subtitle">
+            Curated commissions and personal darkroom plates across architecture, landscape, portraiture, and nocturnal street studies. Select any frame for full EXIF and print editions.
+          </p>
+        </div>
+
+        <div class="gallery-controls">
+          <div class="filter-bar" role="tablist" aria-label="Filter photography by category">
+            <button type="button" class="filter-btn active" data-filter="all">All (10)</button>
+            <button type="button" class="filter-btn" data-filter="architecture">Architecture</button>
+            <button type="button" class="filter-btn" data-filter="landscape">Landscape</button>
+            <button type="button" class="filter-btn" data-filter="editorial">Editorial</button>
+            <button type="button" class="filter-btn" data-filter="street">Street</button>
+            <button type="button" class="filter-btn" data-filter="still-life">Still Life</button>
+          </div>
+
+          <div class="view-switcher" role="group" aria-label="Switch gallery layout">
+            <button type="button" class="view-btn active" id="viewGridBtn">
+              <span>▦</span>
+              <span>Gallery</span>
+            </button>
+            <button type="button" class="view-btn" id="viewContactBtn">
+              <span>🎞</span>
+              <span>Contact Sheet</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="works-grid" id="worksGrid">
+          <!-- Populated dynamically from curated dataset -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MONOGRAPH / PHOTO ESSAY
+         ====================================================================== -->
+    <section class="section" id="series">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="eyebrow">02 / Featured Monograph</span>
+            <h2 class="section-title">After the Tide — North Atlantic</h2>
+          </div>
+          <p class="section-subtitle">
+            A winter field study photographed over six weeks along the volcanic coasts of Iceland and the Faroe Islands using medium format film.
+          </p>
+        </div>
+
+        <div class="monograph-grid reveal">
+          <div class="monograph-stage">
+            <div class="monograph-stage-img-wrap" id="monoStageTrigger" role="button" tabindex="0" aria-label="Inspect current monograph plate">
+              <img id="monoStageImg" alt="Monograph featured photograph" />
+            </div>
+            <div class="monograph-stage-footer">
+              <span id="monoStageCaption">PLATE I — VESTMANNAEYJAR MIST</span>
+              <span id="monoStageCoords">63°26'N 20°16'W · KODAK PORTRA 400</span>
+            </div>
+          </div>
+
+          <div class="monograph-sidebar">
+            <p class="monograph-essay" id="monoEssayText">
+              Between November and January, daylight in the North Atlantic arrives as a brief horizontal slit of pewter and rose. Shot entirely on tripod with long exposures, these plates examine where basalt architecture dissolves into sea fog.
+            </p>
+
+            <div class="plate-list" id="plateList">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         ABOUT & PRACTICE
+         ====================================================================== -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="eyebrow">03 / Practice &amp; Ethos</span>
+            <h2 class="section-title">Slow Looking &amp; Archival Craft</h2>
+          </div>
+        </div>
+
+        <div class="about-grid reveal">
+          <div class="about-portrait-frame">
+            <img id="aboutPortraitImg" alt="Window-lit editorial portrait of Clara Moreau in her Paris studio" />
+            <div class="about-portrait-caption">
+              <span>CLARA MOREAU · STUDIO SELF-PORTRAIT</span>
+              <span>LEICA M6 · 50MM</span>
+            </div>
+          </div>
+
+          <div class="about-content">
+            <p class="about-bio">
+              Trained in architectural history in Lyon before working as a darkroom printer in Paris, Clara Moreau approaches every assignment with patience, minimal equipment, and a reverence for unmanipulated light. Whether documenting a timber pavilion at dawn or photographing an artist in their studio, her work seeks stillness inside motion.
+            </p>
+            <p class="about-bio">
+              All fine-art editions are hand-printed on Hahnemühle Photo Rag Baryta or fiber-based silver gelatin paper, signed, numbered, and accompanied by a certificate of provenance.
+            </p>
+
+            <div class="about-columns">
+              <div>
+                <h3 class="info-heading">Selected Exhibitions</h3>
+                <ul class="info-list">
+                  <li><span>Fondation Henri Cartier-Bresson, Paris</span><span>2025</span></li>
+                  <li><span>Reykjavík Museum of Photography</span><span>2024</span></li>
+                  <li><span>Foam Editions Group Show, Amsterdam</span><span>2023</span></li>
+                  <li><span>Les Rencontres d'Arles — Off</span><span>2022</span></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="info-heading">Primary Field Kit</h3>
+                <ul class="info-list">
+                  <li><span>Hasselblad 500C/M · Planar 80mm</span><span>120 Film</span></li>
+                  <li><span>Leica M6 · Summilux 35mm f/1.4</span><span>35mm</span></li>
+                  <li><span>Fujifilm GFX 100S · GF 45mm</span><span>Digital MF</span></li>
+                  <li><span>Cambo WRS-1600 · Rodenstock 32mm</span><span>Tilt-Shift</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="info-heading">Selected Clients &amp; Publications</h3>
+              <div class="clients-strip">
+                <span class="client-tag">Kinfolk</span>
+                <span class="client-tag">Monocle</span>
+                <span class="client-tag">Architectural Digest</span>
+                <span class="client-tag">Cereal</span>
+                <span class="client-tag">Aesop</span>
+                <span class="client-tag">T Magazine</span>
+                <span class="client-tag">Wallpaper*</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         COMMISSION & PRINT INQUIRY
+         ====================================================================== -->
+    <section class="section" id="contact" style="border-bottom: none;">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="eyebrow">04 / Commissions &amp; Prints</span>
+            <h2 class="section-title">Start a Conversation</h2>
+          </div>
+          <p class="section-subtitle">
+            Available worldwide for architectural assignments, editorial features, brand lookbooks, and museum-grade print acquisitions.
+          </p>
+        </div>
+
+        <div class="contact-grid reveal">
+          <div class="contact-details">
+            <p class="about-bio">
+              For upcoming assignments, licensing requests, or private print viewings in Paris, please share your project dates and brief. Typical response time is within 24 hours.
+            </p>
+
+            <div class="email-copy-box">
+              <span class="email-address">studio@claramoreau.photo</span>
+              <button type="button" class="copy-btn" id="copyEmailBtn">Copy</button>
+            </div>
+
+            <div class="studio-locations">
+              <div>
+                <div class="studio-loc-title">Paris Darkroom</div>
+                <div class="studio-loc-sub">14 Rue de Turenne, 75004<br />By appointment</div>
+              </div>
+              <div>
+                <div class="studio-loc-title">Nordic Base</div>
+                <div class="studio-loc-sub">Vesturgata 19, 101 Reykjavík<br />Nov — Feb Residency</div>
+              </div>
+            </div>
+          </div>
+
+          <form class="commission-form" id="commissionForm" novalidate>
+            <div class="field">
+              <label>Inquiry Type</label>
+              <div class="inquiry-types" id="inquiryTypeGroup">
+                <button type="button" class="inquiry-chip active" data-type="Editorial Commission">Editorial</button>
+                <button type="button" class="inquiry-chip" data-type="Architectural / Commercial">Architecture</button>
+                <button type="button" class="inquiry-chip" data-type="Fine Art Print">Fine Art Print</button>
+                <button type="button" class="inquiry-chip" data-type="Portrait Session">Portrait</button>
+              </div>
+              <input type="hidden" id="inquiryTypeInput" value="Editorial Commission" />
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="clientName">Your Name *</label>
+                <input id="clientName" type="text" placeholder="Soren Lindqvist" required />
+              </div>
+              <div class="field">
+                <label for="clientEmail">Email Address *</label>
+                <input id="clientEmail" type="email" placeholder="soren@publication.com" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="projectTimeline">Target Month / Location</label>
+                <input id="projectTimeline" type="text" placeholder="March 2027 · Zurich" />
+              </div>
+              <div class="field">
+                <label for="projectBudget">Estimated Scope</label>
+                <select id="projectBudget">
+                  <option value="Editorial / Day Rate">Editorial Day Rate</option>
+                  <option value="$2,500 – $6,000">Commercial ($2.5k – $6k)</option>
+                  <option value="$6,000 – $15,000">Campaign / Monograph ($6k – $15k)</option>
+                  <option value="Archival Print ($480 – $1,900)">Archival Print ($480 – $1,900)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="projectBrief">Project Brief or Print Title *</label>
+              <textarea id="projectBrief" rows="4" placeholder="Tell me about the subject, light, deliverables, or archival print edition you have in mind..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="justify-content: center;">
+              <span>Send Commission Inquiry</span>
+              <span aria-hidden="true">→</span>
+            </button>
+
+            <div class="form-status" id="formStatus" role="status" aria-live="polite">
+              <strong id="formStatusTitle">Inquiry logged.</strong>
+              <span id="formStatusMsg" style="font-size: 0.88rem; color: var(--text-secondary);"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 CLARA MOREAU STUDIO. ALL PHOTOGRAPHS ARCHIVED &amp; COPYRIGHTED.</span>
+      <div class="footer-links">
+        <a href="#top">Top ↑</a>
+        <a href="#work">Archive</a>
+        <a href="#series">Monograph</a>
+        <a href="#contact">Inquire</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       LIGHTBOX MODAL
+       ======================================================================== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+    <div class="lightbox-top">
+      <div class="lightbox-counter" id="lbCounter">PLATE 01 / 10</div>
+      <div class="lightbox-top-actions">
+        <button type="button" class="lb-btn" id="lbInquireBtn">Acquire Print</button>
+        <button type="button" class="lb-btn" id="lbCloseBtn" aria-label="Close lightbox">Close [ESC]</button>
+      </div>
+    </div>
+
+    <div class="lightbox-main">
+      <div class="lightbox-stage">
+        <button type="button" class="lb-nav prev" id="lbPrevBtn" aria-label="Previous photograph">←</button>
+        <img id="lbImg" alt="" />
+        <button type="button" class="lb-nav next" id="lbNextBtn" aria-label="Next photograph">→</button>
+      </div>
+
+      <aside class="lightbox-sidebar">
+        <div>
+          <span class="eyebrow" id="lbCategory" style="margin-bottom: 10px;">Architecture</span>
+          <h2 class="lb-title" id="lbTitle">Brutalist Light Study</h2>
+        </div>
+
+        <p class="lb-note" id="lbNote"></p>
+
+        <div class="exif-table" id="lbExif">
+          <!-- EXIF rows injected dynamically -->
+        </div>
+
+        <button type="button" class="btn-primary" id="lbPrintCta" style="width: 100%; justify-content: center;">
+          Inquire About Edition
+        </button>
+      </aside>
+    </div>
+
+    <div class="lightbox-strip" id="lbStrip" aria-label="Filmstrip thumbnails">
+      <!-- Thumbnails injected dynamically -->
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       APPLICATION SCRIPT (PROCEDURAL FINE-ART PLATES + INTERACTION)
+       ======================================================================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      /* ----------------------------------------------------------------------
+         1. PROCEDURAL PHOTOGRAPH PLATE GENERATOR (OFFLINE & SELF-CONTAINED)
+         Generates rich, atmospheric photographic compositions with film grain,
+         optical vignettes, and authentic tonal palettes.
+         ---------------------------------------------------------------------- */
+      function createFilmGrainPattern(ctx) {
+        const tile = document.createElement("canvas");
+        tile.width = 160;
+        tile.height = 160;
+        const gctx = tile.getContext("2d");
+        const img = gctx.createImageData(160, 160);
+        const data = img.data;
+        let seed = 1337;
+        for (let i = 0; i < data.length; i += 4) {
+          seed = (seed * 16807) % 2147483647;
+          const v = (seed & 255);
+          data[i] = v;
+          data[i + 1] = v;
+          data[i + 2] = v;
+          data[i + 3] = 255;
+        }
+        gctx.putImageData(img, 0, 0);
+        return ctx.createPattern(tile, "repeat");
+      }
+
+      function applyFinish(ctx, w, h, grainPattern, opts = {}) {
+        // Subtle optical vignette
+        const vig = ctx.createRadialGradient(w * 0.5, h * 0.48, Math.min(w, h) * 0.28, w * 0.5, h * 0.5, Math.max(w, h) * 0.78);
+        vig.addColorStop(0, "rgba(0,0,0,0)");
+        vig.addColorStop(1, `rgba(6, 5, 4, ${opts.vignette ?? 0.42})`);
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, w, h);
+
+        // Film grain overlay
+        ctx.save();
+        ctx.globalCompositeOperation = "overlay";
+        ctx.globalAlpha = opts.grain ?? 0.085;
+        ctx.fillStyle = grainPattern;
+        ctx.fillRect(0, 0, w, h);
+        ctx.restore();
+      }
+
+      function paintScene(sceneId, w, h) {
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        const grain = createFilmGrainPattern(ctx);
+
+        if (sceneId === "brutalist") {
+          // Warm concrete colonnade in raking golden afternoon sun
+          const sky = ctx.createLinearGradient(0, 0, 0, h);
+          sky.addColorStop(0, "#384b5c");
+          sky.addColorStop(0.55, "#c9a67d");
+          sky.addColorStop(1, "#e7cca7");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h);
+
+          // Sunlit concrete left monolith
+          const wallGrad = ctx.createLinearGradient(0, 0, w * 0.65, h);
+          wallGrad.addColorStop(0, "#d8cab8");
+          wallGrad.addColorStop(0.5, "#ab9a86");
+          wallGrad.addColorStop(1, "#4c433b");
+          ctx.fillStyle = wallGrad;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w * 0.58, h * 0.14);
+          ctx.lineTo(w * 0.58, h * 0.84);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Deep architectural shadow pillars
+          ctx.fillStyle = "#1c1917";
+          for (let i = 0; i < 4; i++) {
+            const x = w * (0.14 + i * 0.13);
+            const topY = h * (0.04 + i * 0.032);
+            const botY = h * (0.94 - i * 0.035);
+            ctx.fillRect(x, topY, w * 0.045, botY - topY);
+          }
+
+          // Floor perspective & dramatic diagonal light shaft
+          ctx.fillStyle = "#26211d";
+          ctx.beginPath();
+          ctx.moveTo(0, h);
+          ctx.lineTo(w * 0.58, h * 0.84);
+          ctx.lineTo(w, h * 0.92);
+          ctx.lineTo(w, h);
+          ctx.closePath();
+          ctx.fill();
+
+          const shaft = ctx.createLinearGradient(w * 0.45, h * 0.25, w * 0.95, h);
+          shaft.addColorStop(0, "rgba(255, 224, 178, 0.58)");
+          shaft.addColorStop(1, "rgba(232, 184, 126, 0.08)");
+          ctx.fillStyle = shaft;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.58, h * 0.14);
+          ctx.lineTo(w, h * 0.42);
+          ctx.lineTo(w, h * 0.92);
+          ctx.lineTo(w * 0.58, h * 0.84);
+          ctx.closePath();
+          ctx.fill();
+
+          // Tiny solitary human silhouette + long shadow
+          ctx.fillStyle = "#12100e";
+          ctx.beginPath();
+          ctx.ellipse(w * 0.67, h * 0.81, w * 0.012, h * 0.008, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(w * 0.662, h * 0.815, w * 0.016, h * 0.055);
+          ctx.fillStyle = "rgba(14, 12, 10, 0.65)";
+          ctx.beginPath();
+          ctx.moveTo(w * 0.665, h * 0.87);
+          ctx.lineTo(w * 0.68, h * 0.87);
+          ctx.lineTo(w * 0.43, h * 0.96);
+          ctx.lineTo(w * 0.41, h * 0.95);
+          ctx.closePath();
+          ctx.fill();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.36, grain: 0.08 });
+        } else if (sceneId === "fjord") {
+          // Nordic Fjord Mist at Dawn
+          const bg = ctx.createLinearGradient(0, 0, 0, h);
+          bg.addColorStop(0, "#7f8f9c");
+          bg.addColorStop(0.45, "#b8c2c7");
+          bg.addColorStop(0.56, "#cbd2d4");
+          bg.addColorStop(0.57, "#51616c");
+          bg.addColorStop(1, "#253038");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Distant layered sea stacks
+          const drawMountain = (pts, color) => {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(pts[0][0] * w, pts[0][1] * h);
+            for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0] * w, pts[i][1] * h);
+            ctx.closePath();
+            ctx.fill();
+          };
+          drawMountain([[0, 0.56], [0.18, 0.36], [0.35, 0.48], [0.58, 0.28], [0.8, 0.49], [1, 0.38], [1, 0.56]], "rgba(74, 88, 99, 0.52)");
+          drawMountain([[0.05, 0.56], [0.24, 0.25], [0.41, 0.56]], "#34404a");
+          drawMountain([[0.55, 0.56], [0.76, 0.21], [0.95, 0.56]], "#2b353e");
+
+          // Water reflections
+          ctx.save();
+          ctx.globalAlpha = 0.28;
+          drawMountain([[0.05, 0.56], [0.24, 0.87], [0.41, 0.56]], "#182026");
+          drawMountain([[0.55, 0.56], [0.76, 0.91], [0.95, 0.56]], "#151c22");
+          ctx.restore();
+
+          // Drifting horizontal fog bands
+          for (let i = 0; i < 4; i++) {
+            const fy = h * (0.34 + i * 0.08);
+            const fog = ctx.createLinearGradient(0, fy - 30, 0, fy + 30);
+            fog.addColorStop(0, "rgba(225, 232, 235, 0)");
+            fog.addColorStop(0.5, "rgba(225, 232, 235, 0.34)");
+            fog.addColorStop(1, "rgba(225, 232, 235, 0)");
+            ctx.fillStyle = fog;
+            ctx.fillRect(0, fy - 30, w, 60);
+          }
+
+          // Subtle water ripples
+          ctx.strokeStyle = "rgba(220, 228, 232, 0.14)";
+          ctx.lineWidth = 1.2;
+          for (let y = h * 0.6; y < h * 0.95; y += 16) {
+            ctx.beginPath();
+            ctx.moveTo(w * 0.12, y);
+            ctx.lineTo(w * 0.88, y);
+            ctx.stroke();
+          }
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.32, grain: 0.09 });
+        } else if (sceneId === "tokyo") {
+          // Nocturnal rain & neon bokeh (Cinestill 800T vibe)
+          const night = ctx.createLinearGradient(0, 0, 0, h);
+          night.addColorStop(0, "#0a0c14");
+          night.addColorStop(0.55, "#151622");
+          night.addColorStop(1, "#09080c");
+          ctx.fillStyle = night;
+          ctx.fillRect(0, 0, w, h);
+
+          // Buildings silhouettes
+          ctx.fillStyle = "#0e1018";
+          ctx.fillRect(0, 0, w * 0.28, h * 0.62);
+          ctx.fillRect(w * 0.72, 0, w * 0.28, h * 0.65);
+
+          // Neon bokeh orbs
+          const orbs = [
+            [0.24, 0.28, 42, "rgba(255, 72, 88, 0.55)"],
+            [0.34, 0.22, 28, "rgba(255, 186, 82, 0.52)"],
+            [0.64, 0.25, 48, "rgba(68, 212, 235, 0.45)"],
+            [0.74, 0.36, 36, "rgba(255, 86, 118, 0.52)"],
+            [0.48, 0.38, 22, "rgba(255, 225, 168, 0.65)"],
+            [0.54, 0.44, 18, "rgba(255, 92, 72, 0.68)"],
+            [0.41, 0.45, 14, "rgba(104, 224, 255, 0.6)"]
+          ];
+          ctx.save();
+          ctx.globalCompositeOperation = "screen";
+          orbs.forEach(([ox, oy, r, col]) => {
+            const g = ctx.createRadialGradient(ox * w, oy * h, 0, ox * w, oy * h, r * 1.9);
+            g.addColorStop(0, col);
+            g.addColorStop(0.55, col.replace(/[\d.]+\)$/, "0.22)"));
+            g.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(ox * w, oy * h, r * 1.9, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.restore();
+
+          // Wet asphalt vertical reflections
+          for (let i = 0; i < 16; i++) {
+            const rx = w * (0.16 + i * 0.044);
+            const col = i % 3 === 0 ? "rgba(255,78,94,0.22)" : i % 3 === 1 ? "rgba(72,216,238,0.18)" : "rgba(255,190,104,0.18)";
+            const rg = ctx.createLinearGradient(0, h * 0.58, 0, h);
+            rg.addColorStop(0, col);
+            rg.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = rg;
+            ctx.fillRect(rx, h * 0.58, 12, h * 0.42);
+          }
+
+          // Umbrella silhouette in foreground
+          ctx.fillStyle = "#070709";
+          ctx.beginPath();
+          ctx.arc(w * 0.47, h * 0.64, w * 0.11, Math.PI, 0);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillRect(w * 0.44, h * 0.64, w * 0.06, h * 0.23);
+
+          // Rain streaks
+          ctx.strokeStyle = "rgba(210, 225, 245, 0.14)";
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 90; i++) {
+            const rx = ((i * 97) % w);
+            const ry = ((i * 173) % h);
+            ctx.beginPath();
+            ctx.moveTo(rx, ry);
+            ctx.lineTo(rx - 4, ry + 24);
+            ctx.stroke();
+          }
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.48, grain: 0.11 });
+        } else if (sceneId === "dunes") {
+          // Desert Monolith Twilight (Sossusvlei S-curve ridge)
+          const sky = ctx.createLinearGradient(0, 0, 0, h * 0.46);
+          sky.addColorStop(0, "#1d2740");
+          sky.addColorStop(0.7, "#4d526b");
+          sky.addColorStop(1, "#b47c67");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h);
+
+          // Distant sand ridge
+          ctx.fillStyle = "#8a5642";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.45);
+          ctx.quadraticCurveTo(w * 0.35, h * 0.38, w * 0.68, h * 0.44);
+          ctx.lineTo(w, h * 0.41);
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Sunlit dune face (left)
+          const sunSand = ctx.createLinearGradient(0, h * 0.35, w * 0.7, h);
+          sunSand.addColorStop(0, "#df9662");
+          sunSand.addColorStop(0.6, "#ba6c43");
+          sunSand.addColorStop(1, "#7b3d27");
+          ctx.fillStyle = sunSand;
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.44);
+          ctx.bezierCurveTo(w * 0.36, h * 0.32, w * 0.56, h * 0.58, w * 0.48, h);
+          ctx.lineTo(0, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Deep indigo shadow dune face (right)
+          const shadSand = ctx.createLinearGradient(w * 0.4, h * 0.4, w, h);
+          shadSand.addColorStop(0, "#242130");
+          shadSand.addColorStop(1, "#12101a");
+          ctx.fillStyle = shadSand;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.48, h);
+          ctx.bezierCurveTo(w * 0.56, h * 0.58, w * 0.36, h * 0.32, w * 0.66, h * 0.39);
+          ctx.lineTo(w, h * 0.48);
+          ctx.lineTo(w, h);
+          ctx.closePath();
+          ctx.fill();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.34, grain: 0.085 });
+        } else if (sceneId === "still-life") {
+          // Chiaroscuro Ceramic Vessel
+          const bg = ctx.createRadialGradient(w * 0.35, h * 0.3, 20, w * 0.5, h * 0.5, w * 0.9);
+          bg.addColorStop(0, "#3d352d");
+          bg.addColorStop(0.55, "#1f1b17");
+          bg.addColorStop(1, "#0d0b0a");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // North-window soft diagonal light beam
+          const beam = ctx.createLinearGradient(0, 0, w * 0.8, h * 0.85);
+          beam.addColorStop(0, "rgba(242, 224, 198, 0.2)");
+          beam.addColorStop(1, "rgba(242, 224, 198, 0)");
+          ctx.fillStyle = beam;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(w * 0.55, 0);
+          ctx.lineTo(w, h * 0.78);
+          ctx.lineTo(w * 0.2, h * 0.88);
+          ctx.closePath();
+          ctx.fill();
+
+          // Dark linen plinth
+          ctx.fillStyle = "#151310";
+          ctx.fillRect(0, h * 0.72, w, h * 0.28);
+          ctx.strokeStyle = "rgba(218, 198, 170, 0.18)";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.72);
+          ctx.lineTo(w, h * 0.72);
+          ctx.stroke();
+
+          // Ceramic amphora shadow
+          ctx.fillStyle = "rgba(0,0,0,0.55)";
+          ctx.beginPath();
+          ctx.ellipse(w * 0.57, h * 0.76, w * 0.18, h * 0.032, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Ceramic amphora body
+          const clay = ctx.createLinearGradient(w * 0.34, h * 0.4, w * 0.62, h * 0.74);
+          clay.addColorStop(0, "#d4c3ad");
+          clay.addColorStop(0.45, "#8f7d69");
+          clay.addColorStop(1, "#2a231c");
+          ctx.fillStyle = clay;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.44, h * 0.34);
+          ctx.lineTo(w * 0.54, h * 0.34);
+          ctx.bezierCurveTo(w * 0.55, h * 0.42, w * 0.64, h * 0.5, w * 0.61, h * 0.66);
+          ctx.quadraticCurveTo(w * 0.56, h * 0.76, w * 0.49, h * 0.76);
+          ctx.quadraticCurveTo(w * 0.42, h * 0.76, w * 0.37, h * 0.66);
+          ctx.bezierCurveTo(w * 0.34, h * 0.5, w * 0.43, h * 0.42, w * 0.44, h * 0.34);
+          ctx.closePath();
+          ctx.fill();
+
+          // Dried botanical stem
+          ctx.strokeStyle = "#b59d7e";
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.49, h * 0.35);
+          ctx.quadraticCurveTo(w * 0.53, h * 0.22, w * 0.63, h * 0.14);
+          ctx.stroke();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.45, grain: 0.09 });
+        } else if (sceneId === "metro") {
+          // Monochrome Ilford HP5 1/15s Panning Train
+          const bg = ctx.createLinearGradient(0, 0, 0, h);
+          bg.addColorStop(0, "#1c1c1c");
+          bg.addColorStop(0.65, "#2b2b2b");
+          bg.addColorStop(1, "#111111");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Horizontal motion blur train bands
+          for (let i = 0; i < 24; i++) {
+            const y = h * (0.22 + (i * 0.022));
+            const alpha = (i % 5 === 0) ? 0.42 : 0.14;
+            ctx.fillStyle = `rgba(235, 235, 235, ${alpha})`;
+            ctx.fillRect(0, y, w, (i % 4 === 0) ? 14 : 4);
+          }
+
+          // Bright blurred train windows
+          const winGlow = ctx.createLinearGradient(0, h * 0.32, 0, h * 0.52);
+          winGlow.addColorStop(0, "rgba(255,255,255,0)");
+          winGlow.addColorStop(0.5, "rgba(245,245,245,0.48)");
+          winGlow.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = winGlow;
+          ctx.fillRect(0, h * 0.32, w, h * 0.2);
+
+          // Crisp stationary foreground silhouette
+          ctx.fillStyle = "#080808";
+          ctx.beginPath();
+          ctx.arc(w * 0.32, h * 0.38, w * 0.036, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(w * 0.26, h);
+          ctx.lineTo(w * 0.27, h * 0.45);
+          ctx.quadraticCurveTo(w * 0.32, h * 0.42, w * 0.37, h * 0.45);
+          ctx.lineTo(w * 0.38, h);
+          ctx.closePath();
+          ctx.fill();
+
+          // Platform pillar
+          ctx.fillStyle = "#0d0d0d";
+          ctx.fillRect(w * 0.72, 0, w * 0.08, h);
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.4, grain: 0.12 });
+        } else if (sceneId === "pavilion") {
+          // Solstice Pavilion over reflecting pool
+          const sky = ctx.createLinearGradient(0, 0, 0, h * 0.58);
+          sky.addColorStop(0, "#1c2438");
+          sky.addColorStop(0.55, "#4b566e");
+          sky.addColorStop(1, "#c99672");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, h * 0.58);
+
+          const pool = ctx.createLinearGradient(0, h * 0.58, 0, h);
+          pool.addColorStop(0, "#404556");
+          pool.addColorStop(1, "#12151e");
+          ctx.fillStyle = pool;
+          ctx.fillRect(0, h * 0.58, w, h * 0.42);
+
+          // Cantilevered roof & travertine base
+          ctx.fillStyle = "#191816";
+          ctx.fillRect(w * 0.14, h * 0.34, w * 0.72, h * 0.035);
+          ctx.fillStyle = "#2b2824";
+          ctx.fillRect(w * 0.18, h * 0.54, w * 0.64, h * 0.045);
+
+          // Warm interior tungsten glow
+          const glow = ctx.createLinearGradient(w * 0.22, h * 0.37, w * 0.76, h * 0.54);
+          glow.addColorStop(0, "#ffb86b");
+          glow.addColorStop(0.5, "#ffdca8");
+          glow.addColorStop(1, "#d98448");
+          ctx.fillStyle = glow;
+          ctx.fillRect(w * 0.24, h * 0.375, w * 0.52, h * 0.165);
+
+          // Mullions
+          ctx.fillStyle = "#161513";
+          [0.36, 0.5, 0.64].forEach(mx => ctx.fillRect(w * mx, h * 0.375, 5, h * 0.165));
+
+          // Pool reflection
+          ctx.save();
+          ctx.globalAlpha = 0.38;
+          ctx.fillStyle = glow;
+          ctx.fillRect(w * 0.24, h * 0.59, w * 0.52, h * 0.18);
+          ctx.restore();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.36, grain: 0.075 });
+        } else if (sceneId === "portrait") {
+          // Backlit Atelier Window Portrait
+          const bg = ctx.createLinearGradient(0, 0, w, h);
+          bg.addColorStop(0, "#d8cebe");
+          bg.addColorStop(0.45, "#a69783");
+          bg.addColorStop(1, "#332c24");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Sheer curtain vertical folds
+          for (let i = 0; i < 8; i++) {
+            ctx.fillStyle = i % 2 === 0 ? "rgba(255,248,236,0.18)" : "rgba(40,32,24,0.08)";
+            ctx.fillRect(w * (i * 0.125), 0, w * 0.06, h);
+          }
+
+          // Soft rim halo
+          const halo = ctx.createRadialGradient(w * 0.44, h * 0.38, w * 0.08, w * 0.44, h * 0.38, w * 0.46);
+          halo.addColorStop(0, "rgba(255, 240, 214, 0.72)");
+          halo.addColorStop(1, "rgba(255, 240, 214, 0)");
+          ctx.fillStyle = halo;
+          ctx.fillRect(0, 0, w, h);
+
+          // Profile silhouette
+          ctx.fillStyle = "#1c1714";
+          ctx.beginPath();
+          ctx.arc(w * 0.48, h * 0.37, w * 0.125, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(w * 0.25, h);
+          ctx.bezierCurveTo(w * 0.27, h * 0.62, w * 0.42, h * 0.52, w * 0.49, h * 0.52);
+          ctx.bezierCurveTo(w * 0.58, h * 0.52, w * 0.71, h * 0.64, w * 0.74, h);
+          ctx.closePath();
+          ctx.fill();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.34, grain: 0.085 });
+        } else if (sceneId === "saltpan") {
+          // Aerial Salt Pan Geometry
+          ctx.fillStyle = "#d9cfc1";
+          ctx.fillRect(0, 0, w, h);
+
+          const cells = [
+            [0, 0, 0.48, 0.46, "#c98b7c"],
+            [0.48, 0, 0.52, 0.34, "#7ea09d"],
+            [0.48, 0.34, 0.52, 0.32, "#d8b48a"],
+            [0, 0.46, 0.34, 0.54, "#5d8485"],
+            [0.34, 0.46, 0.38, 0.54, "#e6ddd0"],
+            [0.72, 0.66, 0.28, 0.34, "#b87868"]
+          ];
+          cells.forEach(([x, y, cw, ch, col]) => {
+            ctx.fillStyle = col;
+            ctx.fillRect(x * w + 4, y * h + 4, cw * w - 8, ch * h - 8);
+          });
+
+          // Earthen dykes
+          ctx.strokeStyle = "#f0eae0";
+          ctx.lineWidth = 7;
+          ctx.beginPath();
+          ctx.moveTo(w * 0.48, 0); ctx.lineTo(w * 0.48, h * 0.46);
+          ctx.moveTo(0, h * 0.46); ctx.lineTo(w * 0.72, h * 0.46);
+          ctx.moveTo(w * 0.48, h * 0.34); ctx.lineTo(w, h * 0.34);
+          ctx.moveTo(w * 0.34, h * 0.46); ctx.lineTo(w * 0.34, h);
+          ctx.moveTo(w * 0.72, h * 0.46); ctx.lineTo(w * 0.72, h);
+          ctx.stroke();
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.25, grain: 0.08 });
+        } else {
+          // Greenhouse Fog (Botanical Conservatory)
+          const bg = ctx.createLinearGradient(0, 0, 0, h);
+          bg.addColorStop(0, "#aeb8ae");
+          bg.addColorStop(0.5, "#67786a");
+          bg.addColorStop(1, "#222c24");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+
+          // Conservatory arched mullions
+          ctx.strokeStyle = "rgba(32, 38, 33, 0.65)";
+          ctx.lineWidth = 10;
+          for (let i = 1; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(w * (i * 0.25), 0);
+            ctx.lineTo(w * (i * 0.25), h);
+            ctx.stroke();
+          }
+
+          // Botanical fronds silhouettes
+          ctx.fillStyle = "rgba(24, 34, 26, 0.72)";
+          for (let i = 0; i < 7; i++) {
+            ctx.save();
+            ctx.translate(w * 0.48, h * 0.86);
+            ctx.rotate((-0.8 + i * 0.26));
+            ctx.beginPath();
+            ctx.ellipse(0, -h * 0.32, w * 0.045, h * 0.34, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // Steamy morning light haze
+          const haze = ctx.createRadialGradient(w * 0.35, h * 0.28, 20, w * 0.45, h * 0.38, w * 0.7);
+          haze.addColorStop(0, "rgba(246, 244, 232, 0.42)");
+          haze.addColorStop(1, "rgba(246, 244, 232, 0)");
+          ctx.fillStyle = haze;
+          ctx.fillRect(0, 0, w, h);
+
+          applyFinish(ctx, w, h, grain, { vignette: 0.36, grain: 0.085 });
+        }
+
+        return canvas.toDataURL("image/jpeg", 0.92);
+      }
+
+      /* ----------------------------------------------------------------------
+         2. CURATED PORTFOLIO DATASET
+         ---------------------------------------------------------------------- */
+      const PLATES = [
+        {
+          id: "brutalist-light",
+          frame: "01A",
+          scene: "brutalist",
+          width: 960,
+          height: 1200,
+          layout: "normal",
+          title: "Brutalist Light Study",
+          category: "architecture",
+          categoryLabel: "Architecture",
+          location: "Marseille, France",
+          year: "2025",
+          camera: "Hasselblad 500C/M",
+          lens: "Carl Zeiss Planar 80mm f/2.8",
+          film: "Kodak Portra 400",
+          exposure: "1/250s · f/5.6 · ISO 400",
+          edition: "Edition of 15 · $950",
+          note: "Photographed at 16:40 in late October as low Mediterranean sunlight sliced across Le Corbusier's concrete pilotis, reducing human scale to a single moving silhouette."
+        },
+        {
+          id: "vestmannaeyjar-mist",
+          frame: "02A",
+          scene: "fjord",
+          width: 1280,
+          height: 850,
+          layout: "featured-wide",
+          title: "Vestmannaeyjar Mist",
+          category: "landscape",
+          categoryLabel: "Landscape",
+          location: "Westman Islands, Iceland",
+          year: "2025",
+          camera: "Fujifilm GFX 100S",
+          lens: "GF 45mm f/2.8 R WR",
+          film: "Digital Medium Format",
+          exposure: "1.5s · f/11 · ISO 100",
+          edition: "Edition of 12 · $1,400",
+          note: "Shot from a basalt breakwater twenty minutes before sunrise. A 1.5-second exposure smoothed the North Atlantic swell into pewter glass."
+        },
+        {
+          id: "shinjuku-rain",
+          frame: "03A",
+          scene: "tokyo",
+          width: 960,
+          height: 1200,
+          layout: "normal",
+          title: "Shinjuku Rain, 01:40",
+          category: "street",
+          categoryLabel: "Street",
+          location: "Tokyo, Japan",
+          year: "2024",
+          camera: "Leica M6 TTL",
+          lens: "Summilux-M 35mm f/1.4 ASPH",
+          film: "CineStill 800T",
+          exposure: "1/30s · f/1.4 · ISO 800",
+          edition: "Edition of 15 · $880",
+          note: "Tungsten-balanced cinema film captures the natural halation of neon signage bleeding across wet asphalt after the last commuter train departs."
+        },
+        {
+          id: "sossusvlei-dunes",
+          frame: "04A",
+          scene: "dunes",
+          width: 1200,
+          height: 900,
+          layout: "featured-half",
+          title: "Dunes of Sossusvlei",
+          category: "landscape",
+          categoryLabel: "Landscape",
+          location: "Namib-Naukluft, Namibia",
+          year: "2024",
+          camera: "Hasselblad 500C/M",
+          lens: "Sonnar 150mm f/4",
+          film: "Kodak Ektar 100",
+          exposure: "1/125s · f/8 · ISO 100",
+          edition: "Edition of 10 · $1,650",
+          note: "At dusk, the razor crest of Dune 45 splits the frame into opposing temperatures: incandescent iron oxide on the left and deep indigo shadow on the right."
+        },
+        {
+          id: "chiaroscuro-vessel",
+          frame: "05A",
+          scene: "still-life",
+          width: 960,
+          height: 1200,
+          layout: "normal",
+          title: "Chiaroscuro Vessel",
+          category: "still-life",
+          categoryLabel: "Still Life",
+          location: "Paris Studio, France",
+          year: "2026",
+          camera: "Cambo WRS-1600",
+          lens: "Rodenstock HR 32mm",
+          film: "Digital Medium Format",
+          exposure: "1/4s · f/11 · ISO 64",
+          edition: "Edition of 15 · $780",
+          note: "Commissioned study of hand-thrown stoneware for a ceramicist monograph, lit exclusively by a single north-facing studio window."
+        },
+        {
+          id: "paris-metro",
+          frame: "06A",
+          scene: "metro",
+          width: 1200,
+          height: 900,
+          layout: "featured-half",
+          title: "Line 6, 1/15s",
+          category: "street",
+          categoryLabel: "Street",
+          location: "Passy, Paris",
+          year: "2023",
+          camera: "Leica M6 TTL",
+          lens: "Summicron 50mm f/2",
+          film: "Ilford HP5 Plus 400",
+          exposure: "1/15s · f/4 · ISO 400",
+          edition: "Edition of 20 · $720",
+          note: "Hand-held slow shutter on silver-gelatin stock, isolating a motionless commuter against the kinetic blur of an arriving elevated train."
+        },
+        {
+          id: "solstice-pavilion",
+          frame: "07A",
+          scene: "pavilion",
+          width: 1200,
+          height: 900,
+          layout: "normal",
+          title: "Solstice Pavilion",
+          category: "architecture",
+          categoryLabel: "Architecture",
+          location: "Lake Zurich, Switzerland",
+          year: "2025",
+          camera: "Cambo WRS-1600",
+          lens: "Rodenstock HR 32mm Tilt-Shift",
+          film: "Digital Medium Format",
+          exposure: "2s · f/11 · ISO 100",
+          edition: "Edition of 15 · $1,100",
+          note: "Architectural commission photographed at blue hour to balance the warm tungsten interior against the cool twilight reflection pool."
+        },
+        {
+          id: "atelier-portrait",
+          frame: "08A",
+          scene: "portrait",
+          width: 960,
+          height: 1200,
+          layout: "normal",
+          title: "Atelier Window Study",
+          category: "editorial",
+          categoryLabel: "Editorial",
+          location: "Le Marais, Paris",
+          year: "2026",
+          camera: "Leica M6 TTL",
+          lens: "Summilux 50mm f/1.4",
+          film: "Kodak Portra 800",
+          exposure: "1/125s · f/2.0 · ISO 800",
+          edition: "Editorial / Artist Proof",
+          note: "Backlit portrait photographed through sheer Belgian linen curtains for an editorial feature on independent sculptors and makers."
+        },
+        {
+          id: "salt-pan-geometry",
+          frame: "09A",
+          scene: "saltpan",
+          width: 1000,
+          height: 1000,
+          layout: "normal",
+          title: "Salt Pan Geometry",
+          category: "editorial",
+          categoryLabel: "Editorial",
+          location: "Camargue, France",
+          year: "2024",
+          camera: "Fujifilm GFX 100S",
+          lens: "GF 80mm f/1.7",
+          film: "Digital Medium Format",
+          exposure: "1/1000s · f/8 · ISO 200",
+          edition: "Edition of 15 · $980",
+          note: "Aerial study of mineral evaporation basins where algae and salinity paint natural rose, ochre, and celadon rectangles."
+        },
+        {
+          id: "greenhouse-fog",
+          frame: "10A",
+          scene: "greenhouse",
+          width: 960,
+          height: 1200,
+          layout: "normal",
+          title: "Conservatory Morning",
+          category: "still-life",
+          categoryLabel: "Still Life",
+          location: "Kew, London",
+          year: "2023",
+          camera: "Hasselblad 500C/M",
+          lens: "Planar 80mm f/2.8",
+          film: "Kodak Portra 400",
+          exposure: "1/60s · f/4 · ISO 400",
+          edition: "Edition of 15 · $850",
+          note: "Condensation on Victorian glasshouse panes softens the palm silhouettes into an impressionist botanical study."
+        }
+      ];
+
+      // Pre-render all plates once
+      PLATES.forEach((p) => {
+        p.src = paintScene(p.scene, p.width, p.height);
+      });
+
+      const MONOGRAPH_PLATES = [
+        {
+          plateIndex: 1,
+          roman: "PLATE I",
+          title: "Vestmannaeyjar Mist",
+          coords: "63°26'N 20°16'W · PORTRA 400",
+          essay: "Between November and January, daylight in the North Atlantic arrives as a brief horizontal slit of pewter and rose. Shot entirely on tripod with long exposures, these plates examine where basalt architecture dissolves into sea fog."
+        },
+        {
+          plateIndex: 3,
+          roman: "PLATE II",
+          title: "Iron Horizon",
+          coords: "64°08'N 21°56'W · EKTAR 100",
+          essay: "Farther inland, volcanic ridges catch the last oblique rays of winter sun, turning wind-scoured terrain into austere, painterly planes of amber and slate."
+        },
+        {
+          plateIndex: 6,
+          roman: "PLATE III",
+          title: "Outpost at Blue Hour",
+          coords: "62°00'N 06°46'W · TILT-SHIFT",
+          essay: "Isolated timber and concrete shelters glow briefly against the encroaching polar dusk, anchoring human presence inside an overwhelming coastal scale."
+        },
+        {
+          plateIndex: 9,
+          roman: "PLATE IV",
+          title: "Thermal Glasshouse",
+          coords: "64°00'N 21°11'W · PORTRA 400",
+          essay: "Geothermal steam rises inside glass conservatories heated by volcanic springs, creating pockets of quiet botanical warmth in sub-arctic winter."
+        }
+      ];
+
+      /* ----------------------------------------------------------------------
+         3. INITIALIZE HERO & ABOUT IMAGES
+         ---------------------------------------------------------------------- */
+      const heroImg = document.getElementById("heroImg");
+      heroImg.src = PLATES[0].src;
+      document.getElementById("aboutPortraitImg").src = PLATES[7].src;
+
+      /* ----------------------------------------------------------------------
+         4. THEME TOGGLE (SAFE STORAGE)
+         ---------------------------------------------------------------------- */
+      const themeToggle = document.getElementById("themeToggle");
+      const themeLabel = document.getElementById("themeLabel");
+      const rootEl = document.documentElement;
+
+      function setTheme(theme) {
+        rootEl.setAttribute("data-theme", theme);
+        themeLabel.textContent = theme === "dark" ? "Paper" : "Darkroom";
+        try {
+          localStorage.setItem("cm_theme", theme);
+        } catch (e) {}
+      }
+
+      try {
+        const saved = localStorage.getItem("cm_theme");
+        if (saved === "light" || saved === "dark") setTheme(saved);
+      } catch (e) {}
+
+      themeToggle.addEventListener("click", () => {
+        const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        setTheme(next);
+      });
+
+      /* ----------------------------------------------------------------------
+         5. MOBILE NAVIGATION
+         ---------------------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileDrawer = document.getElementById("mobileDrawer");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        const isOpen = mobileDrawer.classList.toggle("open");
+        mobileMenuBtn.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll(".mobile-nav-item").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileDrawer.classList.remove("open");
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         6. HERO PARALLAX RETICLE & LIGHTBOX TRIGGER
+         ---------------------------------------------------------------------- */
+      const heroTiltCard = document.getElementById("heroTiltCard");
+      const heroPlateTrigger = document.getElementById("heroPlateTrigger");
+
+      heroTiltCard.addEventListener("mousemove", (e) => {
+        const rect = heroTiltCard.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        heroTiltCard.style.transform = `perspective(900px) rotateY(${x * 3.5}deg) rotateX(${-y * 3.5}deg)`;
+      });
+      heroTiltCard.addEventListener("mouseleave", () => {
+        heroTiltCard.style.transform = "perspective(900px) rotateY(0deg) rotateX(0deg)";
+      });
+
+      heroPlateTrigger.addEventListener("click", () => openLightbox(0));
+      heroPlateTrigger.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openLightbox(0);
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         7. WORKS GALLERY RENDERING, FILTERING & CONTACT SHEET TOGGLE
+         ---------------------------------------------------------------------- */
+      const worksGrid = document.getElementById("worksGrid");
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      const viewGridBtn = document.getElementById("viewGridBtn");
+      const viewContactBtn = document.getElementById("viewContactBtn");
+
+      let currentFilter = "all";
+      let visiblePlates = [...PLATES];
+
+      function renderWorks() {
+        visiblePlates = currentFilter === "all"
+          ? [...PLATES]
+          : PLATES.filter((p) => p.category === currentFilter);
+
+        worksGrid.innerHTML = "";
+        visiblePlates.forEach((plate) => {
+          const globalIndex = PLATES.findIndex((p) => p.id === plate.id);
+          const card = document.createElement("article");
+          const layoutClass = currentFilter === "all" && plate.layout !== "normal" ? plate.layout : "";
+          card.className = `work-card ${layoutClass}`.trim();
+          card.setAttribute("data-frame", plate.frame);
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("role", "button");
+          card.setAttribute("aria-label", `Inspect ${plate.title}, ${plate.location}`);
+
+          card.innerHTML = `
+            <div class="work-media">
+              <img src="${plate.src}" alt="${plate.title} — ${plate.location}" loading="lazy" />
+              <span class="work-hover-badge">Inspect EXIF</span>
+            </div>
+            <div class="work-meta">
+              <h3 class="work-title">${plate.title}</h3>
+              <span class="work-specs">${plate.film}</span>
+            </div>
+            <div class="work-sub">
+              <span>${plate.location}</span>
+              <span>${plate.year}</span>
+            </div>
+          `;
+
+          card.addEventListener("click", () => openLightbox(globalIndex));
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openLightbox(globalIndex);
+            }
+          });
+          worksGrid.appendChild(card);
+        });
+      }
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentFilter = btn.getAttribute("data-filter");
+          renderWorks();
+        });
+      });
+
+      viewGridBtn.addEventListener("click", () => {
+        worksGrid.classList.remove("contact-sheet");
+        viewGridBtn.classList.add("active");
+        viewContactBtn.classList.remove("active");
+      });
+
+      viewContactBtn.addEventListener("click", () => {
+        worksGrid.classList.add("contact-sheet");
+        viewContactBtn.classList.add("active");
+        viewGridBtn.classList.remove("active");
+      });
+
+      renderWorks();
+
+      /* ----------------------------------------------------------------------
+         8. FEATURED MONOGRAPH SWITCHER
+         ---------------------------------------------------------------------- */
+      const monoStageImg = document.getElementById("monoStageImg");
+      const monoStageCaption = document.getElementById("monoStageCaption");
+      const monoStageCoords = document.getElementById("monoStageCoords");
+      const monoEssayText = document.getElementById("monoEssayText");
+      const monoStageTrigger = document.getElementById("monoStageTrigger");
+      const plateList = document.getElementById("plateList");
+
+      let activeMonoIdx = 0;
+
+      function renderMonograph() {
+        const item = MONOGRAPH_PLATES[activeMonoIdx];
+        const plate = PLATES[item.plateIndex];
+        monoStageImg.src = plate.src;
+        monoStageImg.alt = `${item.title} — ${plate.location}`;
+        monoStageCaption.textContent = `${item.roman} — ${item.title.toUpperCase()}`;
+        monoStageCoords.textContent = item.coords;
+        monoEssayText.textContent = item.essay;
+
+        plateList.innerHTML = "";
+        MONOGRAPH_PLATES.forEach((m, idx) => {
+          const p = PLATES[m.plateIndex];
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `plate-item ${idx === activeMonoIdx ? "active" : ""}`;
+          btn.innerHTML = `
+            <img class="plate-thumb" src="${p.src}" alt="" />
+            <div>
+              <span class="plate-name">${m.title}</span>
+              <span class="plate-loc">${p.location}</span>
+            </div>
+            <span class="plate-num">${m.roman.replace("PLATE ", "")}</span>
+          `;
+          btn.addEventListener("click", () => {
+            activeMonoIdx = idx;
+            renderMonograph();
+          });
+          plateList.appendChild(btn);
+        });
+      }
+
+      monoStageTrigger.addEventListener("click", () => {
+        openLightbox(MONOGRAPH_PLATES[activeMonoIdx].plateIndex);
+      });
+      monoStageTrigger.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openLightbox(MONOGRAPH_PLATES[activeMonoIdx].plateIndex);
+        }
+      });
+
+      renderMonograph();
+
+      /* ----------------------------------------------------------------------
+         9. LIGHTBOX & EXIF INSPECTOR
+         ---------------------------------------------------------------------- */
+      const lightbox = document.getElementById("lightbox");
+      const lbImg = document.getElementById("lbImg");
+      const lbCounter = document.getElementById("lbCounter");
+      const lbCategory = document.getElementById("lbCategory");
+      const lbTitle = document.getElementById("lbTitle");
+      const lbNote = document.getElementById("lbNote");
+      const lbExif = document.getElementById("lbExif");
+      const lbStrip = document.getElementById("lbStrip");
+      const lbCloseBtn = document.getElementById("lbCloseBtn");
+      const lbPrevBtn = document.getElementById("lbPrevBtn");
+      const lbNextBtn = document.getElementById("lbNextBtn");
+      const lbInquireBtn = document.getElementById("lbInquireBtn");
+      const lbPrintCta = document.getElementById("lbPrintCta");
+
+      let activePlateIndex = 0;
+
+      function updateLightboxView() {
+        const plate = PLATES[activePlateIndex];
+        lbImg.src = plate.src;
+        lbImg.alt = `${plate.title} — ${plate.location}`;
+        lbCounter.textContent = `PLATE ${String(activePlateIndex + 1).padStart(2, "0")} / ${PLATES.length}`;
+        lbCategory.textContent = plate.categoryLabel;
+        lbTitle.textContent = plate.title;
+        lbNote.textContent = plate.note;
+
+        lbExif.innerHTML = `
+          <div class="exif-row"><span>Location</span><span>${plate.location}, ${plate.year}</span></div>
+          <div class="exif-row"><span>Camera</span><span>${plate.camera}</span></div>
+          <div class="exif-row"><span>Lens</span><span>${plate.lens}</span></div>
+          <div class="exif-row"><span>Medium</span><span>${plate.film}</span></div>
+          <div class="exif-row"><span>Exposure</span><span>${plate.exposure}</span></div>
+          <div class="exif-row"><span>Edition</span><span>${plate.edition}</span></div>
+        `;
+
+        lbStrip.innerHTML = "";
+        PLATES.forEach((p, idx) => {
+          const thumbBtn = document.createElement("button");
+          thumbBtn.type = "button";
+          thumbBtn.className = `strip-thumb ${idx === activePlateIndex ? "active" : ""}`;
+          thumbBtn.setAttribute("aria-label", `Jump to ${p.title}`);
+          thumbBtn.innerHTML = `<img src="${p.src}" alt="" />`;
+          thumbBtn.addEventListener("click", () => {
+            activePlateIndex = idx;
+            updateLightboxView();
+          });
+          lbStrip.appendChild(thumbBtn);
+        });
+      }
+
+      function openLightbox(index) {
+        activePlateIndex = index;
+        updateLightboxView();
+        lightbox.classList.add("open");
+        document.body.classList.add("modal-open");
+        lbCloseBtn.focus();
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        document.body.classList.remove("modal-open");
+      }
+
+      function prevPlate() {
+        activePlateIndex = (activePlateIndex - 1 + PLATES.length) % PLATES.length;
+        updateLightboxView();
+      }
+
+      function nextPlate() {
+        activePlateIndex = (activePlateIndex + 1) % PLATES.length;
+        updateLightboxView();
+      }
+
+      lbCloseBtn.addEventListener("click", closeLightbox);
+      lbPrevBtn.addEventListener("click", prevPlate);
+      lbNextBtn.addEventListener("click", nextPlate);
+
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox || e.target.classList.contains("lightbox-stage")) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("open")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") prevPlate();
+        if (e.key === "ArrowRight") nextPlate();
+      });
+
+      function inquireAboutCurrentPlate() {
+        const plate = PLATES[activePlateIndex];
+        closeLightbox();
+        selectInquiryType("Fine Art Print");
+        const brief = document.getElementById("projectBrief");
+        brief.value = `Hello Clara — I would like to inquire about acquiring an archival print of "${plate.title}" (${plate.edition}, ${plate.location}).`;
+        document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => document.getElementById("clientName").focus(), 450);
+      }
+
+      lbInquireBtn.addEventListener("click", inquireAboutCurrentPlate);
+      lbPrintCta.addEventListener("click", inquireAboutCurrentPlate);
+
+      /* ----------------------------------------------------------------------
+         10. CONTACT FORM, INQUIRY CHIPS & EMAIL COPY
+         ---------------------------------------------------------------------- */
+      const inquiryChips = document.querySelectorAll(".inquiry-chip");
+      const inquiryTypeInput = document.getElementById("inquiryTypeInput");
+
+      function selectInquiryType(type) {
+        inquiryTypeInput.value = type;
+        inquiryChips.forEach((chip) => {
+          chip.classList.toggle("active", chip.getAttribute("data-type") === type);
+        });
+      }
+
+      inquiryChips.forEach((chip) => {
+        chip.addEventListener("click", () => selectInquiryType(chip.getAttribute("data-type")));
+      });
+
+      const copyEmailBtn = document.getElementById("copyEmailBtn");
+      copyEmailBtn.addEventListener("click", () => {
+        const email = "studio@claramoreau.photo";
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).catch(() => {});
+        }
+        copyEmailBtn.textContent = "Copied";
+        setTimeout(() => {
+          copyEmailBtn.textContent = "Copy";
+        }, 1800);
+      });
+
+      const commissionForm = document.getElementById("commissionForm");
+      const formStatus = document.getElementById("formStatus");
+      const formStatusTitle = document.getElementById("formStatusTitle");
+      const formStatusMsg = document.getElementById("formStatusMsg");
+
+      commissionForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("clientName").value.trim();
+        const email = document.getElementById("clientEmail").value.trim();
+        const brief = document.getElementById("projectBrief").value.trim();
+        const type = inquiryTypeInput.value;
+
+        if (!name || !email || !email.includes("@") || !brief) {
+          formStatusTitle.textContent = "Please complete required fields.";
+          formStatusMsg.textContent = "Enter your name, a valid email address, and a brief note about your commission or print inquiry.";
+          formStatus.classList.add("visible");
+          return;
+        }
+
+        const refCode = "CM-" + Math.floor(100000 + Math.random() * 900000);
+        formStatusTitle.textContent = `Inquiry Logged · Ref #${refCode}`;
+        formStatusMsg.textContent = `Thank you, ${name}. Your ${type.toLowerCase()} note has been prepared for Clara Moreau's studio (${email}).`;
+        formStatus.classList.add("visible");
+        commissionForm.reset();
+        selectInquiryType("Editorial Commission");
+      });
+
+      /* ----------------------------------------------------------------------
+         11. SCROLL REVEAL & ACTIVE NAV HIGHLIGHT
+         ---------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        revealEls.forEach((el) => io.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add("visible"));
+      }
+    })();
+  </script>
+</body>
+</html>

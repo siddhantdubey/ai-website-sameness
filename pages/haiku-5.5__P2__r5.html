@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trattoria Nonna Rosa | Neighborhood Italian Kitchen</title>
+<meta name="description" content="Handmade pasta, wood-fired pizza and family recipes in the heart of the neighborhood.">
+<style>
+  :root {
+    --cream: #fbf6ec;
+    --paper: #fffdf8;
+    --red: #9b2226;
+    --green: #2f5d46;
+    --ink: #2b2118;
+    --muted: #6e6255;
+    --gold: #c9a227;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  h1, h2, h3 { font-weight: normal; line-height: 1.2; }
+  a { color: var(--red); }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 88px 0; }
+  .eyebrow {
+    display: block;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 16px; }
+  .lead { color: var(--muted); max-width: 620px; font-size: 1.05rem; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(251, 246, 236, 0.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #e7dccb;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { font-size: 1.25rem; color: var(--red); text-decoration: none; font-style: italic; }
+  .nav-links { display: flex; gap: 28px; list-style: none; font-family: system-ui, sans-serif; font-size: 0.92rem; }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-links a:hover { color: var(--red); }
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s;
+    border: 1.5px solid var(--red);
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--red); color: #fff; }
+  .btn-primary:hover { background: #7d1b1e; border-color: #7d1b1e; }
+  .btn-outline { background: transparent; color: var(--red); }
+  .btn-outline:hover { background: var(--red); color: #fff; }
+
+  /* Hero */
+  .hero {
+    padding: 120px 0 110px;
+    background:
+      linear-gradient(rgba(43, 33, 24, 0.55), rgba(43, 33, 24, 0.7)),
+      radial-gradient(circle at 20% 20%, #b5442f 0%, transparent 45%),
+      radial-gradient(circle at 80% 80%, #2f5d46 0%, transparent 50%),
+      #5a2a1f;
+    color: #fff;
+    text-align: center;
+  }
+  .hero .eyebrow { color: var(--gold); }
+  .hero h1 { font-size: clamp(2.8rem, 7vw, 5rem); margin-bottom: 18px; }
+  .hero p.sub { font-size: 1.2rem; max-width: 560px; margin: 0 auto 36px; opacity: 0.92; }
+  .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hero .btn-outline { color: #fff; border-color: #fff; }
+  .hero .btn-outline:hover { background: #fff; color: var(--ink); }
+  .hero .btn-primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .hero .btn-primary:hover { background: #b8911f; border-color: #b8911f; color: var(--ink); }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .about-card {
+    background: var(--paper);
+    border: 1px solid #e7dccb;
+    padding: 48px 40px;
+    text-align: center;
+    font-style: italic;
+  }
+  .about-card .big { font-size: 3.5rem; color: var(--red); line-height: 1; margin-bottom: 8px; }
+  .about-card p { color: var(--muted); }
+  .about-text p + p { margin-top: 16px; color: var(--muted); }
+
+  /* Menu */
+  .menu { background: var(--paper); }
+  .menu-header { text-align: center; margin-bottom: 52px; }
+  .menu-header .lead { margin: 0 auto; }
+  .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 56px; }
+  .menu-group h3 {
+    font-size: 1.45rem;
+    color: var(--green);
+    border-bottom: 1px solid #e7dccb;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+  .dish { margin-bottom: 18px; }
+  .dish-top { display: flex; justify-content: space-between; gap: 16px; font-weight: bold; }
+  .dish-top span.price { color: var(--red); white-space: nowrap; }
+  .dish p { color: var(--muted); font-size: 0.95rem; }
+  .tag {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 1px 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .menu-note { text-align: center; color: var(--muted); font-size: 0.9rem; margin-top: 40px; font-style: italic; }
+
+  /* Gallery strip */
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 260px;
+  }
+  .strip div { position: relative; }
+  .strip div:nth-child(1) { background: linear-gradient(135deg, #b5442f, #7d1b1e); }
+  .strip div:nth-child(2) { background: linear-gradient(135deg, #c9a227, #8a6d12); }
+  .strip div:nth-child(3) { background: linear-gradient(135deg, #2f5d46, #1d3a2c); }
+  .strip div:nth-child(4) { background: linear-gradient(135deg, #6b3f2a, #3d2316); }
+
+  /* Visit */
+  .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .info-block { margin-bottom: 28px; }
+  .info-block h3 { font-size: 1.2rem; color: var(--green); margin-bottom: 8px; }
+  .info-block p, .info-block li { color: var(--muted); }
+  .hours { list-style: none; }
+  .hours li { display: flex; justify-content: space-between; border-bottom: 1px dotted #d8ccb6; padding: 6px 0; max-width: 360px; }
+  .hours li strong { color: var(--ink); font-weight: normal; }
+
+  /* Reservations */
+  .reserve { background: var(--green); color: #fff; }
+  .reserve .eyebrow { color: var(--gold); }
+  .reserve .lead { color: rgba(255,255,255,0.85); }
+  .reserve-form {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 680px;
+  }
+  .reserve-form label {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: rgba(255,255,255,0.9);
+  }
+  .reserve-form input, .reserve-form select, .reserve-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid #cdbfa5;
+    border-radius: 2px;
+  }
+  .reserve-form .full { grid-column: 1 / -1; }
+  .reserve-form textarea { min-height: 90px; resize: vertical; }
+  .reserve-form button { grid-column: 1 / -1; justify-self: start; }
+  .reserve-form .btn-primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .reserve-form .btn-primary:hover { background: #b8911f; border-color: #b8911f; }
+  .form-status { grid-column: 1 / -1; font-family: system-ui, sans-serif; font-size: 0.9rem; min-height: 1.2em; }
+
+  /* Footer */
+  footer { background: var(--ink); color: #cfc3ae; padding: 56px 0 36px; font-family: system-ui, sans-serif; font-size: 0.9rem; }
+  .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
+  footer .logo { color: #fff; font-size: 1.4rem; }
+  footer .socials a { color: #cfc3ae; margin-right: 18px; text-decoration: none; }
+  footer .socials a:hover { color: #fff; }
+  .copy { margin-top: 40px; padding-top: 24px; border-top: 1px solid #3d3228; text-align: center; font-size: 0.8rem; color: #9c8f7c; }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .about-grid, .visit-grid, .menu-grid { grid-template-columns: 1fr; gap: 40px; }
+    .strip { grid-template-columns: repeat(2, 1fr); height: auto; }
+    .strip div { height: 150px; }
+    section { padding: 64px 0; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .reserve-form { grid-template-columns: 1fr; }
+    .hero { padding: 90px 0 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#top" class="logo">Trattoria Nonna Rosa</a>
+    <ul class="nav-links">
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#visit">Visit</a></li>
+      <li><a href="#reserve">Reservations</a></li>
+    </ul>
+    <a href="#reserve" class="btn btn-primary">Book a Table</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Est. 1987 &middot; Family Owned</span>
+      <h1>Trattoria Nonna Rosa</h1>
+      <p class="sub">Hand-rolled pasta, wood-fired pizza and recipes carried over from a small kitchen in Calabria. Come as you are, stay for dessert.</p>
+      <div class="hero-actions">
+        <a href="#reserve" class="btn btn-primary">Reserve a Table</a>
+        <a href="#menu" class="btn btn-outline">View the Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container about-grid">
+      <div class="about-text">
+        <span class="eyebrow">Our Story</span>
+        <h2 class="section-title">Three generations, one long table.</h2>
+        <p>Nonna Rosa opened this room with a single oven, a borrowed mixer and a rule: every plate leaves the kitchen the way she would have served it to family. Her grandchildren still make the pasta by hand each morning.</p>
+        <p>We source from farms within an hour of the neighborhood, buy our olive oil from the same grove our family has used for decades, and keep the wine list small and honest.</p>
+      </div>
+      <div class="about-card">
+        <div class="big">38</div>
+        <p>years of Sunday gravy, one neighborhood at a time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" class="menu">
+    <div class="container">
+      <div class="menu-header">
+        <span class="eyebrow">Menu</span>
+        <h2 class="section-title">From the Kitchen</h2>
+        <p class="lead">A rotating selection built on seasonal produce. Ask about tonight's specials.</p>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-group">
+          <h3>Antipasti</h3>
+          <div class="dish">
+            <div class="dish-top"><span>Burrata &amp; Roasted Tomato</span><span class="price">$14</span></div>
+            <p>Heirloom tomatoes, basil oil, grilled sourdough.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Polpette della Nonna</span><span class="price">$12</span></div>
+            <p>Beef and pork meatballs, San Marzano sauce, ricotta.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Crispy Artichokes</span><span class="price">$11</span></div>
+            <p>Lemon, pecorino, garlic aioli. <span class="tag">Vegetarian</span></p>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h3>Pasta</h3>
+          <div class="dish">
+            <div class="dish-top"><span>Tagliatelle al Ragù</span><span class="price">$22</span></div>
+            <p>Slow-braised short rib ragù, parmigiano-reggiano.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Cacio e Pepe</span><span class="price">$18</span></div>
+            <p>Tonnarelli, Pecorino Romano, black pepper. <span class="tag">Vegetarian</span></p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Gnocchi alla Sorrentina</span><span class="price">$20</span></div>
+            <p>Potato gnocchi, fresh tomato, mozzarella, basil.</p>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h3>Pizza</h3>
+          <div class="dish">
+            <div class="dish-top"><span>Margherita</span><span class="price">$16</span></div>
+            <p>San Marzano tomato, fior di latte, basil.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Diavola</span><span class="price">$18</span></div>
+            <p>Spicy salami, Calabrian chili, mozzarella, honey.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Quattro Formaggi</span><span class="price">$17</span></div>
+            <p>Gorgonzola, fontina, parmigiano, smoked mozzarella.</p>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <h3>Dolci</h3>
+          <div class="dish">
+            <div class="dish-top"><span>Tiramisù</span><span class="price">$9</span></div>
+            <p>Espresso-soaked savoiardi, mascarpone, cocoa.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Panna Cotta</span><span class="price">$8</span></div>
+            <p>Vanilla bean, seasonal berry compote.</p>
+          </div>
+          <div class="dish">
+            <div class="dish-top"><span>Cannoli</span><span class="price">$9</span></div>
+            <p>Sicilian ricotta, pistachio, candied orange.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="menu-note">Please tell your server about any allergies. Gluten-free pasta available upon request.</p>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true">
+    <div></div><div></div><div></div><div></div>
+  </div>
+
+  <section id="visit">
+    <div class="container visit-grid">
+      <div>
+        <span class="eyebrow">Visit Us</span>
+        <h2 class="section-title">Find the Table</h2>
+        <div class="info-block">
+          <h3>Address</h3>
+          <p>214 Maple Avenue<br>Your Neighborhood, ST 00000</p>
+        </div>
+        <div class="info-block">
+          <h3>Contact</h3>
+          <p>Phone: (555) 010-2468<br>Email: hello@nonnarosa.example</p>
+        </div>
+        <div class="info-block">
+          <h3>Parking</h3>
+          <p>Street parking on Maple Avenue. Public lot behind the bakery on 3rd Street.</p>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Hours</span>
+        <h2 class="section-title">When We're Open</h2>
+        <ul class="hours">
+          <li><span>Monday</span><strong>Closed</strong></li>
+          <li><span>Tuesday &ndash; Thursday</span><strong>4:30 pm &ndash; 9:30 pm</strong></li>
+          <li><span>Friday &amp; Saturday</span><strong>4:30 pm &ndash; 10:30 pm</strong></li>
+          <li><span>Sunday</span><strong>12:00 pm &ndash; 9:00 pm</strong></li>
+        </ul>
+        <p style="margin-top: 20px; color: var(--muted); font-size: 0.95rem;">Sunday brunch is served 10:00 am &ndash; 2:00 pm on the first and third weekend of each month.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reserve" class="reserve">
+    <div class="container">
+      <span class="eyebrow">Reservations</span>
+      <h2 class="section-title">Save Your Seat</h2>
+      <p class="lead">Parties of seven or more, please call us directly. For everyone else, send a request and we'll confirm within a few hours.</p>
+
+      <form class="reserve-form" id="reserve-form">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <div>
+          <label for="time">Time</label>
+          <select id="time" name="time" required>
+            <option value="">Choose a time</option>
+            <option>5:00 pm</option><option>5:30 pm</option><option>6:00 pm</option>
+            <option>6:30 pm</option><option>7:00 pm</option><option>7:30 pm</option>
+            <option>8:00 pm</option><option>8:30 pm</option><option>9:00 pm</option>
+          </select>
+        </div>
+        <div>
+          <label for="guests">Guests</label>
+          <select id="guests" name="guests" required>
+            <option value="">Party size</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option>
+          </select>
+        </div>
+        <div>
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel">
+        </div>
+        <div class="full">
+          <label for="notes">Special requests</label>
+          <textarea id="notes" name="notes" placeholder="Allergies, celebrations, high chair..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Request Reservation</button>
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo">Trattoria Nonna Rosa</div>
+        <p style="margin-top: 8px;">214 Maple Avenue &middot; (555) 010-2468</p>
+      </div>
+      <div class="socials">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Yelp</a>
+      </div>
+    </div>
+    <div class="copy">&copy; 2026 Trattoria Nonna Rosa. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('reserve-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var status = document.getElementById('form-status');
+    status.textContent = 'Thank you! We have your request and will confirm shortly.';
+    this.reset();
+  });
+</script>
+
+</body>
+</html>

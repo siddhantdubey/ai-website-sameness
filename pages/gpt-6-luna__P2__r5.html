@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#193b30">
+  <title>Casa Luce — Neighborhood Italian in Brooklyn</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --green: #193b30;
+      --green-light: #284e40;
+      --cream: #f7f3eb;
+      --paper: #fffdf8;
+      --tomato: #bd4934;
+      --gold: #d2a85d;
+      --ink: #252a23;
+      --muted: #77766d;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+
+    .announcement {
+      padding: 10px 20px;
+      background: #e8dfcb;
+      color: #3f493e;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .announcement a { color: var(--tomato); font-weight: 700; }
+    header {
+      position: absolute;
+      z-index: 2;
+      top: 39px;
+      left: 0;
+      width: 100%;
+      color: var(--paper);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 88px;
+      border-bottom: 1px solid #ffffff32;
+    }
+    .brand {
+      font: 700 25px/1 var(--serif);
+      letter-spacing: .03em;
+    }
+    .brand small {
+      display: block;
+      margin-top: 6px;
+      font: 10px/1 var(--sans);
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      opacity: .74;
+    }
+    .nav-links { display: flex; align-items: center; gap: 34px; font-size: 13px; }
+    .nav-links a:not(.button) { opacity: .86; }
+    .nav-links a:not(.button):hover { opacity: 1; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      background: var(--tomato);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      transition: background .2s, transform .2s;
+    }
+    .button:hover { background: #a63c2b; transform: translateY(-2px); }
+    .button.outline { border-color: #ffffff8a; background: transparent; }
+    .button.outline:hover { background: #ffffff18; }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 720px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 72% 47%, #355949 0, #284638 29%, transparent 55%),
+        linear-gradient(108deg, #193b30 0%, #17372c 57%, #203d31 100%);
+      color: var(--paper);
+    }
+    .hero::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      opacity: .13;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      align-items: center;
+      gap: 40px;
+      width: min(1160px, calc(100% - 48px));
+      margin: 100px auto 0;
+    }
+    .hero-copy { max-width: 490px; padding-bottom: 20px; }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      color: #e8c77f;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { width: 30px; height: 1px; background: currentColor; content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 21px;
+      font: 400 clamp(54px, 7vw, 82px)/.98 var(--serif);
+      letter-spacing: -.045em;
+    }
+    h1 em { color: #e2bd71; font-weight: 400; }
+    .hero-copy > p {
+      max-width: 385px;
+      margin-bottom: 31px;
+      color: #e1e2d8c9;
+      font: 16px/1.8 var(--serif);
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 39px;
+      color: #e1e2d899;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+    .note-stars { color: #e2bd71; letter-spacing: .12em; font-size: 13px; }
+
+    .art-wrap { position: relative; display: grid; place-items: center; min-height: 510px; }
+    .plate {
+      position: relative;
+      width: min(440px, 38vw);
+      aspect-ratio: 1;
+      border: 1px solid #eadfc72f;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f5f0e5 0 47%, #e4dac4 47.4% 48%, #f9f5ec 48.5% 59%, #e6decd 59.5% 60%, #d9d0bd 60.5% 61%, transparent 61.5%);
+      box-shadow: 0 35px 80px #0000003a, inset 0 0 30px #9f92752e;
+      transform: rotate(-10deg);
+    }
+    .plate::after {
+      position: absolute;
+      inset: 16%;
+      border: 1px solid #a99c8335;
+      border-radius: 50%;
+      content: "";
+    }
+    .pasta {
+      position: absolute;
+      inset: 21%;
+      overflow: hidden;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 38%, #bd5c35 0 7%, transparent 8%),
+        radial-gradient(circle at 65% 40%, #e5a54a 0 5%, transparent 6%),
+        radial-gradient(circle at 37% 67%, #e8ae57 0 5%, transparent 6%),
+        radial-gradient(circle at 70% 64%, #b9482e 0 6%, transparent 7%),
+        radial-gradient(circle at 51% 54%, #d9713e 0 43%, #ba4a31 70%);
+      box-shadow: inset 0 0 30px #78362455;
+    }
+    .noodle {
+      position: absolute;
+      width: 56%;
+      height: 25%;
+      border: 7px solid #edca79;
+      border-left-color: #f4d893;
+      border-right-color: #d69d4f;
+      border-radius: 50%;
+      box-shadow: 0 3px 3px #74391d66;
+      transform: rotate(-34deg);
+    }
+    .n1 { top: 27%; left: 14%; }
+    .n2 { top: 36%; left: 24%; transform: rotate(27deg); }
+    .n3 { top: 45%; left: 12%; transform: rotate(-13deg); }
+    .n4 { top: 54%; left: 29%; transform: rotate(48deg); }
+    .n5 { top: 59%; left: 9%; transform: rotate(-47deg); }
+    .basil {
+      position: absolute;
+      width: 17%;
+      height: 10%;
+      border-radius: 100% 0 100% 0;
+      background: linear-gradient(135deg, #668858, #2e513a);
+      box-shadow: 0 2px 3px #48281555;
+    }
+    .b1 { top: 18%; left: 40%; transform: rotate(28deg); }
+    .b2 { top: 44%; left: 68%; transform: rotate(82deg); }
+    .b3 { top: 67%; left: 27%; transform: rotate(-21deg); }
+    .basil::after {
+      position: absolute;
+      top: 50%;
+      left: 15%;
+      width: 75%;
+      height: 1px;
+      background: #c8d49b99;
+      content: "";
+      transform: rotate(-20deg);
+    }
+    .parmesan {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff0bd;
+      box-shadow: 16px 6px 0 #f9e9b2, 31px -4px 0 #fff1c2, 42px 9px 0 #f2dba0,
+        -10px 20px 0 #fff2c6, 15px 28px 0 #eed695, 48px 29px 0 #fff0b6;
+    }
+    .p1 { top: 26%; left: 51%; }
+    .p2 { top: 61%; left: 49%; }
+    .tomato {
+      position: absolute;
+      top: 34%;
+      left: 43%;
+      width: 18%;
+      aspect-ratio: 1;
+      border-radius: 47%;
+      background: radial-gradient(circle at 35% 30%, #ee9870, #c64e35 67%);
+      box-shadow: 0 5px 8px #6e2b1d70;
+    }
+    .tomato::after {
+      position: absolute;
+      top: 5%;
+      left: 40%;
+      width: 22%;
+      height: 17%;
+      background: #476541;
+      clip-path: polygon(50% 0, 62% 40%, 100% 31%, 72% 61%, 88% 100%, 50% 73%, 10% 100%, 28% 60%, 0 35%, 39% 40%);
+      content: "";
+    }
+    .art-label {
+      position: absolute;
+      right: -1px;
+      bottom: 86px;
+      padding: 17px 20px;
+      border: 1px solid #ffffff38;
+      background: #193b30b5;
+      color: var(--paper);
+      font: italic 16px var(--serif);
+      backdrop-filter: blur(8px);
+    }
+    .art-label small {
+      display: block;
+      margin-top: 5px;
+      color: #e2bd71;
+      font: 9px var(--sans);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .ticker {
+      overflow: hidden;
+      padding: 17px 0;
+      background: #e8dfcb;
+      color: #455044;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      font: italic 17px var(--serif);
+    }
+    .ticker span { color: var(--tomato); font-size: 12px; }
+
+    section { padding: 105px 0; }
+    .section-kicker {
+      margin-bottom: 15px;
+      color: var(--tomato);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    h2 {
+      margin-bottom: 18px;
+      font: 400 clamp(39px, 5vw, 55px)/1.05 var(--serif);
+      letter-spacing: -.035em;
+    }
+    .intro {
+      max-width: 495px;
+      margin: 0 auto;
+      color: var(--muted);
+      font: 16px/1.8 var(--serif);
+    }
+
+    .story { background: var(--paper); }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 90px;
+    }
+    .story-art {
+      position: relative;
+      min-height: 420px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 70% 30%, #b45c39 0 8%, transparent 8.5%),
+        radial-gradient(ellipse at 36% 60%, #dfb16b 0 12%, transparent 12.5%),
+        radial-gradient(ellipse at 69% 73%, #6c7d4c 0 7%, transparent 7.5%),
+        linear-gradient(142deg, #d7c39d, #a7aa83 45%, #65725a);
+    }
+    .story-art::before {
+      position: absolute;
+      inset: 34px;
+      border: 1px solid #fff8;
+      content: "";
+    }
+    .story-art::after {
+      position: absolute;
+      right: -6%;
+      bottom: -28%;
+      width: 80%;
+      aspect-ratio: 1;
+      border: 30px solid #f8f2e4;
+      border-radius: 50%;
+      background: radial-gradient(circle, #c25035 0 34%, #f4e8ca 35% 45%, transparent 46%);
+      content: "";
+      opacity: .86;
+    }
+    .story-stamp {
+      position: absolute;
+      z-index: 1;
+      top: 51px;
+      left: 48px;
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #fff9;
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      font: italic 17px/1.25 var(--serif);
+      transform: rotate(-12deg);
+    }
+    .story-copy p:not(.section-kicker) {
+      color: var(--muted);
+      font: 16px/1.85 var(--serif);
+    }
+    .story-signoff {
+      margin-top: 26px;
+      color: var(--green);
+      font: italic 19px var(--serif);
+    }
+
+    .menu { text-align: center; }
+    .menu .intro { margin-bottom: 49px; }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      text-align: left;
+    }
+    .dish {
+      min-height: 285px;
+      padding: 29px;
+      border: 1px solid #e2ddcf;
+      background: #fbf9f3;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .dish:hover { transform: translateY(-4px); box-shadow: 0 13px 30px #49391a0e; }
+    .dish-icon {
+      display: grid;
+      width: 49px;
+      height: 49px;
+      place-items: center;
+      margin-bottom: 27px;
+      border-radius: 50%;
+      background: #eee5d1;
+      color: var(--tomato);
+      font: 22px var(--serif);
+    }
+    .dish-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+    .dish h3 { margin: 0; font: 400 22px var(--serif); }
+    .price { color: var(--tomato); font: 17px var(--serif); }
+    .dish p { margin: 0; color: var(--muted); font: 14px/1.7 var(--serif); }
+    .menu-link { margin-top: 38px; }
+
+    .visit {
+      padding: 84px 0;
+      background: var(--green);
+      color: var(--paper);
+    }
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      align-items: start;
+      gap: 48px;
+    }
+    .visit .section-kicker { color: #e2bd71; }
+    .visit h2 { margin: 0; font-size: 39px; }
+    .visit-block h3 {
+      margin: 4px 0 16px;
+      color: #e2bd71;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .visit-block p { margin: 0; color: #e1e2d8bd; font: 14px/1.9 var(--serif); }
+    .visit-block a { color: var(--paper); }
+    .visit-block a:hover { color: #e2bd71; }
+
+    footer { padding: 23px 0; background: #132e25; color: #ffffff8a; }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      font-size: 10px;
+      letter-spacing: .05em;
+    }
+    .footer-brand { color: var(--paper); font: 17px var(--serif); }
+    .footer-links { display: flex; gap: 20px; }
+
+    @media (max-width: 800px) {
+      .nav-links { gap: 18px; }
+      .nav-links a:nth-child(2), .nav-links a:nth-child(3) { display: none; }
+      .hero { min-height: 850px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 0; margin-top: 155px; }
+      .hero-copy { z-index: 1; }
+      .hero-copy > p { max-width: 450px; }
+      .art-wrap { position: absolute; right: -28px; bottom: -42px; min-height: 0; opacity: .72; }
+      .plate { width: min(380px, 70vw); }
+      .art-label { right: 5px; bottom: 28px; }
+      .story-grid { gap: 45px; }
+      .story-art { min-height: 350px; }
+      .menu-grid { grid-template-columns: 1fr 1fr; }
+      .visit-grid { grid-template-columns: 1fr 1fr; }
+      .visit-grid > :first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 540px) {
+      .wrap, .hero-inner { width: min(100% - 36px, 1160px); }
+      .announcement { font-size: 9px; letter-spacing: .09em; }
+      header { top: 36px; }
+      .nav { min-height: 75px; }
+      .brand { font-size: 22px; }
+      .nav-links { gap: 0; }
+      .nav-links .button { min-height: 40px; padding: 0 13px; font-size: 9px; }
+      .hero { min-height: 790px; }
+      .hero-inner { margin-top: 135px; }
+      h1 { font-size: 62px; }
+      .hero-copy > p { max-width: 320px; font-size: 15px; }
+      .hero-note { margin-top: 25px; font-size: 10px; }
+      .art-wrap { right: -48px; bottom: -24px; }
+      .plate { width: 78vw; }
+      .art-label { right: 8px; bottom: 17px; padding: 12px 14px; font-size: 14px; }
+      .ticker-track { justify-content: flex-start; padding-left: 20px; font-size: 15px; }
+      section { padding: 76px 0; }
+      .story-grid { grid-template-columns: 1fr; gap: 35px; }
+      .story-art { min-height: 330px; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .dish { min-height: 0; }
+      .visit { padding: 70px 0; }
+      .visit-grid { grid-template-columns: 1fr 1fr; gap: 35px 20px; }
+      .visit h2 { font-size: 34px; }
+      .footer-inner { flex-wrap: wrap; }
+      .footer-links { gap: 13px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">
+    A little taste of Italy, right around the corner &nbsp;·&nbsp;
+    <a href="#visit">Walk-ins always welcome</a>
+  </div>
+
+  <header>
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Casa Luce home">CASA LUCE<small>Brooklyn, New York</small></a>
+      <div class="nav-links">
+        <a href="#story">Our story</a>
+        <a href="#menu">The menu</a>
+        <a href="#visit">Find us</a>
+        <a class="button" href="tel:+17185550148">Book a table</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="eyebrow">A neighborhood trattoria</div>
+          <h1 id="hero-title">Come for<br>the pasta.<br><em>Stay awhile.</em></h1>
+          <p>Hand-rolled, slow-simmered, and always served with a little extra. Pull up a chair at your new favorite table.</p>
+          <div class="hero-actions">
+            <a class="button" href="#menu">Explore the menu</a>
+            <a class="button outline" href="#visit">Plan your visit</a>
+          </div>
+          <div class="hero-note"><span class="note-stars">★★★★★</span> Made with love on Smith Street since 2014</div>
+        </div>
+        <div class="art-wrap" role="img" aria-label="Illustration of fresh tomato and basil pasta">
+          <div class="plate">
+            <div class="pasta">
+              <i class="noodle n1"></i><i class="noodle n2"></i><i class="noodle n3"></i>
+              <i class="noodle n4"></i><i class="noodle n5"></i>
+              <i class="basil b1"></i><i class="basil b2"></i><i class="basil b3"></i>
+              <i class="parmesan p1"></i><i class="parmesan p2"></i><i class="tomato"></i>
+            </div>
+          </div>
+          <div class="art-label">Made by hand, every day<small>Fresh from our kitchen</small></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="Our approach">
+      <div class="ticker-track">
+        <span>✳</span> Good food, good company <span>✳</span> Pasta fatta a mano
+        <span>✳</span> A seat for everyone <span>✳</span> Good food, good company
+      </div>
+    </div>
+
+    <section class="story" id="story">
+      <div class="story-grid wrap">
+        <div class="story-art" role="img" aria-label="A rustic table set with a bowl of pasta">
+          <div class="story-stamp">Fatto con<br>amore<br>✳</div>
+        </div>
+        <div class="story-copy">
+          <p class="section-kicker">A table with a story</p>
+          <h2>Our kind of<br>Italian is simple.</h2>
+          <p>It starts with Sunday sauce, a crowded kitchen, and someone insisting you take another serving. That feeling is what we wanted to bring to Smith Street.</p>
+          <p>So we make our pasta by hand, shop for what's in season, and set the table like we're expecting friends. Because around here, we are.</p>
+          <div class="story-signoff">A tavola, amici. — The Casa Luce family</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu" id="menu">
+      <div class="wrap">
+        <p class="section-kicker">From our kitchen</p>
+        <h2>A few house favorites</h2>
+        <p class="intro">A little something to start, something slow for the middle, and always room for one more bite.</p>
+        <div class="menu-grid">
+          <article class="dish">
+            <div class="dish-icon" aria-hidden="true">✳</div>
+            <div class="dish-top"><h3>Burrata &amp; Peaches</h3><span class="price">$17</span></div>
+            <p>Summer peaches, torn basil, aged balsamic, grilled country bread.</p>
+          </article>
+          <article class="dish">
+            <div class="dish-icon" aria-hidden="true">〰</div>
+            <div class="dish-top"><h3>Sunday Tagliatelle</h3><span class="price">$26</span></div>
+            <p>Hand-cut ribbons, slow-braised short rib ragù, a snowfall of parmigiano.</p>
+          </article>
+          <article class="dish">
+            <div class="dish-icon" aria-hidden="true">❋</div>
+            <div class="dish-top"><h3>Lemon Olive Oil Cake</h3><span class="price">$12</span></div>
+            <p>Bright lemon, grassy olive oil, whipped mascarpone, just enough sweetness.</p>
+          </article>
+        </div>
+        <div class="menu-link"><a class="button" href="#visit">Join us for dinner</a></div>
+      </div>
+    </section>
+
+    <section class="visit" id="visit">
+      <div class="visit-grid wrap">
+        <div>
+          <p class="section-kicker">Your table is waiting</p>
+          <h2>See you<br>around the table.</h2>
+        </div>
+        <div class="visit-block">
+          <h3>Come on in</h3>
+          <p>214 Smith Street<br>Brooklyn, NY 11201<br><br><a href="tel:+17185550148">(718) 555-0148</a><br><a href="mailto:ciao@casaluce.example">ciao@casaluce.example</a></p>
+        </div>
+        <div class="visit-block">
+          <h3>Pull up a chair</h3>
+          <p>Tuesday–Thursday &nbsp; 5–10<br>Friday–Saturday &nbsp; 5–11<br>Sunday &nbsp; 4–9<br>Monday &nbsp; taking a little rest</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner wrap">
+      <a class="footer-brand" href="#">Casa Luce</a>
+      <span>Good food tastes better together. © 2025 Casa Luce</span>
+      <div class="footer-links"><a href="#menu">Menu</a><a href="#visit">Contact</a><a href="#story">Our story</a></div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,241 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5ed">
+  <title>Daymark — A shared place for project work</title>
+  <style>
+    :root {
+      --paper: #f7f5ed;
+      --ink: #242820;
+      --muted: #60665a;
+      --line: #cecec0;
+      --orange: #ff713e;
+      --serif: "Instrument Serif", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+      --mono: "IBM Plex Mono", "Courier New", monospace;
+    }
+    * { box-sizing: border-box }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--sans) }
+    button, input { font: inherit }
+    button, a { -webkit-tap-highlight-color: transparent }
+    button { cursor: pointer; color: inherit }
+    a { color: inherit; text-decoration: none }
+    :focus-visible { outline: 3px solid #956125; outline-offset: 4px }
+    .wrap { width: min(1280px, 90%); margin-inline: auto }
+    header, nav, .brand, .actions, .workspace-head, .tabs, .row, footer {
+      display: flex; align-items: center;
+    }
+    header { min-height: 86px; justify-content: space-between; border-bottom: 1px solid var(--line) }
+    .brand { gap: 10px; font-size: 26px; font-weight: 750; letter-spacing: -1.7px }
+    .mark { width: 28px; height: 29px; background: var(--ink); clip-path: polygon(0 100%, 0 0, 27% 0, 27% 65%, 39% 65%, 39% 22%, 65% 22%, 65% 65%, 77% 65%, 77% 42%, 100% 42%, 100% 100%) }
+    nav { gap: 30px; font-size: 14px }
+    nav a:hover, footer a:hover { text-decoration: underline; text-underline-offset: 4px }
+    .nav-cta { border: 1px solid var(--ink); padding: 8px 15px; border-radius: 5px }
+    .hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 5%; align-items: center; padding-block: clamp(64px, 7vw, 108px) }
+    h1, h2, h3, p { margin: 0 }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400 }
+    h1 { font-size: clamp(65px, 6.65vw, 102px); letter-spacing: -.073em; line-height: .98 }
+    h1 em { font-weight: 400; color: #586a49 }
+    .intro { max-width: 410px; margin-top: 26px; color: var(--muted); font-size: 18px }
+    .actions { gap: 22px; flex-wrap: wrap; margin-top: 30px }
+    .primary { display: inline-flex; align-items: center; justify-content: center; gap: 18px; padding: 12px 18px; background: var(--ink); color: white; border: 1px solid var(--ink); border-radius: 5px; font-size: 14px }
+    .primary:hover { background: #404938 }
+    .text-link { font-size: 14px; border-bottom: 1px solid #858777 }
+    .poster { position: relative; margin: 0; overflow: hidden; background: var(--orange); border: 1px solid var(--ink); border-radius: 3px; transform: rotate(1deg); box-shadow: 4px 5px 0 #dbdace }
+    .poster svg { display: block; width: 100%; height: auto }
+    .poster figcaption { display: flex; justify-content: space-between; margin: 0 5% 4%; padding-top: 10px; border-top: 1px solid #793d27; font: 11px var(--mono); letter-spacing: .06em }
+    .workspace { border-top: 1px solid var(--ink); padding-block: 42px 60px; scroll-margin-top: 15px }
+    .workspace-head { justify-content: space-between; gap: 20px; margin-bottom: 25px }
+    .eyebrow { font: 11px var(--mono); letter-spacing: .11em; text-transform: uppercase; color: var(--muted) }
+    h2 { font-size: clamp(36px, 4vw, 58px); letter-spacing: -.055em; line-height: 1.12; margin-top: 7px }
+    .add { background: transparent; border: 1px solid #a6aa9b; border-radius: 4px; padding: 8px 14px; white-space: nowrap }
+    .add:hover { background: #eaeade }
+    .tabs { gap: 22px; border-bottom: 1px solid var(--line) }
+    .tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 9px 0; color: var(--muted); font-size: 14px }
+    .tabs button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); font-weight: 700 }
+    .row { gap: 15px; min-height: 56px; border-bottom: 1px solid var(--line); padding: 8px 3px }
+    .row input { width: 17px; height: 17px; accent-color: #566947; cursor: pointer }
+    .row label { flex: 1; overflow-wrap: anywhere; cursor: pointer }
+    .row input:checked + label { text-decoration: line-through; color: var(--muted) }
+    .owner { color: var(--muted); font: 12px var(--mono) }
+    .empty, .note { color: var(--muted); font-size: 13px; margin-top: 15px }
+    form { display: flex; gap: 10px; margin-bottom: 16px }
+    form input { min-width: 0; flex: 1; border: 1px solid #919585; border-radius: 4px; background: #fffef8; padding: 9px 12px }
+    [hidden] { display: none !important }
+    footer { border-top: 1px solid var(--line); padding: 22px 0; justify-content: space-between; font-size: 13px }
+    @media (max-width: 760px) {
+      header { min-height: 68px }
+      nav { gap: 14px }
+      .hero { grid-template-columns: 1fr; gap: 40px; padding-block: 50px }
+      .poster { width: min(100%, 530px); justify-self: center }
+      h1 { font-size: clamp(60px, 12vw, 82px) }
+      .workspace { padding-block: 30px 45px }
+    }
+    @media (max-width: 420px) {
+      nav > a:first-child { display: none }
+      .wrap { width: 91% }
+      .row { gap: 8px }
+      .owner { font-size: 10px }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="wrap">
+    <a class="brand" href="#top" aria-label="Daymark home"><span class="mark" aria-hidden="true"></span>Daymark</a>
+    <nav aria-label="Main navigation">
+      <a href="#workspace">Product</a>
+      <a class="nav-cta" href="#workspace">Open demo ↗</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="headline">
+      <div>
+        <h1 id="headline">Big plans.<br><em>Small steps.</em></h1>
+        <p class="intro">A shared place for your team's projects, tasks, and deadlines. Open it on Monday and see where to start.</p>
+        <div class="actions">
+          <a class="primary" href="#workspace">Try the workspace <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#project-tasks">Explore the task list ↓</a>
+        </div>
+      </div>
+      <figure class="poster">
+        <svg viewBox="0 0 580 360" role="img" aria-labelledby="art-title">
+          <title id="art-title">Field study of a folded paper staircase climbing toward a small flag</title>
+          <defs>
+            <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+              <rect width="5" height="5" fill="#d9d7bc"/><path d="M0 0V5" stroke="#59604c" stroke-width="1.6"/>
+            </pattern>
+            <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r=".7" fill="#752e1a"/>
+            </pattern>
+          </defs>
+          <rect width="580" height="360" fill="url(#dots)" opacity=".37"/>
+          <g fill="none" stroke="#773a24" opacity=".55">
+            <path d="M34 282L353 98M86 319L454 107M169 337L537 125M58 208L314 356M152 154L475 340" stroke-dasharray="4 6"/>
+          </g>
+          <g stroke="#292d23" stroke-width="2" stroke-linejoin="round">
+            <path fill="#33392d" d="M54 262l131 76 313-181-130-75z" opacity=".18" stroke="none"/>
+            <path fill="url(#hatch)" d="M168 286l54-31v-26l54-31v-26l54-31v-26l54-31v-26l60-35v129L168 313z"/>
+            <path fill="#fff5d7" d="M69 229l54-31 99 57-54 31z"/>
+            <path fill="#5a6851" d="M69 229l99 57v27l-99-57z"/>
+            <path fill="#5a6851" d="M123 172l99 57v26l-99-57z"/>
+            <path fill="#fff5d7" d="M123 172l54-31 99 57-54 31z"/>
+            <path fill="#5a6851" d="M177 115l99 57v26l-99-57z"/>
+            <path fill="#fff5d7" d="M177 115l54-31 99 57-54 31z"/>
+            <path fill="#5a6851" d="M231 58l99 57v26l-99-57z"/>
+            <path fill="#fff5d7" d="M231 58l54-31 99 57-54 31z"/>
+            <path fill="#5a6851" d="M285 1l99 57v26l-99-57z"/>
+            <path fill="#fff5d7" d="M285 1l60-35 99 57-60 35z"/>
+          </g>
+          <g transform="translate(394 28) rotate(6)" stroke="#292d23" stroke-width="2">
+            <path d="M0 0v-26"/><path fill="#292d23" d="M0-26l24 5-24 7z"/>
+          </g>
+          <g fill="#472e22" font-family="monospace" font-size="12">
+            <text x="27" y="32">FIG. 01</text>
+            <text x="470" y="300">ASCENT</text>
+            <path d="M472 283l27-16m-9 0l9-1-4 8" fill="none" stroke="#472e22"/>
+          </g>
+        </svg>
+        <figcaption><span>DAYMARK FIELD STUDIES</span><span>01 / 01</span></figcaption>
+      </figure>
+    </section>
+    <section class="workspace" id="workspace" aria-labelledby="project-title">
+      <div class="workspace-head">
+        <div><p class="eyebrow">Demo workspace / Studio projects</p><h2 id="project-title">Autumn catalogue</h2></div>
+        <button class="add" id="new-task" aria-expanded="false" aria-controls="task-form">+ Add task</button>
+      </div>
+      <form id="task-form" hidden>
+        <input id="task-name" aria-label="Task name" placeholder="What needs doing?" maxlength="140" required>
+        <button class="primary" type="submit">Add task</button>
+      </form>
+      <div id="project-tasks" class="tabs" role="group" aria-label="Filter tasks">
+        <button data-filter="all" aria-pressed="true">All tasks</button>
+        <button data-filter="open" aria-pressed="false">Open</button>
+        <button data-filter="done" aria-pressed="false">Completed</button>
+      </div>
+      <div id="tasks"></div>
+      <p class="note" id="summary" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer class="wrap"><a class="brand" href="#top">Daymark</a><a href="#top">Back to top ↑</a></footer>
+  <script>
+    const tasks = [
+      { name: "Confirm the print schedule", owner: "M. Chen", done: true },
+      { name: "Select photographs for the cover", owner: "J. Bell", done: false },
+      { name: "Review the first layout proof", owner: "A. Reyes", done: false }
+    ];
+    const list = document.querySelector("#tasks");
+    const form = document.querySelector("#task-form");
+    const field = document.querySelector("#task-name");
+    const toggle = document.querySelector("#new-task");
+    const filters = document.querySelectorAll("[data-filter]");
+    let filter = "all";
+
+    function render() {
+      list.replaceChildren();
+      for (const [index, task] of tasks.entries()) {
+        if (filter === "open" && task.done || filter === "done" && !task.done) continue;
+        const row = document.createElement("div");
+        row.className = "row";
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.id = "task-" + index;
+        box.checked = task.done;
+        const label = document.createElement("label");
+        label.htmlFor = box.id;
+        label.textContent = task.name;
+        const owner = document.createElement("span");
+        owner.className = "owner";
+        owner.textContent = task.owner;
+        box.addEventListener("change", () => {
+          task.done = box.checked;
+          render();
+          const next = document.getElementById(box.id) || list.querySelector("input") || document.querySelector('[aria-pressed="true"]');
+          next.focus({ preventScroll: true });
+        });
+        row.append(box, label, owner);
+        list.append(row);
+      }
+      if (!list.children.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = filter === "done" ? "Completed tasks will appear here." : "All caught up.";
+        list.append(empty);
+      }
+      document.querySelector("#summary").textContent =
+        `${tasks.filter(task => task.done).length} of ${tasks.length} complete · Changes last for this visit.`;
+      filters.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.filter === filter)));
+    }
+    filters.forEach(button => button.addEventListener("click", () => {
+      filter = button.dataset.filter;
+      render();
+    }));
+    function showForm(open) {
+      form.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Cancel" : "+ Add task";
+      (open ? field : toggle).focus();
+    }
+    toggle.addEventListener("click", () => showForm(form.hidden));
+    field.addEventListener("input", () => field.setCustomValidity(""));
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = field.value.trim();
+      if (!name) {
+        field.setCustomValidity("Enter a task name.");
+        field.reportValidity();
+        return;
+      }
+      tasks.push({ name, owner: "You", done: false });
+      field.value = "";
+      filter = "all";
+      showForm(false);
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>
+```

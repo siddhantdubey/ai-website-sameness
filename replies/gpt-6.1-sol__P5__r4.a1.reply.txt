@@ -1,0 +1,251 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f2">
+<title>Forma — Good work, coming together.</title>
+<style>
+  :root{--paper:#f7f7f2;--ink:#253c36;--muted:#737c75;--line:#dedfd5;--orange:#e77947;--green:#e7eddd}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+  button,a,input{font:inherit}
+  a{color:inherit;text-decoration:none}
+  button{cursor:pointer}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:5px}
+  .wrap{max-width:1440px;margin:auto;padding:0 6%}
+  header{height:100px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:30px}
+  .brand{font-weight:750;font-size:29px;letter-spacing:-1.7px;display:inline-flex;gap:10px;align-items:center}
+  .mark{width:28px;height:30px;display:grid;grid-template-columns:repeat(2,1fr);gap:3px;transform:rotate(-8deg)}
+  .mark i{background:var(--ink);border-radius:2px}
+  .mark i:nth-child(2){border-radius:2px 13px 2px 2px}
+  .mark i:nth-child(3){height:19px}
+  nav{display:flex;gap:32px;font-size:13px}
+  .nav-right{display:flex;gap:25px;align-items:center;font-size:13px}
+  .button{display:inline-flex;justify-content:center;align-items:center;gap:24px;padding:16px 21px;background:var(--ink);color:white;border:1px solid var(--ink);border-radius:5px;font-weight:600;font-size:13px;transition:background .2s,transform .2s}
+  .button:hover{background:#3c554b;transform:translateY(-2px)}
+  .button.small{padding:12px 17px;gap:15px}
+  .eyebrow{font-family:monospace;font-size:11px;letter-spacing:1.8px;text-transform:uppercase}
+  .hero{padding:75px 0 65px;display:grid;grid-template-columns: .9fr 1.2fr;gap:48px;align-items:center}
+  .new{font-size:11px;display:inline-flex;align-items:center;gap:9px;margin-bottom:26px}
+  .new span{background:#e6ebda;border:1px solid #d5ddc6;border-radius:3px;padding:4px 6px;font:10px monospace;text-transform:uppercase;letter-spacing:1px}
+  .new b{font-size:15px;margin-left:3px;font-weight:400}
+  h1{font-size:clamp(48px,5.5vw,79px);font-weight:500;line-height:1.03;letter-spacing:-4.3px;margin:0 0 25px}
+  h1 em{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-4px}
+  .intro{max-width:340px;font-size:16px;line-height:1.75;color:#6c756d;margin:0 0 28px}
+  .hero-actions{display:flex;align-items:center;gap:23px}
+  .text-link{font-size:12px;border-bottom:1px solid #b5bdb2;padding-bottom:5px;display:inline-flex;gap:9px;align-items:center}
+  .fine{font-size:10px;color:var(--muted);margin-top:15px}
+  .proof{display:flex;align-items:center;gap:13px;margin-top:36px}
+  .faces{display:flex;padding-left:0}
+  .face{display:grid;place-items:center;flex-shrink:0;width:30px;height:30px;border-radius:50%;border:2px solid var(--paper);margin-left:-6px;font-size:10px;font-weight:bold;color:#3b453d;background:#d9c5ad}
+  .face:first-child{margin-left:0;background:#d2ddca}.face:nth-child(2){background:#ecc6b2}.face:nth-child(3){background:#c0cfca}.face:nth-child(4){background:#e2d4b6}
+  .proof-copy{font-size:10px;line-height:1.7;color:var(--muted)}
+  .stars{letter-spacing:2px;color:var(--ink);font-size:10px}
+  .stage{position:relative;min-width:0;padding:30px 0 46px 12px}
+  .stage:before{content:"";position:absolute;inset:0 -28px 0 -3px;background:#e9edde;border-radius:48% 48% 10px 10px}
+  .stage:after{content:"";position:absolute;width:110px;height:110px;border:1px solid #cbd3bb;border-radius:50%;right:-35px;top:10px;z-index:-1}
+  .app{position:relative;display:flex;height:365px;width:100%;background:#fff;border:1px solid #d7ddd0;border-radius:8px;box-shadow:0 18px 36px #35422a12;overflow:hidden;transform:rotate(-2deg);font-size:9px}
+  .sidebar{width:116px;flex-shrink:0;background:#f8f9f4;border-right:1px solid #e8ebe2;padding:17px 10px}
+  .app-brand{font-weight:bold;font-size:15px;letter-spacing:-.6px;margin-bottom:24px;display:flex;align-items:center;gap:6px}
+  .tiny-mark{font-size:20px;line-height:1}
+  .side-item{padding:8px 6px;display:flex;align-items:center;gap:7px;color:#748071;white-space:nowrap}
+  .side-item.active{background:#e7eddf;border-radius:4px;color:#304b3d}
+  .side-label{font-size:7px;letter-spacing:1px;color:#8a9386;margin:23px 6px 8px}
+  .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#c6ceaf;flex-shrink:0}
+  .dot.orange{background:#df9a74}.dot.blue{background:#a9bec9}
+  .workspace{flex:1;min-width:0;padding:17px}
+  .app-top{display:flex;justify-content:space-between;color:#8c9388;font-size:8px;margin-bottom:22px}
+  .workspace h3{font-size:19px;letter-spacing:-.5px;margin:0 0 7px;font-weight:500}
+  .project-desc{color:#92998e;font-size:8px;margin-bottom:18px}
+  .view-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e9ece3;padding-bottom:10px;gap:6px}
+  .view-tabs{display:flex;gap:14px;font-size:8px;color:#8d9688}
+  .view-tabs b{color:#344d3c;font-weight:500}
+  .add-task{font-size:7px;color:white;background:#385641;border:none;border-radius:3px;padding:6px 8px}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:14px}
+  .column-title{font-size:8px;display:flex;gap:6px;align-items:center;margin-bottom:9px;white-space:nowrap}
+  .count{color:#9ca393;font-size:7px}
+  .task{background:#fff;border:1px solid #e2e7dc;border-radius:4px;padding:9px;margin-bottom:7px;min-height:80px;box-shadow:0 2px 3px #293f2a03}
+  .tag{display:inline-block;padding:3px 4px;background:#eaf0e2;color:#70845d;font-size:6px;border-radius:2px;margin-bottom:7px}
+  .tag.peach{background:#fae8dd;color:#ae785a}.tag.lilac{background:#eeebf5;color:#9384ac}
+  .task-name{font-size:8px;line-height:1.5;color:#41513d}
+  .task-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;color:#99a18f;font-size:6px}
+  .mini-face{background:#d6ddc8;border-radius:50%;height:15px;width:15px;display:grid;place-items:center;font-size:5px;color:#5c6d4c}
+  .task.done .task-name{text-decoration:line-through;color:#9aa38f}
+  .floating{position:absolute;bottom:14px;left:45px;display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e4e5db;border-radius:7px;box-shadow:0 8px 24px #3a463114;padding:15px 20px;transform:rotate(2deg)}
+  .check{width:28px;height:28px;border-radius:50%;background:#e7eddd;color:#49603c;display:grid;place-items:center;font-size:14px}
+  .floating strong{font-size:11px;display:block;font-weight:500;margin-bottom:4px}
+  .floating span{font-size:9px;color:#959b8d}
+  .note{position:absolute;right:-8px;bottom:7px;font-family:Georgia,serif;font-style:italic;font-size:16px;transform:rotate(-6deg);color:#667a55}
+  .note svg{position:absolute;width:48px;height:37px;right:18px;bottom:25px}
+  .customers{padding:30px 0 48px;text-align:center;border-bottom:1px solid var(--line)}
+  .customers p{font-size:10px;letter-spacing:.3px;color:#8c9386;margin:0 0 25px}
+  .logos{display:flex;justify-content:space-around;align-items:center;gap:25px;color:#7e877b}
+  .logo{font-size:21px;font-weight:700;letter-spacing:-.8px}
+  .logo.serif{font-family:Georgia,serif;font-weight:400;font-size:26px}.logo.mono{font-family:monospace;font-size:20px;letter-spacing:-1.4px}.logo.light{font-weight:400;letter-spacing:-1px}
+  .features{padding:66px 0}
+  .section-top{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:35px}
+  h2{font-size:38px;line-height:1.15;letter-spacing:-1.7px;font-weight:500;margin:13px 0 0}
+  .section-top>p{font-size:13px;line-height:1.8;max-width:270px;color:var(--muted);margin:0 0 3px}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature{border-top:1px solid var(--line);padding-top:20px}
+  .feature-num{font:10px monospace;color:#899180;display:flex;justify-content:space-between}
+  .feature-num span{font-size:18px;color:#557047}
+  .feature h3{font-size:18px;font-weight:500;letter-spacing:-.5px;margin:23px 0 10px}
+  .feature p{font-size:12px;line-height:1.8;color:var(--muted);max-width:280px;margin:0}
+  .closing{display:flex;align-items:center;justify-content:space-between;gap:25px;border:1px solid #dbe1d0;background:#edf0e5;border-radius:7px;padding:30px 35px;margin-bottom:35px}
+  .closing h2{font-size:27px;margin:0 0 8px;letter-spacing:-1px}
+  .closing p{font-size:12px;color:var(--muted);margin:0}
+  footer{padding:22px 0 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:10px;color:#858d7e}
+  footer div{display:flex;gap:20px}
+  dialog{border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:35px;width:min(440px,calc(100% - 32px));box-shadow:0 25px 80px #172b3330}
+  dialog::backdrop{background:#182e2870;backdrop-filter:blur(4px)}
+  dialog h2{font-size:30px;margin:8px 0 15px}
+  dialog p{font-size:14px;line-height:1.7;color:var(--muted)}
+  .close{position:absolute;top:12px;right:15px;background:none;border:0;font-size:25px;color:var(--muted)}
+  label{display:block;font-size:12px;margin:25px 0 8px}
+  input{padding:13px;border:1px solid #cdd4c4;border-radius:4px;width:100%;background:white;color:var(--ink);margin-bottom:15px}
+  dialog .button{width:100%}
+  @media(min-width:1450px){.hero{gap:80px}.app{height:400px}.workspace{padding:22px}.sidebar{width:130px}.task{min-height:89px}}
+  @media(max-width:1000px){.wrap{padding:0 5%}.hero{gap:26px;grid-template-columns:1fr 1.1fr}h1{font-size:58px}.sidebar{width:85px;padding:17px 6px}.side-item{font-size:7px}.workspace{padding:13px}.board{gap:5px}.task{padding:6px}.note{display:none}.stage:before{right:-10px}.hero-actions{gap:15px}.text-link{font-size:11px}}
+  @media(max-width:760px){header{height:78px}nav{display:none}.nav-right{gap:15px}.nav-right>a:first-child{display:none}.hero{grid-template-columns:1fr;padding:45px 0 35px;gap:25px}.hero-copy{max-width:500px}h1{font-size:64px;letter-spacing:-3.5px}.intro{max-width:370px}.stage{margin:0 auto;width:100%;max-width:550px;padding-top:30px}.app{height:350px}.sidebar{width:105px}.workspace{padding:17px}.board{gap:9px}.task{padding:9px}.note{display:block;right:5px}.stage:before{inset:0 -5px 0 0}.floating{left:30px}.proof{margin-top:27px}.customers{padding:20px 0 35px}.logos{flex-wrap:wrap;gap:24px 30px}.logo{font-size:18px}.logo.serif{font-size:22px}.section-top{align-items:start;flex-direction:column;gap:15px}.section-top>p{max-width:370px}.features{padding:45px 0}.feature-grid{grid-template-columns:1fr;gap:27px}.feature h3{margin-top:12px}.feature p{max-width:100%}.closing{padding:26px;align-items:start;flex-direction:column}footer{gap:18px;flex-wrap:wrap}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#" aria-label="Forma home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>forma</a>
+    <nav aria-label="Main navigation"><a href="#product">Product</a><a href="#why-forma">Why Forma</a><a href="#pricing">Pricing</a></nav>
+    <div class="nav-right"><a href="#product">Take a look</a><button class="button small" data-start>Get started <span aria-hidden="true">↗</span></button></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <a class="new" href="#product"><span>Less busywork</span> A little more room to do great things <b aria-hidden="true">↗</b></a>
+        <h1>Good work,<br>coming<br><em>together.</em></h1>
+        <p class="intro">A calmer place for your projects, plans, and people. Keep everyone in the loop, and the work moving forward.</p>
+        <div class="hero-actions">
+          <button class="button" data-start>Find your flow <span aria-hidden="true">↗</span></button>
+          <a class="text-link" href="#product"><span aria-hidden="true">▷</span> See how it works</a>
+        </div>
+        <p class="fine">Free to start. No credit card. No complicated setup.</p>
+        <div class="proof">
+          <div class="faces" aria-hidden="true"><span class="face">JL</span><span class="face">AK</span><span class="face">MR</span><span class="face">ST</span></div>
+          <div class="proof-copy"><div class="stars" aria-label="Five stars">★★★★★</div>Made for teams who care about their craft.</div>
+        </div>
+      </div>
+
+      <div class="stage" id="product">
+        <div class="app" role="img" aria-label="Forma project board showing the website refresh project with tasks organized into To do, In progress, and Done.">
+          <aside class="sidebar">
+            <div class="app-brand"><span class="tiny-mark">◧</span> forma</div>
+            <div class="side-item">⌂ <span>Overview</span></div>
+            <div class="side-item">▣ <span>My tasks</span></div>
+            <div class="side-item">◷ <span>Inbox</span></div>
+            <div class="side-label">WORKSPACE</div>
+            <div class="side-item active"><i class="dot"></i> Website refresh</div>
+            <div class="side-item"><i class="dot orange"></i> Brand studio</div>
+            <div class="side-item"><i class="dot blue"></i> Product launch</div>
+            <div class="side-item" style="margin-top:12px">＋ New project</div>
+          </aside>
+          <div class="workspace">
+            <div class="app-top"><span>Projects / Website refresh</span><span>☆ &nbsp; ···</span></div>
+            <h3>Website refresh <span style="font-size:15px">🌿</span></h3>
+            <div class="project-desc">A fresh home for everything we're becoming.</div>
+            <div class="view-row">
+              <div class="view-tabs"><b>▦ Board</b><span>☷ List</span><span>▤ Timeline</span></div>
+              <span class="add-task">＋ Add task</span>
+            </div>
+            <div class="board">
+              <div>
+                <div class="column-title"><i class="dot"></i> To do <span class="count">3</span></div>
+                <div class="task"><span class="tag lilac">Strategy</span><div class="task-name">Map the customer journey</div><div class="task-foot"><span>☷ 3 &nbsp; ◷ Jun 12</span><span class="mini-face">AL</span></div></div>
+                <div class="task"><span class="tag">Content</span><div class="task-name">Write a story worth telling</div><div class="task-foot"><span>◷ Jun 14</span><span class="mini-face" style="background:#e7cbb8">JM</span></div></div>
+                <div style="color:#a3aa99;font-size:8px;padding:5px">＋ Add task</div>
+              </div>
+              <div>
+                <div class="column-title"><i class="dot orange"></i> In progress <span class="count">2</span></div>
+                <div class="task"><span class="tag peach">Design</span><div class="task-name">Explore homepage directions</div><div class="task-foot"><span>☷ 6 &nbsp; ◷ Jun 10</span><span class="mini-face" style="background:#c9d8d5">SK</span></div></div>
+                <div class="task"><span class="tag">Content</span><div class="task-name">Collect the little details</div><div class="task-foot"><span>◷ Jun 11</span><span class="mini-face">AL</span></div></div>
+                <div style="color:#a3aa99;font-size:8px;padding:5px">＋ Add task</div>
+              </div>
+              <div>
+                <div class="column-title"><i class="dot" style="background:#73966b"></i> Done <span class="count">2</span></div>
+                <div class="task done"><span class="tag lilac">Strategy</span><div class="task-name">Get everyone on the same page</div><div class="task-foot"><span>✓ Jun 6</span><span class="mini-face" style="background:#e7cbb8">JM</span></div></div>
+                <div class="task done"><span class="tag peach">Design</span><div class="task-name">A moodboard for what's next</div><div class="task-foot"><span>✓ Jun 7</span><span class="mini-face" style="background:#c9d8d5">SK</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating"><div class="check">✓</div><div><strong>A little progress. A big difference.</strong><span>You're moving things forward.</span></div></div>
+        <div class="note">Less chasing. More creating.
+          <svg viewBox="0 0 60 45" fill="none" aria-hidden="true"><path d="M54 40C51 11 26 9 11 14m0 0 7-9m-7 9 12 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="customers" aria-label="Built for creative teams">
+      <p>FOR THE SMALL TEAMS MAKING A BIG DIFFERENCE</p>
+      <div class="logos"><span class="logo serif">Layers</span><span class="logo">◈ Quotient</span><span class="logo light">circooles</span><span class="logo mono">/ Sisyphus</span><span class="logo serif">Catalog</span></div>
+    </section>
+
+    <section class="features" id="why-forma">
+      <div class="section-top">
+        <div><span class="eyebrow">A little structure. A lot of possibility.</span><h2>Space for your best work.</h2></div>
+        <p>Everything your team needs to get from “what if” to “we did it,” without the extra noise.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-num">01 / FIND CLARITY <span aria-hidden="true">▦</span></div><h3>The whole picture. Finally.</h3><p>Bring scattered tasks into one shared view. Know what matters, who's on it, and what's coming next.</p></article>
+        <article class="feature"><div class="feature-num">02 / KEEP YOUR RHYTHM <span aria-hidden="true">↗</span></div><h3>Plans that move with you.</h3><p>Make room for the unexpected. Shift a deadline, change a view, or try a new direction without starting over.</p></article>
+        <article class="feature"><div class="feature-num">03 / WORK TOGETHER <span aria-hidden="true">◎</span></div><h3>In sync. Without the meeting.</h3><p>Keep conversations close to the work. Share an update, leave a thought, and give everyone their focus back.</p></article>
+      </div>
+    </section>
+
+    <section class="closing" id="pricing">
+      <div><h2>Your next good idea starts here.</h2><p>Start free with up to 3 projects and 5 teammates. Make a little room for progress.</p></div>
+      <button class="button" data-start>Let's make things happen <span aria-hidden="true">↗</span></button>
+    </section>
+  </main>
+  <footer><span>© <span id="year">2026</span> Forma. A little more together.</span><div><a href="#product">Explore the product</a><a href="#why-forma">Our approach</a><a href="#pricing">Get started</a></div></footer>
+</div>
+
+<dialog id="signup" aria-labelledby="signup-title">
+  <button class="close" aria-label="Close dialog">×</button>
+  <span class="eyebrow">Make room for good work</span>
+  <h2 id="signup-title">Find your flow.</h2>
+  <p>Forma is taking shape. Leave your email for an invitation when we open the doors.</p>
+  <form id="signup-form">
+    <label for="email">Your work email</label>
+    <input id="email" name="email" type="email" autocomplete="email" placeholder="you@yourteam.com" required>
+    <button class="button" type="submit">Join the interest list <span aria-hidden="true">↗</span></button>
+    <p style="font-size:11px">Demo only: your email stays in this browser session and isn't sent anywhere.</p>
+  </form>
+  <p id="success" role="status" hidden>Your interest has been noted for this demo. No email was sent or saved. Thanks for taking a look.</p>
+</dialog>
+<script>
+  const dialog = document.getElementById('signup');
+  const form = document.getElementById('signup-form');
+  document.querySelectorAll('[data-start]').forEach(button => {
+    button.addEventListener('click', () => dialog.showModal());
+  });
+  document.querySelector('.close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    const rect = dialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right ||
+        event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+  });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    form.hidden = true;
+    document.getElementById('success').hidden = false;
+  });
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
+```

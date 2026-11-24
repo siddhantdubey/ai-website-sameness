@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hale &amp; Okafor — Attorneys at Law</title>
+<meta name="description" content="Hale & Okafor is a two-partner law firm handling estate planning, small business, and real estate matters with clear fees and direct attorney access.">
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --paper-deep: #ece4d3;
+    --ink: #1d2a24;
+    --ink-soft: #4a5a52;
+    --green: #234536;
+    --oxblood: #7a2e2a;
+    --rule: #cfc4ad;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    --max: 1120px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--green); }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--oxblood); outline-offset: 3px;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.5rem; }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: .6rem 1rem; z-index: 100; }
+  .skip:focus { left: 1rem; top: 1rem; }
+
+  .eyebrow {
+    font-family: var(--sans); font-size: .75rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--oxblood); font-weight: 600; margin: 0 0 1rem;
+  }
+  h1, h2, h3 { font-weight: 400; line-height: 1.15; margin: 0; letter-spacing: -.01em; }
+  h2 { font-size: clamp(1.9rem, 3.5vw, 2.6rem); }
+  h3 { font-size: 1.3rem; }
+
+  .btn {
+    display: inline-block; font-family: var(--sans); font-size: .9rem; font-weight: 600; letter-spacing: .02em;
+    text-decoration: none; padding: .9rem 1.5rem; border: 1px solid var(--green); border-radius: 2px;
+    cursor: pointer; transition: background .2s, color .2s;
+  }
+  .btn-solid { background: var(--green); color: var(--paper); }
+  .btn-solid:hover { background: var(--ink); border-color: var(--ink); }
+  .btn-line { background: transparent; color: var(--green); }
+  .btn-line:hover { background: var(--green); color: var(--paper); }
+
+  /* Header */
+  header.site {
+    position: sticky; top: 0; z-index: 50; background: rgba(246,241,231,.94);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--ink); }
+  .brand-mark {
+    width: 38px; height: 38px; border: 1.5px solid var(--green); display: grid; place-items: center;
+    font-size: 1rem; color: var(--green); font-style: italic;
+  }
+  .brand-name { font-size: 1.2rem; }
+  .brand-name small { display: block; font-family: var(--sans); font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+  .nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0; align-items: center; }
+  .nav ul a { font-family: var(--sans); font-size: .88rem; color: var(--ink); text-decoration: none; }
+  .nav ul a:not(.btn):hover { color: var(--oxblood); }
+  .nav ul .btn { color: var(--paper); padding: .6rem 1.1rem; }
+  .menu-toggle { display: none; background: none; border: 1px solid var(--rule); padding: .5rem .7rem; font-family: var(--sans); font-size: .85rem; color: var(--ink); cursor: pointer; }
+
+  /* Hero */
+  .hero { padding: 6rem 0 5rem; border-bottom: 1px solid var(--rule); }
+  .hero-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 4rem; align-items: end; }
+  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1.04; }
+  .hero h1 em { color: var(--oxblood); }
+  .hero-lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 34ch; margin: 1.75rem 0 2.25rem; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero-card { background: var(--paper-deep); border: 1px solid var(--rule); padding: 2rem; position: relative; }
+  .hero-card::before { content: ""; position: absolute; inset: 8px; border: 1px solid var(--rule); pointer-events: none; }
+  .hero-card dl { margin: 0; display: grid; gap: 1.25rem; }
+  .hero-card dt { font-family: var(--sans); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  .hero-card dd { margin: .15rem 0 0; font-size: 1.15rem; }
+  .hero-card a { text-decoration: none; }
+
+  section { padding: 6rem 0; }
+  .section-head { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; margin-bottom: 3.5rem; align-items: end; }
+  .section-head p { color: var(--ink-soft); margin: 0; max-width: 52ch; }
+
+  /* Practice */
+  .practice-list { border-top: 1px solid var(--ink); }
+  .practice {
+    display: grid; grid-template-columns: 4rem 1fr 1.6fr; gap: 2rem; padding: 2.25rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .practice .num { font-family: var(--sans); font-size: .8rem; color: var(--oxblood); padding-top: .4rem; }
+  .practice h3 { font-size: 1.6rem; }
+  .practice p { margin: 0 0 .75rem; color: var(--ink-soft); }
+  .practice ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .practice li { font-family: var(--sans); font-size: .78rem; border: 1px solid var(--rule); padding: .25rem .6rem; color: var(--ink); }
+
+  /* Approach */
+  .approach { background: var(--green); color: var(--paper); }
+  .approach .eyebrow { color: #d9b9a0; }
+  .approach .section-head p { color: #c9d3cc; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid rgba(246,241,231,.3); }
+  .step { padding: 2rem 2rem 0 0; }
+  .step + .step { padding-left: 2rem; border-left: 1px solid rgba(246,241,231,.3); }
+  .step .big { font-size: 3rem; font-style: italic; color: #d9b9a0; line-height: 1; margin-bottom: 1rem; }
+  .step p { color: #c9d3cc; margin: .75rem 0 0; }
+  .fees { margin-top: 4rem; padding: 2rem; border: 1px solid rgba(246,241,231,.3); display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; align-items: center; }
+  .fees p { margin: 0; max-width: 60ch; }
+  .fees .btn { border-color: var(--paper); color: var(--paper); }
+  .fees .btn:hover { background: var(--paper); color: var(--green); }
+
+  /* Attorneys */
+  .attorneys { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .attorney { display: grid; grid-template-columns: 140px 1fr; gap: 1.75rem; }
+  .portrait {
+    width: 140px; aspect-ratio: 4/5; background: var(--paper-deep); border: 1px solid var(--rule);
+    display: grid; place-items: center; font-size: 2.6rem; color: var(--green); font-style: italic;
+  }
+  .attorney .role { font-family: var(--sans); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--oxblood); margin: .35rem 0 1rem; }
+  .attorney p { margin: 0 0 1rem; color: var(--ink-soft); }
+  .creds { font-family: var(--sans); font-size: .82rem; color: var(--ink); margin: 0; padding: 0; list-style: none; }
+  .creds li { padding: .35rem 0; border-top: 1px solid var(--rule); }
+
+  /* Testimonials */
+  .words { background: var(--paper-deep); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .quotes { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; }
+  blockquote { margin: 0; }
+  blockquote p { margin: 0; }
+  .q-main p { font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.3; }
+  .q-main p::before { content: "\201C"; color: var(--oxblood); }
+  .q-main p::after { content: "\201D"; color: var(--oxblood); }
+  .q-side { display: grid; gap: 2rem; align-content: start; }
+  .q-side p { font-size: 1.05rem; }
+  cite { display: block; margin-top: 1rem; font-family: var(--sans); font-style: normal; font-size: .8rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .disclaimer-sm { font-family: var(--sans); font-size: .72rem; color: var(--ink-soft); margin-top: 2.5rem; }
+
+  /* FAQ */
+  .faq { max-width: 820px; }
+  details { border-bottom: 1px solid var(--rule); }
+  details:first-of-type { border-top: 1px solid var(--ink); }
+  summary {
+    list-style: none; cursor: pointer; padding: 1.4rem 2.5rem 1.4rem 0; font-size: 1.25rem; position: relative;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: .25rem; top: 1.2rem; font-family: var(--sans); font-size: 1.4rem;
+    color: var(--oxblood); transition: transform .2s;
+  }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin: 0 0 1.5rem; color: var(--ink-soft); max-width: 65ch; }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; }
+  .contact-info address { font-style: normal; margin: 1.5rem 0; }
+  .contact-info dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .4rem 1.5rem; font-size: .98rem; }
+  .contact-info dt { font-family: var(--sans); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); padding-top: .2rem; }
+  .contact-info dd { margin: 0; }
+  form { background: #fbf8f2; border: 1px solid var(--rule); padding: 2.25rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .field { margin-bottom: 1.25rem; }
+  label { display: block; font-family: var(--sans); font-size: .78rem; font-weight: 600; letter-spacing: .04em; margin-bottom: .4rem; }
+  input, select, textarea {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--rule); border-radius: 2px; padding: .7rem .8rem;
+  }
+  textarea { min-height: 120px; resize: vertical; }
+  input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--oxblood); }
+  .err { font-family: var(--sans); font-size: .75rem; color: var(--oxblood); margin-top: .3rem; min-height: 1em; }
+  .check { display: flex; gap: .6rem; align-items: flex-start; font-family: var(--sans); font-size: .8rem; color: var(--ink-soft); margin-bottom: 1.5rem; }
+  .check input { width: auto; margin-top: .2rem; }
+  .form-status { font-family: var(--sans); font-size: .9rem; margin-top: 1rem; }
+  .form-status.ok { color: var(--green); }
+
+  /* Footer */
+  footer { background: var(--ink); color: #b9c2bc; padding: 3.5rem 0 2.5rem; font-family: var(--sans); font-size: .82rem; }
+  footer a { color: var(--paper); }
+  .foot-top { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; padding-bottom: 2rem; border-bottom: 1px solid #36443d; }
+  .foot-top .brand-name { color: var(--paper); font-family: var(--serif); font-size: 1.3rem; }
+  .foot-legal { padding-top: 1.75rem; line-height: 1.6; max-width: 90ch; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-grid, .section-head, .quotes, .contact-grid, .attorneys { grid-template-columns: 1fr; gap: 2.5rem; }
+    .practice { grid-template-columns: 3rem 1fr; }
+    .practice > div:last-child { grid-column: 2; }
+    .steps { grid-template-columns: 1fr; }
+    .step, .step + .step { padding: 1.75rem 0; border-left: 0; border-bottom: 1px solid rgba(246,241,231,.3); }
+  }
+  @media (max-width: 760px) {
+    .menu-toggle { display: block; }
+    .nav ul {
+      position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; align-items: flex-start;
+      gap: 0; background: var(--paper); border-bottom: 1px solid var(--rule); padding: .5rem 1.5rem 1.25rem; display: none;
+    }
+    .nav ul.open { display: flex; }
+    .nav ul li { width: 100%; }
+    .nav ul a:not(.btn) { display: block; padding: .8rem 0; border-bottom: 1px solid var(--rule); }
+    .nav ul .btn { margin-top: 1rem; }
+    section { padding: 4.5rem 0; }
+    .hero { padding: 4rem 0; }
+    .row { grid-template-columns: 1fr; gap: 0; }
+    .attorney { grid-template-columns: 1fr; }
+    form { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Hale &amp; Okafor, home">
+      <span class="brand-mark" aria-hidden="true">H&amp;O</span>
+      <span class="brand-name">Hale &amp; Okafor<small>Attorneys at Law</small></span>
+    </a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <ul id="nav-links">
+      <li><a href="#practice">Practice</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#attorneys">Attorneys</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a class="btn btn-solid" href="#contact">Book a consultation</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <div class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Est. 2011 · Two partners · One office</p>
+        <h1>Careful counsel for the <em>important</em> things.</h1>
+        <p class="hero-lede">Wills, businesses, homes. We handle the legal work that shapes a family's next twenty years — in plain language, at a flat fee, with your attorney's direct number.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#contact">Schedule a free 30-minute call</a>
+          <a class="btn btn-line" href="#practice">See what we handle</a>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Office at a glance">
+        <dl>
+          <div><dt>Call the office</dt><dd><a href="tel:+15555550142">(555) 555-0142</a></dd></div>
+          <div><dt>Visit</dt><dd>214 Linden Street, Suite 3<br>Riverton</dd></div>
+          <div><dt>Hours</dt><dd>Mon–Fri, 8:30 – 5:30<br><span style="font-size:.9rem;color:var(--ink-soft)">Evening meetings by appointment</span></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Practice areas -->
+  <section id="practice" aria-labelledby="practice-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Practice areas</p>
+          <h2 id="practice-h">Three things, done thoroughly.</h2>
+        </div>
+        <p>We deliberately keep our practice narrow. It means we know these areas deeply, we can quote fees honestly, and we refer you elsewhere when a matter is outside what we do best.</p>
+      </div>
+
+      <div class="practice-list">
+        <article class="practice">
+          <span class="num">01</span>
+          <h3>Estate Planning &amp; Probate</h3>
+          <div>
+            <p>Wills, trusts, and powers of attorney that reflect how your family actually works. When someone passes, we guide executors through probate one step at a time.</p>
+            <ul><li>Wills</li><li>Revocable trusts</li><li>Healthcare directives</li><li>Probate administration</li><li>Guardianship</li></ul>
+          </div>
+        </article>
+        <article class="practice">
+          <span class="num">02</span>
+          <h3>Small Business</h3>
+          <div>
+            <p>From forming an LLC to selling the company you built. We act as outside counsel for owners who need a lawyer they can simply call with a question.</p>
+            <ul><li>Entity formation</li><li>Contracts</li><li>Partnership agreements</li><li>Buy–sell planning</li><li>Commercial leases</li></ul>
+          </div>
+        </article>
+        <article class="practice">
+          <span class="num">03</span>
+          <h3>Residential Real Estate</h3>
+          <div>
+            <p>Purchases, sales, and title questions handled with a close eye on the details that become expensive later — easements, surveys, and deed language.</p>
+            <ul><li>Closings</li><li>Title review</li><li>Deed transfers</li><li>Landlord–tenant</li><li>Boundary disputes</li></ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="approach" id="approach" aria-labelledby="approach-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">How we work</p>
+          <h2 id="approach-h">No surprises. Not in the law, not on the invoice.</h2>
+        </div>
+        <p>Most clients come to us after a matter has already felt confusing somewhere else. Our process is built to make each step visible before it happens.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="big">i.</div>
+          <h3>A real conversation</h3>
+          <p>Your first call is free and with an attorney — not an intake form. We listen, ask questions, and tell you honestly whether you need us.</p>
+        </div>
+        <div class="step">
+          <div class="big">ii.</div>
+          <h3>A written plan &amp; price</h3>
+          <p>Before any work begins, you receive a one-page letter describing exactly what we'll do, when, and what it will cost.</p>
+        </div>
+        <div class="step">
+          <div class="big">iii.</div>
+          <h3>Direct access, start to finish</h3>
+          <p>You work with the same partner throughout. Calls and emails are returned within one business day — usually the same day.</p>
+        </div>
+      </div>
+      <div class="fees">
+        <p><strong>Flat fees for most matters.</strong> A standard will package starts at $1,250; an LLC formation with operating agreement starts at $950. Hourly work, when needed, is quoted in advance.</p>
+        <a class="btn" href="#contact">Ask for a quote</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attorneys -->
+  <section id="attorneys" aria-labelledby="attorneys-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">The attorneys</p>
+          <h2 id="attorneys-h">You'll always know who's handling your matter.</h2>
+        </div>
+        <p>Two partners, one paralegal, and an office manager who knows every client by name. That's the whole firm, and we like it that way.</p>
+      </div>
+      <div class="attorneys">
+        <article class="attorney">
+          <div class="portrait" aria-hidden="true">MH</div>
+          <div>
+            <h3>Margaret Hale</h3>
+            <p class="role">Founding Partner · Estates &amp; Probate</p>
+            <p>Margaret spent nine years in trust administration at a regional bank before opening the firm. She's known for planning meetings that end with clients feeling relieved rather than overwhelmed.</p>
+            <ul class="creds">
+              <li>J.D., State University School of Law</li>
+              <li>Fellow, College of Trust &amp; Estate Counsel</li>
+              <li>Admitted 2006</li>
+            </ul>
+          </div>
+        </article>
+        <article class="attorney">
+          <div class="portrait" aria-hidden="true">DO</div>
+          <div>
+            <h3>Daniel Okafor</h3>
+            <p class="role">Partner · Business &amp; Real Estate</p>
+            <p>Daniel advises roughly forty local businesses as outside general counsel, from bakeries to engineering firms. Before law school, he ran his family's hardware store for six years.</p>
+            <ul class="creds">
+              <li>J.D., Riverton College of Law</li>
+              <li>Board member, Riverton Small Business Alliance</li>
+              <li>Admitted 2012</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="words" aria-labelledby="words-h">
+    <div class="wrap">
+      <p class="eyebrow" id="words-h">From our clients</p>
+      <div class="quotes">
+        <blockquote class="q-main">
+          <p>After my father died, I didn't know where to start. Margaret walked me through every form and every deadline, and never once made me feel rushed.</p>
+          <cite>— Executor, probate matter, 2025</cite>
+        </blockquote>
+        <div class="q-side">
+          <blockquote>
+            <p>“Daniel caught a clause in our lease that would have cost us our second location. He's the first call I make now.”</p>
+            <cite>— Owner, family restaurant</cite>
+          </blockquote>
+          <blockquote>
+            <p>“We got a fee letter up front and the final bill matched it to the dollar.”</p>
+            <cite>— Clients, home purchase &amp; wills</cite>
+          </blockquote>
+        </div>
+      </div>
+      <p class="disclaimer-sm">Client statements are shared with permission. Prior results do not guarantee a similar outcome.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Common questions</p>
+          <h2 id="faq-h">Before you call.</h2>
+        </div>
+        <p>If your question isn't here, ask it during the free consultation — that's what it's for.</p>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Is the first consultation really free?</summary>
+          <p>Yes. The first 30 minutes are free, by phone or in person, and you'll speak with one of the partners. There's no obligation to hire us afterward.</p>
+        </details>
+        <details>
+          <summary>What should I bring to the first meeting?</summary>
+          <p>Any documents related to your matter — existing wills, deeds, contracts, or letters you've received. If you're unsure, bring it. We'll send a short checklist when you book.</p>
+        </details>
+        <details>
+          <summary>Do you handle litigation or criminal cases?</summary>
+          <p>We don't. Our work is advisory and transactional. If you need a litigator or criminal defense attorney, we'll gladly refer you to a trusted colleague.</p>
+        </details>
+        <details>
+          <summary>Can we meet remotely?</summary>
+          <p>Absolutely. Many clients meet by video, and most documents can be signed electronically. Some estate documents require in-person signing, which we can arrange at our office or your home.</p>
+        </details>
+        <details>
+          <summary>How quickly can my will be done?</summary>
+          <p>A typical estate plan takes two to three weeks from first meeting to signing. If there's urgency — an upcoming surgery or travel — tell us and we'll prioritize it.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" aria-labelledby="contact-h" style="padding-top:0">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <p class="eyebrow">Get in touch</p>
+        <h2 id="contact-h">Tell us a little about what's going on.</h2>
+        <address>
+          214 Linden Street, Suite 3<br>
+          Riverton<br>
+          Street parking &amp; rear lot entrance
+        </address>
+        <dl>
+          <dt>Phone</dt><dd><a href="tel:+15555550142">(555) 555-0142</a></dd>
+          <dt>Email</dt><dd><a href="mailto:office@haleokafor.example">office@haleokafor.example</a></dd>
+          <dt>Hours</dt><dd>Mon–Fri, 8:30 am – 5:30 pm</dd>
+        </dl>
+      </div>
+
+      <form id="contact-form" novalidate aria-describedby="form-note">
+        <div class="row">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-err">
+            <div class="err" id="name-err" aria-live="polite"></div>
+          </div>
+          <div class="field">
+            <label for="phone">Phone <span style="font-weight:400;color:var(--ink-soft)">(optional)</span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-err">
+          <div class="err" id="email-err" aria-live="polite"></div>
+        </div>
+        <div class="field">
+          <label for="area">What do you need help with?</label>
+          <select id="area" name="area" required aria-describedby="area-err">
+            <option value="">Choose one…</option>
+            <option>Estate planning or probate</option>
+            <option>Small business</option>
+            <option>Residential real estate</option>
+            <option>Not sure / something else</option>
+          </select>
+          <div class="err" id="area-err" aria-live="polite"></div>
+        </div>
+        <div class="field">
+          <label for="msg">Brief description</label>
+          <textarea id="msg" name="msg" placeholder="A few sentences is plenty. Please don't include confidential details yet."></textarea>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="ack" required aria-describedby="ack-err">
+          <span id="form-note">I understand that submitting this form does not create an attorney–client relationship.</span>
+        </label>
+        <div class="err" id="ack-err" aria-live="polite" style="margin:-1rem 0 1rem"></div>
+        <button class="btn btn-solid" type="submit">Request a consultation</button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="brand-name">Hale &amp; Okafor</div>
+        <div>Attorneys at Law · Riverton</div>
+      </div>
+      <div>
+        <a href="tel:+15555550142">(555) 555-0142</a> &nbsp;·&nbsp;
+        <a href="mailto:office@haleokafor.example">office@haleokafor.example</a>
+      </div>
+    </div>
+    <p class="foot-legal">
+      Attorney Advertising. The information on this website is for general informational purposes only and is not legal advice.
+      Contacting the firm does not create an attorney–client relationship. Please do not send confidential information until a
+      relationship has been established in writing. © <span id="year">2026</span> Hale &amp; Okafor, PLLC.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const toggle = document.querySelector('.menu-toggle');
+  const links = document.getElementById('nav-links');
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+    toggle.textContent = open ? 'Close' : 'Menu';
+  });
+  links.addEventListener('click', e => {
+    if (e.target.tagName === 'A' && links.classList.contains('open')) toggle.click();
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Form validation (demo — wire to your backend or form service)
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  const rules = {
+    name:  el => el.value.trim() ? '' : 'Please enter your name.',
+    email: el => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()) ? '' : 'Please enter a valid email address.',
+    area:  el => el.value ? '' : 'Please choose a practice area.',
+    ack:   el => el.checked ? '' : 'Please confirm to continue.'
+  };
+  function check(id) {
+    const el = document.getElementById(id);
+    const msg = rules[id](el);
+    document.getElementById(id + '-err').textContent = msg;
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    return !msg;
+  }
+  Object.keys(rules).forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'blur', () => check(id));
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    status.textContent = ''; status.className = 'form-status';
+    const results = Object.keys(rules).map(check);
+    if (results.every(Boolean)) {
+      status.textContent = 'Thank you — we\'ll be in touch within one business day.';
+      status.classList.add('ok');
+      form.reset();
+      form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    } else {
+      const firstBad = Object.keys(rules).find(id => document.getElementById(id).getAttribute('aria-invalid') === 'true');
+      document.getElementById(firstBad).focus();
+    }
+  });
+</script>
+</body>
+</html>

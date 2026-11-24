@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planyard — Project management that gets out of your way</title>
+  <meta name="description" content="Planyard is project management for teams who want to ship, not sit in status meetings. Plan, track, and deliver work in one calm place.">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --bg-alt: #11141b;
+      --surface: #161a23;
+      --border: #242a36;
+      --text: #e8ebf2;
+      --muted: #9aa3b5;
+      --accent: #6d7cff;
+      --accent-2: #3fd0c9;
+      --accent-grad: linear-gradient(135deg, #6d7cff 0%, #3fd0c9 100%);
+      --radius: 14px;
+      --max: 1140px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+
+    .container {
+      width: min(100% - 2.5rem, var(--max));
+      margin-inline: auto;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .75rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: .95rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+      white-space: nowrap;
+    }
+    .btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+    .btn-primary {
+      background: var(--accent-grad);
+      color: #06080c;
+    }
+    .btn-primary:hover { transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover { border-color: var(--muted); }
+    .btn-lg { padding: .95rem 1.6rem; font-size: 1rem; }
+
+    /* ---------- Nav ---------- */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: saturate(160%) blur(12px);
+      background: rgba(11, 13, 18, .72);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -.01em;
+    }
+    .logo-mark {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--accent-grad);
+      display: grid; place-items: center;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: .93rem;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-actions { display: flex; align-items: center; gap: .75rem; }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .4rem .55rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      padding: 6rem 0 5rem;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(109,124,255,.25) 0%, rgba(63,208,201,.08) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .35rem .85rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 10px var(--accent-2);
+    }
+    h1 {
+      font-size: clamp(2.4rem, 5.5vw, 4.25rem);
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      font-weight: 800;
+      max-width: 14ch;
+      margin-inline: auto;
+    }
+    .gradient-text {
+      background: var(--accent-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p.lead {
+      margin: 1.5rem auto 0;
+      max-width: 56ch;
+      font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+      color: var(--muted);
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .85rem;
+      justify-content: center;
+      margin-top: 2.25rem;
+    }
+    .hero-note {
+      margin-top: 1rem;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    /* Mock board preview */
+    .board-preview {
+      margin: 4.5rem auto 0;
+      max-width: 980px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--bg-alt);
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.02) inset;
+      padding: 1rem;
+      text-align: left;
+    }
+    .board-top {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .25rem .25rem .9rem;
+    }
+    .board-top span {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--border);
+    }
+    .board-top span:nth-child(1) { background: #ff5f57; }
+    .board-top span:nth-child(2) { background: #febc2e; }
+    .board-top span:nth-child(3) { background: #28c840; }
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .9rem;
+    }
+    .column {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .8rem;
+      min-height: 230px;
+    }
+    .column h4 {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .75rem;
+      font-weight: 600;
+    }
+    .card {
+      background: #1c2230;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: .7rem .8rem;
+      font-size: .85rem;
+      margin-bottom: .6rem;
+    }
+    .card .tag {
+      display: inline-block;
+      font-size: .7rem;
+      padding: .12rem .5rem;
+      border-radius: 6px;
+      margin-bottom: .4rem;
+      font-weight: 600;
+    }
+    .tag-blue { background: rgba(109,124,255,.15); color: #aab3ff; }
+    .tag-teal { background: rgba(63,208,201,.15); color: #7fe7e1; }
+    .tag-amber { background: rgba(255,186,73,.15); color: #ffcf7a; }
+    .avatar {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent-grad);
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: .35rem;
+    }
+
+    /* ---------- Logos strip ---------- */
+    .logos {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .logos p {
+      text-align: center;
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .logos-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2.5rem 3.5rem;
+      color: #5b6375;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -.01em;
+    }
+
+    /* ---------- Sections ---------- */
+    section { padding: 6rem 0; }
+    .section-alt { background: var(--bg-alt); }
+    .section-head {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 3.5rem;
+    }
+    .kicker {
+      color: var(--accent-2);
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    h2 {
+      font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+      letter-spacing: -.025em;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+    .section-head p {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .feature:hover { border-color: #353d50; transform: translateY(-3px); }
+    .icon {
+      width: 44px; height: 44px;
+      border-radius: 11px;
+      display: grid; place-items: center;
+      background: rgba(109,124,255,.12);
+      color: #aab3ff;
+      margin-bottom: 1.2rem;
+    }
+    .icon.teal { background: rgba(63,208,201,.12); color: #7fe7e1; }
+    .icon.amber { background: rgba(255,186,73,.12); color: #ffcf7a; }
+    .feature h3 {
+      font-size: 1.1rem;
+      margin-bottom: .5rem;
+      font-weight: 700;
+    }
+    .feature p {
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      counter-reset: step;
+    }
+    .step {
+      position: relative;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .step::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .85rem;
+      color: var(--accent-2);
+      margin-bottom: .85rem;
+    }
+    .step h3 { font-size: 1.2rem; margin-bottom: .5rem; }
+    .step p { color: var(--muted); font-size: .95rem; }
+
+    /* Testimonials */
+    .quotes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .quote {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .quote blockquote {
+      font-size: .98rem;
+      color: #d4d9e4;
+      line-height: 1.6;
+    }
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-top: auto;
+    }
+    .quote-author .initials {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: #222a3b;
+      display: grid; place-items: center;
+      font-weight: 700;
+      font-size: .8rem;
+      color: var(--text);
+    }
+    .quote-author strong { display: block; font-size: .92rem; }
+    .quote-author span { font-size: .82rem; color: var(--muted); }
+
+    /* Pricing */
+    .billing-toggle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 2.5rem;
+      font-size: .93rem;
+      color: var(--muted);
+    }
+    .switch {
+      position: relative;
+      width: 46px; height: 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      transition: transform .25s ease;
+    }
+    .switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent); }
+    .switch[aria-checked="true"]::after { transform: translateX(20px); }
+    .save-badge {
+      font-size: .75rem;
+      background: rgba(63,208,201,.15);
+      color: #7fe7e1;
+      padding: .15rem .5rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    .plan {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .plan.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 30px 60px -30px rgba(109,124,255,.5);
+      position: relative;
+    }
+    .plan .ribbon {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-grad);
+      color: #06080c;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+    }
+    .plan h3 { font-size: 1.15rem; }
+    .plan .desc { color: var(--muted); font-size: .9rem; margin-top: .3rem; }
+    .price {
+      margin: 1.5rem 0 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: .35rem;
+    }
+    .price .amount { font-size: 2.75rem; font-weight: 800; letter-spacing: -.03em; }
+    .price .per { color: var(--muted); font-size: .95rem; }
+    .plan ul {
+      list-style: none;
+      display: grid;
+      gap: .7rem;
+      margin-bottom: 2rem;
+      font-size: .93rem;
+      color: #cfd5e2;
+    }
+    .plan li { display: flex; gap: .6rem; align-items: flex-start; }
+    .plan li svg { flex-shrink: 0; margin-top: 3px; color: var(--accent-2); }
+    .plan .btn { margin-top: auto; width: 100%; }
+
+    /* FAQ */
+    .faq {
+      max-width: 760px;
+      margin: 0 auto;
+      display: grid;
+      gap: .85rem;
+    }
+    details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.35rem;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after {
+      content: "+";
+      font-size: 1.3rem;
+      color: var(--muted);
+      transition: transform .2s;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p {
+      color: var(--muted);
+      margin-top: .75rem;
+      font-size: .95rem;
+    }
+
+    /* Final CTA */
+    .cta-box {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 4.5rem 2rem;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      inset: -50% -20% auto;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(109,124,255,.35), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-box > * { position: relative; }
+    .cta-box p {
+      color: var(--muted);
+      margin: 1rem auto 2rem;
+      max-width: 52ch;
+    }
+    .email-form {
+      display: flex;
+      gap: .6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .email-form input {
+      flex: 1 1 240px;
+      padding: .8rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+    }
+    .email-form input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(109,124,255,.25);
+    }
+    .form-msg {
+      margin-top: 1rem;
+      font-size: .9rem;
+      color: var(--accent-2);
+      min-height: 1.4em;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 0 2rem;
+      background: var(--bg-alt);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+    .footer-grid p { color: var(--muted); font-size: .9rem; margin-top: .9rem; max-width: 30ch; }
+    .footer-col h5 {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; display: grid; gap: .6rem; }
+    .footer-col a { color: #cfd5e2; font-size: .92rem; }
+    .footer-col a:hover { color: var(--accent-2); }
+    .footer-bottom {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .features, .quotes, .pricing, .steps { grid-template-columns: 1fr 1fr; }
+      .pricing .plan:last-child { grid-column: 1 / -1; max-width: 480px; margin: 0 auto; width: 100%; }
+      .board-grid { grid-template-columns: 1fr; }
+      .column { min-height: auto; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links, .nav-actions .btn-ghost { display: none; }
+      .menu-toggle { display: inline-block; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 68px; left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 1.25rem;
+        gap: 1rem;
+      }
+      .features, .quotes, .pricing, .steps { grid-template-columns: 1fr; }
+      .pricing .plan:last-child { max-width: none; }
+      section { padding: 4.5rem 0; }
+      .hero { padding-top: 4rem; }
+      .board-preview { display: none; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="Primary">
+      <a href="#top" class="logo" aria-label="Planyard home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06080c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+        </span>
+        Planyard
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost">Log in</a>
+        <a href="#signup" class="btn btn-primary">Start free</a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow"><span class="dot"></span> New: Timeline views for every project</span>
+        <h1>Plan less. <span class="gradient-text">Ship more.</span></h1>
+        <p class="lead">
+          Planyard is project management for teams who would rather build things than
+          update status boards. Organize work, see progress at a glance, and keep everyone
+          aligned without another meeting.
+        </p>
+        <div class="hero-cta">
+          <a href="#signup" class="btn btn-primary btn-lg">Start for free</a>
+          <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+        </div>
+        <p class="hero-note">Free for teams up to 10. No credit card required.</p>
+
+        <!-- Board preview -->
+        <div class="board-preview" aria-hidden="true">
+          <div class="board-top"><span></span><span></span><span></span></div>
+          <div class="board-grid">
+            <div class="column">
+              <h4>To do <em style="font-style:normal;opacity:.6">3</em></h4>
+              <div class="card"><span class="tag tag-blue">Design</span><br>Onboarding flow revisions <br><span class="avatar"></span></div>
+              <div class="card"><span class="tag tag-teal">Backend</span><br>Migrate billing webhooks <br><span class="avatar" style="background:#3a4358"></span></div>
+            </div>
+            <div class="column">
+              <h4>In progress <em style="font-style:normal;opacity:.6">2</em></h4>
+              <div class="card"><span class="tag tag-amber">Launch</span><br>Q4 pricing page copy <br><span class="avatar"></span></div>
+              <div class="card"><span class="tag tag-blue">Mobile</span><br>Offline sync for tasks <br><span class="avatar" style="background:#3a4358"></span></div>
+            </div>
+            <div class="column">
+              <h4>Shipped <em style="font-style:normal;opacity:.6">5</em></h4>
+              <div class="card"><span class="tag tag-teal">Infra</span><br>Edge caching for dashboards <br><span class="avatar"></span></div>
+              <div class="card"><span class="tag tag-blue">Design</span><br>New sidebar navigation <br><span class="avatar" style="background:#3a4358"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LOGOS ============ -->
+    <div class="logos">
+      <div class="container">
+        <p>Trusted by fast-moving teams</p>
+        <div class="logos-row">
+          <span>Northwind</span>
+          <span>Lumen&nbsp;Labs</span>
+          <span>Kestrel</span>
+          <span>Hollowpoint</span>
+          <span>Parallax Co.</span>
+          <span>Brightline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FEATURES ============ -->
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">Features</p>
+          <h2>Everything your team needs. Nothing it doesn't.</h2>
+          <p>Planyard keeps the essentials sharp: clear ownership, honest timelines, and a workflow that adapts to how you already work.</p>
+        </div>
+
+        <div class="features">
+          <article class="feature">
+            <div class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="13" rx="1.5"/></svg>
+            </div>
+            <h3>Flexible boards</h3>
+            <p>Switch between kanban, list, and calendar views. Every view reads from the same source of truth, so nothing gets out of sync.</p>
+          </article>
+
+          <article class="feature">
+            <div class="icon teal" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V10"/><path d="M11 16V6"/><path d="M16 16v-4"/></svg>
+            </div>
+            <h3>Timelines that tell the truth</h3>
+            <p>Drag dependencies into place and watch the schedule update live. See the critical path before it becomes a missed deadline.</p>
+          </article>
+
+          <article class="feature">
+            <div class="icon amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18.5 15c1.4.7 2.3 2.2 2.5 5"/></svg>
+            </div>
+            <h3>Clear ownership</h3>
+            <p>Every task has one owner, one due date, and one place to discuss it. No more hunting through threads to find who's on it.</p>
+          </article>
+
+          <article class="feature">
+            <div class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg>
+            </div>
+            <h3>Built-in conversation</h3>
+            <p>Comment on tasks, mention teammates, and attach files right where the work lives. Context stays attached to the thing it's about.</p>
+          </article>
+
+          <article class="feature">
+            <div class="icon teal" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M4 9h8a4 4 0 0 1 4 4"/><path d="M14 17l3 3 3-3"/></svg>
+            </div>
+            <h3>Automations</h3>
+            <p>Set rules once and let them run: move a card when its subtasks finish, notify a reviewer, or roll over unfinished work each sprint.</p>
+          </article>
+
+          <article class="feature">
+            <div class="icon amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>
+            </div>
+            <h3>Reports without the spreadsheet</h3>
+            <p>Burndown charts, workload views, and velocity trends update automatically. Share a live link with stakeholders in one click.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section id="how" class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">How it works</p>
+          <h2>From idea to shipped in three steps</h2>
+          <p>Get your first project running in minutes, not afternoons.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <h3>Create a project</h3>
+            <p>Start from a template for sprints, launches, or ongoing operations, or build a board from scratch in seconds.</p>
+          </div>
+          <div class="step">
+            <h3>Invite your team</h3>
+            <p>Add teammates and clients with the right permissions. Guests see only what you share with them.</p>
+          </div>
+          <div class="step">
+            <h3>Track and ship</h3>
+            <p>Move work across the board, let automations handle the busywork, and check progress whenever you want, without a status meeting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">Customers</p>
+          <h2>Teams that stopped chasing updates</h2>
+        </div>
+
+        <div class="quotes">
+          <figure class="quote">
+            <blockquote>“We cut our weekly sync from an hour to fifteen minutes. The board tells us what we need to know before anyone asks.”</blockquote>
+            <figcaption class="quote-author">
+              <span class="initials">MR</span>
+              <div><strong>Maya Rodriguez</strong><span>Head of Product, Lumen Labs</span></div>
+            </figcaption>
+          </figure>
+
+          <figure class="quote">
+            <blockquote>“Timelines finally match reality. Dependencies update on their own, so I can see slips the day they happen.”</blockquote>
+            <figcaption class="quote-author">
+              <span class="initials">DK</span>
+              <div><strong>David Kim</strong><span>Engineering Manager, Kestrel</span></div>
+            </figcaption>
+          </figure>
+
+          <figure class="quote">
+            <blockquote>“Our agency runs eight client projects at once. Planyard keeps every one of them legible, and our clients actually log in.”</blockquote>
+            <figcaption class="quote-author">
+              <span class="initials">AO</span>
+              <div><strong>Amara Okafor</strong><span>Director of Operations, Brightline</span></div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section id="pricing" class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">Pricing</p>
+          <h2>Simple plans that grow with you</h2>
+          <p>Start free. Upgrade when your team needs more.</p>
+        </div>
+
+        <div class="billing-toggle">
+          <span>Monthly</span>
+          <button class="switch" id="billing-switch" role="switch" aria-checked="false" aria-label="Toggle annual billing"></button>
+          <span>Annual <span class="save-badge">Save 20%</span></span>
+        </div>
+
+        <div class="pricing">
+          <!-- Free -->
+          <div class="plan">
+            <h3>Starter</h3>
+            <p class="desc">For small teams getting organized.</p>
+            <div class="price"><span class="amount">$0</span><span class="per">/ forever</span></div>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Up to 10 team members</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Unlimited projects</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Kanban and list views</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>7-day activity history</li>
+            </ul>
+            <a href="#signup" class="btn btn-ghost">Get started free</a>
+          </div>
+
+          <!-- Pro -->
+          <div class="plan featured">
+            <span class="ribbon">Most popular</span>
+            <h3>Team</h3>
+            <p class="desc">For teams running multiple projects at once.</p>
+            <div class="price">
+              <span class="amount" data-monthly="12" data-annual="10">$12</span>
+              <span class="per">/ user / month</span>
+            </div>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Everything in Starter</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Timelines and dependencies</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Automations and integrations</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Reports and guest access</li>
+            </ul>
+            <a href="#signup" class="btn btn-primary">Start 14-day trial</a>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="plan">
+            <h3>Enterprise</h3>
+            <p class="desc">For organizations with security and scale needs.</p>
+            <div class="price"><span class="amount">Custom</span></div>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Everything in Team</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>SSO and SCIM provisioning</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Audit logs and data residency</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Dedicated success manager</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost">Talk to sales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">FAQ</p>
+          <h2>Questions, answered</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>Is there a free plan?</summary>
+            <p>Yes. The Starter plan is free forever for teams of up to 10 people, with unlimited projects and the core board and list views.</p>
+          </details>
+          <details>
+            <summary>Can I import from other tools?</summary>
+            <p>Planyard imports from common project tools via CSV and direct integrations. Your existing tasks, owners, and due dates come with you.</p>
+          </details>
+          <details>
+            <summary>Do you offer a trial for paid plans?</summary>
+            <p>Every paid plan starts with a 14-day trial. No credit card is required to begin, and you can downgrade to Starter at any time.</p>
+          </details>
+          <details>
+            <summary>How is my data protected?</summary>
+            <p>All data is encrypted in transit and at rest. Enterprise customers can choose data residency and access detailed audit logs.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINAL CTA ============ -->
+    <section id="signup" style="padding-top:0">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Ready to get your team unstuck?</h2>
+          <p>Join thousands of teams who plan with clarity and deliver on time. Set up your first project in under five minutes.</p>
+          <form class="email-form" id="signup-form" novalidate>
+            <label for="email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Work email</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+            <button type="submit" class="btn btn-primary">Get started</button>
+          </form>
+          <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="logo">
+            <span class="logo-mark" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06080c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            </span>
+            Planyard
+          </a>
+          <p>Project management for teams that value momentum over meetings.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#">Integrations</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="#">Help center</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> Planyard, Inc. All rights reserved.</span>
+        <span>Made for teams who ship.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile navigation toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Monthly / annual billing toggle
+    const billingSwitch = document.getElementById('billing-switch');
+    const priceEl = document.querySelector('[data-monthly]');
+
+    billingSwitch.addEventListener('click', () => {
+      const annual = billingSwitch.getAttribute('aria-checked') !== 'true';
+      billingSwitch.setAttribute('aria-checked', String(annual));
+      priceEl.textContent = '$' + (annual ? priceEl.dataset.annual : priceEl.dataset.monthly);
+    });
+
+    // Signup form (front-end only; wire to your backend)
+    const form = document.getElementById('signup-form');
+    const emailInput = document.getElementById('email');
+    const formMsg = document.getElementById('form-msg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = emailInput.value.trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+      if (!valid) {
+        formMsg.style.color = '#ff8a8a';
+        formMsg.textContent = 'Please enter a valid work email address.';
+        emailInput.focus();
+        return;
+      }
+
+      formMsg.style.color = 'var(--accent-2)';
+      formMsg.textContent = 'Thanks! Check your inbox to finish setting up your workspace.';
+      form.reset();
+    });
+
+    // Keep footer year current
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

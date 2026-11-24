@@ -1,0 +1,2689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Osteria Vico — Neighborhood Italian Kitchen &amp; Wine Bar · Cobble Hill</title>
+  <meta name="description" content="Osteria Vico is a neighborhood Italian restaurant on Henry Street in Cobble Hill, serving handmade pasta, wood-roasted seasonal plates, and low-intervention Italian wines since 1998." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F6F0E4;
+      --bg-elevated: #FBF7EE;
+      --bg-tinted: #ECE3D1;
+      --ink: #1F1916;
+      --ink-muted: #5A4E45;
+      --ink-soft: #7E7065;
+      --terracotta: #B63E26;
+      --terracotta-dark: #922D19;
+      --olive: #4A5D3F;
+      --olive-light: #E6ECE0;
+      --gold: #B99352;
+      --espresso: #211B18;
+      --espresso-card: #2B231F;
+      --espresso-text: #F4EDE0;
+      --espresso-muted: #C4B7A6;
+      --border: rgba(31, 25, 22, 0.14);
+      --border-strong: rgba(31, 25, 22, 0.28);
+      --radius-sm: 4px;
+      --radius-md: 10px;
+      --radius-lg: 18px;
+      --shadow-soft: 0 14px 36px rgba(31, 25, 22, 0.08);
+      --shadow-card: 0 8px 24px rgba(31, 25, 22, 0.06);
+      --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --max-w: 1180px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(185, 147, 82, 0.09) 0%, transparent 45%),
+        radial-gradient(circle at 88% 35%, rgba(182, 62, 38, 0.05) 0%, transparent 40%);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Subtle paper grain overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--terracotta);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--terracotta);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      z-index: 10000;
+      font-weight: 500;
+    }
+    .skip-link:focus {
+      left: 1rem;
+      top: 1rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.75;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: clamp(2.85rem, 6vw, 4.7rem);
+    }
+
+    h2 {
+      font-size: clamp(2.15rem, 4.2vw, 3.35rem);
+    }
+
+    h3 {
+      font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    }
+
+    em, .italic {
+      font-style: italic;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.85rem 1.65rem;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--terracotta);
+      color: #FFFBF5;
+      box-shadow: 0 6px 18px rgba(182, 62, 38, 0.22);
+    }
+    .btn-primary:hover {
+      background-color: var(--terracotta-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(182, 62, 38, 0.28);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      background-color: rgba(31, 25, 22, 0.04);
+    }
+
+    .btn-light {
+      background-color: var(--bg-elevated);
+      color: var(--espresso);
+    }
+    .btn-light:hover {
+      background-color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Announcement Banner */
+    .announcement-bar {
+      background-color: var(--espresso);
+      color: var(--espresso-text);
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      padding: 0.55rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(185, 147, 82, 0.28);
+    }
+    .announcement-bar span {
+      color: #E3C388;
+      font-weight: 500;
+    }
+
+    /* Sticky Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(246, 240, 228, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.25s ease;
+    }
+    .site-header.scrolled {
+      box-shadow: 0 6px 24px rgba(31, 25, 22, 0.06);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+    .brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+    }
+    .brand-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-left: 1px solid var(--border-strong);
+      padding-left: 0.6rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      position: relative;
+      padding: 0.25rem 0;
+      transition: color 0.2s ease;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 1.5px;
+      background: var(--terracotta);
+      transition: width 0.22s ease;
+    }
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .header-phone {
+      font-size: 0.86rem;
+      color: var(--ink-muted);
+      display: none;
+    }
+    @media (min-width: 1040px) {
+      .header-phone { display: inline-block; }
+    }
+
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 0.45rem 0.6rem;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    /* Mobile Drawer */
+    .mobile-nav {
+      display: none;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem) 1.75rem;
+    }
+    .mobile-nav.open {
+      display: block;
+    }
+    .mobile-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      display: block;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: clamp(2.8rem, 6vw, 5.2rem) 0 clamp(3.5rem, 6vw, 5.5rem);
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: clamp(2.2rem, 5vw, 4.5rem);
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      margin-top: 1.1rem;
+      margin-bottom: 1.35rem;
+      color: var(--ink);
+    }
+    .hero-copy h1 em {
+      color: var(--terracotta);
+      font-weight: 500;
+    }
+
+    .hero-lead {
+      font-size: 1.08rem;
+      color: var(--ink-muted);
+      max-width: 50ch;
+      margin: 0 0 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      align-items: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2.2rem;
+      padding-top: 1.6rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+    }
+    .hero-meta-item strong {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-soft);
+      margin-bottom: 0.2rem;
+      font-weight: 600;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--olive);
+      box-shadow: 0 0 0 4px rgba(74, 93, 63, 0.18);
+    }
+    .status-dot.closed {
+      background-color: var(--terracotta);
+      box-shadow: 0 0 0 4px rgba(182, 62, 38, 0.18);
+    }
+
+    /* Hero Visual Arch Frame */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .arch-frame {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 230px 230px 14px 14px;
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+    }
+    .arch-inner {
+      border-radius: 218px 218px 8px 8px;
+      overflow: hidden;
+      border: 1px solid rgba(185, 147, 82, 0.35);
+      background: linear-gradient(180deg, #EFE5D2 0%, #E7D8BE 58%, #DFCBB0 100%);
+      position: relative;
+    }
+
+    .daily-card {
+      position: absolute;
+      bottom: -18px;
+      left: -24px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.2rem;
+      max-width: 245px;
+      box-shadow: var(--shadow-soft);
+    }
+    .daily-card-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .daily-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+    .daily-card-note {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Values Ribbon */
+    .pillars {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(251, 247, 238, 0.6);
+      padding: 2.4rem 0;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .pillar {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .pillar-num {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-style: italic;
+      color: var(--terracotta);
+      line-height: 1;
+      padding-top: 0.1rem;
+    }
+    .pillar h3 {
+      font-size: 1.28rem;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+    }
+    .pillar p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    /* Generic Section Spacing */
+    section.band {
+      padding: clamp(4rem, 7vw, 6.2rem) 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2.6rem;
+    }
+    .section-header-copy {
+      max-width: 580px;
+    }
+    .section-header-copy h2 {
+      margin-top: 0.65rem;
+    }
+    .section-header-copy p {
+      margin: 0.85rem 0 0;
+      color: var(--ink-muted);
+    }
+
+    /* Menu Section */
+    .menu-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem 1.5rem;
+      margin-bottom: 2.2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.55rem 1.15rem;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--ink);
+      background: rgba(31, 25, 22, 0.05);
+    }
+    .tab-btn[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--bg-elevated);
+    }
+
+    .diet-filters {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+    }
+    .diet-label {
+      color: var(--ink-soft);
+      margin-right: 0.2rem;
+    }
+    .filter-pill {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 0.3rem 0.78rem;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-pill.active {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #fff;
+    }
+
+    .menu-board {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.6rem, 4vw, 3rem);
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+    .menu-board::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(185, 147, 82, 0.22);
+      border-radius: calc(var(--radius-lg) - 6px);
+      pointer-events: none;
+    }
+
+    .menu-category-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .menu-category-heading h3 {
+      font-size: clamp(1.7rem, 2.8vw, 2.25rem);
+      font-style: italic;
+    }
+    .menu-category-note {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .menu-items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.8rem 3rem;
+    }
+
+    .dish {
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+    }
+    .dish-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+    }
+    .dish-name {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .dish-leader {
+      flex: 1;
+      border-bottom: 1px dotted rgba(31, 25, 22, 0.28);
+      transform: translateY(-4px);
+      min-width: 24px;
+    }
+    .dish-price {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .dish-desc {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+    .dish-tags {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.15rem;
+    }
+    .tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.12rem 0.45rem;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .tag-v {
+      background: var(--olive-light);
+      color: var(--olive);
+    }
+    .tag-gf {
+      background: #F3E8D4;
+      color: #876326;
+    }
+    .tag-fav {
+      background: #F6E2DD;
+      color: var(--terracotta);
+    }
+
+    .menu-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    /* Sunday Supper Callout */
+    .sunday-banner {
+      margin-top: 2.2rem;
+      background: linear-gradient(135deg, #EDE3CF 0%, #E7D9BE 100%);
+      border: 1px solid rgba(185, 147, 82, 0.42);
+      border-radius: var(--radius-md);
+      padding: 1.65rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .sunday-banner h4 {
+      font-size: 1.55rem;
+      margin-bottom: 0.25rem;
+    }
+    .sunday-banner p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--ink-muted);
+      max-width: 60ch;
+    }
+    .sunday-price {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--terracotta);
+      text-align: right;
+    }
+    .sunday-price span {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Story Section */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: clamp(2.2rem, 5vw, 4.5rem);
+      align-items: center;
+    }
+
+    .story-art-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+    .story-art-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 0.4rem 0.2rem;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .story-copy h2 {
+      margin-top: 0.7rem;
+      margin-bottom: 1.35rem;
+    }
+    .story-copy p {
+      color: var(--ink-muted);
+      margin: 0 0 1.15rem;
+      font-size: 1.01rem;
+      line-height: 1.75;
+    }
+
+    .story-quote {
+      margin: 1.8rem 0;
+      padding: 1.25rem 0 1.25rem 1.5rem;
+      border-left: 2px solid var(--terracotta);
+    }
+    .story-quote blockquote {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-style: italic;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .story-quote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .story-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-val {
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 600;
+      color: var(--terracotta);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Dark Wine & Aperitivo Section */
+    .enoteca {
+      background-color: var(--espresso);
+      color: var(--espresso-text);
+      position: relative;
+      overflow: hidden;
+    }
+    .enoteca::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(182, 62, 38, 0.18) 0%, transparent 48%),
+        radial-gradient(circle at 15% 85%, rgba(185, 147, 82, 0.14) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .enoteca .container {
+      position: relative;
+      z-index: 1;
+    }
+    .enoteca .eyebrow {
+      color: #E3C388;
+    }
+    .enoteca p {
+      color: var(--espresso-muted);
+    }
+
+    .enoteca-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .aperitivo-card {
+      background: var(--espresso-card);
+      border: 1px solid rgba(227, 195, 136, 0.24);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: 1.8rem;
+    }
+    .aperitivo-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #E3C388;
+      border: 1px solid rgba(227, 195, 136, 0.35);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .aperitivo-card h3 {
+      color: var(--espresso-text);
+      margin-bottom: 0.65rem;
+      font-size: 1.7rem;
+    }
+    .aperitivo-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .aperitivo-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.93rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .aperitivo-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .aperitivo-list strong {
+      color: var(--espresso-text);
+      font-weight: 500;
+    }
+    .aperitivo-list span {
+      color: #E3C388;
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+    }
+
+    .wine-pours {
+      display: grid;
+      gap: 1rem;
+    }
+    .wine-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 1.35rem 1.5rem;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .wine-card:hover {
+      border-color: rgba(227, 195, 136, 0.42);
+      background: rgba(255, 255, 255, 0.055);
+    }
+    .wine-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .wine-region {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #E3C388;
+      margin-bottom: 0.2rem;
+    }
+    .wine-title {
+      font-family: var(--font-serif);
+      font-size: 1.38rem;
+      color: var(--espresso-text);
+    }
+    .wine-price {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: #E3C388;
+      white-space: nowrap;
+    }
+    .wine-notes {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--espresso-muted);
+    }
+
+    /* Reservation Section */
+    .reserve-wrapper {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+    }
+
+    .reserve-aside {
+      background: linear-gradient(180deg, #EFE5D3 0%, #E6D8BF 100%);
+      padding: clamp(2rem, 4vw, 3rem);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .reserve-aside h2 {
+      margin-top: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .reserve-aside p {
+      color: var(--ink-muted);
+      margin: 0 0 1.2rem;
+      font-size: 0.96rem;
+    }
+    .walkin-note {
+      background: rgba(251, 247, 238, 0.78);
+      border: 1px solid rgba(185, 147, 82, 0.38);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.25rem;
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+    }
+    .walkin-note strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+      font-size: 0.92rem;
+    }
+
+    .reserve-form-pane {
+      padding: clamp(2rem, 4vw, 3rem);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.15rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field.full {
+      grid-column: 1 / -1;
+    }
+    .field label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 0.72rem 0.9rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(182, 62, 38, 0.12);
+    }
+
+    .seating-pills,
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .choice-chip {
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.48rem 0.95rem;
+      font-size: 0.86rem;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .choice-chip:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+    .choice-chip[aria-pressed="true"] {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #fff;
+    }
+
+    .monday-notice {
+      display: none;
+      background: #F6E2DD;
+      border: 1px solid rgba(182, 62, 38, 0.3);
+      color: var(--terracotta-dark);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.95rem;
+      font-size: 0.88rem;
+      margin-top: 0.25rem;
+    }
+    .monday-notice.visible {
+      display: block;
+    }
+
+    /* Confirmation Ticket */
+    .booking-ticket {
+      display: none;
+      border: 1px dashed var(--gold);
+      background: #FCF9F2;
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+    }
+    .booking-ticket.visible {
+      display: block;
+    }
+    .ticket-seal {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: var(--olive-light);
+      color: var(--olive);
+      display: grid;
+      place-items: center;
+    }
+    .booking-ticket h3 {
+      font-size: 2rem;
+      margin-bottom: 0.4rem;
+    }
+    .ticket-code {
+      display: inline-block;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      background: #F6E2DD;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    .ticket-details {
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.15rem 1.3rem;
+      margin: 0 auto 1.5rem;
+      max-width: 420px;
+      display: grid;
+      gap: 0.55rem;
+      font-size: 0.92rem;
+    }
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .ticket-row span:first-child {
+      color: var(--ink-soft);
+    }
+    .ticket-row strong {
+      color: var(--ink);
+      font-weight: 500;
+      text-align: right;
+    }
+
+    /* Voices / Press */
+    .voices {
+      background: rgba(236, 227, 209, 0.45);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .voices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.6rem;
+    }
+    .voice-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .voice-quote {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--ink);
+      margin: 0;
+    }
+    .voice-author {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--border);
+      padding-top: 0.9rem;
+    }
+
+    /* Visit & Map Section */
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .hours-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .hours-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+    .hours-list li span:first-child {
+      font-weight: 500;
+    }
+    .hours-list li span:last-child {
+      color: var(--ink-muted);
+    }
+
+    .contact-blocks {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .contact-block strong {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.3rem;
+    }
+    .contact-block p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--ink-muted);
+    }
+
+    .newsletter-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.35rem 1.5rem;
+    }
+    .newsletter-box h4 {
+      font-size: 1.35rem;
+      margin-bottom: 0.25rem;
+    }
+    .newsletter-box p {
+      margin: 0 0 1rem;
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .newsletter-form input {
+      flex: 1;
+      padding: 0.68rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      font-size: 0.9rem;
+      min-width: 0;
+    }
+    .newsletter-msg {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--olive);
+      font-weight: 500;
+      display: none;
+    }
+    .newsletter-msg.visible {
+      display: block;
+    }
+
+    .map-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+    .map-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      padding: 1rem 0.4rem 0.25rem;
+    }
+    .map-transit {
+      font-size: 0.86rem;
+      color: var(--ink-muted);
+    }
+    .map-transit strong {
+      color: var(--ink);
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 0.42rem 0.95rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--ink);
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      border-color: var(--terracotta);
+      color: var(--terracotta);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--espresso);
+      color: var(--espresso-muted);
+      padding: 3.5rem 0 2.5rem;
+      border-top: 1px solid rgba(227, 195, 136, 0.2);
+    }
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+      padding-bottom: 2.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .monogram {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(227, 195, 136, 0.55);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-style: italic;
+      color: #E3C388;
+    }
+    .footer-brand strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      color: var(--espresso-text);
+      font-weight: 500;
+      line-height: 1.1;
+    }
+    .footer-brand span {
+      font-size: 0.82rem;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.6rem;
+      font-size: 0.9rem;
+    }
+    .footer-links a:hover {
+      color: #E3C388;
+    }
+    .footer-bottom {
+      padding-top: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.82rem;
+      color: rgba(196, 183, 166, 0.78);
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .story-grid,
+      .enoteca-grid,
+      .reserve-wrapper,
+      .visit-grid {
+        grid-template-columns: 1fr;
+      }
+      .reserve-aside {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .pillars-grid,
+      .voices-grid {
+        grid-template-columns: 1fr;
+      }
+      .menu-items-grid {
+        grid-template-columns: 1fr;
+      }
+      .daily-card {
+        left: 12px;
+        bottom: -14px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .nav-links,
+      .header-actions .btn {
+        display: none;
+      }
+      .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .brand-sub {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .form-grid,
+      .contact-blocks,
+      .story-stats {
+        grid-template-columns: 1fr;
+      }
+      .newsletter-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Seasonal Ribbon -->
+  <div class="announcement-bar">
+    <span>Tonight on the Chalkboard:</span> Hand-cut Tajarin with Black Truffle &amp; 36-Month Parmigiano · Half the counter held nightly for neighborhood walk-ins.
+  </div>
+
+  <!-- Sticky Navigation -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Osteria Vico Home">
+        <span class="brand-name">Osteria Vico</span>
+        <span class="brand-sub">Est. 1998</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="#menu">La Carta</a></li>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#enoteca">Aperitivo &amp; Wine</a></li>
+          <li><a href="#visit">Hours &amp; Visit</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="tel:+17185550194" class="header-phone">(718) 555-0194</a>
+        <a href="#reserve" class="btn btn-primary">Book a Table</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="3" y1="7" x2="21" y2="7"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="17" x2="21" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="#menu">La Carta · Menu</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#enoteca">Aperitivo &amp; Wine</a></li>
+        <li><a href="#visit">Hours &amp; Visit</a></li>
+      </ul>
+      <a href="#reserve" class="btn btn-primary" style="width: 100%;">Book a Table</a>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">214 Henry Street · Cobble Hill</span>
+          <h1>Handmade pasta, poured wine, and a <em>warm corner table.</em></h1>
+          <p class="hero-lead">
+            A neighborhood trattoria rooted in Northern and Central Italian home cooking. Every afternoon we roll fresh egg dough by hand, bake rosemary focaccia in cast iron, and uncork small-family bottles meant to linger over.
+          </p>
+          <div class="hero-ctas">
+            <a href="#reserve" class="btn btn-primary">Reserve a Table</a>
+            <a href="#menu" class="btn btn-secondary">Explore Tonight's Menu</a>
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <strong>Kitchen Status</strong>
+              <span class="status-pill" id="kitchenStatus">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Dinner Tue–Sun from 5:00 PM</span>
+              </span>
+            </div>
+            <div class="hero-meta-item">
+              <strong>Walk-Ins</strong>
+              <span>12 pasta bar seats held every evening</span>
+            </div>
+            <div class="hero-meta-item">
+              <strong>Sunday Supper</strong>
+              <span>Family-style 3 courses · 4 PM–9 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="arch-frame">
+            <div class="arch-inner">
+              <!-- Bespoke Editorial Trattoria Table Still-Life SVG -->
+              <svg viewBox="0 0 420 500" role="img" aria-label="Illustrated Italian dining table with carafe of red wine, handmade tagliatelle, tomatoes, and olive branch">
+                <defs>
+                  <linearGradient id="wallGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#F2E7D3" />
+                    <stop offset="65%" stop-color="#E8D8BC" />
+                    <stop offset="100%" stop-color="#DEC8A5" />
+                  </linearGradient>
+                  <linearGradient id="wineFill" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8B2318" />
+                    <stop offset="100%" stop-color="#5A130D" />
+                  </linearGradient>
+                  <linearGradient id="tableCloth" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#FBF7EE" />
+                    <stop offset="100%" stop-color="#EFE6D5" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Warm Plaster Wall -->
+                <rect width="420" height="500" fill="url(#wallGlow)" />
+
+                <!-- Sunlit Window Arch Shadow -->
+                <path d="M55 260 V155 C55 78 125 32 210 32 C295 32 365 78 365 155 V260 Z" fill="#F8F1E3" opacity="0.52" />
+                <circle cx="292" cy="112" r="46" fill="#E9B86B" opacity="0.22" />
+
+                <!-- Decorative Botanical Olive Branch -->
+                <g stroke="#4A5D3F" stroke-width="2" fill="none" stroke-linecap="round">
+                  <path d="M52 175 C95 155, 132 130, 178 96" />
+                  <path d="M96 150 C92 128, 108 118, 114 134 C118 144, 106 152, 96 150 Z" fill="#5D724F" />
+                  <path d="M126 132 C136 112, 152 114, 148 130 C145 140, 132 140, 126 132 Z" fill="#4A5D3F" />
+                  <path d="M150 114 C150 94, 166 88, 170 103 C172 112, 160 118, 150 114 Z" fill="#6B825B" />
+                  <path d="M76 164 C66 146, 82 135, 90 148 C94 156, 84 166, 76 164 Z" fill="#6B825B" />
+                  <circle cx="116" cy="153" r="4.5" fill="#2A241E" stroke="none" />
+                  <circle cx="144" cy="136" r="4" fill="#3B3128" stroke="none" />
+                </g>
+
+                <!-- Table Surface -->
+                <path d="M0 320 Q210 304 420 320 L420 500 L0 500 Z" fill="url(#tableCloth)" />
+                <path d="M0 320 Q210 304 420 320" fill="none" stroke="#C7A66B" stroke-width="1.5" opacity="0.65" />
+
+                <!-- Subtle Woven Linen Stripes -->
+                <g stroke="#B63E26" stroke-width="1" opacity="0.14">
+                  <line x1="0" y1="365" x2="420" y2="365" />
+                  <line x1="0" y1="372" x2="420" y2="372" />
+                  <line x1="0" y1="455" x2="420" y2="455" />
+                </g>
+
+                <!-- Wine Carafe (Quartino) -->
+                <g transform="translate(242, 150)">
+                  <!-- Glass Body -->
+                  <path d="M36 16 L66 16 L62 64 C84 82, 92 115, 86 154 C82 178, 68 188, 51 188 C34 188, 20 178, 16 154 C10 115, 18 82, 40 64 Z" fill="#FAF5EB" fill-opacity="0.52" stroke="#3D312A" stroke-width="2" />
+                  <!-- Wine Inside -->
+                  <path d="M23 114 C40 120, 62 120, 79 114 C84 134, 83 158, 76 172 C70 181, 61 184, 51 184 C41 184, 32 181, 26 172 C19 158, 18 134, 23 114 Z" fill="url(#wineFill)" />
+                  <ellipse cx="51" cy="114" rx="28" ry="6" fill="#A63224" />
+                  <!-- Highlight -->
+                  <path d="M32 95 C26 115, 25 142, 31 164" fill="none" stroke="#FFFBF5" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+                  <!-- Rim -->
+                  <ellipse cx="51" cy="16" rx="15" ry="4" fill="#FBF7EE" stroke="#3D312A" stroke-width="1.8" />
+                </g>
+
+                <!-- Small Wine Glass -->
+                <g transform="translate(328, 236)">
+                  <path d="M8 10 L46 10 L42 52 C40 68, 33 74, 27 74 C21 74, 14 68, 12 52 Z" fill="#FAF5EB" fill-opacity="0.5" stroke="#3D312A" stroke-width="1.8" />
+                  <path d="M12 36 L42 36 L40 52 C38 65, 32 70, 27 70 C22 70, 16 65, 14 52 Z" fill="url(#wineFill)" />
+                  <line x1="27" y1="74" x2="27" y2="108" stroke="#3D312A" stroke-width="1.8" />
+                  <ellipse cx="27" cy="109" rx="16" ry="4.5" fill="none" stroke="#3D312A" stroke-width="1.8" />
+                </g>
+
+                <!-- Ceramic Plate with Handmade Tagliatelle -->
+                <g transform="translate(46, 294)">
+                  <!-- Plate Shadow -->
+                  <ellipse cx="122" cy="96" rx="108" ry="42" fill="#2A2018" opacity="0.1" />
+                  <!-- Outer Ceramic Plate -->
+                  <ellipse cx="118" cy="86" rx="108" ry="42" fill="#FBF8F1" stroke="#3D312A" stroke-width="2" />
+                  <ellipse cx="118" cy="85" rx="84" ry="30" fill="none" stroke="#B63E26" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65" />
+
+                  <!-- Pasta Ribbons -->
+                  <g fill="none" stroke-linecap="round">
+                    <path d="M62 82 C75 56, 152 54, 174 80 C186 95, 145 110, 108 106 C76 103, 52 94, 62 82 Z" fill="#E8BF6E" stroke="#C2913E" stroke-width="2.2" />
+                    <path d="M72 78 C95 62, 148 64, 164 82" stroke="#F4D590" stroke-width="5" />
+                    <path d="M68 88 C95 72, 142 75, 168 88" stroke="#D9A74F" stroke-width="4.5" />
+                    <path d="M80 96 C106 82, 138 84, 156 95" stroke="#F4D590" stroke-width="4.2" />
+                    <path d="M90 70 C114 60, 136 62, 150 72" stroke="#C8933B" stroke-width="3" />
+                  </g>
+
+                  <!-- San Marzano Ragù Spoonful & Basil Leaf -->
+                  <ellipse cx="118" cy="76" rx="28" ry="11" fill="#B63E26" opacity="0.92" />
+                  <path d="M108 72 C112 60, 128 58, 132 69 C125 75, 113 76, 108 72 Z" fill="#4A5D3F" stroke="#2D3B25" stroke-width="1.2" />
+                  <path d="M122 72 C131 62, 144 65, 142 75 C135 79, 125 77, 122 72 Z" fill="#5E754F" stroke="#2D3B25" stroke-width="1.2" />
+
+                  <!-- Shaved Parmigiano Curls -->
+                  <circle cx="96" cy="79" r="2.2" fill="#FFFBF2" />
+                  <circle cx="139" cy="82" r="2.4" fill="#FFFBF2" />
+                  <circle cx="114" cy="85" r="2" fill="#FFFBF2" />
+                </g>
+
+                <!-- Cluster of Vine Tomatoes -->
+                <g transform="translate(274, 374)">
+                  <circle cx="28" cy="30" r="18" fill="#B63E26" stroke="#3D312A" stroke-width="1.6" />
+                  <circle cx="56" cy="40" r="15" fill="#C94A30" stroke="#3D312A" stroke-width="1.6" />
+                  <path d="M24 14 L28 20 L34 15" fill="none" stroke="#4A5D3F" stroke-width="2" stroke-linecap="round" />
+                  <path d="M52 26 L56 32 L61 28" fill="none" stroke="#4A5D3F" stroke-width="2" stroke-linecap="round" />
+                  <circle cx="22" cy="24" r="3" fill="#FFFBF2" opacity="0.45" />
+                </g>
+
+                <!-- Small Monogram Stamp at Top Center -->
+                <g transform="translate(210, 74)" text-anchor="middle">
+                  <circle cx="0" cy="0" r="22" fill="none" stroke="#B63E26" stroke-width="1" opacity="0.55" />
+                  <text x="0" y="5" font-family="Cormorant Garamond, Georgia, serif" font-size="16" font-style="italic" fill="#B63E26" opacity="0.85">O·V</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="daily-card">
+              <div class="daily-card-label">Lavagna del Giorno</div>
+              <div class="daily-card-title">Tajarin al Tartufo Nero</div>
+              <p class="daily-card-note">40-yolk Piedmontese ribbons, cultured Normandy butter, shaved black truffle — rolled at 2:00 PM.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Neighborhood Pillars -->
+    <div class="pillars">
+      <div class="container pillars-grid reveal">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div>
+            <h3>Rolled by Hand Every Afternoon</h3>
+            <p>Organic stone-milled semolina, Italian 00 flour, and deep-amber Hudson Valley eggs shaped on wooden boards before service.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div>
+            <h3>Cellar of Family Growers</h3>
+            <p>A 90-bottle list devoted to small-production Italian winemakers—from crisp Alto Adige whites to old-vine Nebbiolo.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div>
+            <h3>Always Room for Neighbors</h3>
+            <p>No booking required to drop in. We keep our 12-seat marble pasta counter and front sidewalk tables open for walk-ins nightly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Menu Section -->
+    <section class="band" id="menu">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-header-copy">
+            <span class="eyebrow">La Carta · Autumn Menu</span>
+            <h2>Cooked from the market, written every week.</h2>
+            <p>Our menu follows what arrives from local farms and our importers in Emilia-Romagna and Lazio. Ask your server for tonight's off-menu market fish.</p>
+          </div>
+          <a href="#reserve" class="btn btn-secondary">Book Dinner</a>
+        </div>
+
+        <div class="menu-controls reveal">
+          <div class="menu-tabs" role="tablist" aria-label="Menu categories" id="menuTabs">
+            <button class="tab-btn" role="tab" aria-selected="true" data-category="antipasti">Antipasti</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-category="primi">Primi · Pasta</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-category="secondi">Secondi</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-category="dolci">Dolci</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-category="vini">Aperitivo &amp; Vini</button>
+          </div>
+
+          <div class="diet-filters" aria-label="Dietary filters">
+            <span class="diet-label">Filter:</span>
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="v">Vegetarian</button>
+            <button class="filter-pill" data-filter="gf">Gluten-Free</button>
+          </div>
+        </div>
+
+        <div class="menu-board reveal" id="menuBoard" role="tabpanel" aria-live="polite">
+          <!-- Dynamically rendered by JS for crisp filtering & switching -->
+        </div>
+
+        <div class="sunday-banner reveal">
+          <div>
+            <h4>La Domenica — Our Weekly Sunday Supper</h4>
+            <p>Every Sunday from 4:00 PM to 9:00 PM, we set the table family-style: warm rosemary focaccia, bitter greens, braised pork &amp; beef Sunday ragù over rigatoni, and warm olive oil cake.</p>
+          </div>
+          <div class="sunday-price">
+            $54
+            <span>Per Guest · Kids $22</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story & Courtyard Section -->
+    <section class="band" id="story" style="padding-top: 1rem;">
+      <div class="container story-grid">
+        <div class="story-art-card reveal">
+          <!-- Custom Inline SVG Illustration of the Cobble Hill Brownstone & Garden Courtyard -->
+          <svg viewBox="0 0 460 390" role="img" aria-label="Illustration of Osteria Vico's brick garden courtyard with string lights and olive tree">
+            <defs>
+              <linearGradient id="duskSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#35403B" />
+                <stop offset="55%" stop-color="#6F6554" />
+                <stop offset="100%" stop-color="#D7A773" />
+              </linearGradient>
+              <linearGradient id="warmGlow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F6D592" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#E59C4F" stop-opacity="0.1" />
+              </linearGradient>
+            </defs>
+            <rect width="460" height="390" rx="10" fill="url(#duskSky)" />
+
+            <!-- Courtyard Brick Walls -->
+            <rect x="0" y="130" width="115" height="260" fill="#8C4834" />
+            <rect x="345" y="110" width="115" height="280" fill="#7D3E2C" />
+            <!-- Brick Texture Lines -->
+            <g stroke="#5F2B1D" stroke-width="1" opacity="0.35">
+              <line x1="0" y1="160" x2="115" y2="160" />
+              <line x1="0" y1="190" x2="115" y2="190" />
+              <line x1="0" y1="220" x2="115" y2="220" />
+              <line x1="0" y1="250" x2="115" y2="250" />
+              <line x1="345" y1="145" x2="460" y2="145" />
+              <line x1="345" y1="175" x2="460" y2="175" />
+              <line x1="345" y1="205" x2="460" y2="205" />
+              <line x1="345" y1="235" x2="460" y2="235" />
+            </g>
+
+            <!-- Arched Glowing Dining Room Doorway -->
+            <path d="M148 310 V192 C148 145 184 114 230 114 C276 114 312 145 312 192 V310 Z" fill="#F2C882" />
+            <path d="M158 310 V195 C158 154 189 126 230 126 C271 126 302 154 302 195 V310 Z" fill="#2A201B" opacity="0.16" />
+            <!-- Door Mullions -->
+            <g stroke="#3F2D22" stroke-width="2.5">
+              <line x1="230" y1="114" x2="230" y2="310" />
+              <line x1="148" y1="210" x2="312" y2="210" />
+              <line x1="148" y1="262" x2="312" y2="262" />
+              <path d="M148 310 V192 C148 145 184 114 230 114 C276 114 312 145 312 192 V310" fill="none" stroke-width="4" />
+            </g>
+
+            <!-- Bistro String Lights -->
+            <path d="M20 138 Q230 198 440 124" fill="none" stroke="#241D19" stroke-width="1.5" />
+            <path d="M30 85 Q230 142 435 76" fill="none" stroke="#241D19" stroke-width="1.3" />
+            <g fill="#FFE6A8">
+              <circle cx="95" cy="154" r="5" /><circle cx="155" cy="166" r="5" /><circle cx="225" cy="171" r="5" /><circle cx="295" cy="164" r="5" /><circle cx="365" cy="148" r="5" />
+              <circle cx="120" cy="105" r="4.2" /><circle cx="195" cy="115" r="4.2" /><circle cx="275" cy="112" r="4.2" /><circle cx="350" cy="98" r="4.2" />
+            </g>
+            <g fill="#FFE6A8" opacity="0.22">
+              <circle cx="95" cy="154" r="14" /><circle cx="155" cy="166" r="14" /><circle cx="225" cy="171" r="14" /><circle cx="295" cy="164" r="14" /><circle cx="365" cy="148" r="14" />
+            </g>
+
+            <!-- Courtyard Paving -->
+            <rect x="0" y="308" width="460" height="82" fill="#D9C7AE" />
+            <line x1="0" y1="308" x2="460" y2="308" stroke="#9D876E" stroke-width="2" />
+
+            <!-- Terracotta Olive Tree Pot (Left) -->
+            <g transform="translate(56, 224)">
+              <path d="M16 92 L24 134 L60 134 L68 92 Z" fill="#B63E26" stroke="#3D261D" stroke-width="1.8" />
+              <rect x="12" y="84" width="60" height="10" rx="3" fill="#C94E35" stroke="#3D261D" stroke-width="1.8" />
+              <path d="M42 84 C42 64, 44 48, 40 30" stroke="#4F3D2F" stroke-width="5" stroke-linecap="round" />
+              <ellipse cx="42" cy="24" rx="34" ry="26" fill="#4A5D3F" />
+              <ellipse cx="26" cy="30" rx="18" ry="15" fill="#5D7450" />
+              <ellipse cx="56" cy="28" rx="18" ry="14" fill="#3C4E32" />
+            </g>
+
+            <!-- Two-Top Bistro Table in Foreground -->
+            <g transform="translate(278, 286)">
+              <!-- Tablecloth -->
+              <path d="M12 22 L92 22 L98 62 C80 68, 24 68, 6 62 Z" fill="#FBF7EE" stroke="#3D312A" stroke-width="1.6" />
+              <line x1="52" y1="64" x2="52" y2="96" stroke="#3D312A" stroke-width="3" />
+              <line x1="34" y1="96" x2="70" y2="96" stroke="#3D312A" stroke-width="3" stroke-linecap="round" />
+              <!-- Candle -->
+              <rect x="48" y="8" width="8" height="14" rx="1.5" fill="#FFFDF8" stroke="#3D312A" stroke-width="1.2" />
+              <ellipse cx="52" cy="4" rx="3" ry="5" fill="#F4C25B" />
+              <circle cx="52" cy="4" r="14" fill="url(#warmGlow)" />
+              <!-- Wine Bottle -->
+              <path d="M68 22 L68 2 L71 -5 L75 -5 L78 2 L78 22 Z" fill="#2A3826" />
+            </g>
+          </svg>
+          <div class="story-art-caption">
+            <span>The back garden on Henry Street — heated in autumn</span>
+            <span>38 seats inside · 22 outside</span>
+          </div>
+        </div>
+
+        <div class="story-copy reveal">
+          <span class="eyebrow">La Storia · Since 1998</span>
+          <h2>A brownstone dining room built for weeknights and milestones alike.</h2>
+          <p>
+            When Mirella and Marco Conti opened Osteria Vico twenty-eight years ago, they wanted the sort of place they missed from Bologna: unhurried, deeply seasonal, and priced so neighbors could wander in on a Tuesday evening for a bowl of tagliatelle and a quartino of Sangiovese.
+          </p>
+          <p>
+            Today, their daughter Chiara runs the dining room and cellar while Chef Lorenzo leads the pasta table. Our olive oil still arrives each November in tin cans from Mirella's cousin's grove outside Spoleto, and our cast-iron focaccia still comes out blistered and fragrant at 5:00 sharp.
+          </p>
+
+          <div class="story-quote">
+            <blockquote>“Good hospitality isn’t theater. It’s remembering how someone takes their Negroni and making sure the pasta hits the table piping hot.”</blockquote>
+            <cite>— Chiara Conti, Proprietor</cite>
+          </div>
+
+          <div class="story-stats">
+            <div>
+              <div class="stat-val">28</div>
+              <div class="stat-label">Years on Henry Street</div>
+            </div>
+            <div>
+              <div class="stat-val">7</div>
+              <div class="stat-label">Fresh pasta shapes rolled daily</div>
+            </div>
+            <div>
+              <div class="stat-val">90+</div>
+              <div class="stat-label">Small-estate Italian wines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wine & Aperitivo Contrast Section -->
+    <section class="band enoteca" id="enoteca">
+      <div class="container enoteca-grid">
+        <div class="reveal">
+          <span class="eyebrow">Enoteca &amp; Bar</span>
+          <h2 style="margin-top: 0.7rem; color: var(--espresso-text);">Golden Hour Aperitivo &amp; Cellar Pours.</h2>
+          <p style="margin-top: 1rem;">
+            Slip onto a barstool before dinner. Every bottle on our list comes from independent Italian growers farming organically—poured generously by the glass, carafe, or bottle.
+          </p>
+
+          <div class="aperitivo-card">
+            <span class="aperitivo-badge">Tue – Fri · 5:00 to 6:30 PM</span>
+            <h3>Aperitivo at the Marble Bar</h3>
+            <p style="margin: 0; font-size: 0.92rem;">Every early-evening cocktail or glass of Franciacorta arrives with Castelvetrano olives, taralli, and warm rosemary focaccia on the house.</p>
+            <ul class="aperitivo-list">
+              <li><strong>Negroni Sbagliato</strong> <span>$12</span></li>
+              <li><strong>Spritz Veneziano (Select or Aperol)</strong> <span>$11</span></li>
+              <li><strong>House Vermouth Rosso on a Big Rock</strong> <span>$10</span></li>
+              <li><strong>Non-Alcoholic Chinotto &amp; Rosemary Spritz</strong> <span>$9</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="wine-pours reveal">
+          <div class="wine-card">
+            <div class="wine-region">Piedmont · Nebbiolo</div>
+            <div class="wine-card-top">
+              <div class="wine-title">2021 Produttori del Barbaresco, Langhe</div>
+              <div class="wine-price">$18 / $68</div>
+            </div>
+            <p class="wine-notes">Wild sour cherry, dried rose petal, and fine chalky tannin. Built for our Tajarin or braised short rib.</p>
+          </div>
+
+          <div class="wine-card">
+            <div class="wine-region">Campania · Fiano di Avellino</div>
+            <div class="wine-card-top">
+              <div class="wine-title">2022 Ciro Picariello, Ciro 906</div>
+              <div class="wine-price">$16 / $60</div>
+            </div>
+            <p class="wine-notes">Toasted hazelnut, white peach, and volcanic salinity. Gorgeous alongside crudo and roasted branzino.</p>
+          </div>
+
+          <div class="wine-card">
+            <div class="wine-region">Sicily · Nerello Mascalese</div>
+            <div class="wine-card-top">
+              <div class="wine-title">2022 Cornelissen, Susucaru Rosso (Chilled)</div>
+              <div class="wine-price">$17 / $64</div>
+            </div>
+            <p class="wine-notes">Lifted red currant, blood orange peel, and Etna smoke—served lightly chilled for effortless drinking.</p>
+          </div>
+
+          <div class="wine-card">
+            <div class="wine-region">Emilia-Romagna · Lambrusco di Sorbara</div>
+            <div class="wine-card-top">
+              <div class="wine-title">Paltrinieri, Radice (Dry, Unfiltered)</div>
+              <div class="wine-price">$14 / $52</div>
+            </div>
+            <p class="wine-notes">Bone-dry pale pink fizz with crisp strawberry and vibrant acidity—the classic partner to prosciutto &amp; gnocco fritto.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section class="band" id="reserve">
+      <div class="container">
+        <div class="reserve-wrapper reveal">
+          <div class="reserve-aside">
+            <div>
+              <span class="eyebrow">Prenota un Tavolo</span>
+              <h2>Join us for dinner.</h2>
+              <p>We release tables 21 days in advance. For parties of 7 to 14 guests, we host family-style feasts at our long walnut table in the back alcove—just select 7+ guests or give us a ring.</p>
+            </div>
+
+            <div class="walkin-note">
+              <strong>Looking for tonight?</strong>
+              Even when online reservations are full, we hold our 12-seat pasta bar and front garden tables exclusively for walk-in neighbors starting at 5:00 PM.
+            </div>
+          </div>
+
+          <div class="reserve-form-pane">
+            <form id="reservationForm" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="partySize">Party Size</label>
+                  <select id="partySize" name="partySize">
+                    <option value="2">2 Guests</option>
+                    <option value="1">1 Guest</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4" selected>4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="6">6 Guests</option>
+                    <option value="8">7–10 Guests (Alcove Table)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="reserveDate">Date</label>
+                  <input type="date" id="reserveDate" name="reserveDate" required />
+                </div>
+
+                <div class="field full">
+                  <div class="monday-notice" id="mondayNotice" role="alert">
+                    We're closed on Mondays while our team rests and visits the market. Please choose Tuesday through Sunday.
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label>Seating Preference</label>
+                  <div class="seating-pills" id="seatingPills" role="group" aria-label="Seating preference">
+                    <button type="button" class="choice-chip" aria-pressed="true" data-seating="Dining Room">Dining Room</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-seating="Garden Patio">Garden Patio (Heated)</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-seating="Pasta Bar Counter">Pasta Bar Counter</button>
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label>Available Dinner Times</label>
+                  <div class="time-slots" id="timeSlots" role="group" aria-label="Available dinner times">
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="5:15 PM">5:15 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="5:45 PM">5:45 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="6:30 PM">6:30 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="true" data-time="7:15 PM">7:15 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="8:00 PM">8:00 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="8:45 PM">8:45 PM</button>
+                    <button type="button" class="choice-chip" aria-pressed="false" data-time="9:15 PM">9:15 PM</button>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="guestName">Full Name</label>
+                  <input type="text" id="guestName" name="guestName" placeholder="Elena Rossi" required />
+                </div>
+
+                <div class="field">
+                  <label for="guestEmail">Email or Phone</label>
+                  <input type="text" id="guestEmail" name="guestEmail" placeholder="elena@example.com" required />
+                </div>
+
+                <div class="field full">
+                  <label for="guestNotes">Notes or Allergies (Optional)</label>
+                  <input type="text" id="guestNotes" name="guestNotes" placeholder="Anniversary, nut allergy, high chair needed..." />
+                </div>
+
+                <div class="field full" style="margin-top: 0.35rem;">
+                  <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.95rem;">Confirm Reservation</button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Instant Confirmation Ticket -->
+            <div class="booking-ticket" id="bookingTicket" aria-live="polite">
+              <div class="ticket-seal" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <h3>Ci vediamo presto!</h3>
+              <div class="ticket-code" id="ticketCode">VICO-4821</div>
+              <p style="margin: 0 0 1.25rem; color: var(--ink-muted); font-size: 0.93rem;">Your table is reserved. We'll hold it for 15 minutes past your seating time.</p>
+
+              <div class="ticket-details" id="ticketDetails"></div>
+
+              <button type="button" class="btn btn-secondary" id="resetBookingBtn">Modify or Book Another Table</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neighborhood Voices -->
+    <section class="band voices">
+      <div class="container">
+        <div class="section-header reveal" style="margin-bottom: 2rem;">
+          <div class="section-header-copy">
+            <span class="eyebrow">From the Block</span>
+            <h2>Loved by regulars for nearly three decades.</h2>
+          </div>
+        </div>
+
+        <div class="voices-grid reveal">
+          <article class="voice-card">
+            <p class="voice-quote">“The cacio e pepe tonnarelli tastes like a rainy night in Trastevere, and the garden under the string lights is the loveliest spot in Brooklyn.”</p>
+            <div class="voice-author">Hannah &amp; David M. · Warren Street Regulars</div>
+          </article>
+
+          <article class="voice-card">
+            <p class="voice-quote">“Unpretentious, deeply soulful cooking. Osteria Vico never chases trends—it simply makes the handmade pasta you crave every Friday.”</p>
+            <div class="voice-author">Brooklyn Dining Guide · Neighborhood Classics</div>
+          </article>
+
+          <article class="voice-card">
+            <p class="voice-quote">“We brought our newborn here for Sunday Supper, and ten years later it’s still where our family celebrates every birthday. Don’t skip the pistachio tiramisu.”</p>
+            <div class="voice-author">Marco T. · Cobble Hill Neighbor</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit, Hours & Stylized Map -->
+    <section class="band" id="visit">
+      <div class="container visit-grid">
+        <div class="reveal">
+          <span class="eyebrow">Hours &amp; Location</span>
+          <h2 style="margin-top: 0.7rem;">Find us on the corner of Henry &amp; Warren.</h2>
+
+          <ul class="hours-list">
+            <li><span>Tuesday – Thursday</span><span>5:00 PM – 10:00 PM</span></li>
+            <li><span>Friday &amp; Saturday</span><span>5:00 PM – 10:45 PM</span></li>
+            <li><span>Sunday (Supper &amp; À La Carte)</span><span>4:00 PM – 9:00 PM</span></li>
+            <li><span>Monday</span><span>Closed (Market &amp; Rest)</span></li>
+          </ul>
+
+          <div class="contact-blocks">
+            <div class="contact-block">
+              <strong>Address</strong>
+              <p>214 Henry Street<br />Cobble Hill, Brooklyn, NY 11201</p>
+            </div>
+            <div class="contact-block">
+              <strong>Phone &amp; Private Dining</strong>
+              <p><a href="tel:+17185550194">(718) 555-0194</a><br /><a href="mailto:ciao@osteriavico.com">ciao@osteriavico.com</a></p>
+            </div>
+          </div>
+
+          <div class="newsletter-box">
+            <h4>Notes from the Kitchen</h4>
+            <p>One letter a month when white truffles land, spring peas arrive, or we host a winemaker dinner.</p>
+            <form class="newsletter-form" id="newsletterForm">
+              <label for="newsletterEmail" class="skip-link">Email address</label>
+              <input type="email" id="newsletterEmail" placeholder="you@neighborhood.com" required />
+              <button type="submit" class="btn btn-primary" style="padding: 0.68rem 1.25rem;">Subscribe</button>
+            </form>
+            <div class="newsletter-msg" id="newsletterMsg" role="status">Grazie! You're on our monthly kitchen letter list.</div>
+          </div>
+        </div>
+
+        <div class="map-card reveal">
+          <!-- Bespoke Stylized Cobble Hill Neighborhood Map SVG -->
+          <svg viewBox="0 0 500 380" role="img" aria-label="Neighborhood map showing Osteria Vico at 214 Henry Street near Bergen Street subway station and Cobble Hill Park">
+            <rect width="500" height="380" rx="10" fill="#F2EAD9" />
+
+            <!-- City Blocks -->
+            <g fill="#E7DCC7">
+              <rect x="20" y="20" width="96" height="84" rx="4" />
+              <rect x="136" y="20" width="114" height="84" rx="4" />
+              <rect x="270" y="20" width="108" height="84" rx="4" />
+              <rect x="398" y="20" width="82" height="84" rx="4" />
+
+              <rect x="20" y="124" width="96" height="96" rx="4" />
+              <rect x="136" y="124" width="114" height="96" rx="4" />
+              <rect x="270" y="124" width="108" height="96" rx="4" />
+              <rect x="398" y="124" width="82" height="96" rx="4" />
+
+              <rect x="20" y="240" width="96" height="118" rx="4" />
+              <rect x="270" y="240" width="108" height="118" rx="4" />
+              <rect x="398" y="240" width="82" height="118" rx="4" />
+            </g>
+
+            <!-- Cobble Hill Park (Green Block) -->
+            <rect x="136" y="240" width="114" height="118" rx="6" fill="#C9D6BC" stroke="#8DA37B" stroke-width="1.2" />
+            <circle cx="172" cy="285" r="16" fill="#9BB388" opacity="0.7" />
+            <circle cx="212" cy="316" r="14" fill="#9BB388" opacity="0.7" />
+            <circle cx="215" cy="272" r="11" fill="#8EA67B" opacity="0.65" />
+            <text x="193" y="302" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" letter-spacing="0.06em" fill="#3E5034">COBBLE HILL</text>
+            <text x="193" y="315" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10.5" font-weight="600" letter-spacing="0.06em" fill="#3E5034">PARK</text>
+
+            <!-- Streets -->
+            <g stroke="#FBF7EE" stroke-width="14">
+              <line x1="126" y1="0" x2="126" y2="380" />
+              <line x1="260" y1="0" x2="260" y2="380" />
+              <line x1="388" y1="0" x2="388" y2="380" />
+              <line x1="0" y1="114" x2="500" y2="114" />
+              <line x1="0" y1="230" x2="500" y2="230" />
+            </g>
+
+            <!-- Street Labels -->
+            <g font-family="DM Sans, sans-serif" font-size="10" font-weight="600" letter-spacing="0.14em" fill="#7D6F63">
+              <text x="58" y="118">BERGEN ST</text>
+              <text x="304" y="118">BERGEN ST</text>
+              <text x="58" y="234">WARREN ST</text>
+              <text x="300" y="234">WARREN ST</text>
+
+              <text x="130" y="64" transform="rotate(-90 130 64)">HENRY ST</text>
+              <text x="264" y="68" transform="rotate(-90 264 68)">CLINTON ST</text>
+              <text x="392" y="66" transform="rotate(-90 392 66)">COURT ST</text>
+            </g>
+
+            <!-- Subway Stop Indicator (F / G at Bergen St) -->
+            <g transform="translate(388, 114)">
+              <circle cx="0" cy="0" r="13" fill="#2A241E" />
+              <text x="0" y="4" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9.5" font-weight="700" fill="#FBF7EE">F·G</text>
+              <text x="20" y="-8" font-family="DM Sans, sans-serif" font-size="9.5" font-weight="600" fill="#5A4E45">Bergen St</text>
+              <text x="20" y="4" font-family="DM Sans, sans-serif" font-size="8.5" fill="#7E7065">4 min walk</text>
+            </g>
+
+            <!-- Walking Dashed Route -->
+            <path d="M372 114 L148 114 L148 206" fill="none" stroke="#B63E26" stroke-width="2" stroke-dasharray="5 5" opacity="0.65" />
+
+            <!-- Osteria Vico Location Pin -->
+            <g transform="translate(148, 206)">
+              <circle cx="0" cy="0" r="24" fill="#B63E26" opacity="0.16" />
+              <path d="M0 -34 C-12 -34, -20 -25, -20 -14 C-20 -2, 0 12, 0 12 C0 12, 20 -2, 20 -14 C20 -25, 12 -34, 0 -34 Z" fill="#B63E26" stroke="#FBF7EE" stroke-width="2.5" />
+              <circle cx="0" cy="-15" r="6" fill="#FBF7EE" />
+              <!-- Pin Callout Label -->
+              <rect x="24" y="-34" width="128" height="38" rx="6" fill="#211B18" />
+              <text x="34" y="-17" font-family="Cormorant Garamond, Georgia, serif" font-size="14.5" font-weight="600" fill="#FBF7EE">Osteria Vico</text>
+              <text x="34" y="-4" font-family="DM Sans, sans-serif" font-size="9.5" fill="#E3C388">214 Henry St · Corner Door</text>
+            </g>
+          </svg>
+
+          <div class="map-footer">
+            <div class="map-transit"><strong>Subway:</strong> F / G to Bergen St (4 min) · 2/3/4/5 to Borough Hall (9 min)</div>
+            <button type="button" class="copy-btn" id="copyAddressBtn">Copy Address</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="monogram" aria-hidden="true">OV</div>
+          <div>
+            <strong>Osteria Vico</strong>
+            <span>214 Henry Street · Cobble Hill, Brooklyn</span>
+          </div>
+        </div>
+
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#menu">La Carta</a>
+          <a href="#story">Our Story</a>
+          <a href="#enoteca">Aperitivo</a>
+          <a href="#reserve">Reservations</a>
+          <a href="#visit">Hours &amp; Map</a>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Osteria Vico. Family-owned in Cobble Hill since 1998.</span>
+        <span>A presto — see you at the table.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* -----------------------------------------
+         1. Menu Data & Interactive Filtering
+      ----------------------------------------- */
+      const MENU_DATA = {
+        antipasti: {
+          title: 'Antipasti',
+          note: 'To share for the table as your wine arrives.',
+          items: [
+            {
+              name: 'Focaccia al Rosmarino',
+              price: '$9',
+              desc: 'Baked to order in cast iron with sea salt flakes, fresh rosemary, and Umbrian new-harvest olive oil.',
+              tags: ['v']
+            },
+            {
+              name: 'Burrata & Fichi Arrostiti',
+              price: '$18',
+              desc: 'Pugliese burrata, roasted black mission figs, toasted pistachios, aged saba, and charred sourdough.',
+              tags: ['v', 'gf', 'fav']
+            },
+            {
+              name: 'Crudo di Ricciola',
+              price: '$21',
+              desc: 'Line-caught amberjack dressed with Sicilian blood orange, shaved fennel, green chili, and sea salt.',
+              tags: ['gf']
+            },
+            {
+              name: 'Carciofi alla Romana',
+              price: '$17',
+              desc: 'Braised baby artichokes stuffed with mint, garlic, and parsley over whipped pecorino crema.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Prosciutto di Parma & Gnocco Fritto',
+              price: '$19',
+              desc: '24-month aged Parma prosciutto served alongside warm, puffed Modenese fried dough.',
+              tags: ['fav']
+            },
+            {
+              name: 'Puntarelle & Cicoria',
+              price: '$15',
+              desc: 'Crisp winter chicories tossed in classic Roman anchovy-garlic vinaigrette and lemon zest.',
+              tags: ['gf']
+            }
+          ]
+        },
+        primi: {
+          title: 'Primi · Handmade Pasta',
+          note: 'Rolled in-house daily. Gluten-free bronze-die rigatoni available on request.',
+          items: [
+            {
+              name: 'Tajarin al Tartufo Nero',
+              price: '$31',
+              desc: 'Delicate 40-yolk Piedmontese ribbons, cultured butter, 36-month Parmigiano, and shaved black truffle.',
+              tags: ['v', 'fav']
+            },
+            {
+              name: 'Tonnarelli Cacio e Pepe',
+              price: '$24',
+              desc: 'Thick square-cut Roman pasta emulsified with Pecorino Romano DOP and toasted Sarawak black pepper.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Tagliatelle al Ragù Bolognese',
+              price: '$27',
+              desc: 'Mirella’s 1998 recipe: six-hour braised veal, pork, white wine, milk, and San Marzano tomato.',
+              tags: ['fav']
+            },
+            {
+              name: 'Agnolotti del Plin',
+              price: '$28',
+              desc: 'Pinched pasta parcels filled with roasted delicata squash and ricotta, brown butter, sage, and amaretti.',
+              tags: ['v']
+            },
+            {
+              name: 'Spaghetti alle Vongole',
+              price: '$29',
+              desc: 'Manila clams steamed in Vermentino, roasted garlic, Calabrian chili flake, and lemon breadcrumbs.',
+              tags: ['gf']
+            },
+            {
+              name: 'Rigatoni alla Gricia',
+              price: '$25',
+              desc: 'Crisp cured guanciale, Pecorino Romano, cracked pepper, and caramelized sweet onion.',
+              tags: ['gf']
+            }
+          ]
+        },
+        secondi: {
+          title: 'Secondi',
+          note: 'Wood-roasted and slow-braised mains served with seasonal contorni.',
+          items: [
+            {
+              name: 'Branzino al Forno',
+              price: '$36',
+              desc: 'Whole Mediterranean sea bass roasted with Meyer lemon, capers, Taggiasca olives, and fennel fronds.',
+              tags: ['gf', 'fav']
+            },
+            {
+              name: 'Pollo alla Diavola',
+              price: '$31',
+              desc: 'Half heritage chicken pressed under brick with rosemary, Calabrian chili oil, and charred lemon.',
+              tags: ['gf']
+            },
+            {
+              name: 'Brasato al Barolo',
+              price: '$38',
+              desc: 'Red-wine braised beef short rib served over creamy heirloom polenta and gremolata.',
+              tags: ['gf', 'fav']
+            },
+            {
+              name: 'Cotoletta alla Milanese',
+              price: '$37',
+              desc: 'Crisp bone-in heritage pork chop fried in clarified butter with shaved fennel and arugula salad.',
+              tags: []
+            },
+            {
+              name: 'Melanzane alla Parmigiana',
+              price: '$26',
+              desc: 'Layered wood-roasted eggplant, fior di latte mozzarella, sweet basil, and bright tomato passata.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Contorni: Broccoli Rabe & Patate',
+              price: '$12',
+              desc: 'Choose garlic-chili sautéed broccoli rabe or crispy rosemary smashed fingerling potatoes.',
+              tags: ['v', 'gf']
+            }
+          ]
+        },
+        dolci: {
+          title: 'Dolci',
+          note: 'House-made pastries, gelati, and digestivi to close the evening.',
+          items: [
+            {
+              name: 'Tiramisù al Pistacchio',
+              price: '$14',
+              desc: 'Espresso-soaked ladyfingers layered with whipped mascarpone and roasted Bronte pistachio cream.',
+              tags: ['v', 'fav']
+            },
+            {
+              name: 'Torta all’Olio d’Oliva',
+              price: '$13',
+              desc: 'Warm Umbrian olive oil and blood orange cake with crème fraîche and candied citrus peel.',
+              tags: ['v']
+            },
+            {
+              name: 'Panna Cotta alla Vaniglia',
+              price: '$12',
+              desc: 'Silky Madagascar vanilla bean custard topped with macerated autumn pears and wildflower honey.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Affogato al Caffè',
+              price: '$11',
+              desc: 'House-churned fior di latte gelato drowned in a hot shot of Neapolitan espresso (+$5 Amaro Montenegro).',
+              tags: ['v', 'gf']
+            }
+          ]
+        },
+        vini: {
+          title: 'Aperitivo, Cocktails & Amari',
+          note: 'Full 90-bottle regional wine book presented at your table.',
+          items: [
+            {
+              name: 'Osteria Vico Negroni',
+              price: '$16',
+              desc: 'Botanical gin, Campari, house-infused orange peel Carpano Antica, served over hand-cut ice.',
+              tags: ['v', 'gf', 'fav']
+            },
+            {
+              name: 'Spritz Veneziano',
+              price: '$15',
+              desc: 'Select Aperitivo, organic Prosecco Col Fondo, soda splash, and a green Castelvetrano olive.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Quartino of House Table Wine (250ml)',
+              price: '$17',
+              desc: 'Choose Tuscan Sangiovese, crisp Soave Classico, or chilled Sicilian Rosato poured in a glass carafe.',
+              tags: ['v', 'gf']
+            },
+            {
+              name: 'Amaro Flight of Three',
+              price: '$21',
+              desc: 'A guided digestivo tasting: Braulio Alpine, Amaro Nonino Quintessentia, and Cynar 70.',
+              tags: ['v', 'gf']
+            }
+          ]
+        }
+      };
+
+      let activeCategory = 'antipasti';
+      let activeFilter = 'all';
+
+      const menuBoard = document.getElementById('menuBoard');
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const filterButtons = document.querySelectorAll('.filter-pill');
+
+      function renderTags(tags) {
+        if (!tags || !tags.length) return '';
+        const map = {
+          v: '<span class="tag tag-v">Vegetarian</span>',
+          gf: '<span class="tag tag-gf">GF Option</span>',
+          fav: '<span class="tag tag-fav">House Favorite</span>'
+        };
+        return '<div class="dish-tags">' + tags.map((t) => map[t] || '').join('') + '</div>';
+      }
+
+      function renderMenu() {
+        const cat = MENU_DATA[activeCategory];
+        const filtered = cat.items.filter((item) => {
+          if (activeFilter === 'all') return true;
+          return item.tags.includes(activeFilter);
+        });
+
+        let itemsHtml = '';
+        if (filtered.length === 0) {
+          itemsHtml = '<div class="menu-empty">No dishes in this section match that filter—ask your server, our kitchen is always happy to adapt.</div>';
+        } else {
+          itemsHtml = filtered
+            .map(
+              (item) => `
+              <article class="dish">
+                <div class="dish-header">
+                  <span class="dish-name">${item.name}</span>
+                  <span class="dish-leader" aria-hidden="true"></span>
+                  <span class="dish-price">${item.price}</span>
+                </div>
+                <p class="dish-desc">${item.desc}</p>
+                ${renderTags(item.tags)}
+              </article>
+            `
+            )
+            .join('');
+        }
+
+        menuBoard.innerHTML = `
+          <div class="menu-category-heading">
+            <h3>${cat.title}</h3>
+            <p class="menu-category-note">${cat.note}</p>
+          </div>
+          <div class="menu-items-grid">${itemsHtml}</div>
+        `;
+      }
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.category;
+          tabButtons.forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+          renderMenu();
+        });
+      });
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeFilter = btn.dataset.filter;
+          filterButtons.forEach((b) => b.classList.toggle('active', b === btn));
+          renderMenu();
+        });
+      });
+
+      renderMenu();
+
+      /* -----------------------------------------
+         2. Live Kitchen Status Indicator
+      ----------------------------------------- */
+      function updateKitchenStatus() {
+        const now = new Date();
+        const day = now.getDay(); // 0 Sun, 1 Mon ... 6 Sat
+        const hour = now.getHours() + now.getMinutes() / 60;
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+
+        let isOpen = false;
+        let label = 'Dinner Tue–Sun from 5:00 PM';
+
+        if (day === 1) {
+          isOpen = false;
+          label = 'Closed today (Monday) · Reopens Tue 5 PM';
+        } else if (day === 0) {
+          isOpen = hour >= 16 && hour < 21;
+          label = isOpen ? 'Open now · Sunday Supper until 9:00 PM' : 'Sunday Supper · 4:00 PM – 9:00 PM';
+        } else if (day === 5 || day === 6) {
+          isOpen = hour >= 17 && hour < 22.75;
+          label = isOpen ? 'Open now · Kitchen until 10:45 PM' : 'Opens tonight at 5:00 PM';
+        } else {
+          isOpen = hour >= 17 && hour < 22;
+          label = isOpen ? 'Open now · Kitchen until 10:00 PM' : 'Opens tonight at 5:00 PM';
+        }
+
+        dot.classList.toggle('closed', !isOpen && day === 1);
+        text.textContent = label;
+      }
+      updateKitchenStatus();
+
+      /* -----------------------------------------
+         3. Interactive Table Reservation Form
+      ----------------------------------------- */
+      const reserveDateInput = document.getElementById('reserveDate');
+      const mondayNotice = document.getElementById('mondayNotice');
+      const seatingButtons = document.querySelectorAll('#seatingPills .choice-chip');
+      const timeButtons = document.querySelectorAll('#timeSlots .choice-chip');
+      const reservationForm = document.getElementById('reservationForm');
+      const bookingTicket = document.getElementById('bookingTicket');
+      const ticketCode = document.getElementById('ticketCode');
+      const ticketDetails = document.getElementById('ticketDetails');
+      const resetBookingBtn = document.getElementById('resetBookingBtn');
+
+      let selectedSeating = 'Dining Room';
+      let selectedTime = '7:15 PM';
+
+      // Default date to today (or tomorrow if Monday)
+      function getInitialValidDate() {
+        const d = new Date();
+        if (d.getDay() === 1) d.setDate(d.getDate() + 1);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      const todayIso = new Date().toISOString().split('T')[0];
+      reserveDateInput.min = todayIso;
+      reserveDateInput.value = getInitialValidDate();
+
+      function isSelectedMonday(dateStr) {
+        if (!dateStr) return false;
+        const [y, m, d] = dateStr.split('-').map(Number);
+        return new Date(y, m - 1, d).getDay() === 1;
+      }
+
+      function checkMonday() {
+        const isMon = isSelectedMonday(reserveDateInput.value);
+        mondayNotice.classList.toggle('visible', isMon);
+        return isMon;
+      }
+      reserveDateInput.addEventListener('change', checkMonday);
+
+      seatingButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          selectedSeating = btn.dataset.seating;
+          seatingButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        });
+      });
+
+      timeButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          selectedTime = btn.dataset.time;
+          timeButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        });
+      });
+
+      reservationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (checkMonday()) {
+          reserveDateInput.focus();
+          return;
+        }
+
+        const name = document.getElementById('guestName').value.trim();
+        const contact = document.getElementById('guestEmail').value.trim();
+        const party = document.getElementById('partySize').value;
+        const notes = document.getElementById('guestNotes').value.trim();
+        const rawDate = reserveDateInput.value;
+
+        if (!name || !contact || !rawDate) {
+          if (!name) document.getElementById('guestName').focus();
+          else if (!contact) document.getElementById('guestEmail').focus();
+          return;
+        }
+
+        const [y, m, d] = rawDate.split('-').map(Number);
+        const formattedDate = new Date(y, m - 1, d).toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        const code = 'VICO-' + Math.floor(1000 + Math.random() * 9000);
+        ticketCode.textContent = code;
+        ticketDetails.innerHTML = `
+          <div class="ticket-row"><span>Guest</span><strong>${escapeHtml(name)}</strong></div>
+          <div class="ticket-row"><span>Date &amp; Time</span><strong>${formattedDate} · ${selectedTime}</strong></div>
+          <div class="ticket-row"><span>Party</span><strong>${party === '8' ? '7–10 Guests (Alcove)' : party + (party === '1' ? ' Guest' : ' Guests')}</strong></div>
+          <div class="ticket-row"><span>Seating</span><strong>${selectedSeating}</strong></div>
+          <div class="ticket-row"><span>Confirmation sent to</span><strong>${escapeHtml(contact)}</strong></div>
+          ${notes ? `<div class="ticket-row"><span>Notes</span><strong>${escapeHtml(notes)}</strong></div>` : ''}
+        `;
+
+        reservationForm.style.display = 'none';
+        bookingTicket.classList.add('visible');
+      });
+
+      resetBookingBtn.addEventListener('click', () => {
+        bookingTicket.classList.remove('visible');
+        reservationForm.style.display = 'block';
+      });
+
+      function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, (ch) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        })[ch]);
+      }
+
+      /* -----------------------------------------
+         4. Newsletter, Copy Address, Header & Mobile Nav
+      ----------------------------------------- */
+      const newsletterForm = document.getElementById('newsletterForm');
+      const newsletterMsg = document.getElementById('newsletterMsg');
+      newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newsletterEmail');
+        if (!email.value.trim()) return;
+        email.value = '';
+        newsletterMsg.classList.add('visible');
+      });
+
+      const copyAddressBtn = document.getElementById('copyAddressBtn');
+      copyAddressBtn.addEventListener('click', () => {
+        const addr = '214 Henry Street, Cobble Hill, Brooklyn, NY 11201';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(addr).catch(() => {});
+        }
+        copyAddressBtn.textContent = 'Address Copied!';
+        setTimeout(() => {
+          copyAddressBtn.textContent = 'Copy Address';
+        }, 2200);
+      });
+
+      const siteHeader = document.getElementById('siteHeader');
+      window.addEventListener('scroll', () => {
+        siteHeader.classList.toggle('scrolled', window.scrollY > 12);
+      }, { passive: true });
+
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileNav.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+      mobileNav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* -----------------------------------------
+         5. Subtle Scroll Reveal
+      ----------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        revealEls.forEach((el) => observer.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add('in-view'));
+      }
+    })();
+  </script>
+</body>
+</html>

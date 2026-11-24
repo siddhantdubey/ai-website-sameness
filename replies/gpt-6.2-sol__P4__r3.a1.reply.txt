@@ -1,0 +1,221 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A small law firm focused on business law, estate planning, and civil disputes.">
+  <title>Hale &amp; Rowan | Attorneys at Law</title>
+  <!-- Sample firm. Replace the name, practice descriptions, and contact details before publishing. -->
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #14272d;
+      --navy-deep: #0e1e23;
+      --paper: #f7f4ed;
+      --white: #fffdf7;
+      --ink: #192c30;
+      --muted: #4f5d5c;
+      --gold: #e1bf80;
+      --rule: #d8d1c3;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.65 var(--sans); }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; }
+    a { color: inherit; text-underline-offset: .25em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+    .wrap { width: min(72rem, calc(100% - 3rem)); margin-inline: auto; }
+    .skip { position: absolute; top: .5rem; left: .5rem; z-index: 2; padding: .6rem 1rem; background: var(--white); color: var(--ink); transform: translateY(-150%); }
+    .skip:focus { transform: translateY(0); }
+    .eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: .65rem 1.1rem;
+      border: 1px solid transparent;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .button-gold { background: var(--gold); color: var(--navy-deep); }
+    .button-gold:hover { background: #f1d59d; }
+    .button-outline { border-color: #6c7a7c; }
+    .button-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .button-dark { background: var(--navy); color: var(--white); }
+    .button-dark:hover { background: #29454c; }
+
+    .site-header { background: var(--navy-deep); color: var(--white); border-bottom: 1px solid #35464a; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding-block: 1.15rem; }
+    .brand { display: inline-flex; align-items: center; gap: .8rem; text-decoration: none; }
+    .monogram { display: grid; place-items: center; width: 2.65rem; height: 2.65rem; border: 1px solid #9d8052; color: var(--gold); font: 1.15rem var(--serif); }
+    .brand-name { display: block; font: 1.35rem/1.1 var(--serif); }
+    .brand-caption { display: block; margin-top: .25rem; color: #c9d0cc; font-size: .61rem; letter-spacing: .15em; text-transform: uppercase; }
+    .nav { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1.8rem; }
+    .nav a { font-size: .88rem; text-decoration: none; }
+    .nav a:hover { color: var(--gold); }
+
+    .hero { overflow: hidden; color: var(--white); background: var(--navy); }
+    .hero-inner { position: relative; isolation: isolate; display: grid; grid-template-columns: 1.45fr 1fr; align-items: center; min-height: 34rem; }
+    .hero-copy { padding-block: clamp(4rem, 9vw, 7rem); }
+    .hero .eyebrow { margin-bottom: 1.35rem; color: var(--gold); }
+    .hero h1 { max-width: 11ch; font-size: clamp(3.1rem, 7vw, 6.25rem); letter-spacing: -.055em; }
+    .hero h1 em { color: var(--gold); font-weight: inherit; }
+    .hero p:not(.eyebrow) { max-width: 37ch; margin-top: 1.4rem; color: #d3ddda; font-size: clamp(1rem, 2vw, 1.15rem); }
+    .hero .button { margin-top: 2rem; }
+    .hero-art { position: relative; z-index: -1; align-self: stretch; min-height: 100%; }
+    .arch {
+      position: absolute;
+      right: var(--inset);
+      bottom: -3rem;
+      width: var(--width);
+      height: var(--height);
+      border: 1px solid rgba(225, 191, 128, .36);
+      border-bottom: 0;
+      border-radius: 50% 50% 0 0 / 36% 36% 0 0;
+      background: linear-gradient(105deg, transparent 45%, rgba(225, 191, 128, .055));
+    }
+
+    .section { padding-block: clamp(3.75rem, 8vw, 6.5rem); }
+    .section .eyebrow { color: #755926; margin-bottom: .8rem; }
+    .section h2 { font-size: clamp(2.45rem, 5vw, 4.25rem); letter-spacing: -.04em; }
+    .intro { max-width: 50ch; margin-top: .9rem; color: var(--muted); }
+    .practice-grid { display: grid; grid-template-columns: repeat(3, 1fr); margin: 2.25rem 0 0; padding: 0; border-block: 1px solid var(--rule); list-style: none; }
+    .practice-grid li { padding: 1.7rem 1.65rem 1.85rem; }
+    .practice-grid li:first-child { padding-left: 0; }
+    .practice-grid li + li { border-left: 1px solid var(--rule); }
+    .practice-grid h3 { margin-bottom: .75rem; font-size: clamp(1.45rem, 2.5vw, 2rem); }
+    .practice-grid p { max-width: 34ch; color: var(--muted); }
+
+    .about { background: #ebe6da; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem 5rem; align-items: start; }
+    .about-copy p { max-width: 49ch; color: var(--muted); }
+    .about-copy p + p { margin-top: 1rem; }
+    .contact-details { display: flex; align-items: flex-start; flex-direction: column; gap: .65rem; }
+    .contact-details p { max-width: 41ch; color: var(--muted); }
+    .contact-details .button { margin-block: .45rem .15rem; }
+    .contact-details .note { margin-top: .65rem; font-size: .85rem; }
+
+    footer { background: var(--navy-deep); color: #d3ddda; }
+    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.5rem; padding-block: 1.35rem; font-size: .83rem; }
+
+    @media (max-width: 48rem) {
+      .header-inner { flex-wrap: wrap; }
+      .nav { gap: .5rem 1.25rem; }
+      .hero-inner { grid-template-columns: 1fr; min-height: 0; }
+      .hero-art { position: absolute; inset: 20% -30% 0 35%; opacity: .48; }
+      .split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 38rem) {
+      .wrap { width: calc(100% - 2rem); }
+      .practice-grid { grid-template-columns: 1fr; }
+      .practice-grid li { padding: 1.25rem 0; }
+      .practice-grid li + li { border-left: 0; border-top: 1px solid var(--rule); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top">
+        <span class="monogram" aria-hidden="true">HR</span>
+        <span>
+          <span class="brand-name">Hale &amp; Rowan</span>
+          <span class="brand-caption">Attorneys at Law</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#practice">Practice areas</a>
+        <a href="#about">About</a>
+        <a class="button button-outline" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Counsel for individuals and businesses</p>
+          <h1 id="hero-title">Clear advice. <em>A way forward.</em></h1>
+          <p>Get practical legal guidance for your business, your family’s future, or a dispute you need to resolve.</p>
+          <a class="button button-gold" href="#contact">Request a consultation</a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="arch" style="--inset: 0%; --width: 100%; --height: 92%"></span>
+          <span class="arch" style="--inset: 9%; --width: 82%; --height: 82%"></span>
+          <span class="arch" style="--inset: 18%; --width: 64%; --height: 72%"></span>
+          <span class="arch" style="--inset: 27%; --width: 46%; --height: 62%"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="practice" aria-labelledby="practice-title">
+      <div class="wrap">
+        <h2 id="practice-title">Practice areas</h2>
+        <ul class="practice-grid">
+          <li>
+            <h3>Business law</h3>
+            <p>Form a company, draft or review contracts, and get advice on the legal decisions that come with running a business.</p>
+          </li>
+          <li>
+            <h3>Estate planning</h3>
+            <p>Use wills, trusts, and powers of attorney to record your wishes and give your family clear direction.</p>
+          </li>
+          <li>
+            <h3>Civil disputes</h3>
+            <p>Understand your options in a contract, property, or other civil dispute, from negotiation through litigation.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">About the firm</p>
+          <h2 id="about-title">Work directly with your attorney.</h2>
+        </div>
+        <div class="about-copy">
+          <p>At Hale &amp; Rowan, we start by asking what matters to you and what you want to accomplish. Then we explain your options in plain language, including the costs and tradeoffs of each path.</p>
+          <p>You’ll know who to contact with questions and what to expect as your matter moves forward.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Request a consultation</h2>
+        </div>
+        <div class="contact-details">
+          <p>Tell us briefly what kind of legal help you’re looking for and how to reach you.</p>
+          <a class="button button-dark" href="mailto:hello@haleandrowan.example?subject=Consultation%20request">Email the firm</a>
+          <a href="tel:+12025550143">(202) 555-0143</a>
+          <p class="note">Please leave confidential details out of your initial message. Contacting the firm does not create an attorney-client relationship.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>Hale &amp; Rowan · Attorneys at Law</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+</body>
+</html>
+```

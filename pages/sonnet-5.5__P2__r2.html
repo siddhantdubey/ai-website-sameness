@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trattoria Fiorella — Neighborhood Italian Kitchen</title>
+<meta name="description" content="Trattoria Fiorella: handmade pasta, wood-fired plates and a warm table for the whole neighborhood. Reserve online.">
+<style>
+  :root{
+    --cream:#faf4e8;
+    --paper:#f3e9d4;
+    --ink:#2a1d17;
+    --muted:#6b5a4e;
+    --tomato:#b5361f;
+    --tomato-dark:#8d2713;
+    --olive:#55602f;
+    --gold:#c8963e;
+    --radius:14px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  img,svg{max-width:100%;display:block}
+  a{color:inherit}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15}
+  .wrap{width:min(1100px,92%);margin-inline:auto}
+  .eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--tomato);font-weight:600}
+  .btn{display:inline-block;padding:.85rem 1.6rem;border-radius:999px;background:var(--tomato);color:#fff;text-decoration:none;font-weight:600;border:2px solid var(--tomato);cursor:pointer;font-size:1rem;font-family:inherit;transition:background .2s,transform .2s}
+  .btn:hover{background:var(--tomato-dark);border-color:var(--tomato-dark);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+  .btn.ghost:hover{background:rgba(255,255,255,.12)}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:rgba(250,244,232,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(42,29,23,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0}
+  .logo{font-family:var(--serif);font-size:1.4rem;font-weight:700;text-decoration:none;letter-spacing:.02em}
+  .logo span{color:var(--tomato)}
+  nav ul{display:flex;gap:1.6rem;list-style:none;align-items:center}
+  nav a{text-decoration:none;font-size:.95rem;color:var(--muted)}
+  nav a:hover{color:var(--tomato)}
+  nav .btn{padding:.5rem 1.1rem;font-size:.9rem;color:#fff}
+  nav .btn:hover{color:#fff}
+  @media(max-width:720px){nav li:not(:last-child){display:none}}
+
+  /* Hero */
+  .hero{position:relative;color:#fff;text-align:center;padding:9rem 0 8rem;
+    background:
+      radial-gradient(circle at 20% 20%,rgba(200,150,62,.25),transparent 45%),
+      radial-gradient(circle at 85% 80%,rgba(181,54,31,.45),transparent 50%),
+      linear-gradient(160deg,#3a2118,#1f120d);
+    overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;opacity:.07;
+    background-image:repeating-linear-gradient(45deg,#fff 0 2px,transparent 2px 22px),repeating-linear-gradient(-45deg,#fff 0 2px,transparent 2px 22px)}
+  .hero .wrap{position:relative}
+  .hero .eyebrow{color:var(--gold)}
+  .hero h1{font-size:clamp(2.8rem,8vw,5.5rem);margin:1rem 0 1.2rem;font-weight:500}
+  .hero h1 em{color:var(--gold);font-style:italic}
+  .hero p{max-width:34rem;margin:0 auto 2.2rem;font-size:1.15rem;color:#ead9c4}
+  .hero .actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .stripe{height:8px;background:linear-gradient(90deg,var(--olive) 0 33.3%,var(--cream) 33.3% 66.6%,var(--tomato) 66.6%)}
+
+  section{padding:5.5rem 0}
+  .section-head{text-align:center;margin-bottom:3rem}
+  .section-head h2{font-size:clamp(2rem,4.5vw,2.9rem);margin-top:.5rem}
+  .section-head p{color:var(--muted);max-width:36rem;margin:.8rem auto 0}
+
+  /* About */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+  .about h2{font-size:clamp(2rem,4vw,2.7rem);margin:.5rem 0 1.2rem}
+  .about p{color:var(--muted);margin-bottom:1rem}
+  .badge-row{display:flex;gap:2rem;margin-top:1.8rem;flex-wrap:wrap}
+  .badge-row strong{display:block;font-family:var(--serif);font-size:2rem;color:var(--tomato)}
+  .badge-row span{font-size:.85rem;color:var(--muted)}
+  .art{aspect-ratio:1;border-radius:var(--radius);background:var(--paper);display:grid;place-items:center;border:1px solid rgba(42,29,23,.1);box-shadow:0 20px 40px -20px rgba(42,29,23,.35)}
+  @media(max-width:800px){.about{grid-template-columns:1fr;gap:2.5rem}.art{max-width:340px;margin:auto}}
+
+  /* Menu */
+  .menu-bg{background:var(--paper)}
+  .tabs{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem}
+  .tab{font-family:inherit;font-size:.95rem;padding:.55rem 1.3rem;border-radius:999px;border:1.5px solid rgba(42,29,23,.25);background:transparent;color:var(--ink);cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .panel{display:none;grid-template-columns:1fr 1fr;gap:1.6rem 3.5rem}
+  .panel.active{display:grid}
+  .item h3{font-size:1.2rem;display:flex;align-items:baseline;gap:.6rem}
+  .item h3::after{content:"";order:1;flex:1;border-bottom:2px dotted rgba(42,29,23,.3);transform:translateY(-4px)}
+  .item h3 .price{order:2;font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--tomato)}
+  .item p{color:var(--muted);font-size:.93rem;margin-top:.25rem}
+  .tag{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;background:var(--olive);color:#fff;padding:.1rem .5rem;border-radius:4px;margin-left:.4rem;vertical-align:middle;font-family:var(--sans)}
+  .note{text-align:center;color:var(--muted);font-size:.85rem;margin-top:2.5rem}
+  @media(max-width:760px){.panel.active{grid-template-columns:1fr}}
+
+  /* Specials */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+  .card{background:#fff;border-radius:var(--radius);padding:2rem;border:1px solid rgba(42,29,23,.08);box-shadow:0 10px 30px -18px rgba(42,29,23,.4)}
+  .card .day{color:var(--tomato);font-weight:700;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase}
+  .card h3{font-size:1.5rem;margin:.5rem 0}
+  .card p{color:var(--muted);font-size:.95rem}
+
+  /* Quote */
+  .quote{background:var(--olive);color:#fff;text-align:center}
+  .quote blockquote{font-family:var(--serif);font-size:clamp(1.4rem,3vw,2.1rem);font-style:italic;max-width:46rem;margin:0 auto;line-height:1.4}
+  .quote cite{display:block;margin-top:1.4rem;font-style:normal;font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;color:#dfe5c4}
+
+  /* Visit */
+  .visit{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+  .visit h3{font-size:1.5rem;margin-bottom:1rem}
+  .hours{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+  .hours td{padding:.55rem 0;border-bottom:1px solid rgba(42,29,23,.12)}
+  .hours td:last-child{text-align:right;color:var(--muted)}
+  address{font-style:normal;color:var(--muted)}
+  form{background:#fff;padding:2rem;border-radius:var(--radius);border:1px solid rgba(42,29,23,.08);box-shadow:0 10px 30px -18px rgba(42,29,23,.4)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  label{display:block;font-size:.82rem;font-weight:600;margin-bottom:1rem;color:var(--muted)}
+  input,select,textarea{display:block;width:100%;margin-top:.3rem;padding:.7rem .8rem;border:1.5px solid rgba(42,29,23,.2);border-radius:8px;font:inherit;background:var(--cream);color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--tomato)}
+  form .btn{width:100%;margin-top:.4rem}
+  #confirm{display:none;margin-top:1rem;padding:.9rem 1rem;background:#eef2dc;border-left:4px solid var(--olive);border-radius:6px;font-size:.92rem}
+  @media(max-width:800px){.visit{grid-template-columns:1fr}}
+
+  footer{background:#1f120d;color:#cdbba5;text-align:center;padding:3rem 0;font-size:.9rem}
+  footer .logo{color:#fff;display:inline-block;margin-bottom:.8rem}
+  footer p+p{margin-top:.4rem}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">Trattoria <span>Fiorella</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#specials">Specials</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li><a class="btn" href="#reserve">Reserve</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Neighborhood Italian Kitchen</p>
+      <h1>Pull up a chair.<br><em>Stay for dessert.</em></h1>
+      <p>Handmade pasta, wood-fired plates and a table that always has room for one more. Cooked the way somebody's nonna would, right around the corner.</p>
+      <div class="actions">
+        <a class="btn" href="#reserve">Reserve a Table</a>
+        <a class="btn ghost" href="#menu">See the Menu</a>
+      </div>
+    </div>
+  </div>
+  <div class="stripe" aria-hidden="true"></div>
+
+  <section id="story">
+    <div class="wrap about">
+      <div>
+        <p class="eyebrow">Our Story</p>
+        <h2>A family recipe box, turned into a dining room.</h2>
+        <p>Fiorella opened with a simple idea: dinner should feel like being invited over. Every morning we roll pasta by hand, simmer the sugo low and slow, and light the oven before the first guest walks in.</p>
+        <p>We buy from farmers and bakers a few miles away, we know our regulars by name, and we'll happily argue with you about the right way to cook carbonara.</p>
+        <div class="badge-row">
+          <div><strong>12</strong><span>pastas rolled daily</span></div>
+          <div><strong>900°</strong><span>wood-fired oven</span></div>
+          <div><strong>3</strong><span>generations of recipes</span></div>
+        </div>
+      </div>
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 200 200" width="80%" role="img" aria-label="Bowl of pasta illustration">
+          <circle cx="100" cy="100" r="90" fill="#faf4e8" stroke="#c8963e" stroke-width="3"/>
+          <circle cx="100" cy="100" r="70" fill="#fff" stroke="#e5d6bb" stroke-width="2"/>
+          <g fill="none" stroke="#d9a94b" stroke-width="5" stroke-linecap="round">
+            <path d="M55 95c20-25 40 25 60 0s25-15 35 0"/>
+            <path d="M52 110c20-25 40 25 60 0s25-15 38 0"/>
+            <path d="M58 125c20-25 40 25 60 0s20-12 28-2"/>
+            <path d="M65 80c18-18 35 18 55-2s20-8 28 4"/>
+          </g>
+          <circle cx="82" cy="104" r="9" fill="#b5361f"/><circle cx="122" cy="116" r="8" fill="#b5361f"/>
+          <g fill="#55602f"><path d="M98 88c8-12 20-10 22-2-8 8-16 8-22 2z"/><path d="M70 120c6-10 16-10 18-3-6 7-13 8-18 3z"/></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" class="menu-bg">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The Menu</p>
+        <h2>Simple food, done properly</h2>
+        <p>The menu follows the seasons and the market, so expect small changes week to week.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Menu categories">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="p-antipasti" id="t-antipasti">Antipasti</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-pasta" id="t-pasta" tabindex="-1">Pasta</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-pizza" id="t-pizza" tabindex="-1">Pizza &amp; Mains</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-dolci" id="t-dolci" tabindex="-1">Dolci</button>
+      </div>
+
+      <div class="panel active" role="tabpanel" id="p-antipasti" aria-labelledby="t-antipasti">
+        <div class="item"><h3>Burrata <span class="price">14</span></h3><p>Creamy burrata, roasted tomatoes, basil oil, grilled sourdough.</p></div>
+        <div class="item"><h3>Polpette della Nonna <span class="price">12</span></h3><p>Beef and pork meatballs in slow-cooked tomato sauce, pecorino.</p></div>
+        <div class="item"><h3>Fritto Misto <span class="price">16</span></h3><p>Lightly fried calamari, shrimp and lemon with spicy aioli.</p></div>
+        <div class="item"><h3>Insalata di Finocchi <span class="price">11</span><span class="tag">V</span></h3><p>Shaved fennel, orange, olives, toasted pistachio.</p></div>
+        <div class="item"><h3>Bruschetta Trio <span class="price">10</span><span class="tag">V</span></h3><p>Tomato &amp; basil, whipped ricotta &amp; honey, mushroom &amp; thyme.</p></div>
+        <div class="item"><h3>Zuppa del Giorno <span class="price">9</span></h3><p>Ask your server what's simmering today.</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-pasta" aria-labelledby="t-pasta" hidden>
+        <div class="item"><h3>Tagliatelle al Ragù <span class="price">22</span></h3><p>Egg pasta, six-hour beef and pork ragù, parmigiano.</p></div>
+        <div class="item"><h3>Spaghetti alla Carbonara <span class="price">21</span></h3><p>Guanciale, egg yolk, pecorino romano, black pepper. No cream, ever.</p></div>
+        <div class="item"><h3>Cacio e Pepe <span class="price">19</span><span class="tag">V</span></h3><p>Tonnarelli, pecorino, cracked pepper.</p></div>
+        <div class="item"><h3>Ravioli di Ricotta <span class="price">20</span><span class="tag">V</span></h3><p>Lemon ricotta, brown butter, sage, toasted hazelnuts.</p></div>
+        <div class="item"><h3>Rigatoni alla Norma <span class="price">19</span><span class="tag">V</span></h3><p>Eggplant, tomato, basil, ricotta salata.</p></div>
+        <div class="item"><h3>Linguine alle Vongole <span class="price">25</span></h3><p>Littleneck clams, white wine, garlic, chili, parsley.</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-pizza" aria-labelledby="t-pizza" hidden>
+        <div class="item"><h3>Margherita <span class="price">17</span><span class="tag">V</span></h3><p>San Marzano tomato, fior di latte, basil, olive oil.</p></div>
+        <div class="item"><h3>Diavola <span class="price">19</span></h3><p>Spicy salame, chili honey, mozzarella, tomato.</p></div>
+        <div class="item"><h3>Funghi e Tartufo <span class="price">20</span><span class="tag">V</span></h3><p>Roasted mushrooms, truffle cream, mozzarella, thyme.</p></div>
+        <div class="item"><h3>Pollo alla Parmigiana <span class="price">24</span></h3><p>Crisp chicken cutlet, marinara, melted mozzarella, spaghetti.</p></div>
+        <div class="item"><h3>Branzino al Forno <span class="price">29</span></h3><p>Whole roasted sea bass, lemon, capers, herbed potatoes.</p></div>
+        <div class="item"><h3>Bistecca <span class="price">38</span></h3><p>Grilled sirloin, rosemary, arugula, shaved parmigiano.</p></div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-dolci" aria-labelledby="t-dolci" hidden>
+        <div class="item"><h3>Tiramisù <span class="price">10</span></h3><p>Espresso-soaked savoiardi, mascarpone cream, cocoa.</p></div>
+        <div class="item"><h3>Panna Cotta <span class="price">9</span></h3><p>Vanilla bean custard with seasonal fruit compote.</p></div>
+        <div class="item"><h3>Cannoli <span class="price">9</span></h3><p>Crisp shells filled to order with sweet ricotta and chocolate chips.</p></div>
+        <div class="item"><h3>Affogato <span class="price">8</span></h3><p>Vanilla gelato drowned in a shot of hot espresso.</p></div>
+      </div>
+
+      <p class="note">V = vegetarian. Please tell us about any allergies — we're glad to adjust where we can.</p>
+    </div>
+  </section>
+
+  <section id="specials">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Weekly Rhythm</p>
+        <h2>Something to look forward to</h2>
+      </div>
+      <div class="cards">
+        <article class="card"><p class="day">Tuesday</p><h3>Pasta Night</h3><p>Any pasta and a glass of house wine for one set price. Our favorite way to beat the midweek slump.</p></article>
+        <article class="card"><p class="day">Thursday</p><h3>Sunday Sauce, Early</h3><p>Braised short rib over polenta, cooked all afternoon. When it's gone, it's gone.</p></article>
+        <article class="card"><p class="day">Sunday</p><h3>Family Style</h3><p>Shared platters of antipasti, pasta and roast meats, passed around the table. Best with a crowd.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <div class="wrap">
+      <blockquote>“It feels like eating at a friend's house, if your friend happened to be an incredible cook.”</blockquote>
+      <cite>— A regular, every Friday</cite>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Visit Us</p>
+        <h2>Come hungry</h2>
+      </div>
+      <div class="visit">
+        <div>
+          <h3>Hours</h3>
+          <table class="hours">
+            <tr><td>Monday</td><td>Closed</td></tr>
+            <tr><td>Tuesday – Thursday</td><td>5:00 – 9:30 pm</td></tr>
+            <tr><td>Friday – Saturday</td><td>5:00 – 11:00 pm</td></tr>
+            <tr><td>Sunday</td><td>3:00 – 9:00 pm</td></tr>
+          </table>
+          <h3>Find us</h3>
+          <address>
+            128 Olive Street<br>
+            Your Neighborhood, USA<br>
+            <a href="tel:+15555550142">(555) 555-0142</a><br>
+            <a href="mailto:ciao@trattoriafiorella.example">ciao@trattoriafiorella.example</a>
+          </address>
+          <p style="margin-top:1rem;color:var(--muted);font-size:.9rem">Walk-ins always welcome. Parties of 7 or more, please call ahead.</p>
+        </div>
+
+        <form id="reserve" aria-labelledby="rt">
+          <h3 id="rt" style="margin-bottom:1.2rem">Reserve a table</h3>
+          <div class="row">
+            <label>Name<input type="text" name="name" required autocomplete="name"></label>
+            <label>Phone<input type="tel" name="phone" required autocomplete="tel"></label>
+          </div>
+          <div class="row">
+            <label>Date<input type="date" name="date" id="date" required></label>
+            <label>Time
+              <select name="time" required>
+                <option>5:00 pm</option><option>5:30 pm</option><option>6:00 pm</option><option>6:30 pm</option>
+                <option selected>7:00 pm</option><option>7:30 pm</option><option>8:00 pm</option><option>8:30 pm</option>
+              </select>
+            </label>
+          </div>
+          <label>Party size
+            <select name="size">
+              <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+          </label>
+          <label>Notes (allergies, celebrations)<textarea name="notes" rows="2"></textarea></label>
+          <button class="btn" type="submit">Request Reservation</button>
+          <p id="confirm" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top">Trattoria Fiorella</a>
+    <p>128 Olive Street · Tuesday – Sunday</p>
+    <p>© 2026 Trattoria Fiorella. Buon appetito.</p>
+  </div>
+</footer>
+
+<script>
+  // Menu tabs
+  const tabs = [...document.querySelectorAll('.tab')];
+  function select(tab){
+    tabs.forEach(t=>{
+      const on = t===tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      const p = document.getElementById(t.getAttribute('aria-controls'));
+      p.classList.toggle('active', on);
+      p.hidden = !on;
+    });
+  }
+  tabs.forEach((t,i)=>{
+    t.addEventListener('click',()=>select(t));
+    t.addEventListener('keydown',e=>{
+      if(e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+      const n = tabs[(i + (e.key==='ArrowRight'?1:-1) + tabs.length) % tabs.length];
+      n.focus(); select(n);
+    });
+  });
+
+  // Reservation form (demo: no backend; wire to your booking service)
+  const date = document.getElementById('date');
+  date.min = new Date().toISOString().split('T')[0];
+  document.getElementById('reserve').addEventListener('submit',e=>{
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const out = document.getElementById('confirm');
+    out.textContent = `Grazie, ${f.get('name')}! We've noted a table for ${f.get('size')} on ${f.get('date')} at ${f.get('time')}. We'll call to confirm.`;
+    out.style.display = 'block';
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

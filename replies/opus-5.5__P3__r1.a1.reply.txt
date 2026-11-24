@@ -1,0 +1,20 @@
+I've built the portfolio as a single self-contained file: `index.html`. It needs no external images, fonts or libraries and works offline. The script passes a syntax check, but I haven't opened it in a browser, so it's worth a quick look on desktop and mobile.
+
+The photographer, Iris Halden, is invented, and so are all the details about them.
+
+**Sections**
+- **Hero:** a full-screen slideshow that crossfades with a slow zoom. It has slide dots and a caption for each slide.
+- **Work:** a masonry gallery of 14 images with filters (Portrait, Landscape, Editorial, Wedding).
+- **Lightbox:** opens from the gallery. It works with the keyboard (←/→, Esc) and touch swipes, shows a title and camera settings, and its "03 / 09" counter respects the current filter.
+- **About:** a portrait, a short bio, animated stat counters and a list of publications.
+- **Services:** three packages (portraits, editorial/brand, weddings) with starting prices.
+- **Testimonials:** a rotating carousel with previous/next buttons.
+- **Contact:** an enquiry form with project type and date fields, plus email and studio details. It checks the fields in the browser and shows a thank-you message, but **it doesn't send anything yet**. To make it work, connect it to a form service or your own server.
+
+**Design**
+- An editorial look: warm paper background, serif headings, monospace labels and a rust accent colour.
+- The nav bar starts transparent over the hero and becomes solid once you scroll. On mobile it collapses into a full-screen menu.
+- Sections fade in as you scroll. Motion is turned off if the visitor's system asks for reduced motion.
+
+**About the placeholder photos**
+Because the file has to be self-contained, every "photo" is a scene drawn by code: landscapes, seascapes, window-light portraits, still lifes and weddings, with colour palettes, grain and vignetting. They're stand-ins for layout only. To use real photos, add an `src` field to each item in the `PHOTOS` array and output `<img src="...">` instead of calling `scene(...)`. A comment in the script points to the spot.

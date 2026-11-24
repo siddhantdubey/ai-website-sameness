@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Osteria Lucciola — Neighborhood Italian on Calloway Street</title>
+<meta name="description" content="Osteria Lucciola: handmade pasta, wood-fired plates and a good bottle of wine, two blocks from the park. Open Tuesday through Sunday.">
+<style>
+  :root {
+    --cream: #f5eddf;
+    --paper: #fbf6ec;
+    --ink: #2b211b;
+    --ink-soft: #5b4c42;
+    --tomato: #b33a2b;
+    --tomato-dark: #8e2b1f;
+    --olive: #5d6237;
+    --gold: #d9a441;
+    --line: #dccfb9;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--serif);
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.6;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { display: block; }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 92vw); margin: 0 auto; }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: .74rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--tomato);
+    font-weight: 600;
+  }
+  h1, h2, h3 { font-weight: 400; line-height: 1.1; }
+  h2 { font-size: clamp(2.1rem, 4.5vw, 3.2rem); margin: .35em 0 .5em; }
+  h2 em, h1 em { color: var(--tomato); }
+
+  /* ---------- Awning ---------- */
+  .awning {
+    height: 34px;
+    background: repeating-linear-gradient(90deg, var(--tomato) 0 40px, var(--paper) 40px 80px);
+    position: relative;
+  }
+  .awning::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -14px; height: 14px;
+    background:
+      radial-gradient(circle at 20px 0, var(--tomato) 19px, transparent 20px) 0 0 / 80px 14px repeat-x,
+      radial-gradient(circle at 60px 0, var(--paper) 19px, transparent 20px) 0 0 / 80px 14px repeat-x;
+    filter: drop-shadow(0 3px 2px rgba(43,33,27,.15));
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 2.2rem 0 1rem;
+    gap: 1rem;
+  }
+  .logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
+  .logo span { font-size: 1.45rem; letter-spacing: .02em; }
+  .logo small { display: block; font-family: var(--sans); font-size: .62rem; letter-spacing: .25em; text-transform: uppercase; color: var(--ink-soft); }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; font-family: var(--sans); font-size: .9rem; }
+  .nav-links a { text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid transparent; transition: border-color .2s; }
+  .nav-links a:hover { border-color: var(--tomato); }
+  .btn {
+    display: inline-block;
+    font-family: var(--sans); font-weight: 600; font-size: .88rem; letter-spacing: .04em;
+    background: var(--tomato); color: var(--paper);
+    padding: .8rem 1.4rem; border-radius: 999px; text-decoration: none; border: 0; cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .btn:hover { background: var(--tomato-dark); transform: translateY(-1px); }
+  .btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: 1.15fr .85fr; gap: 3.5rem; align-items: center;
+    padding: 3rem 0 5rem;
+  }
+  .hero h1 { font-size: clamp(2.8rem, 6.6vw, 5.4rem); letter-spacing: -.01em; margin: .3em 0 .35em; }
+  .hero p.lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 34ch; }
+  .hero-cta { display: flex; gap: .8rem; margin-top: 2rem; flex-wrap: wrap; }
+  .open-now {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: var(--sans); font-size: .82rem; color: var(--ink-soft); margin-top: 1.6rem;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #9a8f84; }
+  .dot.live { background: #5f8a3c; box-shadow: 0 0 0 0 rgba(95,138,60,.5); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 9px rgba(95,138,60,0); } 100% { box-shadow: 0 0 0 0 rgba(95,138,60,0); } }
+
+  /* Chalkboard specials card */
+  .board {
+    position: relative;
+    background: #2f3a2f;
+    background-image:
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(ellipse at 80% 90%, rgba(255,255,255,.04), transparent 50%);
+    color: #efe9dc;
+    border: 12px solid #7a5434;
+    border-radius: 6px;
+    padding: 2rem 1.8rem 2.2rem;
+    box-shadow: 0 24px 40px -18px rgba(43,33,27,.45), inset 0 0 30px rgba(0,0,0,.35);
+    transform: rotate(1.6deg);
+  }
+  .board::before {
+    content: ""; position: absolute; top: -34px; left: 50%; width: 2px; height: 26px; background: #6b5a48;
+  }
+  .board::after {
+    content: ""; position: absolute; top: -40px; left: calc(50% - 6px); width: 13px; height: 13px; border-radius: 50%; background: var(--gold);
+  }
+  .board h3 {
+    font-family: "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+    font-size: 1.9rem; text-align: center; margin-bottom: .2rem; color: #fff7e6;
+  }
+  .board .date { text-align: center; font-family: var(--sans); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; opacity: .65; margin-bottom: 1.3rem; }
+  .board ul { list-style: none; }
+  .board li { padding: .65rem 0; border-bottom: 1px dashed rgba(239,233,220,.25); font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 1.12rem; display: flex; justify-content: space-between; gap: 1rem; }
+  .board li:last-child { border-bottom: 0; }
+  .board li b { font-weight: 400; color: var(--gold); white-space: nowrap; }
+  .board .note { margin-top: 1.1rem; text-align: center; font-family: var(--sans); font-size: .75rem; opacity: .6; }
+
+  /* ---------- Strip ---------- */
+  .strip { background: var(--ink); color: var(--cream); overflow: hidden; padding: .95rem 0; }
+  .strip-track { display: flex; gap: 3rem; white-space: nowrap; animation: scroll 38s linear infinite; font-size: 1.15rem; font-style: italic; }
+  .strip-track span::after { content: "✦"; color: var(--gold); margin-left: 3rem; font-style: normal; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* ---------- Story ---------- */
+  section { padding: 6rem 0; }
+  .story { display: grid; grid-template-columns: .9fr 1.1fr; gap: 4.5rem; align-items: center; }
+  .story-art {
+    aspect-ratio: 4/5; border-radius: 200px 200px 8px 8px; overflow: hidden;
+    background: linear-gradient(180deg, #e9c98b 0%, #d98e4a 55%, #a94f2c 100%);
+    position: relative;
+  }
+  .story-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .story p { color: var(--ink-soft); margin-bottom: 1.1rem; max-width: 52ch; }
+  .story p:first-of-type::first-letter { float: left; font-size: 4.2rem; line-height: .85; padding: .35rem .5rem 0 0; color: var(--tomato); }
+  .signature { font-family: "Bradley Hand", "Segoe Print", cursive; font-size: 1.5rem; color: var(--ink); margin-top: 1.4rem; }
+  .facts { display: flex; gap: 2.5rem; margin-top: 2.2rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+  .facts div { font-family: var(--sans); font-size: .8rem; color: var(--ink-soft); letter-spacing: .04em; }
+  .facts strong { display: block; font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--ink); letter-spacing: 0; }
+
+  /* ---------- Menu ---------- */
+  .menu-section { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .menu-head { text-align: center; max-width: 620px; margin: 0 auto 2.5rem; }
+  .menu-head p { color: var(--ink-soft); }
+  .tabs { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-bottom: 3rem; }
+  .tab {
+    font-family: var(--sans); font-size: .85rem; font-weight: 600; letter-spacing: .05em;
+    background: transparent; border: 1.5px solid var(--line); color: var(--ink-soft);
+    padding: .6rem 1.25rem; border-radius: 999px; cursor: pointer; transition: all .2s;
+  }
+  .tab:hover { border-color: var(--ink); color: var(--ink); }
+  .tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .menu-panel { display: none; grid-template-columns: 1fr 1fr; gap: .4rem 4.5rem; max-width: 960px; margin: 0 auto; }
+  .menu-panel.active { display: grid; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+  .dish { padding: 1.1rem 0; }
+  .dish-top { display: flex; align-items: baseline; gap: .6rem; }
+  .dish-name { font-size: 1.22rem; }
+  .leader { flex: 1; border-bottom: 2px dotted var(--line); transform: translateY(-5px); }
+  .price { font-family: var(--sans); font-weight: 600; font-size: .95rem; }
+  .dish p { font-size: .95rem; color: var(--ink-soft); margin-top: .15rem; font-style: italic; }
+  .tag { font-family: var(--sans); font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: .15rem .45rem; border-radius: 3px; vertical-align: middle; margin-left: .35rem; }
+  .tag.v { background: #e3e6cf; color: var(--olive); }
+  .tag.house { background: #f4d9cf; color: var(--tomato-dark); }
+  .menu-foot { text-align: center; margin-top: 3rem; font-family: var(--sans); font-size: .82rem; color: var(--ink-soft); }
+
+  /* ---------- Sunday supper feature ---------- */
+  .feature {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 3rem; align-items: center;
+    background: var(--olive); color: var(--cream); border-radius: 14px; padding: 3rem 3.5rem;
+    position: relative; overflow: hidden;
+  }
+  .feature .eyebrow { color: var(--gold); }
+  .feature h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin: .3em 0 .3em; }
+  .feature h2 em { color: var(--gold); }
+  .feature p { opacity: .85; max-width: 48ch; }
+  .feature .big { font-size: 4.5rem; line-height: 1; text-align: center; }
+  .feature .big small { display: block; font-family: var(--sans); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; opacity: .7; margin-top: .4rem; }
+  .feature .btn { background: var(--cream); color: var(--ink); }
+  .feature .btn:hover { background: #fff; }
+
+  /* ---------- Reviews ---------- */
+  .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  blockquote {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 2rem 1.8rem;
+    font-size: 1.08rem; position: relative;
+  }
+  blockquote::before { content: "“"; position: absolute; top: -.2rem; left: 1.2rem; font-size: 4.5rem; color: var(--tomato); line-height: 1; opacity: .25; }
+  blockquote cite { display: block; margin-top: 1.2rem; font-family: var(--sans); font-style: normal; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+  .stars { color: var(--gold); letter-spacing: .15em; font-size: .9rem; margin-bottom: .6rem; }
+
+  /* ---------- Visit + Reserve ---------- */
+  .visit { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .hours { width: 100%; border-collapse: collapse; margin: 1.2rem 0 2rem; font-family: var(--sans); font-size: .95rem; }
+  .hours td { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .hours td:last-child { text-align: right; }
+  .hours tr.today td { color: var(--tomato); font-weight: 600; }
+  .hours tr.closed td:last-child { color: var(--ink-soft); font-style: italic; }
+  .address { font-size: 1.15rem; margin-bottom: .4rem; }
+  .contact-line { font-family: var(--sans); font-size: .92rem; color: var(--ink-soft); }
+  .contact-line a { color: var(--tomato); text-decoration: none; font-weight: 600; }
+  .map {
+    margin-top: 1.8rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #ece2cf;
+  }
+
+  .reserve {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 2.5rem;
+    box-shadow: 0 30px 50px -35px rgba(43,33,27,.35);
+  }
+  .reserve h2 { font-size: 2.2rem; margin-top: .2em; }
+  .reserve > p { color: var(--ink-soft); font-size: .98rem; margin-bottom: 1.6rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  label { display: block; font-family: var(--sans); font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1.1rem; }
+  input, select, textarea {
+    display: block; width: 100%; margin-top: .4rem;
+    font-family: var(--serif); font-size: 1.02rem; color: var(--ink);
+    background: var(--cream); border: 1.5px solid var(--line); border-radius: 8px; padding: .75rem .9rem;
+    transition: border-color .2s, background .2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--tomato); background: #fff; }
+  textarea { resize: vertical; min-height: 80px; }
+  .reserve .btn { width: 100%; padding: 1rem; font-size: .95rem; margin-top: .4rem; }
+  .form-note { font-family: var(--sans); font-size: .76rem; color: var(--ink-soft); text-align: center; margin-top: .9rem; }
+  .confirm { display: none; text-align: center; padding: 2rem 0; }
+  .confirm.show { display: block; animation: fade .4s ease; }
+  .confirm .check { width: 64px; height: 64px; border-radius: 50%; background: #e3e6cf; color: var(--olive); display: grid; place-items: center; margin: 0 auto 1.2rem; font-size: 1.8rem; }
+  .confirm h3 { font-size: 1.8rem; margin-bottom: .5rem; }
+  .confirm p { color: var(--ink-soft); }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--ink); color: #cfc3b3; padding: 4rem 0 2rem; }
+  .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2.5rem; }
+  footer h4 { font-family: var(--sans); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; font-weight: 600; }
+  footer p, footer li { font-size: .95rem; }
+  footer ul { list-style: none; }
+  footer li { margin-bottom: .45rem; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--cream); }
+  .foot-logo { font-size: 1.8rem; color: var(--cream); margin-bottom: .6rem; }
+  .newsletter { display: flex; gap: .5rem; margin-top: 1rem; }
+  .newsletter input { margin: 0; background: #3a2f28; border-color: #4b3e35; color: var(--cream); font-size: .92rem; }
+  .newsletter button { flex-shrink: 0; padding: .7rem 1rem; }
+  .copyright { border-top: 1px solid #43372f; margin-top: 3rem; padding-top: 1.5rem; display: flex; justify-content: space-between; font-family: var(--sans); font-size: .78rem; color: #8f8173; flex-wrap: wrap; gap: 1rem; }
+
+  /* ---------- Reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hero, .story, .visit { grid-template-columns: 1fr; gap: 3rem; }
+    .board { max-width: 440px; margin: 0 auto; }
+    .story-art { max-width: 380px; margin: 0 auto; width: 100%; }
+    .menu-panel { grid-template-columns: 1fr; }
+    .feature { grid-template-columns: 1fr; text-align: left; padding: 2.5rem 2rem; gap: 1.5rem; }
+    .feature .big { text-align: left; }
+    .reviews { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 17px; }
+    section { padding: 4.5rem 0; }
+    .field-row { grid-template-columns: 1fr; gap: 0; }
+    .reserve { padding: 1.8rem 1.4rem; }
+    .foot-grid { grid-template-columns: 1fr; }
+    nav .btn { padding: .65rem 1rem; font-size: .8rem; }
+    .facts { gap: 1.5rem; flex-wrap: wrap; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="awning" aria-hidden="true"></div>
+
+<header class="wrap">
+  <nav aria-label="Main">
+    <a href="#" class="logo" aria-label="Osteria Lucciola home">
+      <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="19" fill="none" stroke="#2b211b" stroke-width="1.5"/>
+        <ellipse cx="20" cy="23" rx="5" ry="8" fill="#2b211b"/>
+        <ellipse cx="14" cy="15" rx="5" ry="3" fill="none" stroke="#2b211b" stroke-width="1.3" transform="rotate(-30 14 15)"/>
+        <ellipse cx="26" cy="15" rx="5" ry="3" fill="none" stroke="#2b211b" stroke-width="1.3" transform="rotate(30 26 15)"/>
+        <circle cx="20" cy="29" r="3.2" fill="#d9a441"/>
+      </svg>
+      <div><span>Osteria Lucciola</span><small>Est. 2009 · Calloway St.</small></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#sunday">Sunday Supper</a></li>
+      <li><a href="#visit">Visit</a></li>
+    </ul>
+    <a href="#reserve" class="btn">Book a Table</a>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Neighborhood Italian · Since 2009</p>
+      <h1>Pasta rolled <em>this morning.</em><br>Wine poured tonight.</h1>
+      <p class="lede">A small, loud, candle-lit room two blocks from Hartwell Park — where the pasta is made by hand, the bread is still warm, and somebody always remembers your order.</p>
+      <div class="hero-cta">
+        <a href="#reserve" class="btn">Reserve a Table</a>
+        <a href="#menu" class="btn ghost">See the Menu</a>
+      </div>
+      <p class="open-now" id="openStatus"><span class="dot"></span><span>Checking hours…</span></p>
+    </div>
+
+    <aside class="board reveal" aria-label="Tonight's specials">
+      <h3>Stasera</h3>
+      <p class="date" id="boardDate">Tonight's specials</p>
+      <ul>
+        <li>Pumpkin cappellacci, brown butter &amp; sage <b>24</b></li>
+        <li>Braised short rib, soft polenta, gremolata <b>34</b></li>
+        <li>Wood-roasted chicories, anchovy, lemon <b>15</b></li>
+        <li>Chestnut panna cotta, saba <b>11</b></li>
+      </ul>
+      <p class="note">While they last — usually until about 8:30.</p>
+    </aside>
+  </div>
+</header>
+
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span>Handmade pasta daily</span><span>Wood-fired oven</span><span>Natural &amp; small-producer wines</span><span>Walk-ins always welcome at the bar</span><span>Sunday family supper</span><span>Private room for 18</span>
+    <span>Handmade pasta daily</span><span>Wood-fired oven</span><span>Natural &amp; small-producer wines</span><span>Walk-ins always welcome at the bar</span><span>Sunday family supper</span><span>Private room for 18</span>
+  </div>
+</div>
+
+<main>
+  <!-- Story -->
+  <section id="story">
+    <div class="wrap story">
+      <div class="story-art reveal" role="img" aria-label="Illustration of a lit window with a bottle, candle and lemons on the sill at dusk">
+        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <circle cx="300" cy="120" r="46" fill="#f7e2a8" opacity=".75"/>
+          <path d="M0 330 Q 100 290 200 320 T 400 300 V500 H0Z" fill="#7d3a22" opacity=".55"/>
+          <path d="M0 370 Q 120 340 230 365 T 400 350 V500 H0Z" fill="#5a2a1a" opacity=".7"/>
+          <!-- table -->
+          <rect x="0" y="410" width="400" height="90" fill="#3d241a"/>
+          <rect x="0" y="405" width="400" height="10" fill="#5b3726"/>
+          <!-- bottle -->
+          <path d="M120 405 V300 Q120 285 132 278 V235 H148 V278 Q160 285 160 300 V405Z" fill="#2e4026"/>
+          <rect x="132" y="225" width="16" height="12" fill="#b33a2b"/>
+          <rect x="124" y="330" width="32" height="40" fill="#f5eddf" opacity=".85"/>
+          <path d="M131 345 h18 M131 353 h14" stroke="#b33a2b" stroke-width="2"/>
+          <!-- candle -->
+          <rect x="215" y="345" width="18" height="60" fill="#f5eddf"/>
+          <path d="M224 345 q-8 -14 0 -30 q8 16 0 30z" fill="#ffd36b"/>
+          <circle cx="224" cy="333" r="26" fill="#ffd36b" opacity=".18"/>
+          <!-- glass -->
+          <path d="M262 340 h30 q0 30 -15 34 q-15 -4 -15 -34z" fill="none" stroke="#f5eddf" stroke-width="2.5"/>
+          <path d="M264 352 h26 q-2 18 -13 21 q-11 -3 -13 -21z" fill="#8e2b1f"/>
+          <path d="M277 374 v26 M265 404 h24" stroke="#f5eddf" stroke-width="2.5"/>
+          <!-- lemons -->
+          <ellipse cx="322" cy="392" rx="22" ry="15" fill="#e8c43c"/>
+          <ellipse cx="352" cy="398" rx="18" ry="12" fill="#d9a441"/>
+          <path d="M318 378 q10 -16 26 -12 q-12 4 -26 12z" fill="#5d6237"/>
+          <!-- fireflies -->
+          <g fill="#fff3b0">
+            <circle cx="60" cy="160" r="3"/><circle cx="90" cy="210" r="2"/><circle cx="210" cy="140" r="2.5"/>
+            <circle cx="350" cy="230" r="2"/><circle cx="40" cy="260" r="2"/><circle cx="250" cy="200" r="1.8"/>
+          </g>
+        </svg>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Our Story</p>
+        <h2>Named for the <em>fireflies</em> of a summer in Emilia.</h2>
+        <p>Marco and Elena Ferrante opened Lucciola in a former shoe-repair shop with twelve tables, one borrowed pasta machine and a recipe book from Elena's grandmother in Modena. Seventeen years later there are still only twenty-two tables — and the pasta machine has been replaced exactly twice.</p>
+        <p>We cook what's good this week: tomatoes from the Harlan family farm in August, chicories and squash when it turns cold. The menu is short on purpose. The wine list is long on purpose. And the tiramisù is never, ever coming off.</p>
+        <p class="signature">— Marco &amp; Elena</p>
+        <div class="facts">
+          <div><strong>22</strong>tables, give or take</div>
+          <div><strong>9</strong>pastas made daily</div>
+          <div><strong>140+</strong>bottles on the list</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section id="menu" class="menu-section">
+    <div class="wrap">
+      <div class="menu-head reveal">
+        <p class="eyebrow">The Menu</p>
+        <h2>Short, seasonal, <em>made to share.</em></h2>
+        <p>Order a few things for the table. Pasta can be split as a middle course — just ask.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Menu sections">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="p-antipasti" id="t-antipasti">Antipasti</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-pasta" id="t-pasta" tabindex="-1">Pasta</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-secondi" id="t-secondi" tabindex="-1">Secondi</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="p-dolci" id="t-dolci" tabindex="-1">Dolci</button>
+      </div>
+
+      <div class="menu-panel active" id="p-antipasti" role="tabpanel" aria-labelledby="t-antipasti">
+        <div class="dish"><div class="dish-top"><span class="dish-name">Focaccia della casa</span><span class="leader"></span><span class="price">7</span></div><p>Rosemary, flaky salt, good olive oil</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Burrata <span class="tag v">V</span></span><span class="leader"></span><span class="price">16</span></div><p>Roasted grapes, aged balsamic, toasted hazelnut</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Arancini</span><span class="leader"></span><span class="price">13</span></div><p>Saffron risotto, fontina, Calabrian chili aioli</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Beef carpaccio</span><span class="leader"></span><span class="price">17</span></div><p>Arugula, shaved parmigiano, lemon, capers</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Polpette della nonna <span class="tag house">House</span></span><span class="leader"></span><span class="price">15</span></div><p>Pork &amp; veal meatballs, Sunday sugo, ricotta</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Insalata invernale <span class="tag v">V</span></span><span class="leader"></span><span class="price">14</span></div><p>Radicchio, pear, gorgonzola, candied walnut</p></div>
+      </div>
+
+      <div class="menu-panel" id="p-pasta" role="tabpanel" aria-labelledby="t-pasta" hidden>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Tagliatelle al ragù <span class="tag house">House</span></span><span class="leader"></span><span class="price">26</span></div><p>Elena's grandmother's Bolognese, eight hours slow</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Cacio e pepe <span class="tag v">V</span></span><span class="leader"></span><span class="price">21</span></div><p>Tonnarelli, pecorino romano, a lot of black pepper</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Ricotta gnudi <span class="tag v">V</span></span><span class="leader"></span><span class="price">23</span></div><p>Brown butter, crispy sage, lemon zest</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Linguine alle vongole</span><span class="leader"></span><span class="price">28</span></div><p>Littleneck clams, garlic, white wine, parsley</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Rigatoni alla vodka</span><span class="leader"></span><span class="price">22</span></div><p>Tomato cream, Calabrian chili, basil</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Pappardelle ai funghi <span class="tag v">V</span></span><span class="leader"></span><span class="price">25</span></div><p>Wild mushrooms, thyme, mascarpone</p></div>
+      </div>
+
+      <div class="menu-panel" id="p-secondi" role="tabpanel" aria-labelledby="t-secondi" hidden>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Pollo al mattone</span><span class="leader"></span><span class="price">29</span></div><p>Brick-pressed half chicken, salsa verde, roasted potatoes</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Branzino</span><span class="leader"></span><span class="price">36</span></div><p>Whole, wood-roasted, fennel &amp; citrus</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Bistecca for two <span class="tag house">House</span></span><span class="leader"></span><span class="price">88</span></div><p>Dry-aged porterhouse, rosemary, olive oil, lemon</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Melanzane alla parmigiana <span class="tag v">V</span></span><span class="leader"></span><span class="price">24</span></div><p>Layered eggplant, tomato, mozzarella, basil</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Contorni</span><span class="leader"></span><span class="price">9</span></div><p>Charred broccolini · crispy potatoes · garlicky greens</p></div>
+      </div>
+
+      <div class="menu-panel" id="p-dolci" role="tabpanel" aria-labelledby="t-dolci" hidden>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Tiramisù <span class="tag house">House</span></span><span class="leader"></span><span class="price">11</span></div><p>The one that's never coming off the menu</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Olive oil cake</span><span class="leader"></span><span class="price">10</span></div><p>Citrus, whipped mascarpone</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Affogato</span><span class="leader"></span><span class="price">8</span></div><p>Fior di latte gelato, hot espresso — add amaro +5</p></div>
+        <div class="dish"><div class="dish-top"><span class="dish-name">Cannoli</span><span class="leader"></span><span class="price">9</span></div><p>Filled to order, pistachio, orange peel</p></div>
+      </div>
+
+      <p class="menu-foot">V = vegetarian · Gluten-free pasta available on request · Menu changes with the seasons</p>
+    </div>
+  </section>
+
+  <!-- Sunday supper -->
+  <section id="sunday">
+    <div class="wrap">
+      <div class="feature reveal">
+        <div class="big">$48<small>per person</small></div>
+        <div>
+          <p class="eyebrow">Every Sunday · 4–9pm</p>
+          <h2>Sunday Supper, <em>family style.</em></h2>
+          <p>Platters of antipasti, two pastas, a roast and dessert, passed down the table the way we eat at home. Kids under 10 eat for $15. Bring the whole crew.</p>
+        </div>
+        <a href="#reserve" class="btn" data-occasion="Sunday Supper">Save Seats</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="reviews">
+        <blockquote class="reveal"><div class="stars">★★★★★</div>The kind of place you start going for birthdays and end up going on Tuesdays. The tagliatelle is the best in the city, full stop.<cite>— Priya R., regular since 2014</cite></blockquote>
+        <blockquote class="reveal"><div class="stars">★★★★★</div>Warm, unfussy and genuinely delicious. Elena talked us into a Lambrusco we'd never have ordered and we've been chasing it since.<cite>— The Calloway Gazette</cite></blockquote>
+        <blockquote class="reveal"><div class="stars">★★★★★</div>We had our rehearsal dinner in the back room. Eighteen people, zero stress, and my uncle still talks about the meatballs.<cite>— Dana &amp; Theo</cite></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visit & reserve -->
+  <section id="visit" class="menu-section">
+    <div class="wrap visit">
+      <div class="reveal">
+        <p class="eyebrow">Visit</p>
+        <h2>Come hungry. <em>Stay late.</em></h2>
+        <p class="address">418 Calloway Street<br>Two blocks south of Hartwell Park</p>
+        <p class="contact-line">Call us at <a href="tel:+15555550142">(555) 555-0142</a> · <a href="mailto:ciao@osterialucciola.example">ciao@osterialucciola.example</a></p>
+
+        <table class="hours" aria-label="Opening hours">
+          <tbody id="hoursBody">
+            <tr data-day="1" class="closed"><td>Monday</td><td>Closed — pasta day</td></tr>
+            <tr data-day="2"><td>Tuesday</td><td>5:00 – 10:00 pm</td></tr>
+            <tr data-day="3"><td>Wednesday</td><td>5:00 – 10:00 pm</td></tr>
+            <tr data-day="4"><td>Thursday</td><td>5:00 – 10:00 pm</td></tr>
+            <tr data-day="5"><td>Friday</td><td>5:00 – 11:00 pm</td></tr>
+            <tr data-day="6"><td>Saturday</td><td>4:00 – 11:00 pm</td></tr>
+            <tr data-day="0"><td>Sunday</td><td>4:00 – 9:00 pm</td></tr>
+          </tbody>
+        </table>
+
+        <div class="map" role="img" aria-label="Simple map showing Osteria Lucciola on Calloway Street, south of Hartwell Park">
+          <svg viewBox="0 0 520 240" width="100%" aria-hidden="true">
+            <rect width="520" height="240" fill="#ece2cf"/>
+            <rect x="40" y="18" width="200" height="92" rx="10" fill="#c9cfa4"/>
+            <text x="140" y="70" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="15" fill="#5d6237">Hartwell Park</text>
+            <g stroke="#fbf6ec" stroke-width="14">
+              <line x1="0" y1="130" x2="520" y2="130"/>
+              <line x1="0" y1="200" x2="520" y2="200"/>
+              <line x1="270" y1="0" x2="270" y2="240"/>
+              <line x1="420" y1="0" x2="420" y2="240"/>
+            </g>
+            <text x="282" y="236" font-family="Helvetica, Arial, sans-serif" font-size="10" letter-spacing="2" fill="#8a7a6a" transform="rotate(-90 282 236)">CALLOWAY ST</text>
+            <text x="10" y="126" font-family="Helvetica, Arial, sans-serif" font-size="10" letter-spacing="2" fill="#8a7a6a">ELM AVE</text>
+            <text x="10" y="196" font-family="Helvetica, Arial, sans-serif" font-size="10" letter-spacing="2" fill="#8a7a6a">BIRCH AVE</text>
+            <g transform="translate(300 172)">
+              <circle r="22" fill="#b33a2b" opacity=".15"/>
+              <path d="M0 10 C -12 -4 -12 -18 0 -20 C 12 -18 12 -4 0 10Z" fill="#b33a2b"/>
+              <circle cy="-11" r="4" fill="#fbf6ec"/>
+            </g>
+            <text x="326" y="168" font-family="Georgia, serif" font-size="14" fill="#2b211b">Lucciola</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="reserve reveal" id="reserve">
+        <form id="reserveForm" novalidate>
+          <p class="eyebrow">Reservations</p>
+          <h2>Save us a seat</h2>
+          <p>We hold a few tables and the whole bar for walk-ins. For parties over 8, give us a call.</p>
+          <div class="field-row">
+            <label>Date<input type="date" name="date" id="resDate" required></label>
+            <label>Time
+              <select name="time" id="resTime" required></select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label>Guests
+              <select name="guests" required>
+                <option value="1">1 guest</option>
+                <option value="2" selected>2 guests</option>
+                <option value="3">3 guests</option>
+                <option value="4">4 guests</option>
+                <option value="5">5 guests</option>
+                <option value="6">6 guests</option>
+                <option value="7">7 guests</option>
+                <option value="8">8 guests</option>
+              </select>
+            </label>
+            <label>Occasion
+              <select name="occasion" id="resOccasion">
+                <option>Just dinner</option>
+                <option>Birthday</option>
+                <option>Anniversary</option>
+                <option>Date night</option>
+                <option>Sunday Supper</option>
+              </select>
+            </label>
+          </div>
+          <label>Name<input type="text" name="name" autocomplete="name" required placeholder="Your name"></label>
+          <label>Phone or email<input type="text" name="contact" required placeholder="So we can confirm"></label>
+          <label>Anything we should know?<textarea name="notes" placeholder="Allergies, high chair, a quiet corner…"></textarea></label>
+          <button type="submit" class="btn">Request Reservation</button>
+          <p class="form-note" id="formNote">We'll confirm by text or email within a couple of hours.</p>
+        </form>
+
+        <div class="confirm" id="confirm" role="status" aria-live="polite">
+          <div class="check">✓</div>
+          <h3>Grazie!</h3>
+          <p id="confirmText"></p>
+          <button class="btn ghost" id="again" style="margin-top:1.5rem">Make another request</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-logo">Osteria Lucciola</p>
+        <p>Handmade pasta and good wine for the neighborhood since 2009.</p>
+        <form class="newsletter" id="newsForm">
+          <label style="flex:1;margin:0"><span style="position:absolute;left:-9999px">Email for newsletter</span><input type="email" placeholder="Email for specials & events" required></label>
+          <button class="btn" type="submit">Join</button>
+        </form>
+      </div>
+      <div>
+        <h4>Find Us</h4>
+        <p>418 Calloway Street<br>(555) 555-0142</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#sunday">Sunday Supper</a></li>
+          <li><a href="#reserve">Reservations</a></li>
+          <li><a href="#visit">Private dining</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Gift cards</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© <span id="year"></span> Osteria Lucciola. Made with olive oil.</span>
+      <span>Please let us know about any allergies before ordering.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Hours: [openMinutes, closeMinutes] indexed by JS day (0 = Sunday)
+  const HOURS = { 0:[960,1260], 1:null, 2:[1020,1320], 3:[1020,1320], 4:[1020,1320], 5:[1020,1380], 6:[960,1380] };
+  const fmt = m => { const h = Math.floor(m/60), mm = m%60, ap = h >= 12 ? 'pm' : 'am'; return `${((h+11)%12)+1}${mm ? ':' + String(mm).padStart(2,'0') : ''}${ap}`; };
+
+  const now = new Date();
+  const day = now.getDay();
+  const mins = now.getHours()*60 + now.getMinutes();
+
+  // Highlight today in hours table
+  const todayRow = document.querySelector(`#hoursBody tr[data-day="${day}"]`);
+  if (todayRow) todayRow.classList.add('today');
+
+  // Open-now indicator
+  const status = document.getElementById('openStatus');
+  const dot = status.querySelector('.dot'), txt = status.querySelector('span:last-child');
+  const h = HOURS[day];
+  if (h && mins >= h[0] && mins < h[1]) {
+    dot.classList.add('live');
+    txt.textContent = `Open now · kitchen until ${fmt(h[1])}`;
+  } else if (h && mins < h[0]) {
+    txt.textContent = `Opens today at ${fmt(h[0])}`;
+  } else {
+    let d = (day + 1) % 7; while (!HOURS[d]) d = (d + 1) % 7;
+    const name = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d];
+    txt.textContent = `Closed now · opens ${d === (day+1)%7 ? 'tomorrow' : name} at ${fmt(HOURS[d][0])}`;
+  }
+
+  // Chalkboard date
+  document.getElementById('boardDate').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  document.getElementById('year').textContent = now.getFullYear();
+
+  // Menu tabs (with arrow-key support)
+  const tabs = [...document.querySelectorAll('.tab')];
+  const select = tab => {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
+      const p = document.getElementById(t.getAttribute('aria-controls'));
+      p.classList.toggle('active', on); p.hidden = !on;
+    });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      select(next); next.focus();
+    });
+  });
+
+  // Reservation form: date + time slots based on that day's hours
+  const dateEl = document.getElementById('resDate'), timeEl = document.getElementById('resTime');
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const start = new Date(now); if (!HOURS[day] || mins > HOURS[day][1] - 60) start.setDate(start.getDate() + 1);
+  while (!HOURS[start.getDay()]) start.setDate(start.getDate() + 1);
+  dateEl.min = iso(now); dateEl.value = iso(start);
+
+  const fillTimes = () => {
+    const d = new Date(dateEl.value + 'T00:00');
+    const hrs = HOURS[d.getDay()];
+    timeEl.innerHTML = '';
+    if (!hrs) { timeEl.add(new Option('Closed Mondays', '')); timeEl.disabled = true; return; }
+    timeEl.disabled = false;
+    const isToday = dateEl.value === iso(now);
+    for (let m = hrs[0]; m <= hrs[1] - 60; m += 30) {
+      if (isToday && m <= mins + 30) continue;
+      timeEl.add(new Option(fmt(m), fmt(m), false, m === 1170));
+    }
+    if (!timeEl.options.length) { timeEl.add(new Option('No times left today', '')); timeEl.disabled = true; }
+  };
+  dateEl.addEventListener('change', fillTimes); fillTimes();
+
+  // Prefill occasion from Sunday Supper button
+  document.querySelectorAll('[data-occasion]').forEach(b => b.addEventListener('click', () => {
+    document.getElementById('resOccasion').value = b.dataset.occasion;
+    const d = new Date(now); while (d.getDay() !== 0) d.setDate(d.getDate() + 1);
+    dateEl.value = iso(d); fillTimes();
+  }));
+
+  const form = document.getElementById('reserveForm'), confirm = document.getElementById('confirm'), note = document.getElementById('formNote');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const missing = [...form.querySelectorAll('[required]')].find(f => !f.value.trim() || f.disabled);
+    if (missing) {
+      note.textContent = missing === timeEl ? 'Please pick a day we’re open.' : 'Please fill in your name, contact and a time.';
+      note.style.color = 'var(--tomato)'; missing.focus(); return;
+    }
+    const data = new FormData(form);
+    const when = new Date(data.get('date') + 'T00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    const n = data.get('guests');
+    document.getElementById('confirmText').textContent =
+      `${data.get('name').split(' ')[0]}, we've got your request for ${n} ${n === '1' ? 'guest' : 'guests'} on ${when} at ${data.get('time')}. We'll be in touch shortly to confirm.`;
+    form.style.display = 'none'; confirm.classList.add('show');
+  });
+  document.getElementById('again').addEventListener('click', () => {
+    form.reset(); dateEl.value = iso(start); fillTimes();
+    note.textContent = 'We’ll confirm by text or email within a couple of hours.'; note.style.color = '';
+    confirm.classList.remove('show'); form.style.display = '';
+  });
+
+  document.getElementById('newsForm').addEventListener('submit', e => {
+    e.preventDefault();
+    e.target.innerHTML = '<p style="color:var(--gold)">Grazie — you’re on the list.</p>';
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>

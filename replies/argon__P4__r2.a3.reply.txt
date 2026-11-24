@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vance & Sterling LLP — Boutique Civil Litigation & Estate Law</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #FAF8F5;
+      --bg-secondary: #F1EDE6;
+      --bg-dark: #12181B;
+      --bg-dark-elevated: #1A2226;
+      --text-primary: #14171A;
+      --text-secondary: #4F565E;
+      --text-muted: #7B828A;
+      --text-on-dark: #F4F1EA;
+      --accent: #9A7B4F;
+      --accent-dark: #7A5E36;
+      --accent-light: #EFE8DC;
+      --border: #DFD9CE;
+      --border-dark: #2A353B;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --shadow-sm: 0 2px 8px rgba(18, 24, 27, 0.04);
+      --shadow-md: 0 12px 32px rgba(18, 24, 27, 0.08);
+      --radius: 4px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Announcement / Bar */
+    .topbar {
+      background-color: var(--bg-dark);
+      color: #C4C9CE;
+      font-size: 0.8125rem;
+      padding: 0.6rem 1.5rem;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .topbar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .topbar-items {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .topbar a {
+      color: var(--text-on-dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .topbar a:hover {
+      color: var(--accent);
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(250, 248, 245, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.15rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      text-decoration: none;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent-dark);
+      margin-top: 0.25rem;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--bg-dark);
+      color: var(--text-on-dark);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-dark);
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn-accent:hover {
+      background-color: var(--accent-dark);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      color: var(--text-primary);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--text-primary);
+      background-color: rgba(20, 23, 26, 0.03);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 5.5rem 1.5rem 6rem;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-dark);
+      margin-bottom: 1.25rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 28px;
+      height: 1.5px;
+      background-color: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.65rem, 4.8vw, 4.15rem);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--accent-dark);
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin-bottom: 2.25rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-val {
+      font-family: var(--serif);
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card {
+      background-color: var(--bg-dark);
+      color: var(--text-on-dark);
+      padding: 2.75rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "§";
+      position: absolute;
+      right: -10px;
+      bottom: -45px;
+      font-family: var(--serif);
+      font-size: 14rem;
+      color: rgba(154, 123, 79, 0.08);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hero-card-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .hero-card blockquote {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      line-height: 1.35;
+      font-weight: 500;
+      margin-bottom: 1.75rem;
+      color: #FFFFFF;
+    }
+
+    .hero-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-dark);
+      padding-top: 1.25rem;
+      font-size: 0.85rem;
+      color: #B2B9C0;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(154, 123, 79, 0.16);
+      color: #E2C89F;
+      padding: 0.35rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #D4A359;
+      border-radius: 50%;
+    }
+
+    /* Section Defaults */
+    section {
+      padding: 5.5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      max-width: 680px;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.4vw, 2.85rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    /* Practice Areas */
+    .practice-section {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+
+    .practice-card {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border);
+      padding: 2.25rem;
+      border-radius: var(--radius);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .practice-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent);
+    }
+
+    .practice-num {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-dark);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .practice-card h3 {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .practice-card p {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .practice-list {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 1.1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .practice-list li::before {
+      content: "•";
+      color: var(--accent);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+    }
+
+    /* Why Boutique / Approach */
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .pillar-item {
+      display: flex;
+      gap: 1.25rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pillar-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .pillar-icon {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      background-color: var(--accent-light);
+      color: var(--accent-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .pillar-item h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .pillar-item p {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+    }
+
+    /* Attorneys */
+    .attorneys-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .attorney-card {
+      border: 1px solid var(--border);
+      background-color: #FFFFFF;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .attorney-portrait {
+      height: 240px;
+      background: linear-gradient(135deg, #1E272C 0%, #2E3B42 100%);
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+      color: var(--text-on-dark);
+    }
+
+    .attorney-initials {
+      font-family: var(--serif);
+      font-size: 4.5rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.12);
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      line-height: 1;
+    }
+
+    .attorney-role-badge {
+      background-color: var(--accent);
+      color: #fff;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.3rem 0.65rem;
+      font-weight: 600;
+      border-radius: 2px;
+    }
+
+    .attorney-body {
+      padding: 1.75rem;
+    }
+
+    .attorney-body h3 {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .attorney-edu {
+      font-size: 0.82rem;
+      color: var(--accent-dark);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .attorney-body p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .attorney-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.9rem;
+    }
+
+    /* Results & Testimonials */
+    .dark-section {
+      background-color: var(--bg-dark);
+      color: var(--text-on-dark);
+    }
+
+    .dark-section .section-title {
+      color: var(--text-on-dark);
+    }
+
+    .dark-section .section-desc {
+      color: #A9B2BA;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .testimonial-card {
+      background-color: var(--bg-dark-elevated);
+      border: 1px solid var(--border-dark);
+      padding: 2.25rem;
+      border-radius: var(--radius);
+    }
+
+    .testimonial-quote {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.45;
+      color: #FFFFFF;
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-author {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .testimonial-context {
+      font-size: 0.8rem;
+      color: #8E97A0;
+    }
+
+    /* FAQ */
+    .faq-list {
+      max-width: 860px;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 1.4rem 0;
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .faq-question:hover {
+      color: var(--accent-dark);
+    }
+
+    .faq-icon {
+      font-size: 1.3rem;
+      color: var(--accent);
+      transition: transform 0.25s ease;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 260px;
+      padding-bottom: 1.4rem;
+    }
+
+    /* Consultation Form Section */
+    .contact-section {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-info-list {
+      list-style: none;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-info-list li strong {
+      display: block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-info-list li span,
+    .contact-info-list li a {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 2.75rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      color: var(--text-primary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-family: var(--sans);
+      font-size: 0.94rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-dark);
+      background-color: #FFFFFF;
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-disclaimer {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    .form-success {
+      display: none;
+      background-color: #EBF5EE;
+      border: 1px solid #A7D7B8;
+      color: #1B4D2E;
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #0D1214;
+      color: #8E97A0;
+      padding: 4rem 1.5rem 2.5rem;
+      font-size: 0.88rem;
+    }
+
+    .footer-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid #1E282C;
+    }
+
+    .footer-brand {
+      color: var(--text-on-dark);
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .footer-col h5 {
+      color: var(--text-on-dark);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .footer-links a {
+      color: #8E97A0;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-on-dark);
+    }
+
+    .footer-bottom {
+      max-width: 1240px;
+      margin: 2rem auto 0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.78rem;
+      color: #68727A;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero,
+      .approach-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .practice-grid,
+      .attorneys-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testimonials-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-items {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-primary);
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.25rem;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .practice-grid,
+      .attorneys-grid,
+      .hero-metrics,
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 3.5rem 1.5rem;
+      }
+
+      .form-card {
+        padding: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span>450 Lexington Avenue, Suite 1420, New York, NY 10017</span>
+      <div class="topbar-items">
+        <span>Mon–Fri: 8:30 AM – 6:30 PM</span>
+        <a href="tel:+12125550194">(212) 555-0194</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <span class="brand-name">Vance &amp; Sterling LLP</span>
+        <span class="brand-sub">Attorneys at Law</span>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#practice-areas">Practice Areas</a></li>
+        <li><a href="#our-approach">Our Approach</a></li>
+        <li><a href="#attorneys">Attorneys</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#consultation" class="btn btn-primary">Schedule Consultation</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Boutique Counsel • Established 2008</span>
+      <h1>Measured strategy for high-stakes <em>business, property, and family</em> matters.</h1>
+      <p class="hero-lead">
+        At Vance &amp; Sterling, every matter is handled directly by a senior partner. We combine big-firm courtroom rigor with the discretion, responsiveness, and cost clarity of a dedicated boutique practice.
+      </p>
+      <div class="hero-actions">
+        <a href="#consultation" class="btn btn-primary">Request a Case Evaluation</a>
+        <a href="#practice-areas" class="btn btn-outline">Explore Practice Areas</a>
+      </div>
+
+      <div class="hero-metrics">
+        <div>
+          <div class="metric-val">$140M+</div>
+          <div class="metric-label">Recovered &amp; protected in verdicts, settlements, and transactions</div>
+        </div>
+        <div>
+          <div class="metric-val">35+ Yrs</div>
+          <div class="metric-label">Combined federal &amp; state courtroom experience</div>
+        </div>
+        <div>
+          <div class="metric-val">24 Hrs</div>
+          <div class="metric-label">Guaranteed direct partner response time for active clients</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card">
+        <span class="hero-card-tag">Our Founding Principle</span>
+        <blockquote>
+          “Good legal counsel prevents unnecessary conflict; exceptional counsel prepares for trial from day one so you negotiate from unmistakable strength.”
+        </blockquote>
+        <div class="hero-card-footer">
+          <div>
+            <strong style="color: #fff; display: block;">Eleanor Vance, Esq.</strong>
+            <span>Managing Partner</span>
+          </div>
+          <span class="status-badge">
+            <span class="status-dot"></span> Accepting New Clients
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice Areas -->
+  <section id="practice-areas" class="practice-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Areas of Focus</span>
+        <h2 class="section-title">Focused representation where precision matters most.</h2>
+        <p class="section-desc">
+          We deliberately limit our caseload and practice scope so we can deliver deep domain command rather than generalist volume.
+        </p>
+      </div>
+
+      <div class="practice-grid">
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">01</span>
+            <h3>Commercial &amp; Business Law</h3>
+            <p>Strategic counsel for founders, closely held corporations, and partnerships navigating growth, governance, and high-stakes disputes.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Partnership &amp; Shareholder Disputes</li>
+            <li>Breach of Contract &amp; Fiduciary Duty</li>
+            <li>Outside General Counsel Services</li>
+            <li>Mergers, Acquisitions &amp; Buyouts</li>
+          </ul>
+        </div>
+
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">02</span>
+            <h3>Real Estate &amp; Land Use</h3>
+            <p>Protecting developers, commercial landlords, and private property owners across complex transactions and title litigation.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Commercial Leasing &amp; Acquisitions</li>
+            <li>Boundary, Easement &amp; Title Litigation</li>
+            <li>Construction Contract Disputes</li>
+            <li>Zoning &amp; Municipal Appeals</li>
+          </ul>
+        </div>
+
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">03</span>
+            <h3>Trusts, Estates &amp; Probate</h3>
+            <p>Thoughtful wealth preservation, succession structuring, and dignified resolution of contested estate administrations.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Revocable &amp; Irrevocable Trust Design</li>
+            <li>Business Succession Planning</li>
+            <li>Probate &amp; Estate Administration</li>
+            <li>Fiduciary &amp; Will Contest Litigation</li>
+          </ul>
+        </div>
+
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">04</span>
+            <h3>Civil &amp; Trial Litigation</h3>
+            <p>Trial-ready advocacy in state and federal courts, mediation, and commercial arbitration panels.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Emergency Injunctions &amp; Restraining Orders</li>
+            <li>Professional Liability Defense</li>
+            <li>Commercial Arbitration &amp; Mediation</li>
+            <li>State &amp; Federal Appeals</li>
+          </ul>
+        </div>
+
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">05</span>
+            <h3>Employment &amp; Executive Counsel</h3>
+            <p>Advising employers and C-suite executives on restrictive covenants, severance negotiations, and workplace compliance.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Executive Compensation &amp; Severance</li>
+            <li>Non-Compete &amp; Trade Secret Litigation</li>
+            <li>Independent Contractor Audits</li>
+            <li>Internal Investigations</li>
+          </ul>
+        </div>
+
+        <div class="practice-card">
+          <div>
+            <span class="practice-num">06</span>
+            <h3>Fiduciary &amp; Private Client Advisory</h3>
+            <p>Ongoing legal stewardship for family offices, charitable foundations, and closely held family enterprises.</p>
+          </div>
+          <ul class="practice-list">
+            <li>Family Office Governance</li>
+            <li>Charitable Giving &amp; Foundation Setup</li>
+            <li>Asset Risk Mitigation</li>
+            <li>Multi-Generational Wealth Transfers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Approach -->
+  <section id="our-approach">
+    <div class="container">
+      <div class="approach-grid">
+        <div>
+          <span class="eyebrow">Why Choose a Boutique Firm</span>
+          <h2 class="section-title">Senior judgment without the institutional overhead.</h2>
+          <p class="section-desc" style="margin-bottom: 1.5rem;">
+            Clients often come to us after feeling sidelined at sprawling national firms where their matter was handed off to first-year associates. At Vance &amp; Sterling, the attorney you meet on day one is the attorney drafting your briefs, negotiating your deal, and standing beside you in court.
+          </p>
+          <a href="#consultation" class="btn btn-accent">Discuss Your Matter With a Partner</a>
+        </div>
+
+        <div class="pillars">
+          <div class="pillar-item">
+            <div class="pillar-icon">I</div>
+            <div>
+              <h4>Direct Partner Access</h4>
+              <p>You receive your lead partner’s direct line. No layers of gatekeepers, and no paying for rotating junior staff to learn on your file.</p>
+            </div>
+          </div>
+
+          <div class="pillar-item">
+            <div class="pillar-icon">II</div>
+            <div>
+              <h4>Transparent &amp; Predictable Billing</h4>
+              <p>We offer flat-fee structures for estate planning and corporate transactions, and clear phased budgets for complex litigation.</p>
+            </div>
+          </div>
+
+          <div class="pillar-item">
+            <div class="pillar-icon">III</div>
+            <div>
+              <h4>Candid Risk Assessment</h4>
+              <p>We tell you what you need to hear, not what prolongs billable hours. If early settlement serves your bottom line best, we pursue it decisively.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attorneys -->
+  <section id="attorneys" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Our Leadership</span>
+        <h2 class="section-title">Meet your advocates.</h2>
+        <p class="section-desc">
+          Former federal clerks and big-law litigators dedicated to personal, high-impact representation.
+        </p>
+      </div>
+
+      <div class="attorneys-grid">
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <span class="attorney-initials">EV</span>
+            <span class="attorney-role-badge">Managing Partner</span>
+          </div>
+          <div class="attorney-body">
+            <h3>Eleanor Vance</h3>
+            <div class="attorney-edu">J.D., Columbia Law School • B.A., Yale University</div>
+            <p>Eleanor leads the firm’s commercial litigation and partnership dispute practice, with over 20 years representing closely held businesses in state and federal courts.</p>
+            <div class="attorney-meta">Admitted: NY, NJ, S.D.N.Y., E.D.N.Y.</div>
+          </div>
+        </article>
+
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <span class="attorney-initials">MS</span>
+            <span class="attorney-role-badge">Senior Partner</span>
+          </div>
+          <div class="attorney-body">
+            <h3>Marcus Sterling</h3>
+            <div class="attorney-edu">J.D., NYU School of Law • B.S., Cornell University</div>
+            <p>Marcus oversees real estate transactions, construction disputes, and commercial leasing for developers, family offices, and institutional property owners.</p>
+            <div class="attorney-meta">Admitted: NY, CT, U.S. Court of Appeals (2d Cir.)</div>
+          </div>
+        </article>
+
+        <article class="attorney-card">
+          <div class="attorney-portrait">
+            <span class="attorney-initials">CL</span>
+            <span class="attorney-role-badge">Partner</span>
+          </div>
+          <div class="attorney-body">
+            <h3>Clara Lin-Mercer</h3>
+            <div class="attorney-edu">LL.M. (Taxation), Georgetown • J.D., Fordham Law</div>
+            <p>Clara chairs the Trusts &amp; Estates group, guiding families and business owners through tax-efficient wealth transfer, probate, and fiduciary litigation.</p>
+            <div class="attorney-meta">Admitted: NY, Surrogate’s Court Bar Association</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="dark-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow" style="color: var(--accent);">Client Perspectives</span>
+        <h2 class="section-title">Trusted by business owners and families across New York.</h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">
+            “When a founding partner exit threatened to stall our company, Eleanor stepped in with calm precision. She resolved a bitter deadlock in 60 days without setting foot in a courtroom.”
+          </p>
+          <div class="testimonial-author">David K., Chief Executive Officer</div>
+          <div class="testimonial-context">Manufacturing &amp; Logistics Enterprise • Shareholder Buyout</div>
+        </div>
+
+        <div class="testimonial-card">
+          <p class="testimonial-quote">
+            “Clara restructured our family estate and commercial real estate holdings with remarkable clarity. For the first time, we have complete peace of mind about the next generation.”
+          </p>
+          <div class="testimonial-author">Dr. Helena &amp; Arthur M.</div>
+          <div class="testimonial-context">Private Estate &amp; Succession Planning Clients</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Common Questions</span>
+        <h2 class="section-title">What to expect when working with us.</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item active">
+          <button class="faq-question">
+            <span>How does the initial consultation work?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            We begin with a confidential 30-minute phone or video evaluation with a partner to review key documents, check for conflicts of interest, and outline your strategic options and fee structures before you commit.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Do you offer flat-fee or alternative billing arrangements?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Yes. For estate plans, corporate formations, contract drafting, and commercial real estate closings, we frequently work on predetermined flat fees. For litigation, we provide detailed phase-by-phase budgets and hybrid fee arrangements where appropriate.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Will my case be handed off to a paralegal or junior associate?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Never. While our experienced paralegals assist with filings and administrative efficiency to keep your costs down, all strategy, drafting, negotiation, and court appearances are performed directly by your lead partner.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How quickly can you step into an urgent dispute or injunction?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Because we maintain a selective caseload, we can mobilize immediately for emergency temporary restraining orders (TROs), preliminary injunctions, or time-sensitive contract deadlines.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Consultation -->
+  <section id="consultation" class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <span class="eyebrow">Confidential Inquiry</span>
+          <h2 class="section-title">Schedule a private consultation.</h2>
+          <p class="section-desc">
+            Tell us briefly about your legal matter. A partner will review your inquiry and respond within one business day.
+          </p>
+
+          <ul class="contact-info-list">
+            <li>
+              <strong>Office Location</strong>
+              <span>450 Lexington Avenue, Suite 1420<br>New York, NY 10017</span>
+            </li>
+            <li>
+              <strong>Direct Telephone</strong>
+              <a href="tel:+12125550194">(212) 555-0194</a>
+            </li>
+            <li>
+              <strong>Electronic Mail</strong>
+              <a href="mailto:inquiries@vancesterlinglaw.com">inquiries@vancesterlinglaw.com</a>
+            </li>
+            <li>
+              <strong>Office Hours</strong>
+              <span>Monday – Friday: 8:30 AM – 6:30 PM<br>Weekend appointments available by request</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-card">
+          <form id="consultationForm">
+            <div class="form-row">
+              <div>
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" class="form-control" placeholder="Jane Doe" required />
+              </div>
+              <div>
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" class="form-control" placeholder="(212) 555-0100" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" class="form-control" placeholder="jane@company.com" required />
+              </div>
+              <div>
+                <label for="practiceArea">Area of Inquiry *</label>
+                <select id="practiceArea" class="form-control" required>
+                  <option value="">Select a practice area...</option>
+                  <option value="commercial">Commercial &amp; Business Dispute</option>
+                  <option value="realestate">Real Estate &amp; Land Use</option>
+                  <option value="estates">Trusts, Estates &amp; Probate</option>
+                  <option value="employment">Employment &amp; Executive Counsel</option>
+                  <option value="other">Other Civil Matter</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Brief Summary of Your Matter *</label>
+              <textarea id="message" class="form-control" placeholder="Please share general context and any upcoming deadlines (do not include confidential or sensitive details at this stage)..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Confidential Request</button>
+
+            <p class="form-disclaimer">
+              Submitting this form does not create an attorney-client relationship. Please do not send confidential information until a conflict-of-interest check has been completed and a formal engagement letter has been signed.
+            </p>
+
+            <div class="form-success" id="formSuccess">
+              Thank you for contacting Vance &amp; Sterling LLP. Your inquiry has been routed to a partner, and our office will reach out within one business day.
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <span class="footer-brand">Vance &amp; Sterling LLP</span>
+        <p style="max-width: 360px; margin-bottom: 1rem;">
+          Boutique litigation, real estate, and private client counsel serving businesses and families across New York, New Jersey, and Connecticut.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Practice Areas</h5>
+        <ul class="footer-links">
+          <li><a href="#practice-areas">Commercial Litigation</a></li>
+          <li><a href="#practice-areas">Real Estate &amp; Land Use</a></li>
+          <li><a href="#practice-areas">Trusts &amp; Estates</a></li>
+          <li><a href="#practice-areas">Executive &amp; Employment Law</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>The Firm</h5>
+        <ul class="footer-links">
+          <li><a href="#our-approach">Our Approach</a></li>
+          <li><a href="#attorneys">Partner Bios</a></li>
+          <li><a href="#faq">Client FAQ</a></li>
+          <li><a href="#consultation">Request Consultation</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 Vance &amp; Sterling LLP. All rights reserved.</span>
+      <span>Attorney Advertising. Prior results do not guarantee a similar outcome.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Navigation Toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    mobileToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const isActive = item.classList.contains('active');
+
+        document.querySelectorAll('.faq-item').forEach(el => {
+          el.classList.remove('active');
+        });
+
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // Consultation Form Submission Handler
+    const form = document.getElementById('consultationForm');
+    const successBanner = document.getElementById('formSuccess');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      successBanner.style.display = 'block';
+      form.reset();
+    });
+  </script>
+</body>
+</html>

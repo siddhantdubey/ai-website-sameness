@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Osteria del Vicolo — Neighborhood Italian Kitchen &amp; Wine Bar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-parchment: #F6F1E7;
+      --bg-cream: #EFE7D6;
+      --bg-card: #FAF7F0;
+      --ink-espresso: #1E1815;
+      --ink-umbra: #524741;
+      --ink-muted: #7D7067;
+      --terracotta: #A43820;
+      --terracotta-dark: #7D2714;
+      --olive: #4A5535;
+      --ochre: #C8963E;
+      --wine-dark: #181110;
+      --border-hairline: rgba(30, 24, 21, 0.14);
+      --border-strong: rgba(30, 24, 21, 0.28);
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-parchment);
+      color: var(--ink-espresso);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(rgba(30, 24, 21, 0.035) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Top Announcement Bar */
+    .top-bar {
+      background-color: var(--wine-dark);
+      color: var(--bg-parchment);
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      padding: 0.55rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .top-bar-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #74B752;
+      display: inline-block;
+      box-shadow: 0 0 8px #74B752;
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(246, 241, 231, 0.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      text-decoration: none;
+      color: var(--ink-espresso);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .brand-sub {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--terracotta);
+      margin-top: 0.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink-espresso);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--terracotta);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--terracotta);
+      color: #FFF;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--terracotta-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--ink-espresso);
+      border-color: var(--border-strong);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--ink-espresso);
+      color: var(--bg-parchment);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3.5rem 1.75rem 5rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
+      align-items: center;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--olive);
+      background: rgba(74, 85, 53, 0.1);
+      padding: 0.35rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5.2vw, 4.75rem);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--terracotta);
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--ink-umbra);
+      max-width: 540px;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      display: block;
+    }
+
+    .metric-value {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--ink-espresso);
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-frame {
+      background: var(--bg-cream);
+      border: 1px solid var(--border-strong);
+      padding: 1rem;
+      box-shadow: 16px 16px 0px rgba(164, 56, 32, 0.12);
+      position: relative;
+    }
+
+    .hero-img-box {
+      width: 100%;
+      aspect-ratio: 4 / 4.6;
+      background-color: #2A1F1B;
+      background-image: 
+        linear-gradient(180deg, rgba(24,17,16,0.15) 0%, rgba(24,17,16,0.75) 100%),
+        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.75rem;
+      color: var(--bg-parchment);
+      position: relative;
+    }
+
+    .daily-stamp {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 112px;
+      height: 112px;
+      background: var(--terracotta);
+      color: var(--bg-parchment);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.25;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.5rem;
+      box-shadow: 0 8px 20px rgba(30,24,21,0.22);
+      transform: rotate(8deg);
+      border: 2px dashed rgba(246, 241, 231, 0.45);
+    }
+
+    .daily-stamp strong {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .chalkboard-callout {
+      border-top: 1px solid rgba(246,241,231,0.3);
+      padding-top: 0.85rem;
+    }
+
+    .chalkboard-callout span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ochre);
+    }
+
+    .chalkboard-callout h3 {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+
+    /* Ribbon Ticker */
+    .ribbon {
+      background-color: var(--bg-cream);
+      border-bottom: 1px solid var(--border-hairline);
+      padding: 0.9rem 1.75rem;
+      overflow: hidden;
+    }
+
+    .ribbon-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-umbra);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .ribbon-sep {
+      color: var(--terracotta);
+      font-weight: 700;
+    }
+
+    /* Section Defaults */
+    .section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 5.5rem 1.75rem;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--terracotta);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 3.8vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    /* Menu Section */
+    .menu-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      background: var(--bg-cream);
+      padding: 0.35rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-hairline);
+    }
+
+    .menu-tab {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.15rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-umbra);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+    }
+
+    .menu-tab.active {
+      background: var(--ink-espresso);
+      color: var(--bg-parchment);
+      font-weight: 700;
+    }
+
+    .menu-paper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      padding: 3rem;
+      box-shadow: 0 12px 35px rgba(30, 24, 21, 0.04);
+      position: relative;
+    }
+
+    .menu-paper-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--ink-espresso);
+      padding-bottom: 1rem;
+      margin-bottom: 2.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .menu-paper-header h3 {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .menu-paper-meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.25rem 3.5rem;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px dashed var(--border-hairline);
+      padding-bottom: 1.25rem;
+    }
+
+    .menu-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .menu-item-name {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--ink-espresso);
+    }
+
+    .menu-item-badge {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      background: rgba(164, 56, 32, 0.12);
+      color: var(--terracotta);
+      border-radius: 2px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .menu-item-price {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--terracotta);
+      white-space: nowrap;
+    }
+
+    .menu-item-desc {
+      font-size: 0.92rem;
+      color: var(--ink-umbra);
+    }
+
+    .menu-footer-note {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    /* Craft & Story Section */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .story-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .craft-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      padding: 1.65rem;
+    }
+
+    .craft-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .craft-card h4 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .craft-card p {
+      font-size: 0.88rem;
+      color: var(--ink-umbra);
+    }
+
+    .story-narrative p {
+      color: var(--ink-umbra);
+      margin-bottom: 1.25rem;
+      font-size: 1.04rem;
+    }
+
+    .signature-block {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signature-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.6rem;
+      color: var(--ink-espresso);
+    }
+
+    .signature-role {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    /* Reservation & Hours Section */
+    .booking-split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .reservation-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      padding: 2.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-umbra);
+    }
+
+    .form-control {
+      padding: 0.75rem 0.9rem;
+      background: var(--bg-parchment);
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      color: var(--ink-espresso);
+    }
+
+    .form-control:focus {
+      outline: 2px solid var(--terracotta);
+      border-color: transparent;
+    }
+
+    .confirmation-banner {
+      display: none;
+      margin-top: 1.25rem;
+      padding: 1.1rem;
+      background: rgba(74, 85, 53, 0.12);
+      border-left: 4px solid var(--olive);
+      font-size: 0.92rem;
+      color: var(--ink-espresso);
+    }
+
+    .hours-card {
+      background: var(--wine-dark);
+      color: var(--bg-parchment);
+      padding: 2.5rem;
+      border: 1px solid var(--border-strong);
+    }
+
+    .hours-card h3 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #FFF;
+    }
+
+    .hours-list {
+      list-style: none;
+      margin: 1.75rem 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .hours-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      font-size: 0.92rem;
+    }
+
+    .hours-list span:last-child {
+      font-family: var(--mono);
+      color: var(--ochre);
+      font-size: 0.84rem;
+    }
+
+    .neighborhood-map {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .neighborhood-map p {
+      font-size: 0.88rem;
+      color: rgba(246, 241, 231, 0.8);
+      margin-top: 0.35rem;
+    }
+
+    /* Footer */
+    footer {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero,
+      .story-grid,
+      .booking-split {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .menu-paper {
+        padding: 1.75rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-grid,
+      .story-cards,
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Neighborhood Status Bar -->
+  <div class="top-bar">
+    <div class="top-bar-status">
+      <span class="status-dot"></span>
+      <span id="live-status-text">KITCHEN PREPARING FOR DINNER SERVICE • PASTA EXTRUDED FRESH AT 3:00 PM</span>
+    </div>
+    <div>214 BLEECKER &amp; CARMINE • (212) 555-0194</div>
+  </div>
+
+  <!-- Sticky Navigation -->
+  <header>
+    <nav class="nav-container">
+      <a href="#" class="brand">
+        <span class="brand-title">Osteria del Vicolo</span>
+        <span class="brand-sub">Cucina di Quartiere • Est. 1998</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#menu">La Carta</a></li>
+        <li><a href="#craft">Our Flour &amp; Cellar</a></li>
+        <li><a href="#visit">Hours &amp; Location</a></li>
+      </ul>
+      <a href="#reserve" class="btn btn-primary">Reserve a Table</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-tag">Wood-Fired Hearth • Hand-Rolled Sfoglia</div>
+        <h1>Handmade pasta, bitter greens &amp; <em>low-intervention</em> Italian wine.</h1>
+        <p class="hero-lead">
+          A corner dining room built for weeknight ragù, loud toasts, and slow Sunday lunches. We mill organic durum wheat each morning and keep twelve barstools strictly for neighborhood walk-ins.
+        </p>
+        <div class="hero-actions">
+          <a href="#reserve" class="btn btn-primary">Book Tonight’s Table</a>
+          <a href="#menu" class="btn btn-outline">Explore Today’s Menu</a>
+        </div>
+        <div class="hero-metrics">
+          <div>
+            <span class="metric-label">Daily Pasta</span>
+            <span class="metric-value">40-Yolk Tagliolini</span>
+          </div>
+          <div>
+            <span class="metric-label">By The Carafe</span>
+            <span class="metric-value">14 House Vintages</span>
+          </div>
+          <div>
+            <span class="metric-label">Bar &amp; Patio</span>
+            <span class="metric-value">Always Walk-In</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-frame">
+          <div class="daily-stamp">
+            <span>Tonight's Roast</span>
+            <strong>Porchetta</strong>
+            <span>at 7:00 PM</span>
+          </div>
+          <div class="hero-img-box">
+            <div class="chalkboard-callout">
+              <span>From the Chalkboard • Tuesday Feature</span>
+              <h3>Pappardelle al Cinghiale &amp; Aged Pecorino Toscano</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neighborhood Ticker -->
+    <div class="ribbon">
+      <div class="ribbon-inner">
+        <span>Aperitivo Hour: 4:30–6:00 PM ($9 Negroni Sbagliato)</span>
+        <span class="ribbon-sep">✦</span>
+        <span>Sunday Family Supper: Whole Braised Ossobuco for Two</span>
+        <span class="ribbon-sep">✦</span>
+        <span>Corkage Free on Mondays for Neighborhood Residents</span>
+      </div>
+    </div>
+
+    <!-- Interactive Menu Section -->
+    <section id="menu" class="section">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">Stampato Oggi • Printed Daily</span>
+          <h2 class="section-title">La Carta della Sera</h2>
+        </div>
+        <div class="menu-controls" role="tablist" aria-label="Menu courses">
+          <button class="menu-tab active" data-course="antipasti" role="tab">Antipasti</button>
+          <button class="menu-tab" data-course="primi" role="tab">Primi Piatti</button>
+          <button class="menu-tab" data-course="secondi" role="tab">Secondi &amp; Contorni</button>
+          <button class="menu-tab" data-course="dolci" role="tab">Dolci &amp; Amari</button>
+        </div>
+      </div>
+
+      <div class="menu-paper">
+        <div class="menu-paper-header">
+          <h3 id="course-heading">Antipasti &amp; Pane</h3>
+          <span class="menu-paper-meta">CHEF MARCO BELLINI • AUTUMN / WINTER HARVEST</span>
+        </div>
+
+        <div id="menu-items-container" class="menu-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <div class="menu-footer-note">
+          <span>* Consuming raw or undercooked meats or eggs may increase risk of foodborne illness.</span>
+          <span>Gluten-free chickpea pasta available upon request (+$3)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story & Craft Section -->
+    <section id="craft" class="section">
+      <div class="story-grid">
+        <div class="story-narrative">
+          <span class="section-eyebrow">La Nostra Filosofia</span>
+          <h2 class="section-title" style="margin-bottom: 1.5rem;">No white tablecloths. Just bronze dies, cold-pressed olive oil, and patience.</h2>
+          <p>
+            When Nona Lidia opened our four-table storefront twenty-eight years ago, the rule was simple: if it can be made by hand before noon, we don’t buy it in a box.
+          </p>
+          <p>
+            Our <em>sfoglina</em> rolls sheet pasta on maple boards every morning using pasture-raised heritage eggs. Our tomato passata comes from a single family cooperative in Puglia, and our cellar focuses on small-parcel biodynamic growers from Piedmont down to Etna.
+          </p>
+          <div class="signature-block">
+            <div>
+              <div class="signature-name">Marco &amp; Elena Bellini</div>
+              <div class="signature-role">Second-Generation Proprietors</div>
+            </div>
+            <span style="font-family: var(--mono); font-size: 0.78rem; color: var(--olive);">[ 100% Scratch Kitchen ]</span>
+          </div>
+        </div>
+
+        <div class="story-cards">
+          <div class="craft-card">
+            <span class="craft-num">01 / LA SFOGLIA</span>
+            <h4>Bronze-Die &amp; Hand-Cut</h4>
+            <p>Extruded through rough bronze dies so every strand of rigatoni and bucatini clings to emulsified pan sauces.</p>
+          </div>
+          <div class="craft-card">
+            <span class="craft-num">02 / IL FORNO</span>
+            <h4>White-Oak Hearth</h4>
+            <p>Our sourdough focaccia, blistered bitter greens, and whole sea bream are roasted over seasoned white-oak coals.</p>
+          </div>
+          <div class="craft-card">
+            <span class="craft-num">03 / LA CANTINA</span>
+            <h4>85+ Grower Vintages</h4>
+            <p>Unfiltered skin-contact friulano, chilled lambrusco, and cellar-aged Barolo poured by the glass or quartino.</p>
+          </div>
+          <div class="craft-card">
+            <span class="craft-num">04 / IL QUARTIERE</span>
+            <h4>12 Walk-In Barstools</h4>
+            <p>We never take reservations for our marble counter—drop by any evening for a bowl of cacio e pepe and an amaro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservations & Hours -->
+    <section id="reserve" class="section">
+      <div class="booking-split">
+        <div class="reservation-box">
+          <span class="section-eyebrow">Prenotazioni</span>
+          <h2 class="section-title" style="font-size: 2.3rem;">Reserve Your Table</h2>
+          <p style="color: var(--ink-umbra); font-size: 0.95rem; margin-top: 0.4rem;">
+            For parties larger than 6, or private cellar dinners, call us directly at (212) 555-0194.
+          </p>
+
+          <form id="reservation-form" class="form-grid">
+            <div class="form-group">
+              <label for="res-name">Full Name</label>
+              <input type="text" id="res-name" class="form-control" placeholder="Giulia Rossi" required />
+            </div>
+            <div class="form-group">
+              <label for="res-guests">Party Size</label>
+              <select id="res-guests" class="form-control">
+                <option value="2 Guests">2 Guests</option>
+                <option value="3 Guests">3 Guests</option>
+                <option value="4 Guests">4 Guests</option>
+                <option value="5 Guests">5 Guests</option>
+                <option value="6 Guests">6 Guests</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="res-date">Date</label>
+              <input type="date" id="res-date" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="res-time">Preferred Seating</label>
+              <select id="res-time" class="form-control">
+                <option value="5:30 PM">5:30 PM (Early Evening)</option>
+                <option value="7:00 PM" selected>7:00 PM (Prime Dinner)</option>
+                <option value="8:30 PM">8:30 PM (Second Seating)</option>
+                <option value="9:45 PM">9:45 PM (Late Kitchen)</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label for="res-notes">Seating Preference or Dietary Notes</label>
+              <input type="text" id="res-notes" class="form-control" placeholder="Window booth, anniversary toast, gluten allergy..." />
+            </div>
+            <div class="form-group full">
+              <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.95rem;">Request Table Confirmation</button>
+            </div>
+          </form>
+
+          <div id="res-confirmation" class="confirmation-banner" role="status"></div>
+        </div>
+
+        <div id="visit" class="hours-card">
+          <span class="section-eyebrow" style="color: var(--ochre);">Orari &amp; Indirizzo</span>
+          <h3>Hours &amp; Location</h3>
+          <p style="color: rgba(246,241,231,0.75); font-size: 0.92rem;">
+            214 Bleecker Street (at the corner of Carmine)<br />
+            Greenwich Village, New York, NY 10014
+          </p>
+
+          <ul class="hours-list">
+            <li>
+              <span>Monday</span>
+              <span>5:00 PM – 10:00 PM</span>
+            </li>
+            <li>
+              <span>Tuesday – Thursday</span>
+              <span>4:30 PM – 10:30 PM</span>
+            </li>
+            <li>
+              <span>Friday – Saturday</span>
+              <span>12:00 PM – 11:30 PM</span>
+            </li>
+            <li>
+              <span>Sunday Supper</span>
+              <span>12:00 PM – 9:30 PM</span>
+            </li>
+          </ul>
+
+          <div class="neighborhood-map">
+            <span style="font-family: var(--mono); font-size: 0.72rem; color: var(--ochre); text-transform: uppercase;">Getting Here</span>
+            <p>
+              2 blocks south of the W 4th St subway station (A/C/E/B/D/F/M). Heated sidewalk pergola open year-round.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong style="color: var(--ink-espresso); font-family: var(--serif); font-size: 1.15rem;">Osteria del Vicolo</strong>
+      <span> • 214 Bleecker St • Buon Appetito</span>
+    </div>
+    <div style="font-family: var(--mono); font-size: 0.75rem;">
+      © 2026 OSTERIA DEL VICOLO. CRAFTED FOR THE NEIGHBORHOOD.
+    </div>
+  </footer>
+
+  <script>
+    const MENU_DATA = {
+      antipasti: {
+        title: "Antipasti & Pane",
+        items: [
+          {
+            name: "Focaccia di Recco Calda",
+            badge: "House Favorite",
+            price: "$13",
+            desc: "Blistered sourdough focaccia filled with molten stracchino cheese, rosemary sea salt, and wildflower honey."
+          },
+          {
+            name: "Polpette della Nonna",
+            badge: "",
+            price: "$17",
+            desc: "Braised pork, veal, and mortadella meatballs simmered in San Marzano sugo, topped with 30-month Parmigiano."
+          },
+          {
+            name: "Carciofi alla Giudia",
+            badge: "Seasonal",
+            price: "$16",
+            desc: "Crisp Roman-style fried artichokes, preserved Meyer lemon aioli, wild mint, and flaky sea salt."
+          },
+          {
+            name: "Burrata Pugliese & Caponata",
+            badge: "",
+            price: "$19",
+            desc: "Creamy D.O.P. burrata over sweet-and-sour charred eggplant, pine nuts, golden raisins, and grilled country bread."
+          },
+          {
+            name: "Crudo di Branzino*",
+            badge: "",
+            price: "$21",
+            desc: "Thinly sliced Mediterranean sea bass, Sicilian blood orange, Castelvetrano olives, and fennel pollen."
+          },
+          {
+            name: "Prosciutto di Parma & Gnocco Fritto",
+            badge: "",
+            price: "$22",
+            desc: "24-month aged Prosciutto served alongside warm, puffed Emilia-Romagna fried dough pillows."
+          }
+        ]
+      },
+      primi: {
+        title: "Primi Piatti — Handmade Pasta",
+        items: [
+          {
+            name: "Tagliolini al Limone & Bottarga",
+            badge: "40-Yolk Dough",
+            price: "$25",
+            desc: "Hand-cut ribbons emulsified with Amalfi lemon butter, cured grey mullet roe, and toasted pangrattato."
+          },
+          {
+            name: "Pappardelle al Cinghiale",
+            badge: "Signature",
+            price: "$27",
+            desc: "Wide hand-rolled ribbons with 6-hour braised wild boar ragù, juniper, Barolo wine, and aged Pecorino Toscano."
+          },
+          {
+            name: "Rigatoni alla Vodka Affumicata",
+            badge: "",
+            price: "$23",
+            desc: "Bronze-extruded rigatoni, wood-roasted Calabrian chili cream, crispy guanciale, and sweet basil."
+          },
+          {
+            name: "Agnolotti del Plin",
+            badge: "",
+            price: "$26",
+            desc: "Pinched Piedmontese parcels stuffed with roasted duck and cabbage, tossed in sage brown butter and roast jus."
+          },
+          {
+            name: "Tonnarelli Cacio e Pepe",
+            badge: "Roman Classic",
+            price: "$22",
+            desc: "Square-cut guitar pasta whipped tableside with Pecorino Romano D.O.P. and freshly cracked Sarawak black pepper."
+          },
+          {
+            name: "Lasagna Verde alla Bolognese",
+            badge: "Limited Daily",
+            price: "$26",
+            desc: "Seven layers of spinach sfoglia, traditional milk-simmered beef and pancetta ragù, nutmeg besciamella."
+          }
+        ]
+      },
+      secondi: {
+        title: "Secondi & Contorni",
+        items: [
+          {
+            name: "Pollo al Mattone",
+            badge: "Wood-Fired",
+            price: "$31",
+            desc: "Brick-pressed heritage half chicken roasted over white oak, salsa verde, and pan-charred salsa di limone."
+          },
+          {
+            name: "Branzino Arrostito Intero",
+            badge: "",
+            price: "$36",
+            desc: "Whole wood-roasted Mediterranean sea bass deboned tableside, Taggiasca olives, caper berries, and grilled radicchio."
+          },
+          {
+            name: "Tagliata di Manzo*",
+            badge: "",
+            price: "$42",
+            desc: "Prime dry-aged strip loin sliced over wild arugula, shaved Parmigiano Vacche Rosse, and 15-year aged balsamic."
+          },
+          {
+            name: "Melanzane alla Parmigiana",
+            badge: "Vegetarian",
+            price: "$26",
+            desc: "Crisp layered heirloom eggplant, smoked scamorza, San Marzano passata, and basil oil."
+          },
+          {
+            name: "Patate Arrosto al Rosmarino",
+            badge: "Contorno",
+            price: "$11",
+            desc: "Crispy crushed fingerling potatoes roasted with garlic confit and fresh rosemary."
+          },
+          {
+            name: "Cicoria Ripassata",
+            badge: "Contorno",
+            price: "$12",
+            desc: "Bitter field dandelion greens sautéed in extra-virgin olive oil, garlic, and Calabrian peperoncino."
+          }
+        ]
+      },
+      dolci: {
+        title: "Dolci & Digestivi",
+        items: [
+          {
+            name: "Tiramisù della Casa",
+            badge: "Tableside Scoop",
+            price: "$14",
+            desc: "House-baked savoiardi soaked in Moka espresso and Marsala Superiore, layered with whipped organic mascarpone."
+          },
+          {
+            name: "Torta all’Olio d’Oliva",
+            badge: "",
+            price: "$13",
+            desc: "Sicilian citrus and rosemary olive oil cake served warm with candied fennel and crème fraîche gelato."
+          },
+          {
+            name: "Cannoli Siciliani",
+            badge: "",
+            price: "$12",
+            desc: "Crisp pastry shells filled to order with sheep’s milk ricotta, Bronte pistachio, and dark chocolate shards."
+          },
+          {
+            name: "Affogato al Amaro",
+            badge: "",
+            price: "$14",
+            desc: "Fior di latte gelato drowned in hot espresso and a shot of Vecchio Amaro del Capo."
+          }
+        ]
+      }
+    };
+
+    const container = document.getElementById('menu-items-container');
+    const heading = document.getElementById('course-heading');
+    const tabs = document.querySelectorAll('.menu-tab');
+
+    function renderCourse(courseKey) {
+      const course = MENU_DATA[courseKey];
+      heading.textContent = course.title;
+      container.innerHTML = course.items.map(item => `
+        <article class="menu-item">
+          <div class="menu-item-top">
+            <div>
+              <span class="menu-item-name">${item.name}</span>
+              ${item.badge ? `<span class="menu-item-badge">${item.badge}</span>` : ''}
+            </div>
+            <span class="menu-item-price">${item.price}</span>
+          </div>
+          <p class="menu-item-desc">${item.desc}</p>
+        </article>
+      `).join('');
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderCourse(tab.dataset.course);
+      });
+    });
+
+    // Initialize default course
+    renderCourse('antipasti');
+
+    // Pre-fill today's date in reservation form
+    const dateInput = document.getElementById('res-date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+    dateInput.min = today;
+
+    // Handle reservation form submission
+    const form = document.getElementById('reservation-form');
+    const confirmation = document.getElementById('res-confirmation');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('res-name').value;
+      const guests = document.getElementById('res-guests').value;
+      const date = document.getElementById('res-date').value;
+      const time = document.getElementById('res-time').value;
+
+      confirmation.style.display = 'block';
+      confirmation.innerHTML = `
+        <strong>Grazie, ${name}!</strong> We have reserved a table for <strong>${guests}</strong> on <strong>${date}</strong> at <strong>${time}</strong>. 
+        A warm basket of rosemary focaccia will be waiting for you.
+      `;
+      form.reset();
+      dateInput.value = date;
+    });
+  </script>
+</body>
+</html>

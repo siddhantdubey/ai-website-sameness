@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f4ee">
+<title>Fieldwork — A little more in sync.</title>
+<style>
+:root{--paper:#f5f4ee;--ink:#263c30;--muted:#788074;--line:#d9dcd1;--green:#d7ed9c;--white:#fffef9}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+button,a,input{font:inherit}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer}
+.wrap{width:min(1240px,calc(100% - 80px));margin:auto}
+nav{height:104px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:700;letter-spacing:-1.2px}
+.symbol{width:27px;height:29px;display:flex;gap:3px;align-items:center;transform:rotate(-12deg)}
+.symbol i{display:block;width:6px;background:var(--ink);border-radius:1px;height:25px}
+.symbol i:nth-child(2){height:17px}.symbol i:nth-child(3){height:10px}
+.nav-links,.nav-right{display:flex;align-items:center;gap:30px;font-size:13px}
+.nav-links a:hover,footer a:hover{text-decoration:underline;text-underline-offset:5px}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:24px;padding:16px 23px;border:1px solid var(--ink);border-radius:5px;background:var(--ink);color:var(--white);font-size:13px;font-weight:600;transition:transform .2s,background .2s}
+.button:hover{background:#3c5541;transform:translateY(-2px)}
+.button.small{padding:12px 18px;gap:15px}
+.hero{padding:75px 0 0;text-align:center;position:relative}
+.eyebrow{font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:1.7px;display:flex;align-items:center;justify-content:center;gap:9px}
+.eyebrow:before{content:"";height:6px;width:6px;background:#659044;border-radius:50%}
+h1{font-weight:500;font-size:clamp(52px,6.3vw,86px);line-height:1.04;letter-spacing:-5px;margin:26px 0 23px}
+h1 em{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+.hero-copy{max-width:430px;margin:0 auto;color:#687166;font-size:16px;line-height:1.65}
+.hero-actions{margin:27px 0 14px;display:flex;justify-content:center;gap:12px}
+.secondary{background:transparent;color:var(--ink);border-color:#d1d5c9;font-weight:400;gap:10px}
+.secondary:hover{background:#e9ecdf}
+.fine{font-size:11px;color:#81877a}
+.preview-area{position:relative;margin-top:57px;padding:0 32px}
+.note{position:absolute;right:-10px;top:-53px;transform:rotate(8deg);font:italic 17px Georgia,serif;color:#7b836b;z-index:2}
+.note span{display:block;transform:rotate(35deg);font-size:33px;margin:2px 0 0 45px}
+.app{display:flex;min-height:423px;text-align:left;background:var(--white);border:1px solid #cdd3c3;border-radius:9px 9px 0 0;box-shadow:0 16px 45px #2f452914;overflow:hidden}
+.sidebar{width:195px;flex-shrink:0;background:#eeefe6;padding:23px 16px;border-right:1px solid #dce0d2;font-size:11px}
+.workspace{font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;margin-bottom:25px}
+.workspace-icon{display:grid;place-items:center;width:25px;height:25px;background:#dce4cb;border-radius:5px;font-family:Georgia,serif}
+.side-item{display:flex;align-items:center;gap:10px;padding:9px 10px;color:#707a68;border-radius:4px;margin-bottom:2px}
+.side-item.active{background:#e0e5d5;color:var(--ink);font-weight:600}
+.side-label{font-size:9px;color:#939b88;text-transform:uppercase;letter-spacing:1px;margin:26px 10px 9px}
+.dot{width:6px;height:6px;background:#91a176;border-radius:2px}.dot.orange{background:#c5a580}.dot.purple{background:#b4a4bf}
+.team{border-top:1px solid #d9dece;margin:53px 5px 0;padding-top:15px;color:#78826c;display:flex;justify-content:space-between}
+.app-main{flex:1;min-width:0}
+.app-top{height:54px;border-bottom:1px solid #e5e6dd;display:flex;align-items:center;justify-content:space-between;padding:0 25px;font-size:10px;color:#8b9283}
+.app-top b{font-weight:400;color:#465440}
+.avatars{display:flex;padding-right:6px}
+.avatar{width:23px;height:23px;border:2px solid var(--white);border-radius:50%;background:#d9c5aa;margin-right:-6px;display:grid;place-items:center;font-size:8px;color:#574d3c}
+.avatar:nth-child(2){background:#bfcab9}.avatar:nth-child(3){background:#d9bcad}
+.project-head{padding:24px 25px 0}
+.project-title{display:flex;align-items:center;justify-content:space-between}
+.project-title h2{font-size:22px;font-weight:500;letter-spacing:-.6px;margin:0}
+.project-title small{font-size:9px;border:1px solid #dfe4d6;border-radius:4px;padding:7px 10px;color:#727e66}
+.project-head p{font-size:10px;color:#89917f;margin:8px 0 20px}
+.tabs{display:flex;align-items:center;gap:22px;border-bottom:1px solid #e4e7dc}
+.tab{font-size:10px;color:#88917e;background:none;border:0;padding:0 0 12px;position:relative}
+.tab.selected{color:var(--ink)}
+.tab.selected:after{position:absolute;content:"";height:2px;background:var(--ink);bottom:-1px;left:0;right:0}
+.tabs .filter{margin-left:auto;font-size:9px;color:#929985}
+.board{padding:20px 25px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;background:#fafbf6;min-height:250px}
+.column-heading{display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-bottom:13px}
+.column-heading span{color:#909985;font-size:9px;margin-left:5px}
+.column-heading .add{font-size:15px;font-weight:400}
+.card{padding:13px;background:white;border:1px solid #e1e5d8;border-radius:5px;margin-bottom:9px;box-shadow:0 2px 2px #283b2203}
+.tag{font-size:8px;background:#eee9dc;color:#89734c;display:inline-block;padding:4px 6px;border-radius:3px}
+.tag.lilac{background:#eee9f2;color:#8c779b}.tag.green{background:#e4edd9;color:#65804c}
+.card h3{font-weight:500;font-size:11px;line-height:1.45;margin:10px 0 15px}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;font-size:8px;color:#9a9e93}
+.card-bottom .avatar{width:19px;height:19px;font-size:6px;border:0;margin:0}
+.completed h3{text-decoration:line-through;color:#8e9786}
+.list-view{display:none;padding:20px 25px;background:#fafbf6;min-height:250px}
+.list-row{display:flex;gap:15px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);font-size:11px}
+.list-row span:last-child{margin-left:auto;color:#8a927e;font-size:10px}
+.trust{position:relative;background:var(--paper);border-top:1px solid var(--line);text-align:center;padding:35px 0 47px}
+.trust p{font-size:11px;color:#88907d;margin:0 0 27px}
+.logos{display:flex;justify-content:center;gap:65px;align-items:center;color:#76816c}
+.logos span{font-size:21px;font-weight:600;letter-spacing:-.8px}
+.logos span:nth-child(2){font-family:Georgia,serif;font-style:italic;font-size:25px}.logos span:nth-child(3){font-family:monospace;letter-spacing:-1px}.logos span:nth-child(4){font-weight:400}
+.features{padding:70px 0 80px;border-top:1px solid var(--line)}
+.section-top{display:flex;justify-content:space-between;align-items:end;margin-bottom:40px}
+.section-top h2{font-size:43px;line-height:1.13;letter-spacing:-1.7px;font-weight:400;margin:0}
+.section-top p{color:#79816f;font-size:13px;line-height:1.7;max-width:300px;margin:0}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.feature{border-top:1px solid #bdc6b3;padding-top:20px}
+.feature-num{font:11px monospace;color:#929b87}
+.feature h3{font-size:18px;font-weight:500;margin:23px 0 12px;letter-spacing:-.4px}
+.feature p{font-size:13px;color:#7b8372;line-height:1.7;margin:0;max-width:290px}
+.quote{padding:49px 20px;background:#e9eddf;border-radius:6px;text-align:center;margin-bottom:80px}
+.quote blockquote{font:29px/1.4 Georgia,serif;max-width:680px;margin:0 auto 22px;letter-spacing:-.5px}
+.quote p{font-size:11px;color:#7d8672;margin:0}
+.cta{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:55px 0}
+.cta h2{font:400 38px Georgia,serif;letter-spacing:-1px;margin:0 0 12px}
+.cta p{font-size:13px;color:#7b8372;margin:0}
+footer{border-top:1px solid var(--line);padding:28px 0;display:flex;align-items:center;justify-content:space-between}
+footer .brand{font-size:19px}footer .symbol{transform:scale(.7) rotate(-12deg);margin-right:-4px}
+.footer-links{display:flex;gap:24px;font-size:11px;color:#7e8873}
+.copyright{font-size:10px;color:#939a89}
+dialog{width:min(430px,calc(100% - 32px));border:1px solid var(--line);border-radius:10px;padding:35px;background:var(--paper);color:var(--ink);box-shadow:0 20px 100px #152a3030}
+dialog::backdrop{background:#20362866;backdrop-filter:blur(4px)}
+dialog h2{font:32px Georgia,serif;margin:0 0 12px}dialog p{font-size:13px;color:#788170;line-height:1.6}
+dialog label{display:block;font-size:12px;margin:22px 0 8px}
+dialog input{width:100%;padding:13px;border:1px solid #c8cebe;background:white;border-radius:4px;color:var(--ink)}
+dialog .button{width:100%;margin-top:14px}.close{position:absolute;right:14px;top:10px;background:none;border:0;font-size:24px;color:#788170}
+:focus-visible{outline:3px solid #91ac68;outline-offset:4px}
+@media(min-width:1500px){.hero{padding-top:90px}}
+@media(max-width:900px){.wrap{width:calc(100% - 40px)}.nav-links{gap:18px}.preview-area{padding:0}.note{display:none}.sidebar{width:155px;padding:20px 10px}.board{gap:9px;padding:18px}.project-head{padding:22px 18px 0}.logos{gap:35px}.feature-grid{gap:25px}.section-top h2{font-size:36px}}
+@media(max-width:650px){nav{height:80px}.nav-links,.nav-right>a:first-child{display:none}.brand{font-size:23px}.nav-right .button{padding:11px 13px;font-size:11px}.hero{padding-top:49px}h1{font-size:56px;letter-spacing:-3px}.hero-copy{font-size:14px;max-width:310px}.hero-actions{gap:9px}.button{padding:15px 18px;font-size:12px;gap:15px}.preview-area{margin-top:38px;overflow:hidden}.app{width:740px;min-height:410px;transform-origin:top left}.sidebar{width:145px}.preview-area{height:370px}.app{transform:scale(.84)}.trust{padding:27px 0 33px}.logos{gap:23px;flex-wrap:wrap}.logos span{font-size:17px}.logos span:nth-child(2){font-size:20px}.features{padding:45px 0}.section-top{display:block}.section-top h2{font-size:36px}.section-top p{margin-top:20px}.feature-grid{grid-template-columns:1fr;gap:27px}.feature h3{margin-top:15px}.feature p{max-width:100%}.quote{margin-bottom:45px;padding:35px 23px}.quote blockquote{font-size:24px}.cta{display:block;padding:35px 0}.cta h2{font-size:32px}.cta .button{margin-top:24px}footer{flex-wrap:wrap;gap:22px}.copyright{width:100%}.footer-links{margin-left:auto;gap:15px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="Main navigation">
+<a class="brand" href="#" aria-label="Fieldwork home"><span class="symbol" aria-hidden="true"><i></i><i></i><i></i></span>fieldwork</a>
+<div class="nav-links"><a href="#product">The product</a><a href="#why">Why Fieldwork</a><a href="#start">Get started</a></div>
+<div class="nav-right"><a href="#demo" id="explore-link">Explore the app ↗</a><button class="button small" data-signup>Start for free <span>↗</span></button></div>
+</nav>
+<main>
+<section class="hero" id="product">
+<div class="eyebrow">Good work is a team sport</div>
+<h1>Less managing.<br>More <em>moving forward.</em></h1>
+<p class="hero-copy">A calmer place for projects, plans, and the people<br class="desktop-break"> who bring them to life. Meet Fieldwork.</p>
+<div class="hero-actions"><button class="button" data-signup>Find your flow <span>↗</span></button><a class="button secondary" href="#demo" id="demo-link"><span>▷</span> Take a look around</a></div>
+<div class="fine">Free to start. No credit card. Just good company.</div>
+<div class="preview-area" id="demo">
+<div class="note">A little order. A lot of possibility.<span>⤵</span></div>
+<div class="app">
+<aside class="sidebar" aria-label="App preview sidebar">
+<div class="workspace"><span class="workspace-icon">s.</span> Studio North <span style="margin-left:auto;color:#859076">⌄</span></div>
+<div class="side-item">⌂ <span>Home</span></div><div class="side-item">◉ <span>My tasks</span></div><div class="side-item">▣ <span>Inbox</span><span style="margin-left:auto;font-size:9px">3</span></div>
+<div class="side-label">Your projects <span style="float:right">+</span></div>
+<div class="side-item active"><i class="dot"></i> Website refresh</div><div class="side-item"><i class="dot orange"></i> Spring campaign</div><div class="side-item"><i class="dot purple"></i> Brand foundations</div>
+<div class="team"><span>♧ &nbsp; Invite your people</span><span>↗</span></div>
+</aside>
+<div class="app-main">
+<div class="app-top"><span>Projects &nbsp; / &nbsp; <b>Website refresh</b></span><div class="avatars" aria-label="3 project members"><span class="avatar">JL</span><span class="avatar">AM</span><span class="avatar">RK</span></div></div>
+<div class="project-head">
+<div class="project-title"><h2>Website refresh <span style="font-size:15px;color:#b9c2ac">☆</span></h2><small>↗ &nbsp; Share project</small></div>
+<p>A fresh home for everything we're becoming.</p>
+<div class="tabs" role="tablist" aria-label="Project view"><button class="tab selected" id="board-tab" role="tab" aria-selected="true" aria-controls="board-view">▦ &nbsp; Board</button><button class="tab" id="list-tab" role="tab" aria-selected="false" aria-controls="list-view">☰ &nbsp; List</button><span class="filter">↓↑ &nbsp; Sorted by priority</span></div>
+</div>
+<div class="board" id="board-view" role="tabpanel" aria-labelledby="board-tab">
+<div><div class="column-heading"><div>○ &nbsp; Up next <span>3</span></div><span class="add">+</span></div>
+<article class="card"><span class="tag">Strategy</span><h3>Map out the new site structure</h3><div class="card-bottom"><span class="avatar">JL</span><span>☷ 2 &nbsp; ◷ Jun 12</span></div></article>
+<article class="card"><span class="tag lilac">Content</span><h3>A few words about who we are</h3><div class="card-bottom"><span class="avatar">AM</span><span>◷ Jun 14</span></div></article>
+</div>
+<div><div class="column-heading"><div>◑ &nbsp; In motion <span>2</span></div><span class="add">+</span></div>
+<article class="card"><span class="tag green">Design</span><h3>Give the homepage some love</h3><div style="height:4px;background:#edf0e6;border-radius:4px;margin-bottom:12px"><div style="height:100%;width:65%;background:#b0c58e;border-radius:4px"></div></div><div class="card-bottom"><span class="avatar">RK</span><span>☷ 4 &nbsp; ◷ Jun 10</span></div></article>
+<article class="card"><span class="tag lilac">Content</span><h3>Collect our favorite customer stories</h3><div class="card-bottom"><span class="avatar">AM</span><span>◷ Jun 11</span></div></article>
+</div>
+<div><div class="column-heading"><div>● &nbsp; Looking good <span>4</span></div><span class="add">+</span></div>
+<article class="card completed"><span class="tag">Strategy</span><h3>Kick things off together</h3><div class="card-bottom"><span class="avatar">JL</span><span style="color:#879a6c">✓ Done</span></div></article>
+<article class="card completed"><span class="tag green">Design</span><h3>A moodboard to set the mood</h3><div class="card-bottom"><span class="avatar">RK</span><span style="color:#879a6c">✓ Done</span></div></article>
+</div>
+</div>
+<div class="list-view" id="list-view" role="tabpanel" aria-labelledby="list-tab" hidden>
+<div class="list-row">○ <strong>Map out the new site structure</strong><span>Up next · Jun 12</span></div>
+<div class="list-row">○ <strong>A few words about who we are</strong><span>Up next · Jun 14</span></div>
+<div class="list-row">◑ <strong>Give the homepage some love</strong><span>In motion · Jun 10</span></div>
+<div class="list-row">◑ <strong>Collect our favorite customer stories</strong><span>In motion · Jun 11</span></div>
+<div class="list-row">✓ <strong>Kick things off together</strong><span>Done</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="trust" aria-label="Made for creative teams"><p>For small teams with big things in mind.</p><div class="logos"><span>◒ Layers</span><span>Quotient</span><span>⊙ circooles</span><span>↟ Sisyphus</span><span>Catalog▰</span></div></section>
+<section class="features" id="why">
+<div class="section-top"><h2>Everything in its place.<br>Everyone in the loop.</h2><p>Less “where did that go?”<br>More “look how far we've come.”</p></div>
+<div class="feature-grid">
+<article class="feature"><span class="feature-num">01 / MAKE SPACE</span><h3>A home for the whole project.</h3><p>Tasks, notes, and the next big idea. Keep the moving parts together, so the work keeps moving.</p></article>
+<article class="feature"><span class="feature-num">02 / FIND YOUR RHYTHM</span><h3>Your team. Your way of working.</h3><p>See the big picture on a board or get into the details in a list. A little structure, plenty of room.</p></article>
+<article class="feature"><span class="feature-num">03 / MOVE TOGETHER</span><h3>Less chasing. More creating.</h3><p>Give every task a clear owner and every conversation a place. Know what's happening without another meeting.</p></article>
+</div>
+</section>
+<div class="quote"><blockquote>“The best part of a good workday?<br>Getting to spend it doing the actual work.”</blockquote><p>A small belief behind everything we build.</p></div>
+<section class="cta" id="start"><div><h2>Make room for good work.</h2><p>Your next chapter starts with a little more clarity.</p></div><button class="button" data-signup>Start your workspace <span>↗</span></button></section>
+</main>
+<footer><a class="brand" href="#"><span class="symbol" aria-hidden="true"><i></i><i></i><i></i></span>fieldwork</a><div class="footer-links"><a href="#product">Product</a><a href="#why">Our approach</a><a href="#start">Get started ↗</a></div><span class="copyright">© <span id="year">2026</span> Fieldwork. Good things take teamwork.</span></footer>
+</div>
+<dialog id="signup">
+<button class="close" aria-label="Close dialog">×</button>
+<div id="signup-content">
+<div class="eyebrow" style="justify-content:flex-start;margin-bottom:20px">A fresh start</div>
+<h2>Good work starts here.</h2>
+<p>This is a preview of Fieldwork. Try the signup flow with an email address; nothing is sent or stored.</p>
+<form id="signup-form"><label for="email">Your work email</label><input id="email" type="email" autocomplete="email" placeholder="you@yourstudio.com" required><button class="button" type="submit">Create a little momentum <span>↗</span></button></form>
+</div>
+</dialog>
+<script>
+const dialog = document.querySelector('#signup');
+document.querySelectorAll('[data-signup]').forEach(button => {
+  button.addEventListener('click', () => dialog.showModal());
+});
+document.querySelector('.close').addEventListener('click', () => dialog.close());
+dialog.addEventListener('click', event => {
+  const bounds = dialog.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right ||
+      event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+});
+document.querySelector('#signup-form').addEventListener('submit', event => {
+  event.preventDefault();
+  document.querySelector('#signup-content').innerHTML =
+    '<div class="eyebrow" style="justify-content:flex-start;margin-bottom:20px">You’re all set</div>' +
+    '<h2>A little momentum.</h2><p>You’ve reached the end of this demo. Your email hasn’t been sent or saved. Close this window to keep exploring.</p>';
+});
+const tabs = [document.querySelector('#board-tab'), document.querySelector('#list-tab')];
+function selectView(index) {
+  tabs.forEach((tab, i) => {
+    tab.classList.toggle('selected', i === index);
+    tab.setAttribute('aria-selected', String(i === index));
+    tab.tabIndex = i === index ? 0 : -1;
+    const panel = document.getElementById(tab.getAttribute('aria-controls'));
+    panel.hidden = i !== index;
+    panel.style.display = i === index ? (i === 0 ? 'grid' : 'block') : 'none';
+  });
+}
+tabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => selectView(index));
+  tab.addEventListener('keydown', event => {
+    if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? 1 : 1 - index;
+      selectView(next);
+      tabs[next].focus();
+    }
+  });
+});
+selectView(0);
+document.querySelector('#year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

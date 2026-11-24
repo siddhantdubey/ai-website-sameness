@@ -1,0 +1,694 @@
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noor Halvorsen — Photographer, Bergen</title>
+<meta name="description" content="Noor Halvorsen is a freelance photographer in Bergen, Norway, making editorial, portrait and architectural work on film and digital.">
+<style>
+  :root {
+    --table: #e6eaea;
+    --table-glow: #f7f9f9;
+    --ink: #121517;
+    --ink-soft: #4b5357;
+    --rule: #c3caca;
+    --film: #0b0b0c;
+    --film-edge: #0b0b0c;
+    --hole: #e6eaea;
+    --rebate: #e9a53c;
+    --grease: #d7301d;
+    --sans: "Helvetica Neue", Helvetica, "Nimbus Sans", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --table: #0e0f10; --table-glow: #141617; --ink: #e9e6df; --ink-soft: #9aa0a1;
+      --rule: #2a2d2f; --film-edge: #2a2d2f; --hole: #26292b; --grease: #ee4a35;
+    }
+  }
+  :root[data-theme="dark"] {
+    --table: #0e0f10; --table-glow: #141617; --ink: #e9e6df; --ink-soft: #9aa0a1;
+    --rule: #2a2d2f; --film-edge: #2a2d2f; --hole: #26292b; --grease: #ee4a35;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--ink);
+    background: radial-gradient(120% 70vh at 50% 0, var(--table-glow), var(--table)) no-repeat, var(--table);
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+  a:hover { color: var(--grease); }
+  :focus-visible { outline: 2px solid var(--grease); outline-offset: 3px; }
+  h1, h2, h3, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; }
+  ol, ul { list-style: none; }
+  button { font: inherit; color: inherit; }
+
+  .wrap { width: min(1240px, 100% - 2.5rem); margin-inline: auto; }
+  .mono {
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+
+  /* ---------- header ---------- */
+  .top {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: .75rem 2rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule);
+  }
+  .brand { font-weight: 700; letter-spacing: -.01em; text-decoration: none; font-size: 1.05rem; }
+  .top nav { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; }
+  .top nav a { text-decoration: none; font-size: .95rem; }
+  .top nav a:hover { text-decoration: underline; }
+  .lamp {
+    display: inline-flex; align-items: center; gap: .55rem; cursor: pointer;
+    background: none; border: 1px solid var(--rule); border-radius: 99px;
+    padding: .35rem .8rem .35rem .6rem;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .lamp::before {
+    content: ""; width: .6rem; height: .6rem; border-radius: 50%;
+    background: var(--rebate); box-shadow: 0 0 0 3px color-mix(in srgb, var(--rebate) 30%, transparent);
+  }
+  .lamp[aria-pressed="false"]::before { background: transparent; box-shadow: inset 0 0 0 1px var(--ink-soft); }
+  .lamp:hover { border-color: var(--ink); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem); align-items: center;
+    padding-block: clamp(3rem, 9vw, 7.5rem) clamp(3rem, 7vw, 6rem);
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 6.6vw, 6rem); line-height: .96; letter-spacing: -.035em;
+    font-weight: 500; text-wrap: balance; margin-block: 1.25rem 1.75rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--grease); }
+  .hero p.lede { max-width: 34rem; color: var(--ink-soft); font-size: 1.15rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center; margin-top: 2rem; }
+  .btn {
+    display: inline-block; text-decoration: none; background: var(--ink); color: var(--table);
+    padding: .8rem 1.3rem; font-weight: 500; border-radius: 2px;
+  }
+  .btn:hover { background: var(--grease); color: #fff; }
+
+  .print { position: relative; transform: rotate(1.6deg); }
+  .print .photo {
+    border: clamp(8px, 1.2vw, 14px) solid #fbfbf8;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .25), 0 18px 40px -12px rgb(0 0 0 / .35);
+  }
+  .print figcaption { margin-top: .9rem; display: flex; justify-content: space-between; gap: 1rem; }
+
+  /* ---------- photos ---------- */
+  .photo {
+    position: relative; display: block; width: 100%; aspect-ratio: 3 / 2;
+    overflow: hidden; background: #222; padding: 0; border: 0;
+  }
+  .photo > svg { display: block; width: 100%; height: 100%; }
+  .photo::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / .28)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  .mark {
+    position: absolute; inset: -7% -5%; width: 110%; height: 114%;
+    pointer-events: none; overflow: visible; z-index: 2;
+  }
+  .mark path {
+    fill: none; stroke: var(--grease); stroke-width: 3.5; stroke-linecap: round;
+    vector-effect: non-scaling-stroke; opacity: .92;
+    stroke-dasharray: 1; stroke-dashoffset: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .print .mark path { animation: draw 1.1s .5s cubic-bezier(.6,0,.2,1) backwards; }
+    @keyframes draw { from { stroke-dashoffset: 1; } }
+  }
+
+  /* ---------- work ---------- */
+  .section-head {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
+    gap: .5rem 2rem; padding-block: 1rem; border-top: 1px solid var(--ink);
+  }
+  .section-head h2 { font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+
+  .roll { padding-block: clamp(2rem, 5vw, 4rem); }
+  .roll-head {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: 1.75rem;
+  }
+  .roll-head h3 {
+    font-size: clamp(2rem, 4.6vw, 3.75rem); line-height: 1; letter-spacing: -.03em; font-weight: 500;
+    margin-top: .5rem;
+  }
+  .roll-head p { color: var(--ink-soft); max-width: 32rem; }
+
+  .strip-scroll { overflow-x: auto; scrollbar-width: thin; scroll-snap-type: x proximity; }
+  .strip {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr);
+    gap: 10px; min-width: 100%; width: max-content;
+    padding: 26px 14px 22px;
+    border: 1px solid var(--film-edge);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 9px, var(--hole) 9px 17px, transparent 17px 26px) 0 8px / 100% 8px no-repeat,
+      repeating-linear-gradient(90deg, transparent 0 9px, var(--hole) 9px 17px, transparent 17px 26px) 0 calc(100% - 7px) / 100% 8px no-repeat,
+      var(--film);
+  }
+  .frame { position: relative; scroll-snap-align: center; }
+  .frame .photo { cursor: zoom-in; transition: filter .2s; }
+  .frame .photo:hover { filter: brightness(1.12); }
+  .frame .photo:focus-visible { outline-color: var(--rebate); outline-offset: 2px; }
+  .edge {
+    display: flex; justify-content: space-between; padding: 5px 2px 6px;
+    font-family: var(--mono); font-size: .66rem; letter-spacing: .14em; color: var(--rebate);
+  }
+  .edge span:last-child { opacity: .6; }
+  .hint { margin-top: .75rem; }
+
+  /* ---------- about ---------- */
+  .about {
+    display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 2.5rem clamp(2rem, 5vw, 5rem); padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 7vw, 6rem);
+  }
+  .about .big {
+    font-size: clamp(1.5rem, 2.7vw, 2.25rem); line-height: 1.2; letter-spacing: -.02em; text-wrap: pretty;
+  }
+  .about .big + p { margin-top: 1.5rem; color: var(--ink-soft); max-width: 36rem; }
+  .facts > div { padding-block: 1.1rem; border-top: 1px solid var(--rule); }
+  .facts > div:last-child { border-bottom: 1px solid var(--rule); }
+  .facts dt { margin-bottom: .4rem; }
+  .facts dd { max-width: 30rem; }
+
+  /* ---------- contact ---------- */
+  .contact { padding-block: clamp(2.5rem, 7vw, 6rem); }
+  .contact .mail {
+    display: inline-block; margin-block: 1rem 1.5rem; overflow-wrap: anywhere;
+    font-size: clamp(1.3rem, 5.4vw, 4.5rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 500;
+    text-decoration-thickness: 2px; text-underline-offset: .14em;
+  }
+  .contact-row { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: center; }
+  .copy {
+    cursor: pointer; background: none; border: 1px solid var(--ink); border-radius: 2px;
+    padding: .6rem 1rem; min-width: 9.5rem;
+  }
+  .copy:hover { background: var(--ink); color: var(--table); }
+  .contact-row p { color: var(--ink-soft); max-width: 30rem; }
+
+  footer {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem;
+    padding-block: 1.25rem 2rem; border-top: 1px solid var(--rule);
+  }
+  footer ul { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; }
+
+  /* ---------- lightbox ---------- */
+  dialog {
+    width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 1rem;
+    border: 0; background: #070707; color: #e9e6df;
+  }
+  dialog[open] { display: grid; grid-template-rows: auto 1fr auto; gap: 1rem; justify-items: center; }
+  dialog::backdrop { background: #070707; }
+  .lb-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .lb-bar .mono, .lb-cap .mono { color: #9aa0a1; }
+  .lb-btn {
+    cursor: pointer; background: none; border: 1px solid #3a3d3f; color: inherit; border-radius: 2px;
+    min-width: 2.75rem; height: 2.75rem; padding-inline: .9rem; font-size: 1rem;
+  }
+  .lb-btn:hover { border-color: #e9e6df; }
+  .lb-stage { align-self: center; width: min(100%, calc((100dvh - 15rem) * 1.5)); min-width: min(100%, 280px); }
+  .lb-foot { width: 100%; display: flex; justify-content: space-between; align-items: end; gap: 1rem; }
+  .lb-cap strong { display: block; font-size: 1.15rem; font-weight: 500; letter-spacing: -.01em; }
+  .lb-nav { display: flex; gap: .5rem; flex: none; }
+
+  @media (max-width: 780px) {
+    .hero, .roll-head, .about { grid-template-columns: minmax(0, 1fr); }
+    .print { transform: rotate(1deg); margin-inline: .5rem; }
+    .strip { grid-auto-columns: 68vw; }
+  }
+  @media (min-width: 781px) { .hint { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Photograph definitions (illustrated placeholders — swap for real images) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="b3"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="b6"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="b14"><feGaussianBlur stdDeviation="14"/></filter>
+
+    <linearGradient id="g1sky" x2="0" y2="1"><stop offset="0" stop-color="#8399a6"/><stop offset=".7" stop-color="#d6c2ae"/><stop offset="1" stop-color="#f1d3ad"/></linearGradient>
+    <linearGradient id="g1sea" x2="0" y2="1"><stop offset="0" stop-color="#6a808b"/><stop offset="1" stop-color="#222f36"/></linearGradient>
+    <linearGradient id="g2sky" x2="0" y2="1"><stop offset="0" stop-color="#b9c6c9"/><stop offset="1" stop-color="#ebe4d3"/></linearGradient>
+    <linearGradient id="g3sky" x2="0" y2="1"><stop offset="0" stop-color="#9aa5a9"/><stop offset="1" stop-color="#d9d9d2"/></linearGradient>
+    <linearGradient id="g3sea" x2="0" y2="1"><stop offset="0" stop-color="#8a999d"/><stop offset="1" stop-color="#4c5a60"/></linearGradient>
+    <linearGradient id="g4sky" x2="0" y2="1"><stop offset="0" stop-color="#5d6d85"/><stop offset=".75" stop-color="#d3ac96"/><stop offset="1" stop-color="#e9c39c"/></linearGradient>
+    <linearGradient id="g5win" x2="0" y2="1"><stop offset="0" stop-color="#fafafa"/><stop offset="1" stop-color="#b4b4b4"/></linearGradient>
+    <radialGradient id="g8bowl" cx=".4" cy=".35"><stop offset="0" stop-color="#f4f4f4"/><stop offset="1" stop-color="#8f8f8f"/></radialGradient>
+    <linearGradient id="g9sky" x2="0" y2="1"><stop offset="0" stop-color="#27344f"/><stop offset=".7" stop-color="#8d7481"/><stop offset="1" stop-color="#d39a72"/></linearGradient>
+    <pattern id="win" width="34" height="28" patternUnits="userSpaceOnUse"><rect x="5" y="5" width="24" height="18" fill="#232831"/></pattern>
+    <pattern id="steps" width="10" height="22" patternUnits="userSpaceOnUse"><rect width="10" height="13" fill="#d2cabc"/><rect y="13" width="10" height="9" fill="#a09889"/></pattern>
+    <linearGradient id="g11sky" x2="0" y2="1"><stop offset="0" stop-color="#8fa9bf"/><stop offset="1" stop-color="#e4dfd6"/></linearGradient>
+    <linearGradient id="g12floor" x2="0" y2="1"><stop offset="0" stop-color="#3a372f"/><stop offset="1" stop-color="#121315"/></linearGradient>
+  </defs>
+
+  <!-- Roll 01 · Salt Roads -->
+  <symbol id="p1" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g1sky)"/>
+    <circle cx="212" cy="110" r="26" fill="#ffeccb" filter="url(#b14)"/>
+    <rect y="118" width="300" height="82" fill="url(#g1sea)"/>
+    <path d="M0 118V103c30-5 54 4 80 9l32 6z" fill="#2b3338"/>
+    <rect x="194" y="120" width="36" height="80" fill="#f6d9ae" opacity=".3" filter="url(#b6)"/>
+    <path d="M0 172c60-10 130 8 300-8v36H0z" fill="#1a2226" opacity=".75"/>
+  </symbol>
+  <symbol id="p2" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g2sky)"/>
+    <path d="M0 104c50-16 90-4 140-10s110-14 160-2v108H0z" fill="#b5a686"/>
+    <path d="M0 132c70-18 120 6 180-4s80-10 120-4v76H0z" fill="#978563"/>
+    <path d="M112 200c26-46 76-66 62-106h7c22 38 4 62 22 106z" fill="#35332f"/>
+    <path d="M158 196c14-38 36-62 22-98" fill="none" stroke="#d9d2c0" stroke-width="1.6" stroke-dasharray="9 8"/>
+    <path d="M30 150l4-16m4 17l1-18m5 19l6-15M238 160l3-17m5 18l1-19m6 20l6-16M70 182l4-14m5 15v-17" stroke="#5f5539" stroke-width="1.5" fill="none"/>
+  </symbol>
+  <symbol id="p3" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g3sky)"/>
+    <path d="M0 132V96c40-22 70-8 104-30 30 18 56 6 90 24s70 8 106 22v20z" fill="#87949a" opacity=".8" filter="url(#b3)"/>
+    <rect y="130" width="300" height="70" fill="url(#g3sea)"/>
+    <rect x="118" y="132" width="68" height="34" fill="#9c2f24" opacity=".35" filter="url(#b3)"/>
+    <path d="M112 92l40-24 40 24z" fill="#27211f"/>
+    <rect x="118" y="92" width="68" height="40" fill="#a23226"/>
+    <rect x="143" y="106" width="16" height="26" fill="#2b1411"/>
+    <rect x="166" y="102" width="11" height="11" fill="#eee9dc"/>
+    <path d="M0 200v-38c36-12 60-2 92-12 30 6 60 0 96 6 40-8 76 2 112 0v44z" fill="#25282a"/>
+    <path d="M60 164c20-6 40-2 56-6M200 162c26 2 50-4 76-2" stroke="#4a4f52" stroke-width="2" fill="none"/>
+  </symbol>
+  <symbol id="p4" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g4sky)"/>
+    <rect y="160" width="300" height="40" fill="#222225"/>
+    <g stroke="#19191b" stroke-width="2.4" fill="none">
+      <path d="M20 160l22-94 22 94M84 160l22-94 22 94M148 160l22-94 22 94M212 160l22-94 22 94"/>
+      <path d="M30 68h220M24 98h232M18 128h244"/>
+    </g>
+    <path d="M30 106h220M26 136h236" stroke="#19191b" stroke-width="13" stroke-dasharray="2 5.5"/>
+    <circle cx="262" cy="52" r="7" fill="#f6e3c8" opacity=".9"/>
+  </symbol>
+
+  <!-- Roll 02 · Working Hands (monochrome) -->
+  <symbol id="p5" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#161616"/>
+    <rect x="150" y="22" width="112" height="132" fill="url(#g5win)"/>
+    <path d="M206 22v132M150 86h112" stroke="#1c1c1c" stroke-width="4"/>
+    <path d="M150 154h112l-30 46H56z" fill="#fff" opacity=".13"/>
+    <rect x="130" y="10" width="150" height="160" fill="#fff" opacity=".12" filter="url(#b14)"/>
+    <circle cx="112" cy="84" r="18" fill="#040404"/>
+    <path d="M74 200c0-64 14-92 38-92s40 26 42 92z" fill="#040404"/>
+    <path d="M124 70c8 8 8 22 0 30M134 114c10 10 16 30 18 56" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55"/>
+  </symbol>
+  <symbol id="p6" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#1d1d1d"/>
+    <rect x="110" y="28" width="80" height="142" fill="url(#g5win)"/>
+    <path d="M110 170h80l62 30H48z" fill="#cfcfcf" opacity=".55"/>
+    <path d="M141 172h18l34 28h-76z" fill="#000" opacity=".6"/>
+    <circle cx="150" cy="92" r="8" fill="#0a0a0a"/>
+    <path d="M140 104h20l4 40h-6l-2 28h-5l-1-26-1 26h-5l-2-28h-6z" fill="#0a0a0a"/>
+    <path d="M0 170h110M190 170h110" stroke="#2c2c2c" stroke-width="1.5"/>
+  </symbol>
+  <symbol id="p7" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#161616"/>
+    <circle cx="176" cy="130" r="74" fill="#fff" opacity=".33" filter="url(#b14)"/>
+    <path d="M56 200c-4-50 22-88 54-96 12-22 40-18 40 0 0 12-8 18-14 20 14 6 26 4 34 4l-2 6c-16 4-36 8-42 16-4 20-2 40 0 50z" fill="#020202" stroke="#9a9a9a" stroke-width=".7"/>
+    <g stroke="#fff" stroke-width=".9" stroke-linecap="round" opacity=".9">
+      <path d="M176 130l44-38M176 130l58-8M176 130l50 30M176 130l22 52M176 130l-6 46M176 130l30-58M176 130l66 14M176 130l8-44"/>
+    </g>
+    <circle cx="176" cy="130" r="6" fill="#fff"/>
+    <circle cx="176" cy="130" r="14" fill="#fff" opacity=".6" filter="url(#b3)"/>
+  </symbol>
+  <symbol id="p8" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#2b2b2b"/>
+    <path d="M0 50h300M0 100h300M0 150h300" stroke="#222" stroke-width="1.5"/>
+    <circle cx="154" cy="96" r="50" fill="#000" opacity=".4" filter="url(#b6)"/>
+    <circle cx="150" cy="92" r="46" fill="#d6d6d6"/>
+    <circle cx="150" cy="92" r="37" fill="url(#g8bowl)"/>
+    <circle cx="60" cy="48" r="21" fill="#bdbdbd"/><circle cx="60" cy="48" r="15" fill="#f0f0f0"/>
+    <circle cx="246" cy="152" r="25" fill="#6a6a6a"/><circle cx="246" cy="152" r="18" fill="#3c3c3c"/>
+    <path d="M92 200l30-70c6-12 20-8 18 4l-12 66z" fill="#b3b3b3"/>
+    <path d="M208 200l-30-70c-6-12-20-8-18 4l12 66z" fill="#a6a6a6"/>
+    <g fill="#e8e8e8" opacity=".7"><circle cx="208" cy="60" r="1.5"/><circle cx="220" cy="72" r="1"/><circle cx="198" cy="46" r="1"/><circle cx="230" cy="54" r="1.6"/><circle cx="90" cy="120" r="1.2"/><circle cx="76" cy="134" r="1"/></g>
+  </symbol>
+
+  <!-- Roll 03 · Concrete Hours -->
+  <symbol id="p9" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g9sky)"/>
+    <rect x="238" y="92" width="62" height="108" fill="#262931"/>
+    <rect x="34" y="28" width="204" height="172" fill="#3c4049"/>
+    <rect x="34" y="28" width="204" height="172" fill="url(#win)"/>
+    <g fill="#f3c27a"><rect x="73" y="61" width="24" height="18"/><rect x="175" y="33" width="24" height="18"/><rect x="107" y="117" width="24" height="18"/><rect x="175" y="117" width="24" height="18"/><rect x="39" y="145" width="24" height="18"/></g>
+    <g fill="#f3c27a" opacity=".5" filter="url(#b6)"><rect x="73" y="61" width="24" height="18"/><rect x="175" y="33" width="24" height="18"/><rect x="107" y="117" width="24" height="18"/><rect x="175" y="117" width="24" height="18"/><rect x="39" y="145" width="24" height="18"/></g>
+    <rect x="252" y="120" width="14" height="10" fill="#e9b872"/>
+  </symbol>
+  <symbol id="p10" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#steps)"/>
+    <path d="M0 36l300 164H0z" fill="#1c2027" opacity=".62"/>
+    <path d="M300 14L96 200" stroke="#26282b" stroke-width="3.5"/>
+    <circle cx="214" cy="50" r="4" fill="#2a2320"/>
+    <rect x="209" y="55" width="10" height="17" rx="2" fill="#b53c28"/>
+    <path d="M212 72v9M217 72l2 9" stroke="#1d1d1f" stroke-width="2.4"/>
+    <path d="M214 82l34 24" stroke="#1c2027" stroke-width="4" opacity=".45"/>
+  </symbol>
+  <symbol id="p11" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="url(#g11sky)"/>
+    <path d="M0 0h96l38 108-74 92H0z" fill="#80776a"/>
+    <path d="M300 0h-92l-40 96 68 104h64z" fill="#a69d8e"/>
+    <g stroke="#5c554b" stroke-width="1.5" fill="none"><path d="M0 28l104 22M0 66l116 14M0 106l132 0M0 146l102 -14M0 182l76 -22"/></g>
+    <g stroke="#c9c1b3" stroke-width="1.5" fill="none"><path d="M300 26l-102 22M300 62l-116 14M300 100l-130-4M300 140l-104-16M300 178l-78-22"/></g>
+    <path d="M146 60l5 4 6-5" stroke="#2b2b2b" stroke-width="1.4" fill="none"/>
+  </symbol>
+  <symbol id="p12" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#15171b"/>
+    <rect y="150" width="300" height="50" fill="url(#g12floor)"/>
+    <rect x="116" y="104" width="68" height="52" fill="#42526a"/>
+    <path d="M0 0h300v44L184 104h-68L0 44z" fill="#0d0e11"/>
+    <circle cx="150" cy="62" r="34" fill="#f2c887" opacity=".55" filter="url(#b14)"/>
+    <path d="M150 62l70 138H80z" fill="#f1c98a" opacity=".16"/>
+    <rect x="142" y="58" width="16" height="4" fill="#fff0d2"/>
+    <rect x="14" y="40" width="44" height="160" fill="#0a0b0d"/><rect x="242" y="40" width="44" height="160" fill="#0a0b0d"/>
+    <circle cx="150" cy="130" r="4" fill="#07080a"/>
+    <path d="M145 136h10l2 16h-4l-1 12h-4l-1-12h-4z" fill="#07080a"/>
+    <path d="M146 164h8l10 22h-28z" fill="#000" opacity=".5"/>
+  </symbol>
+</svg>
+
+<header class="wrap top">
+  <a class="brand" href="#top">Noor Halvorsen</a>
+  <nav aria-label="Primary">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <button class="lamp" id="lamp" type="button" aria-pressed="true">Light table</button>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <div>
+      <p class="mono">Photographer · Bergen, Norway · 60.39° N</p>
+      <h1>People at work, and the places that <em>keep</em> them.</h1>
+      <p class="lede">I photograph for magazines, architects and small companies along the west coast, mostly on medium‑format film and always with more time than the brief asks for.</p>
+      <div class="cta">
+        <a class="btn" href="#contact">Book a commission</a>
+        <a href="#work">See the contact sheets</a>
+      </div>
+    </div>
+    <figure class="print">
+      <div class="photo">
+        <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A red boathouse on dark rocks at the edge of a grey fjord"><use href="#p3"/></svg>
+      </div>
+      <svg class="mark" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M38 104C30 44 118 10 182 14c70 4 104 44 92 98-12 52-92 80-164 72C58 178 26 150 42 94c10-32 46-58 90-66"/></svg>
+      <figcaption class="mono"><span>Naust, Sotra · 2025</span><span>Roll 01 / Frame 3</span></figcaption>
+    </figure>
+  </section>
+
+  <section id="work" class="wrap" aria-labelledby="work-h">
+    <div class="section-head">
+      <h2 id="work-h">Selected work</h2>
+      <p class="mono">3 rolls · 12 frames · circled = printed</p>
+    </div>
+
+    <article class="roll" data-roll="Roll 01 · Salt Roads">
+      <div class="roll-head">
+        <div>
+          <p class="mono">Roll 01 · Personal · 2024–25</p>
+          <h3>Salt Roads</h3>
+        </div>
+        <p>Two winters driving the coast road between Sotra and Lofoten, stopping wherever the weather made the decision for me.</p>
+      </div>
+      <div class="strip-scroll" tabindex="0" role="group" aria-label="Salt Roads film strip">
+        <ol class="strip">
+          <li class="frame">
+            <button type="button" class="photo" data-src="p1" data-title="First light, Hellesøy" data-meta="Øygarden · January 2025 · Portra 400, 6×9" aria-label="Open photograph: First light, Hellesøy — sun rising over a calm sea with a low headland"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p1"/></svg></button>
+            <div class="edge"><span>▸ 1</span><span>NH 400</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p2" data-title="The road out" data-meta="Jæren · March 2024 · Portra 400, 6×9" aria-label="Open photograph: The road out — a narrow road winding through pale dunes"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p2"/></svg></button>
+            <div class="edge"><span>▸ 2</span><span>NH 400</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p3" data-title="Naust" data-meta="Sotra · February 2025 · Portra 400, 6×9" aria-label="Open photograph: Naust — a red boathouse on dark rocks beside a grey fjord"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p3"/></svg></button>
+            <svg class="mark" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M38 104C30 44 118 10 182 14c70 4 104 44 92 98-12 52-92 80-164 72C58 178 26 150 42 94c10-32 46-58 90-66"/></svg>
+            <div class="edge"><span>▸ 3</span><span>NH 400</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p4" data-title="Hjell at dusk" data-meta="Henningsvær · March 2025 · Portra 400, 6×9" aria-label="Open photograph: Hjell at dusk — wooden fish-drying racks silhouetted against an evening sky"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p4"/></svg></button>
+            <div class="edge"><span>▸ 4</span><span>NH 400</span></div>
+          </li>
+        </ol>
+      </div>
+      <p class="mono hint">Swipe the strip →</p>
+    </article>
+
+    <article class="roll" data-roll="Roll 02 · Working Hands">
+      <div class="roll-head">
+        <div>
+          <p class="mono">Roll 02 · Editorial · 2025</p>
+          <h3>Working Hands</h3>
+        </div>
+        <p>A portrait series for <i>Fjordposten</i> magazine on the trades still practised within a ferry ride of Bergen: a welder, a potter, a sailmaker, a baker.</p>
+      </div>
+      <div class="strip-scroll" tabindex="0" role="group" aria-label="Working Hands film strip">
+        <ol class="strip">
+          <li class="frame">
+            <button type="button" class="photo" data-src="p5" data-title="Ragnhild, sailmaker" data-meta="Askøy · May 2025 · Tri‑X 400, 6×7" aria-label="Open photograph: Ragnhild, sailmaker — a figure in silhouette beside a bright loft window"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p5"/></svg></button>
+            <div class="edge"><span>▸ 5</span><span>NH 400TX</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p6" data-title="Bakery door, 04:40" data-meta="Sandviken · June 2025 · Tri‑X 400, 6×7" aria-label="Open photograph: Bakery door, 04:40 — a small figure standing in a lit doorway, casting a long shadow"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p6"/></svg></button>
+            <svg class="mark" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M44 96C40 40 124 14 186 18c66 4 98 46 86 96-12 50-88 76-160 68C62 176 30 146 46 98c8-26 36-48 70-58"/></svg>
+            <div class="edge"><span>▸ 6</span><span>NH 400TX</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p7" data-title="Tomas, welder" data-meta="Laksevåg shipyard · April 2025 · Tri‑X 400, 6×7" aria-label="Open photograph: Tomas, welder — a crouched figure lit by a burst of welding sparks"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p7"/></svg></button>
+            <div class="edge"><span>▸ 7</span><span>NH 400TX</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p8" data-title="Glazing table" data-meta="Kiln &amp; Co., Os · May 2025 · Tri‑X 400, 6×7" aria-label="Open photograph: Glazing table — a potter's forearms reaching toward bowls, seen from above"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p8"/></svg></button>
+            <div class="edge"><span>▸ 8</span><span>NH 400TX</span></div>
+          </li>
+        </ol>
+      </div>
+      <p class="mono hint">Swipe the strip →</p>
+    </article>
+
+    <article class="roll" data-roll="Roll 03 · Concrete Hours">
+      <div class="roll-head">
+        <div>
+          <p class="mono">Roll 03 · Commission · 2026</p>
+          <h3>Concrete Hours</h3>
+        </div>
+        <p>Atelier Brekke asked for their post‑war housing refurbishments photographed the way residents see them: at the ends of the day, and in use.</p>
+      </div>
+      <div class="strip-scroll" tabindex="0" role="group" aria-label="Concrete Hours film strip">
+        <ol class="strip">
+          <li class="frame">
+            <button type="button" class="photo" data-src="p9" data-title="Block C, five windows" data-meta="Fyllingsdalen · February 2026 · Digital, 45 mm shift" aria-label="Open photograph: Block C, five windows — an apartment block at dusk with a handful of windows lit"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p9"/></svg></button>
+            <div class="edge"><span>▸ 9</span><span>NH 100</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p10" data-title="Red coat, east stair" data-meta="Fyllingsdalen · March 2026 · Ektar 100, 6×9" aria-label="Open photograph: Red coat, east stair — a figure in a red coat climbing concrete steps cut by a diagonal shadow"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p10"/></svg></button>
+            <svg class="mark" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M40 100C34 42 120 12 184 16c68 4 102 46 90 98-12 50-90 78-162 70C60 178 28 148 44 96c8-28 40-52 78-62"/></svg>
+            <div class="edge"><span>▸ 10</span><span>NH 100</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p11" data-title="Light well" data-meta="Landås · April 2026 · Ektar 100, 6×9" aria-label="Open photograph: Light well — looking straight up between two converging concrete towers"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p11"/></svg></button>
+            <div class="edge"><span>▸ 11</span><span>NH 100</span></div>
+          </li>
+          <li class="frame">
+            <button type="button" class="photo" data-src="p12" data-title="Underpass, last tram" data-meta="Danmarksplass · January 2026 · Digital, 35 mm" aria-label="Open photograph: Underpass, last tram — a lone figure under a single warm lamp in a dark underpass"><svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#p12"/></svg></button>
+            <div class="edge"><span>▸ 12</span><span>NH 100</span></div>
+          </li>
+        </ol>
+      </div>
+      <p class="mono hint">Swipe the strip →</p>
+    </article>
+  </section>
+
+  <section id="about" class="wrap" aria-labelledby="about-h">
+    <div class="section-head">
+      <h2 id="about-h">About</h2>
+      <p class="mono">Freelance since 2017</p>
+    </div>
+    <div class="about">
+      <div>
+        <p class="big">I trained as a darkroom printer before I owned a decent camera, which is why I still edit on contact sheets and still think a photograph isn't finished until it's on paper.</p>
+        <p>These days I split the year between editorial portraits, architectural commissions and my own slow projects on the coast. I work alone or with one assistant, keep sets quiet, and deliver a tight edit instead of a folder of four hundred near‑identical files.</p>
+      </div>
+      <dl class="facts">
+        <div>
+          <dt class="mono">Commissions</dt>
+          <dd>Editorial portraits and reportage, architecture and interiors, and long‑form documentation for studios and makers.</dd>
+        </div>
+        <div>
+          <dt class="mono">Selected clients</dt>
+          <dd>Fjordposten Magazine, Atelier Brekke Arkitekter, Nordhavn Ferry Co., Kiln &amp; Co., Vestland Craft Council.</dd>
+        </div>
+        <div>
+          <dt class="mono">What you get</dt>
+          <dd>A proof sheet within five working days, 20–40 finished frames per shooting day, and fibre prints on request.</dd>
+        </div>
+        <div>
+          <dt class="mono">Rates</dt>
+          <dd>Day rate from NOK 9,500 plus film and travel. Licensing is quoted per use, in plain language.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="contact" class="wrap" aria-labelledby="contact-h">
+    <div class="section-head">
+      <h2 id="contact-h">Contact</h2>
+      <p class="mono">Booking February–June 2027</p>
+    </div>
+    <div class="contact">
+      <p class="mono">Tell me what, where and roughly when</p>
+      <a class="mail" id="mail" href="mailto:hello@noorhalvorsen.example">hello@noorhalvorsen.example</a>
+      <div class="contact-row">
+        <button class="copy" id="copy" type="button">Copy address</button>
+        <p>I reply within two working days. If I'm away on a shoot, an auto‑reply will say when I'm back.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p class="mono">© 2026 Noor Halvorsen · All photographs rights reserved</p>
+  <ul class="mono">
+    <li><a href="#top">Back to top</a></li>
+    <li><a href="mailto:hello@noorhalvorsen.example?subject=Print%20enquiry">Print enquiries</a></li>
+  </ul>
+</footer>
+
+<dialog id="lb" aria-label="Photograph viewer">
+  <div class="lb-bar">
+    <span class="mono" id="lb-roll"></span>
+    <button class="lb-btn" id="lb-close" type="button">Close</button>
+  </div>
+  <div class="lb-stage">
+    <div class="photo">
+      <svg viewBox="0 0 300 200" role="img" id="lb-svg" aria-label=""><use id="lb-use" href="#p1"/></svg>
+    </div>
+  </div>
+  <div class="lb-foot">
+    <p class="lb-cap" aria-live="polite">
+      <strong id="lb-title"></strong>
+      <span class="mono" id="lb-meta"></span>
+    </p>
+    <div class="lb-nav">
+      <span class="mono" id="lb-count" style="align-self:center;margin-right:.5rem"></span>
+      <button class="lb-btn" id="lb-prev" type="button" aria-label="Previous photograph">←</button>
+      <button class="lb-btn" id="lb-next" type="button" aria-label="Next photograph">→</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* Light table toggle */
+  var lamp = document.getElementById('lamp');
+  var saved = null;
+  try { saved = localStorage.getItem('theme'); } catch (e) {}
+  if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+  function isDark() {
+    if (root.dataset.theme) return root.dataset.theme === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function syncLamp() {
+    var on = !isDark();
+    lamp.setAttribute('aria-pressed', String(on));
+    lamp.textContent = 'Light table ' + (on ? 'on' : 'off');
+  }
+  lamp.addEventListener('click', function () {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+    syncLamp();
+  });
+  syncLamp();
+
+  /* Lightbox */
+  var frames = Array.prototype.slice.call(document.querySelectorAll('.frame .photo'));
+  var lb = document.getElementById('lb');
+  var use = document.getElementById('lb-use');
+  var svg = document.getElementById('lb-svg');
+  var elTitle = document.getElementById('lb-title');
+  var elMeta = document.getElementById('lb-meta');
+  var elRoll = document.getElementById('lb-roll');
+  var elCount = document.getElementById('lb-count');
+  var current = 0;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function show(i) {
+    current = (i + frames.length) % frames.length;
+    var f = frames[current];
+    use.setAttribute('href', '#' + f.dataset.src);
+    svg.setAttribute('aria-label', f.getAttribute('aria-label').replace(/^Open photograph: /, ''));
+    elTitle.textContent = f.dataset.title;
+    elMeta.textContent = f.dataset.meta;
+    elRoll.textContent = f.closest('.roll').dataset.roll;
+    elCount.textContent = pad(current + 1) + ' / ' + pad(frames.length);
+  }
+  frames.forEach(function (f, i) {
+    f.addEventListener('click', function () {
+      show(i);
+      if (lb.showModal) lb.showModal(); else lb.setAttribute('open', '');
+    });
+  });
+  document.getElementById('lb-prev').addEventListener('click', function () { show(current - 1); });
+  document.getElementById('lb-next').addEventListener('click', function () { show(current + 1); });
+  document.getElementById('lb-close').addEventListener('click', function () { lb.close(); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+  lb.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+  lb.addEventListener('close', function () { frames[current].focus(); });
+
+  /* Copy email */
+  var copy = document.getElementById('copy');
+  var address = document.getElementById('mail').textContent;
+  copy.addEventListener('click', function () {
+    function done(ok) {
+      copy.textContent = ok ? 'Copied' : 'Press Ctrl+C';
+      setTimeout(function () { copy.textContent = 'Copy address'; }, 1800);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(address).then(function () { done(true); }, function () { done(false); });
+    } else {
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById('mail'));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      done(false);
+    }
+  });
+})();
+</script>
+</body>
+</html>
+````
+
+The portfolio is a single HTML file with no external requests, designed as a film contact sheet on a light table. I have not opened it in a browser, so it is untested.
+
+- **Photographer:** an invented one, Noor Halvorsen in Bergen. The bio, clients, rates and the `hello@noorhalvorsen.example` address are all placeholders to replace.
+- **Photographs:** the twelve frames are illustrated SVG stand-ins with a grain overlay, not real photos. To use real ones, replace each `<svg><use href="#pN"/></svg>` with an `<img>`; for a single file they would need to be base64-embedded.
+- **Work section:** three film strips of four frames each, with red grease-pencil circles on the picks. On phones each strip scrolls sideways.
+- **Viewer:** clicking a frame opens a full-screen view with captions, a frame counter and previous/next buttons (arrow keys and Esc also work).
+- **Light table toggle:** this is the light/dark theme switch; it follows the system setting by default and remembers the choice.
+- **Contact:** a large mailto link and a copy-address button. There is no form, since a form needs a backend.

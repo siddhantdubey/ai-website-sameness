@@ -1,0 +1,179 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Meet Avery & Hale, a neighborhood law firm focused on estate planning, small business counsel, and real estate.">
+  <title>Avery & Hale · Attorneys at Law</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f4ec;
+      --ink: #183e35;
+      --muted: #52635a;
+      --rule: #c9ccbf;
+      --serif: "Baskerville", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 1rem/1.6 var(--sans);
+    }
+    a { color: inherit; text-underline-offset: .25em; }
+    a:focus-visible { outline: 3px solid #b27537; outline-offset: 5px; }
+    .skip { position: absolute; left: 1rem; top: -5rem; z-index: 2; padding: .6rem 1rem; background: white; }
+    .skip:focus { top: 1rem; }
+    .wrap { width: min(1240px, 90%); margin-inline: auto; }
+    header, nav, .brand, .button, footer { display: flex; align-items: center; }
+    header { min-height: 94px; justify-content: space-between; gap: 2rem; border-bottom: 1px solid var(--rule); }
+    .brand { gap: .8rem; text-decoration: none; }
+    .mark { width: 39px; height: 48px; }
+    .wordmark { display: grid; font: 1.65rem/1.1 var(--serif); }
+    .wordmark small, .eyebrow {
+      font: 600 .67rem/1.5 var(--sans);
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+    .wordmark small { margin-top: .28rem; font-size: .55rem; letter-spacing: .24em; }
+    nav { gap: clamp(1rem, 3vw, 3rem); font-size: .88rem; }
+    nav a { text-decoration: none; }
+    nav a:hover, .text-link:hover { text-decoration: underline; }
+    .nav-contact { border-bottom: 1px solid; padding-bottom: .16rem; }
+    .hero { display: grid; grid-template-columns: 1fr 1.03fr; align-items: center; gap: 5%; padding: clamp(3rem, 6vw, 6rem) 0; }
+    .eyebrow { margin: 0 0 1.4rem; }
+    .hero .eyebrow { display: flex; align-items: center; gap: .85rem; }
+    .hero .eyebrow::before { content: ""; width: 36px; height: 1px; background: currentColor; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    h1 { font-size: clamp(3.5rem, 6.45vw, 6.4rem); letter-spacing: -.06em; line-height: .99; margin: 0; }
+    h1 em { font-weight: 400; color: #526e59; }
+    .intro { max-width: 38ch; margin: 1.5rem 0 2rem; color: var(--muted); font-size: 1.08rem; }
+    .button { width: fit-content; gap: 1.6rem; padding: .87rem 1.25rem; background: var(--ink); color: white; text-decoration: none; font-size: .9rem; }
+    .button:hover { background: #315b48; }
+    .art { width: 100%; display: block; background: #dce1d1; border-radius: 48% 48% 2px 2px / 36% 36% 2px 2px; }
+    .practice { border-top: 1px solid var(--rule); padding: 3.8rem 0 4.5rem; }
+    h2 { font-size: clamp(2.35rem, 4.3vw, 4.2rem); line-height: 1.05; letter-spacing: -.045em; margin: 0; }
+    .practice .eyebrow, .firm .eyebrow, .contact .eyebrow { margin-bottom: .85rem; }
+    .areas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3%; margin-top: 2.1rem; }
+    article { border-top: 1px solid var(--rule); padding-top: 1.2rem; }
+    h3 { margin: 0 0 .45rem; font-size: 1.75rem; letter-spacing: -.035em; }
+    article p, .firm-copy { margin: 0; color: var(--muted); max-width: 47ch; }
+    .firm { padding: 3.5rem 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 1fr 1fr; gap: 5%; align-items: center; }
+    .contact { background: var(--ink); color: var(--paper); padding: 3.5rem 0; }
+    .contact .wrap { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .contact p:last-child { margin: .85rem 0 0; }
+    .contact .button { background: var(--paper); color: var(--ink); flex-shrink: 0; }
+    .contact .button:hover { background: #e2e7d8; }
+    footer { justify-content: space-between; gap: 1rem; padding: 1.35rem 0; color: var(--muted); font-size: .77rem; }
+    @media (max-width: 700px) {
+      header { min-height: 76px; gap: .5rem; }
+      nav { gap: 1rem; font-size: .8rem; }
+      .wordmark { font-size: 1.25rem; }
+      .mark { width: 29px; }
+      .hero { grid-template-columns: 1fr; gap: 2.4rem; }
+      .art { max-width: 450px; justify-self: center; }
+      .areas, .firm { grid-template-columns: 1fr; gap: 1.5rem; }
+      .contact .wrap { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 450px) {
+      header { align-items: flex-start; flex-direction: column; padding: .9rem 0; }
+      nav { width: 100%; justify-content: space-between; }
+      .hero { padding-top: 2.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="wrap">
+    <a href="#top" class="brand" aria-label="Avery and Hale home">
+      <svg class="mark" viewBox="0 0 40 48" fill="none" aria-hidden="true">
+        <path d="M3 42V17a17 17 0 0 1 34 0v25M1 45h38M8 40l11-29 11 29M13 28h12M22 20v20m10-20v20M22 30h10" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <span class="wordmark">Avery &amp; Hale<small>Attorneys at Law</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#practice">Practice areas</a>
+      <a href="#firm">Our firm</a>
+      <a class="nav-contact" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Independent law practice</p>
+        <h1 id="hero-title">Clear counsel.<br><em>Personal attention.</em></h1>
+        <p class="intro">Whether you’re planning for your family, opening a business, or buying a home, we help you understand your options and decide what comes next.</p>
+        <a class="button" href="#contact">Schedule a consultation <span aria-hidden="true">↗</span></a>
+      </div>
+      <svg class="art" viewBox="0 0 560 475" role="img" aria-label="Architectural line drawing of a sunlit classical portico in sage and deep green">
+        <defs>
+          <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse">
+            <path d="M-1 5L5-1M4 6l2-2" fill="none" stroke="#345747" stroke-width=".7"/>
+          </pattern>
+          <pattern id="flutes" width="9" height="9" patternUnits="userSpaceOnUse">
+            <path d="M1 0v9m2-9v9" stroke="#617b65" stroke-width=".9"/>
+          </pattern>
+          <g id="column" stroke="#385947" stroke-width="1.6">
+            <path d="M0 0h82v9H0zM4 10h74v7H4z" fill="#d6d9bd"/>
+            <path d="M8 18h66q-1 10-9 14H17Q9 27 8 18Z" fill="#b4c3a6"/>
+            <path d="M17 33h48l5 230H12z" fill="#d3d8bd"/>
+            <path d="M19 35h43l4 226H15z" fill="url(#flutes)"/>
+            <path d="M53 33h12l5 230H57z" fill="url(#hatch)"/>
+            <path d="M12 263h58v6H12zM8 270h66v7H8zM2 278h78v9H2z" fill="#cbd1b5"/>
+          </g>
+        </defs>
+        <path fill="#dbe2d1" d="M0 0h560v475H0z"/>
+        <circle cx="422" cy="100" r="59" fill="#ede5c8"/>
+        <path d="M0 280q91-64 171-18t167-10 222-27v250H0z" fill="#bccbb7"/>
+        <path d="M0 330q140-74 264-15t296-28v188H0z" fill="#9db49f"/>
+        <g transform="translate(45 96) skewY(-10)">
+          <path d="M-64 87L206-6l322 99-6 12H-64z" fill="#b2c2a6" stroke="#385947" stroke-width="2"/>
+          <path d="M-38 83L206 2l279 85z" fill="#d7dbc1" stroke="#526e57" stroke-width="2"/>
+          <path d="M-7 78l214-65 238 68z" fill="url(#hatch)" stroke="#6e866c"/>
+          <path d="M-64 95h592v14H-64z" fill="#e2e0c6" stroke="#385947" stroke-width="2"/>
+          <path d="M-58 110h580v18H-58z" fill="url(#hatch)" stroke="#385947"/>
+          <path d="M-62 129h588v8H-62z" fill="#c2cdb0" stroke="#385947"/>
+          <path d="M-47 138h526v287H-47z" fill="#627e69"/>
+          <path d="M-47 138h526v287H-47z" fill="url(#hatch)"/>
+          <use href="#column" x="-45" y="138"/>
+          <use href="#column" x="95" y="138"/>
+          <use href="#column" x="235" y="138"/>
+          <use href="#column" x="375" y="138"/>
+          <path d="M-64 426h565v10H-64zm-8 11h582v12H-72zm-8 13h598v14H-80z" fill="#cbd1b7" stroke="#385947" stroke-width="2"/>
+        </g>
+      </svg>
+    </section>
+
+    <section id="practice" class="practice wrap" aria-labelledby="practice-title">
+      <p class="eyebrow">Practice areas</p>
+      <h2 id="practice-title">How we can help</h2>
+      <div class="areas">
+        <article><h3>Estate planning</h3><p>Put your wishes into writing with a will, trust, or power of attorney that fits your family.</p></article>
+        <article><h3>Small business</h3><p>Choose a business structure, review a lease, or work through the terms of a new partnership.</p></article>
+        <article><h3>Real estate</h3><p>Understand what you’re signing, from the first purchase agreement to the closing documents.</p></article>
+      </div>
+    </section>
+
+    <section id="firm" class="firm wrap" aria-labelledby="firm-title">
+      <div><p class="eyebrow">Our firm</p><h2 id="firm-title">A conversation first.</h2></div>
+      <p class="firm-copy">We start by asking what you want to accomplish and what’s on your mind. From there, we explain the options, discuss fees, and agree on the work ahead.</p>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div><p class="eyebrow">Get in touch</p><h2 id="contact-title">Let’s talk it through.</h2><p>Email us to arrange an initial consultation.</p></div>
+        <!-- Replace the fictional firm's reserved example address before publishing. -->
+        <a class="button" href="mailto:hello@averyhale.example?subject=Consultation%20request">Email the firm <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap"><span>Avery &amp; Hale · Attorneys at Law</span><a href="#top">Back to top ↑</a></footer>
+</body>
+</html>
+```

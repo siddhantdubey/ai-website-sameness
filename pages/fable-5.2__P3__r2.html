@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odile Varga — Photographer, Porto</title>
+<meta name="description" content="Odile Varga photographs land, buildings and people on commission for magazines, architects and independent brands. Based in Porto.">
+<style>
+  :root {
+    --wall: #e2e3df;
+    --paper: #f5f4ef;
+    --ink: #151614;
+    --ink-soft: #4b4d49;
+    --film: #0e0e0d;
+    --edge: #eda63a;      /* film edge markings */
+    --grease: #dc3a2c;    /* china marker */
+    --rule: #b9bbb5;
+    --sans: "Helvetica Neue", Helvetica, "Nimbus Sans", Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html:has(dialog[open]) { overflow: hidden; }
+  body {
+    margin: 0;
+    background: var(--wall);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--edge); color: var(--film); }
+  a { color: inherit; }
+  h1, h2, h3, p, ul, dl, dd, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--grease); outline-offset: 3px; }
+
+  .skip {
+    position: absolute; left: var(--pad); top: -4rem;
+    background: var(--ink); color: var(--paper); padding: .6rem 1rem; z-index: 10;
+  }
+  .skip:focus { top: .75rem; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Header ---------- */
+  .top {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    padding: 1.25rem var(--pad);
+  }
+  .top .brand { font-weight: 700; letter-spacing: -.01em; text-decoration: none; }
+  .top nav ul { display: flex; gap: clamp(1rem, 3vw, 2.25rem); }
+  .top nav a { text-decoration: none; padding: .35rem 0; }
+  .top nav a:hover { text-decoration: underline; text-underline-offset: .35em; }
+
+  /* ---------- Photographs (shared) ---------- */
+  .ph { position: relative; display: block; aspect-ratio: 3 / 2; background: #222; }
+  .ph > svg:first-child { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .ph::before { /* lens falloff */
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,.28) 100%);
+  }
+  .ph::after { /* grain */
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay; opacity: .55;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(1rem, 4vw, 3rem) 0 clamp(3rem, 8vw, 6.5rem) var(--pad);
+    align-items: end;
+  }
+  .hero h1 {
+    grid-column: 1 / -1;
+    font-size: clamp(3.25rem, 13.2vw, 13rem);
+    font-weight: 700;
+    line-height: .86;
+    letter-spacing: -.05em;
+    margin-left: -.05em;
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+    text-wrap: balance;
+  }
+  .hero-text { grid-column: 1 / span 4; padding-bottom: .25rem; }
+  .hero-text p.lede {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+    line-height: 1.35;
+    max-width: 24ch;
+  }
+  .avail { margin-top: 1.5rem; display: flex; gap: .6rem; align-items: baseline; }
+  .avail::before {
+    content: ""; flex: none; width: .55rem; height: .55rem; border-radius: 50%;
+    background: var(--grease); transform: translateY(-.05rem);
+  }
+  .hero-links { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .75rem; }
+  .btn {
+    display: inline-block; padding: .8rem 1.2rem;
+    border: 1.5px solid var(--ink); border-radius: 0;
+    background: transparent; text-decoration: none; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .btn.solid, .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn.solid:hover { background: var(--grease); border-color: var(--grease); }
+  .hero figure { grid-column: 6 / -1; }
+  .hero figcaption {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding: .7rem var(--pad) 0 0; color: var(--ink-soft);
+  }
+
+  /* ---------- Contact sheet ---------- */
+  .work { padding: 0 var(--pad) clamp(4rem, 9vw, 7.5rem); }
+  .sheet {
+    background: var(--paper);
+    padding: clamp(1rem, 3vw, 2.5rem);
+    box-shadow: 0 1px 0 #fff inset, 0 18px 40px -22px rgba(20, 22, 20, .45);
+  }
+  .sheet-head {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end;
+    gap: 1.25rem 2rem; margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .sheet-head h2 {
+    font-size: clamp(1.9rem, 4.2vw, 3.5rem); line-height: 1; letter-spacing: -.035em; font-weight: 700;
+    margin-top: .6rem;
+  }
+  .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .filters button {
+    padding: .55rem .9rem; background: transparent; cursor: pointer;
+    border: 1.5px solid var(--ink); border-radius: 0;
+  }
+  .filters button:hover { background: rgba(21, 22, 20, .08); }
+  .filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+  .strips {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    row-gap: clamp(.6rem, 1.4vw, 1.1rem);
+  }
+  .frame { background: var(--film); }
+  .frame[hidden] { display: none; }
+  .frame button {
+    display: block; width: 100%; padding: 0; border: 0; border-radius: 0;
+    background: none; color: var(--edge); cursor: zoom-in; text-align: left;
+  }
+  .frame button:focus-visible { outline-offset: -4px; outline-color: var(--edge); }
+  .holes {
+    display: block; height: 22px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='22'%3E%3Crect x='9' y='5' width='12' height='12' rx='2.5' fill='%23f5f4ef'/%3E%3C/svg%3E") center / auto repeat-x;
+    background-repeat: space no-repeat;
+  }
+  .frame .ph { margin: 0 5px; }
+  .edge-text {
+    display: flex; justify-content: space-between; gap: .75rem;
+    padding: .4rem 9px .1rem; white-space: nowrap;
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .edge-text span:last-child { overflow: hidden; text-overflow: ellipsis; }
+  .mark {
+    position: absolute; inset: -7px; width: calc(100% + 14px); height: calc(100% + 14px);
+    z-index: 2; overflow: visible; pointer-events: none;
+  }
+  .mark path {
+    fill: none; stroke: var(--grease); stroke-width: 3.5; stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset .5s cubic-bezier(.6, .1, .2, 1);
+  }
+  .frame button:hover .mark path,
+  .frame button:focus-visible .mark path { stroke-dashoffset: 0; }
+  .sheet-foot {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem;
+    margin-top: clamp(1rem, 2vw, 1.5rem); color: var(--ink-soft);
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+    column-gap: clamp(1rem, 2vw, 1.75rem); row-gap: 2.5rem;
+    padding: 0 var(--pad) clamp(4rem, 9vw, 7.5rem);
+  }
+  .about > .label { grid-column: 1 / -1; padding-top: 1rem; border-top: 1.5px solid var(--ink); }
+  .about-text { grid-column: 1 / span 7; font-family: var(--serif); }
+  .about-text p:first-child {
+    font-size: clamp(1.5rem, 2.9vw, 2.5rem); line-height: 1.2; letter-spacing: -.01em;
+    text-wrap: pretty;
+  }
+  .about-text p + p { margin-top: 1.5rem; font-size: 1.1875rem; max-width: 58ch; }
+  .facts { grid-column: 9 / -1; }
+  .facts div { padding: .9rem 0; border-top: 1px solid var(--rule); }
+  .facts div:first-child { border-top: 0; padding-top: .3rem; }
+  .facts dt { color: var(--ink-soft); margin-bottom: .3rem; }
+
+  /* ---------- Commissions ---------- */
+  .jobs { padding: 0 var(--pad) clamp(4rem, 9vw, 7.5rem); }
+  .jobs > .label { padding-top: 1rem; border-top: 1.5px solid var(--ink); margin-bottom: 1rem; }
+  .jobs li {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+    column-gap: clamp(1rem, 2vw, 1.75rem); align-items: baseline;
+    padding: clamp(1.1rem, 2.2vw, 1.75rem) 0; border-bottom: 1px solid var(--rule);
+  }
+  .jobs h3 {
+    grid-column: 1 / span 4;
+    font-size: clamp(1.6rem, 3.4vw, 2.75rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 700;
+  }
+  .jobs p { grid-column: 5 / span 5; max-width: 46ch; }
+  .jobs .label { grid-column: 10 / -1; color: var(--ink-soft); }
+
+  /* ---------- Contact ---------- */
+  .contact { background: var(--film); color: var(--paper); }
+  .contact .holes { opacity: .9; }
+  .contact-in { padding: clamp(3rem, 8vw, 6.5rem) var(--pad) clamp(2.5rem, 6vw, 4.5rem); }
+  .contact .label { color: var(--edge); }
+  .contact h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem); line-height: 1.25; max-width: 30ch;
+    margin: 1rem 0 clamp(2rem, 5vw, 3.5rem);
+  }
+  .mail {
+    display: inline-block; font-weight: 700; text-decoration: none;
+    font-size: clamp(1.45rem, 6.3vw, 6rem); letter-spacing: -.045em; line-height: 1;
+    overflow-wrap: anywhere;
+    background: linear-gradient(var(--grease), var(--grease)) 0 100% / 0 .07em no-repeat;
+    padding-bottom: .12em; transition: background-size .35s cubic-bezier(.6, .1, .2, 1);
+  }
+  .mail:hover, .mail:focus-visible { background-size: 100% .07em; }
+  .contact :focus-visible { outline-color: var(--edge); }
+  .contact-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2.5rem;
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  }
+  .contact .btn { border-color: var(--paper); color: var(--paper); }
+  .contact .btn:hover { background: var(--paper); color: var(--film); }
+  .contact-row p { color: #b5b6b0; }
+  .colophon {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem;
+    padding: 1.1rem var(--pad) 1.4rem; color: #9a9b95; border-top: 1px solid #2c2c2a;
+  }
+
+  /* ---------- Lightbox ---------- */
+  dialog#lb {
+    width: 100vw; height: 100dvh; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; background: var(--film); color: var(--paper);
+  }
+  dialog#lb::backdrop { background: var(--film); }
+  .lb-in {
+    height: 100%; display: grid; grid-template-rows: auto 1fr auto;
+    justify-items: center; align-items: center;
+    padding: 1rem var(--pad) 1.25rem;
+  }
+  .lb-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; color: var(--edge); }
+  .lb-bar button, .lb-nav button {
+    background: none; border: 1.5px solid #4a4a46; border-radius: 0; color: var(--paper);
+    padding: .55rem .9rem; cursor: pointer;
+  }
+  .lb-bar button:hover, .lb-nav button:hover { border-color: var(--paper); }
+  dialog#lb :focus-visible { outline-color: var(--edge); }
+  .lb-ph { width: min(100%, calc((100dvh - 13.5rem) * 1.5)); }
+  .lb-cap {
+    width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 2rem;
+  }
+  .lb-cap h2 { font-size: clamp(1.25rem, 2.4vw, 1.75rem); letter-spacing: -.02em; line-height: 1.15; }
+  .lb-cap p { color: #b5b6b0; margin-top: .3rem; }
+  .lb-nav { display: flex; gap: .4rem; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .hero { padding-right: var(--pad); }
+    .hero-text, .hero figure { grid-column: 1 / -1; }
+    .hero figure { margin-top: 2.5rem; }
+    .hero figcaption { padding-right: 0; }
+    .hero-text p.lede { max-width: 30ch; }
+    .strips { grid-template-columns: repeat(2, 1fr); }
+    .about-text, .facts { grid-column: 1 / -1; }
+    .jobs h3, .jobs p, .jobs .label { grid-column: 1 / -1; }
+    .jobs p { margin: .6rem 0 .7rem; }
+  }
+  @media (max-width: 560px) {
+    .strips { grid-template-columns: 1fr; }
+    .hero figcaption { flex-direction: column; gap: .15rem; }
+    .lb-ph { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to the photographs</a>
+
+<!--
+  PHOTOGRAPHS
+  Each picture below is an inline SVG stand-in. To use real photographs, replace any
+  <svg …><use href="#fN"/></svg> with <img src="your-photo.jpg" alt="…"> (3:2 crops fit best)
+  and give .ph > img the same absolute-fill rules as .ph > svg:first-child.
+-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="b1"><feGaussianBlur stdDeviation="1"/></filter>
+    <filter id="b3"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="b20" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20"/></filter>
+
+    <!-- f1 · dunes -->
+    <linearGradient id="f1sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#63748f"/><stop offset=".5" stop-color="#d1a08a"/><stop offset=".72" stop-color="#f2c999"/>
+    </linearGradient>
+    <linearGradient id="f1lit" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d79a66"/><stop offset="1" stop-color="#9a5f41"/>
+    </linearGradient>
+    <symbol id="f1">
+      <rect width="600" height="400" fill="url(#f1sky)"/>
+      <circle cx="438" cy="214" r="46" fill="#ffe9c4" opacity=".55" filter="url(#b20)"/>
+      <circle cx="438" cy="214" r="20" fill="#fff1d6" filter="url(#b1)"/>
+      <path d="M0 252C120 218 220 230 330 252S520 242 600 224V400H0Z" fill="#b57d5c"/>
+      <path d="M0 304C90 264 200 240 300 284C380 318 470 302 600 262V400H0Z" fill="url(#f1lit)"/>
+      <path d="M300 284C380 318 470 302 600 262V400H236C262 356 286 318 300 284Z" fill="#573529"/>
+      <path d="M0 356C140 320 260 332 380 364S540 374 600 352V400H0Z" fill="#33211c"/>
+      <path d="M0 356C140 320 260 332 380 364" fill="none" stroke="#c98a5c" stroke-width="1.5" opacity=".7"/>
+    </symbol>
+
+    <!-- f2 · sea posts -->
+    <linearGradient id="f2sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#aebbc2"/><stop offset=".58" stop-color="#ebe4d7"/>
+    </linearGradient>
+    <linearGradient id="f2sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fadb0"/><stop offset="1" stop-color="#3a4a52"/>
+    </linearGradient>
+    <symbol id="f2">
+      <rect width="600" height="400" fill="url(#f2sky)"/>
+      <rect y="230" width="600" height="170" fill="url(#f2sea)"/>
+      <rect x="-20" y="224" width="640" height="10" fill="#f6f0e2" opacity=".8" filter="url(#b3)"/>
+      <g fill="#1b2327">
+        <rect x="118" y="252" width="8" height="96"/><rect x="192" y="245" width="6.5" height="70"/>
+        <rect x="252" y="240" width="5.5" height="52"/><rect x="302" y="237" width="4.5" height="38"/>
+        <rect x="343" y="235" width="3.5" height="27"/><rect x="376" y="233" width="2.8" height="19"/>
+        <rect x="402" y="232" width="2.2" height="13"/>
+      </g>
+      <g fill="#1b2327" opacity=".28" filter="url(#b3)">
+        <rect x="116" y="348" width="12" height="52"/><rect x="190" y="315" width="10" height="46"/>
+        <rect x="251" y="292" width="8" height="34"/><rect x="301" y="275" width="6" height="24"/>
+      </g>
+      <path d="M476 150q8-7 14 0q6-7 14 0" fill="none" stroke="#39454b" stroke-width="1.6"/>
+    </symbol>
+
+    <!-- f3 · ridges -->
+    <linearGradient id="f3sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c3ccd1"/><stop offset=".5" stop-color="#e6e6e1"/>
+    </linearGradient>
+    <symbol id="f3">
+      <rect width="600" height="400" fill="url(#f3sky)"/>
+      <circle cx="156" cy="92" r="17" fill="#fbf8ee" filter="url(#b3)"/>
+      <path d="M0 190L60 170L120 182L200 150L270 176L340 158L420 180L500 152L560 170L600 160V400H0Z" fill="#b7c2c8"/>
+      <path d="M0 232L80 202L150 224L230 190L300 222L380 198L450 228L530 202L600 222V400H0Z" fill="#92a2ab"/>
+      <rect x="-20" y="232" width="640" height="26" fill="#eef0ee" opacity=".45" filter="url(#b8)"/>
+      <path d="M0 272L70 252L140 264L220 230L310 268L390 242L470 272L540 252L600 264V400H0Z" fill="#687b86"/>
+      <rect x="-20" y="286" width="640" height="24" fill="#dfe5e6" opacity=".35" filter="url(#b8)"/>
+      <path d="M0 322L90 288L170 312L260 278L340 314L430 292L520 324L600 302V400H0Z" fill="#3e505a"/>
+      <path d="M0 374L100 342L190 364L280 336L370 368L460 348L600 382V400H0Z" fill="#1a2329"/>
+    </symbol>
+
+    <!-- f4 · noon wall -->
+    <linearGradient id="f4sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a68aa"/><stop offset=".45" stop-color="#7fb1dd"/>
+    </linearGradient>
+    <symbol id="f4">
+      <rect width="600" height="400" fill="url(#f4sky)"/>
+      <path d="M0 58L600 30" stroke="#1c2730" stroke-width="1.2"/>
+      <ellipse cx="212" cy="45" rx="6" ry="3.5" fill="#1c2730"/><circle cx="217" cy="42" r="2.4" fill="#1c2730"/>
+      <path d="M0 150L600 70V400H0Z" fill="#f2ecdf"/>
+      <path d="M0 150L600 70V78L0 159Z" fill="#cdbfa6"/>
+      <rect x="388" y="168" width="58" height="82" fill="#1b2831"/>
+      <rect x="448" y="166" width="30" height="86" fill="#2f6c58"/>
+      <path d="M448 180h30M448 194h30M448 208h30M448 222h30M448 236h30" stroke="#234f41" stroke-width="2"/>
+      <path d="M0 316L600 148V400H0Z" fill="#8f9ab0" opacity=".88"/>
+      <rect x="96" y="318" width="64" height="82" fill="#b7772f"/>
+      <rect x="96" y="318" width="64" height="82" fill="#3d4660" opacity=".45"/>
+    </symbol>
+
+    <!-- f5 · block c -->
+    <pattern id="f5p" width="100" height="80" patternUnits="userSpaceOnUse">
+      <rect width="100" height="80" fill="#a8a39a"/>
+      <rect x="10" y="8" width="80" height="46" fill="#2b2a28"/>
+      <rect x="10" y="8" width="80" height="12" fill="#191817"/>
+      <rect x="6" y="52" width="88" height="20" fill="#c6c1b6"/>
+      <rect x="6" y="72" width="88" height="3" fill="#7b766d"/>
+    </pattern>
+    <linearGradient id="f5fall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity=".38"/>
+    </linearGradient>
+    <symbol id="f5">
+      <rect width="600" height="400" fill="url(#f5p)"/>
+      <rect x="118" y="260" width="34" height="34" fill="#e0a94e"/>
+      <rect x="418" y="100" width="22" height="34" fill="#6f8ea3"/>
+      <rect x="322" y="130" width="28" height="26" fill="#c8442e"/>
+      <path d="M512 212v-22m0 0c-8-10-14-4-12 4m12-4c8-12 15-5 12 5" stroke="#3f6b3a" stroke-width="3" fill="none"/>
+      <rect width="600" height="400" fill="url(#f5fall)"/>
+    </symbol>
+
+    <!-- f6 · arcade -->
+    <linearGradient id="f6wall" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e3bf92"/><stop offset="1" stop-color="#c99e70"/>
+    </linearGradient>
+    <linearGradient id="f6in" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#11171d"/><stop offset="1" stop-color="#2d3946"/>
+    </linearGradient>
+    <symbol id="f6">
+      <rect width="600" height="400" fill="url(#f6wall)"/>
+      <rect width="600" height="52" fill="#7da5c9"/>
+      <rect y="52" width="600" height="9" fill="#a57c53"/>
+      <rect y="92" width="600" height="5" fill="#b98f63"/>
+      <g fill="url(#f6in)">
+        <path d="M36 400V214a70 70 0 0 1 140 0V400Z"/>
+        <path d="M230 400V214a70 70 0 0 1 140 0V400Z"/>
+        <path d="M424 400V214a70 70 0 0 1 140 0V400Z"/>
+      </g>
+      <g fill="#f0cf9c" opacity=".8">
+        <path d="M70 400L128 352H176V400Z"/><path d="M264 400L322 352H370V400Z"/><path d="M458 400L516 352H564V400Z"/>
+      </g>
+      <rect x="318" y="318" width="11" height="40" rx="4" fill="#0c1014"/><circle cx="323.5" cy="311" r="5.5" fill="#0c1014"/>
+      <path d="M323 358L296 400H282Z" fill="#0c1014" opacity=".55"/>
+      <rect y="392" width="600" height="8" fill="#8f6c49"/>
+    </symbol>
+
+    <!-- f7 · portrait -->
+    <radialGradient id="f7bg" cx=".3" cy=".4" r=".85">
+      <stop offset="0" stop-color="#66745f"/><stop offset="1" stop-color="#121613"/>
+    </radialGradient>
+    <linearGradient id="f7skin" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e6bc9a"/><stop offset=".48" stop-color="#8a5f4a"/><stop offset=".9" stop-color="#1e1512"/>
+    </linearGradient>
+    <linearGradient id="f7coat" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b9c2ad"/><stop offset=".45" stop-color="#4c5a4c"/><stop offset="1" stop-color="#141916"/>
+    </linearGradient>
+    <symbol id="f7">
+      <rect width="600" height="400" fill="url(#f7bg)"/>
+      <path d="M0 60L190 150L150 400H0Z" fill="#dfe6cf" opacity=".18" filter="url(#b20)"/>
+      <g filter="url(#b1)">
+        <path d="M150 400C160 304 228 272 270 264H330C378 272 448 304 462 400Z" fill="url(#f7coat)"/>
+        <path d="M272 212h56v52c-15 16-41 16-56 0Z" fill="url(#f7skin)"/>
+        <path d="M272 236c16 14 40 14 56 0v10c-16 12-40 12-56 0Z" fill="#000" opacity=".3"/>
+        <ellipse cx="300" cy="160" rx="55" ry="70" fill="url(#f7skin)"/>
+        <path d="M243 164C232 78 366 70 358 168C352 122 316 100 280 104C262 118 250 138 243 164Z" fill="#15100d"/>
+        <circle cx="332" cy="82" r="22" fill="#15100d"/>
+      </g>
+    </symbol>
+
+    <!-- f8 · lemons -->
+    <linearGradient id="f8wall" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ddceb2"/><stop offset=".55" stop-color="#8d806b"/><stop offset="1" stop-color="#332d26"/>
+    </linearGradient>
+    <linearGradient id="f8table" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#94765a"/><stop offset="1" stop-color="#261d16"/>
+    </linearGradient>
+    <linearGradient id="f8bowl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f4eddd"/><stop offset=".6" stop-color="#b3aa97"/><stop offset="1" stop-color="#5d574c"/>
+    </linearGradient>
+    <radialGradient id="f8lemon" cx=".32" cy=".3" r=".8">
+      <stop offset="0" stop-color="#f6dc74"/><stop offset=".55" stop-color="#d9ac34"/><stop offset="1" stop-color="#77551a"/>
+    </radialGradient>
+    <symbol id="f8">
+      <rect width="600" height="400" fill="url(#f8wall)"/>
+      <rect y="264" width="600" height="136" fill="url(#f8table)"/>
+      <rect y="263" width="600" height="2.5" fill="#c9aa86" opacity=".6"/>
+      <ellipse cx="346" cy="300" rx="100" ry="12" fill="#000" opacity=".5" filter="url(#b8)"/>
+      <ellipse cx="474" cy="304" rx="44" ry="7" fill="#000" opacity=".5" filter="url(#b3)"/>
+      <ellipse cx="280" cy="238" rx="74" ry="16" fill="#8f8775"/>
+      <circle cx="258" cy="226" r="21" fill="url(#f8lemon)"/>
+      <circle cx="300" cy="221" r="23" fill="url(#f8lemon)"/>
+      <path d="M206 238C212 298 348 298 354 238C330 252 230 252 206 238Z" fill="url(#f8bowl)"/>
+      <path d="M206 238C230 252 330 252 354 238" fill="none" stroke="#fbf6e9" stroke-width="2"/>
+      <ellipse cx="438" cy="284" rx="28" ry="21" fill="url(#f8lemon)" transform="rotate(-12 438 284)"/>
+    </symbol>
+
+    <!-- f9 · crossing -->
+    <pattern id="f9p" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="rotate(14)">
+      <rect width="64" height="64" fill="#d8d1c3"/>
+      <path d="M0 0H64M0 0V64" stroke="#bbb3a3" stroke-width="2"/>
+      <rect x="2" y="2" width="30" height="30" fill="#d1c9ba"/>
+    </pattern>
+    <symbol id="f9">
+      <rect width="600" height="400" fill="url(#f9p)"/>
+      <path d="M0 0H250L96 400H0Z" fill="#262a31" opacity=".88"/>
+      <path d="M250 0L96 400" stroke="#262a31" stroke-width="6" opacity=".35" filter="url(#b3)"/>
+      <path d="M392 214L530 300L520 309Z" fill="#2c2f35" opacity=".8"/>
+      <ellipse cx="391" cy="211" rx="6.5" ry="8.5" fill="#b8382a"/>
+      <circle cx="390" cy="208" r="3.6" fill="#2a1d17"/>
+      <g fill="#3c3f44">
+        <ellipse cx="300" cy="120" rx="3" ry="2"/><ellipse cx="318" cy="134" rx="3" ry="2"/><ellipse cx="286" cy="140" rx="3" ry="2"/>
+        <ellipse cx="470" cy="92" rx="3" ry="2"/>
+      </g>
+      <g stroke="#2c2f35" stroke-width="1.6" opacity=".6">
+        <path d="M302 121l12 7M320 135l12 7M288 141l12 7M472 93l12 7"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <a class="brand" href="#top">Odile Varga</a>
+  <nav aria-label="Sections">
+    <ul class="label">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <h1>Odile Varga</h1>
+    <div class="hero-text">
+      <p class="lede">Photographs of land, buildings and the people who live in them. Made on commission, mostly on medium-format film.</p>
+      <p class="avail label">Booking commissions from February 2027</p>
+      <div class="hero-links">
+        <a class="btn solid" href="#work">See the work</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <figure>
+      <div class="ph">
+        <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Dunes in low evening light, the sun just above the far ridge"><use href="#f1"/></svg>
+      </div>
+      <figcaption class="label"><span>Slow Sand, no. 4</span><span>Erg Chebbi, Morocco, 2025</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="work-h">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <p class="label">Contact sheet 27 · 2023–2026</p>
+          <h2 id="work-h">Selected work</h2>
+        </div>
+        <div class="filters label" role="group" aria-label="Filter photographs">
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="land" aria-pressed="false">Land</button>
+          <button type="button" data-filter="built" aria-pressed="false">Built</button>
+          <button type="button" data-filter="lived" aria-pressed="false">Lived</button>
+        </div>
+      </div>
+
+      <ul class="strips" id="strips">
+        <li class="frame" data-cat="land">
+          <button type="button" data-id="f1" data-title="Slow Sand, no. 4" data-meta="Erg Chebbi, Morocco, 2025 · Mamiya 7 II, Portra 400" data-alt="Dunes in low evening light, the sun just above the far ridge">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f1"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M14 20C200 8 420 16 590 12C596 140 584 280 592 388C400 396 180 380 8 390C2 260 16 120 10 6"/></svg></span>
+            <span class="edge-text"><span>▸ 2</span><span>Slow Sand, no. 4</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="built">
+          <button type="button" data-id="f4" data-title="Noon Wall" data-meta="Olhão, Portugal, 2025 · Mamiya 7 II, Ektar 100" data-alt="A whitewashed wall cut by a hard diagonal shadow under a deep blue sky">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f4"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M8 14C190 20 410 6 594 16C588 150 596 270 590 392C410 384 190 396 12 386C16 250 4 130 14 4"/></svg></span>
+            <span class="edge-text"><span>▸ 5</span><span>Noon Wall</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="lived">
+          <button type="button" data-id="f7" data-title="Marta, North Window" data-meta="Porto, Portugal, 2026 · Pentax 67, Portra 800" data-alt="Portrait of a woman lit from one side by window light, half her face in shadow">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f7"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M14 20C200 8 420 16 590 12C596 140 584 280 592 388C400 396 180 380 8 390C2 260 16 120 10 6"/></svg></span>
+            <span class="edge-text"><span>▸ 9</span><span>Marta, North Window</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="built">
+          <button type="button" data-id="f5" data-title="Block C" data-meta="Olivais, Lisbon, 2024 · Mamiya 7 II, Portra 160" data-alt="A grid of concrete balconies seen head-on, one with a red towel, one with a lit window">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f5"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M8 14C190 20 410 6 594 16C588 150 596 270 590 392C410 384 190 396 12 386C16 250 4 130 14 4"/></svg></span>
+            <span class="edge-text"><span>▸ 14</span><span>Block C</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="land">
+          <button type="button" data-id="f2" data-title="Low Water" data-meta="Costa Nova, Portugal, 2024 · Mamiya 7 II, Portra 400" data-alt="A line of wooden posts receding into a calm grey sea under a pale sky">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f2"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M14 20C200 8 420 16 590 12C596 140 584 280 592 388C400 396 180 380 8 390C2 260 16 120 10 6"/></svg></span>
+            <span class="edge-text"><span>▸ 17</span><span>Low Water</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="lived">
+          <button type="button" data-id="f8" data-title="Lemons for Inês" data-meta="Tavira, Portugal, 2025 · Pentax 67, Portra 400" data-alt="A cream bowl of lemons on a wooden table in raking side light, one lemon beside it">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f8"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M8 14C190 20 410 6 594 16C588 150 596 270 590 392C410 384 190 396 12 386C16 250 4 130 14 4"/></svg></span>
+            <span class="edge-text"><span>▸ 21</span><span>Lemons for Inês</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="lived">
+          <button type="button" data-id="f9" data-title="Crossing" data-meta="Praça do Comércio, Lisbon, 2024 · Leica M6, HP5 pushed, hand-coloured scan" data-alt="A small figure in a red coat crossing a paved square, seen from above, with a long shadow">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f9"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M14 20C200 8 420 16 590 12C596 140 584 280 592 388C400 396 180 380 8 390C2 260 16 120 10 6"/></svg></span>
+            <span class="edge-text"><span>▸ 24</span><span>Crossing</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="land">
+          <button type="button" data-id="f3" data-title="Five Ridges" data-meta="Serra da Estrela, Portugal, 2023 · Mamiya 7 II, Portra 160" data-alt="Five mountain ridges stacked in morning haze, each darker than the one behind">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f3"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M8 14C190 20 410 6 594 16C588 150 596 270 590 392C410 384 190 396 12 386C16 250 4 130 14 4"/></svg></span>
+            <span class="edge-text"><span>▸ 28</span><span>Five Ridges</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+        <li class="frame" data-cat="built">
+          <button type="button" data-id="f6" data-title="Arcade, 3 p.m." data-meta="Bologna, Italy, 2023 · Mamiya 7 II, Portra 400" data-alt="Three arches of an ochre arcade, a single figure standing in the shade of the middle one">
+            <span class="holes"></span>
+            <span class="ph"><svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#f6"/></svg><svg class="mark" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M14 20C200 8 420 16 590 12C596 140 584 280 592 388C400 396 180 380 8 390C2 260 16 120 10 6"/></svg></span>
+            <span class="edge-text"><span>▸ 33</span><span>Arcade, 3 p.m.</span></span>
+            <span class="holes"></span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sheet-foot label">
+        <span id="count" aria-live="polite">9 frames</span>
+        <span>Select a frame to view it large</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="about-h">
+    <h2 class="label" id="about-h">About</h2>
+    <div class="about-text">
+      <p>I photograph places at the hours when nobody is asking anything of them: dunes before the wind, housing blocks at lunch, kitchens after the guests have gone.</p>
+      <p>I grew up between Budapest and Porto and have worked as a photographer for eleven years. Most of what I make is commissioned — magazine stories, buildings for the architects who drew them, portraits of people who would rather not be photographed.</p>
+      <p>I shoot medium-format film where time allows and digital where it doesn't. I scan and print everything myself, so the person you brief is the person who delivers the files.</p>
+    </div>
+    <dl class="facts">
+      <div><dt class="label">Based in</dt><dd>Bonfim, Porto. Travelling regularly across Iberia and North Africa.</dd></div>
+      <div><dt class="label">Selected clients</dt><dd>Atlas Quarterly, Maré, Casa Norte, Brandão &amp; Reis Arquitectos, Linha Hotels, Oficina Cerâmica</dd></div>
+      <div><dt class="label">Shown at</dt><dd>Encontros da Imagem, Braga (2025)<br>Galeria Salgueiros, Porto (2024)</dd></div>
+      <div><dt class="label">Languages</dt><dd>Portuguese, Hungarian, English, French</dd></div>
+    </dl>
+  </section>
+
+  <section class="jobs" aria-labelledby="jobs-h">
+    <h2 class="label" id="jobs-h">Commissions</h2>
+    <ul>
+      <li>
+        <h3>Editorial</h3>
+        <p>Travel and feature stories, from a single portrait to a ten-day assignment. I'm happy working alone with a writer or from a tight shot list.</p>
+        <span class="label">Edited selects in 5 working days</span>
+      </li>
+      <li>
+        <h3>Architecture</h3>
+        <p>Buildings and interiors photographed across a full day of light, so each room is seen at its best hour and not just the convenient one.</p>
+        <span class="label">20–40 finished images per project</span>
+      </li>
+      <li>
+        <h3>Portraits</h3>
+        <p>On location, or by the north window in my studio. An unhurried hour, no assistants, and you see the contact sheet before I choose.</p>
+        <span class="label">12 finished frames per sitting</span>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="contact" id="contact">
+  <span class="holes" aria-hidden="true"></span>
+  <div class="contact-in">
+    <p class="label">Contact</p>
+    <h2>Tell me what you're making, where, and roughly when. I reply within two working days.</h2>
+    <a class="mail" href="mailto:hello@odilevarga.example">hello@odilevarga.example</a>
+    <div class="contact-row">
+      <button type="button" class="btn label" id="copy" data-mail="hello@odilevarga.example">Copy address</button>
+      <p class="label">+351 22 000 0000 · Instagram @odilevarga</p>
+    </div>
+  </div>
+  <div class="colophon label">
+    <span>© 2026 Odile Varga. All photographs.</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<dialog id="lb" aria-labelledby="lb-title">
+  <div class="lb-in">
+    <div class="lb-bar label">
+      <span id="lb-count"></span>
+      <button type="button" class="label" id="lb-close">Close</button>
+    </div>
+    <div class="ph lb-ph">
+      <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" role="img" id="lb-img" aria-label=""><use id="lb-use" href="#f1"/></svg>
+    </div>
+    <div class="lb-cap">
+      <div>
+        <h2 id="lb-title"></h2>
+        <p class="label" id="lb-meta"></p>
+      </div>
+      <div class="lb-nav">
+        <button type="button" class="label" id="lb-prev" aria-label="Previous photograph">← Prev</button>
+        <button type="button" class="label" id="lb-next" aria-label="Next photograph">Next →</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const frames = [...document.querySelectorAll('.frame')];
+  const visible = () => frames.filter(f => !f.hidden);
+
+  /* Filters */
+  const filterBtns = [...document.querySelectorAll('.filters button')];
+  const count = document.getElementById('count');
+  filterBtns.forEach(btn => btn.addEventListener('click', () => {
+    const cat = btn.dataset.filter;
+    filterBtns.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    frames.forEach(f => { f.hidden = cat !== 'all' && f.dataset.cat !== cat; });
+    const n = visible().length;
+    count.textContent = n + (n === 1 ? ' frame' : ' frames');
+  }));
+
+  /* Lightbox */
+  const lb = document.getElementById('lb');
+  const use = document.getElementById('lb-use');
+  const img = document.getElementById('lb-img');
+  const title = document.getElementById('lb-title');
+  const meta = document.getElementById('lb-meta');
+  const lbCount = document.getElementById('lb-count');
+  let order = [], idx = 0;
+
+  function show(i) {
+    idx = (i + order.length) % order.length;
+    const d = order[idx].querySelector('button').dataset;
+    use.setAttribute('href', '#' + d.id);
+    img.setAttribute('aria-label', d.alt);
+    title.textContent = d.title;
+    meta.textContent = d.meta;
+    lbCount.textContent = (idx + 1) + ' / ' + order.length;
+  }
+
+  frames.forEach(f => f.querySelector('button').addEventListener('click', () => {
+    order = visible();
+    show(order.indexOf(f));
+    lb.showModal();
+  }));
+
+  document.getElementById('lb-prev').addEventListener('click', () => show(idx - 1));
+  document.getElementById('lb-next').addEventListener('click', () => show(idx + 1));
+  document.getElementById('lb-close').addEventListener('click', () => lb.close());
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-in')) lb.close(); });
+  lb.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
+  });
+
+  /* Copy email */
+  const copy = document.getElementById('copy');
+  copy.addEventListener('click', async () => {
+    const original = 'Copy address';
+    try {
+      await navigator.clipboard.writeText(copy.dataset.mail);
+      copy.textContent = 'Copied';
+    } catch {
+      copy.textContent = 'Press Ctrl/⌘+C on the address';
+      const range = document.createRange();
+      range.selectNodeContents(document.querySelector('.mail'));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    }
+    setTimeout(() => { copy.textContent = original; }, 2200);
+  });
+})();
+</script>
+</body>
+</html>

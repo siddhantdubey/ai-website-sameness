@@ -1,0 +1,705 @@
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/opus-5.5__P3__r4.a1.mkp6ap_i/index.html</parameter>
+<parameter name="content"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ines Valer — Photographer</title>
+<meta name="description" content="Ines Valer is a freelance photographer working in landscape, portrait, editorial and architecture. Based in Lisbon, available worldwide.">
+<style>
+  :root{
+    --paper:#f2efe9; --paper-2:#e8e3da; --ink:#161513; --ink-2:#55514a; --rule:#cfc8bc;
+    --accent:#b5502c;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --pad:clamp(1.25rem,4vw,3.5rem);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  canvas{display:block;width:100%;height:100%}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .label{font:500 .72rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+  .wrap{padding-inline:var(--pad);max-width:1600px;margin-inline:auto}
+  .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:.6rem 1rem;z-index:99}
+  .skip:focus{left:1rem;top:1rem}
+
+  /* Header */
+  header.site{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;
+    padding:1.1rem var(--pad);color:#fff;transition:background .35s,color .35s,padding .35s}
+  header.site.solid{background:rgba(242,239,233,.92);backdrop-filter:blur(10px);color:var(--ink);padding-block:.75rem;border-bottom:1px solid var(--rule)}
+  .logo{font:400 1.35rem/1 var(--serif);text-decoration:none;letter-spacing:.01em}
+  .logo i{font-style:italic;color:var(--accent)}
+  header.site:not(.solid) .logo i{color:#ffd9b8}
+  nav ul{display:flex;gap:clamp(1rem,2.5vw,2.25rem);list-style:none}
+  nav a{font:500 .74rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;padding:.4rem 0;border-bottom:1px solid transparent}
+  nav a:hover{border-color:currentColor}
+
+  /* Hero */
+  .hero{position:relative;height:100svh;min-height:560px;overflow:hidden;color:#fff;background:#1b2130}
+  .hero canvas{position:absolute;inset:0;animation:drift 28s ease-in-out infinite alternate;transform-origin:60% 40%}
+  @keyframes drift{from{transform:scale(1.02)}to{transform:scale(1.1) translateX(-1.5%)}}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%,transparent 55%,rgba(0,0,0,.55))}
+  .hero-inner{position:absolute;inset:auto 0 0;z-index:2;padding:0 var(--pad) clamp(2rem,6vh,4rem);display:grid;grid-template-columns:1fr auto;align-items:end;gap:2rem}
+  .hero h1{font:400 clamp(3.4rem,11vw,10.5rem)/.88 var(--serif);letter-spacing:-.02em}
+  .hero h1 em{font-style:italic;display:block;padding-left:.6em}
+  .hero p{max-width:26ch;font-size:1.05rem;line-height:1.5;opacity:.92;margin-top:1.5rem}
+  .hero .meta{text-align:right;display:grid;gap:.5rem}
+  .hero .label{color:rgba(255,255,255,.8)}
+  .dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;background:#7ee08f;margin-right:.5rem;box-shadow:0 0 0 0 rgba(126,224,143,.6);animation:pulse 2.4s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 .5rem rgba(126,224,143,0)}100%{box-shadow:0 0 0 0 rgba(126,224,143,0)}}
+  .hero-caption{position:absolute;z-index:2;top:50%;right:var(--pad);writing-mode:vertical-rl;color:rgba(255,255,255,.7)}
+
+  /* Section heads */
+  section{padding-block:clamp(4.5rem,10vw,8rem)}
+  .head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1.5rem;margin-bottom:clamp(2rem,4vw,3.5rem);border-bottom:1px solid var(--rule);padding-bottom:1.5rem}
+  .head h2{font:400 clamp(2.4rem,6vw,4.75rem)/.95 var(--serif);letter-spacing:-.015em}
+  .head h2 em{color:var(--accent)}
+  .num{display:block;margin-bottom:1rem}
+
+  /* Filters & grid */
+  .filters{display:flex;flex-wrap:wrap;gap:.4rem}
+  .filters button{font:500 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:.6rem .9rem;border:1px solid var(--rule);border-radius:99px;transition:.2s}
+  .filters button:hover{border-color:var(--ink)}
+  .filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .filters sup{font-size:.6rem;margin-left:.25rem;opacity:.6}
+  .grid{columns:3 340px;column-gap:clamp(.9rem,2vw,1.6rem)}
+  .tile{display:block;width:100%;break-inside:avoid;margin-bottom:clamp(.9rem,2vw,1.6rem);text-align:left;animation:fade .6s both}
+  .tile[hidden]{display:none}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}}
+  .tile .frame{position:relative;overflow:hidden;background:var(--paper-2)}
+  .tile canvas{transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .5s}
+  .tile:hover canvas,.tile:focus-visible canvas{transform:scale(1.035)}
+  .tile .view{position:absolute;right:.8rem;bottom:.8rem;background:rgba(242,239,233,.94);color:var(--ink);padding:.45rem .7rem;opacity:0;transform:translateY(6px);transition:.3s}
+  .tile:hover .view,.tile:focus-visible .view{opacity:1;transform:none}
+  .tile figcaption{display:flex;justify-content:space-between;gap:1rem;padding-top:.7rem}
+  .tile .t{font:400 1.15rem/1.25 var(--serif)}
+  .tile .label{white-space:nowrap;padding-top:.25rem}
+
+  /* About */
+  .about{background:var(--ink);color:var(--paper)}
+  .about .head{border-color:#3a3631}
+  .about .label{color:#a59d90}
+  .about-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(2rem,6vw,6rem);align-items:start}
+  .about-photo{aspect-ratio:4/5;position:relative}
+  .about-photo .label{position:absolute;left:0;bottom:-1.8rem}
+  .lede{font:400 clamp(1.5rem,2.6vw,2.15rem)/1.3 var(--serif);margin-bottom:1.75rem}
+  .lede em{color:#e39a74}
+  .about p + p{margin-top:1rem}
+  .about-copy p:not(.lede){color:#cbc4b8;max-width:58ch}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:3rem;border-top:1px solid #3a3631}
+  .stats div{padding:1.25rem 1rem 0 0}
+  .stats b{display:block;font:400 clamp(2.2rem,4vw,3.2rem)/1 var(--serif);margin-bottom:.4rem}
+  .clients{margin-top:clamp(4rem,8vw,6rem);border-top:1px solid #3a3631;padding-top:1.5rem;overflow:hidden}
+  .marquee{display:flex;gap:3.5rem;width:max-content;animation:scroll 40s linear infinite;margin-top:1.25rem}
+  .marquee span{font:italic 400 clamp(1.4rem,2.4vw,2rem)/1 var(--serif);color:#8f887c;white-space:nowrap}
+  .marquee span:nth-child(3n){font-style:normal;font-family:var(--sans);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:clamp(1rem,1.6vw,1.3rem)}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  .clients:hover .marquee{animation-play-state:paused}
+
+  /* Services */
+  .services{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+  .svc{padding:2rem clamp(1rem,2.5vw,2rem) 2rem 0;border-right:1px solid var(--rule)}
+  .svc + .svc{padding-left:clamp(1rem,2.5vw,2rem)}
+  .svc:last-child{border-right:0}
+  .svc h3{font:400 1.9rem/1.1 var(--serif);margin:1.2rem 0 .8rem}
+  .svc p{color:var(--ink-2);max-width:36ch}
+  .svc ul{list-style:none;margin:1.4rem 0;font-size:.95rem}
+  .svc li{padding:.5rem 0;border-bottom:1px dashed var(--rule);display:flex;gap:.6rem}
+  .svc li::before{content:"—";color:var(--accent)}
+  .price{font:400 1.05rem var(--serif)}
+  .price b{font-size:1.6rem;font-weight:400}
+  .quote{margin-top:clamp(4rem,8vw,6.5rem);display:grid;grid-template-columns:auto 1fr;gap:clamp(1rem,3vw,2.5rem);max-width:1100px}
+  .quote .mark{font:400 7rem/0.8 var(--serif);color:var(--accent)}
+  .quote blockquote{font:italic 400 clamp(1.45rem,2.8vw,2.3rem)/1.3 var(--serif)}
+  .quote cite{display:block;margin-top:1.25rem;font-style:normal}
+
+  /* Contact */
+  .contact{background:var(--paper-2)}
+  .contact-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(2rem,6vw,6rem)}
+  .direct p{margin-bottom:1.5rem}
+  .direct a.big{font:400 clamp(1.3rem,2.2vw,1.8rem)/1.2 var(--serif);text-decoration:none;border-bottom:1px solid var(--accent);word-break:break-word}
+  .direct dl{margin-top:2.5rem;display:grid;grid-template-columns:auto 1fr;gap:.75rem 1.5rem}
+  .direct dd{margin:0}
+  form{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 1.5rem}
+  .field{display:grid;gap:.5rem}
+  .field.full{grid-column:1/-1}
+  input,select,textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--ink-2);padding:.55rem 0;border-radius:0;width:100%}
+  textarea{resize:vertical;min-height:7.5rem}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+  .field .err{color:#a3321b;font-size:.8rem;min-height:1em}
+  .field.invalid input,.field.invalid textarea,.field.invalid select{border-color:#a3321b}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem}
+  .chips label{cursor:pointer}
+  .chips input{position:absolute;opacity:0;width:1px;height:1px}
+  .chips span{display:inline-block;padding:.5rem .9rem;border:1px solid var(--ink-2);border-radius:99px;font-size:.9rem;transition:.2s}
+  .chips input:checked + span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .chips input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+  .submit{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:.8rem;background:var(--ink);color:var(--paper);padding:1rem 1.6rem;font:500 .78rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;transition:background .25s}
+  .btn:hover{background:var(--accent)}
+  .btn span{transition:transform .25s}
+  .btn:hover span{transform:translateX(4px)}
+  .sent{grid-column:1/-1;padding:2rem;border:1px solid var(--ink);display:none}
+  .sent h3{font:400 2rem/1.1 var(--serif);margin-bottom:.6rem}
+  form.done > :not(.sent){display:none}
+  form.done .sent{display:block}
+
+  footer{padding:2.5rem var(--pad);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--rule)}
+  footer ul{display:flex;gap:1.5rem;list-style:none}
+
+  /* Lightbox */
+  dialog{border:0;padding:0;max-width:none;max-height:none;width:100vw;height:100vh;height:100dvh;background:rgba(14,13,12,.97);color:var(--paper)}
+  dialog::backdrop{background:transparent}
+  dialog[open]{display:grid;grid-template-rows:auto 1fr auto;animation:lbin .3s ease}
+  @keyframes lbin{from{opacity:0}}
+  .lb-top,.lb-bot{display:flex;justify-content:space-between;align-items:center;padding:1rem var(--pad);gap:1rem}
+  .lb-top .label,.lb-bot .label{color:#a59d90}
+  .lb-stage{display:grid;place-items:center;min-height:0;position:relative;touch-action:pan-y}
+  .lb-stage canvas{box-shadow:0 30px 80px rgba(0,0,0,.5);transition:opacity .25s}
+  .lb-nav{position:absolute;top:0;bottom:0;width:18%;display:flex;align-items:center;padding:0 var(--pad);font:400 2rem var(--serif);color:rgba(255,255,255,.6)}
+  .lb-nav:hover{color:#fff}
+  .lb-prev{left:0}.lb-next{right:0;justify-content:flex-end}
+  .lb-title{font:400 clamp(1.3rem,2.4vw,1.9rem)/1.2 var(--serif)}
+  .lb-close{font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:.6rem .9rem;border:1px solid #4a453f;border-radius:99px;color:var(--paper)}
+  .lb-close:hover{border-color:var(--paper)}
+
+  @media (max-width:900px){
+    .about-grid,.contact-grid{grid-template-columns:1fr}
+    .about-photo{max-width:420px}
+    .services{grid-template-columns:1fr}
+    .svc,.svc + .svc{padding:2rem 0;border-right:0;border-bottom:1px solid var(--rule)}
+    .head{grid-template-columns:1fr}
+    .hero-inner{grid-template-columns:1fr}
+    .hero .meta{text-align:left}
+    .hero-caption{display:none}
+  }
+  @media (max-width:620px){
+    nav ul{gap:.9rem}
+    nav li:nth-child(3){display:none}
+    form{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .lb-nav{width:25%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="site" id="top">
+  <a class="logo" href="#top">Ines <i>Valer</i></a>
+  <nav aria-label="Main">
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <canvas id="hero-canvas" role="img" aria-label="Mountain ridges dissolving into morning mist at sunrise"></canvas>
+    <span class="hero-caption label">Fig. 01 — Picos de Europa, 05:48</span>
+    <div class="hero-inner">
+      <div>
+        <h1>Ines <em>Valer</em></h1>
+        <p>Freelance photographer. Landscapes, people and the places between them. Based in Lisbon, working everywhere.</p>
+      </div>
+      <div class="meta">
+        <span class="label"><span class="dot" aria-hidden="true"></span>Booking spring 2027</span>
+        <span class="label">38.7223° N, 9.1393° W</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="work" class="wrap" aria-labelledby="work-h">
+    <div class="head">
+      <div>
+        <span class="label num">01 / Portfolio</span>
+        <h2 id="work-h">Selected <em>work</em>,<br>2023 — 2025</h2>
+      </div>
+      <div class="filters" role="group" aria-label="Filter by category" id="filters"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="about" class="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="label num">02 / About</span>
+          <h2 id="about-h">Patient light,<br><em>honest</em> pictures.</h2>
+        </div>
+      </div>
+      <div class="about-grid">
+        <div class="about-photo">
+          <canvas id="about-canvas" role="img" aria-label="Portrait of Ines Valer, rim-lit against a warm backdrop"></canvas>
+          <span class="label">Self-portrait, Lisbon studio</span>
+        </div>
+        <div class="about-copy">
+          <p class="lede">I make photographs slowly — waiting for the weather to turn, for a sitter to forget the camera, for a building to <em>show its best side</em> at 6:12 in the morning.</p>
+          <p>For twelve years I've worked between commissioned editorial, brand campaigns and long-form personal projects. I shoot on medium-format digital and film, scout every location in person, and keep crews small so the work stays intimate.</p>
+          <p>Clients come to me when they want images that feel observed rather than staged: quiet, carefully composed and true to the place. I travel with a single assistant and can be on location almost anywhere within 48 hours.</p>
+          <div class="stats">
+            <div><b>12</b><span class="label">Years working</span></div>
+            <div><b>31</b><span class="label">Countries shot</span></div>
+            <div><b>140+</b><span class="label">Commissions</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="clients">
+        <span class="label">Selected clients &amp; publications</span>
+        <div class="marquee" aria-hidden="true" id="marquee"></div>
+        <p class="sr-only" style="position:absolute;left:-9999px">Clients include Northbound Journal, Atelier Hale, Casa Moreno, Field &amp; Fold, Tideline Hotels, Studio Ostra, The Long Walk Quarterly, Kiln Outdoor and Meridian Review.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="wrap" aria-labelledby="services-h">
+    <div class="head">
+      <div>
+        <span class="label num">03 / Services</span>
+        <h2 id="services-h">Ways to <em>work</em> together</h2>
+      </div>
+      <p class="label" style="max-width:32ch;line-height:1.6">Rates are starting points. Every brief gets a tailored quote within two working days.</p>
+    </div>
+    <div class="services">
+      <article class="svc">
+        <span class="label">A — Editorial &amp; Brand</span>
+        <h3>Campaigns</h3>
+        <p>Concept-to-delivery shoots for brands and magazines, from lookbooks to travel features.</p>
+        <ul>
+          <li>Creative direction &amp; moodboards</li>
+          <li>Location scouting &amp; permits</li>
+          <li>Retouched selects in 10 days</li>
+        </ul>
+        <p class="price">from <b>€2,400</b> / day</p>
+      </article>
+      <article class="svc">
+        <span class="label">B — People</span>
+        <h3>Portraits</h3>
+        <p>Studio or on-location portraiture for founders, artists, authors and teams.</p>
+        <ul>
+          <li>Half-day sessions, unhurried</li>
+          <li>Natural &amp; sculpted lighting</li>
+          <li>Full usage for press &amp; web</li>
+        </ul>
+        <p class="price">from <b>€850</b> / session</p>
+      </article>
+      <article class="svc">
+        <span class="label">C — Places</span>
+        <h3>Architecture &amp; Landscape</h3>
+        <p>Buildings, interiors and land, photographed in the right light — however long that takes.</p>
+        <ul>
+          <li>Golden &amp; blue-hour coverage</li>
+          <li>Tilt-shift perspective control</li>
+          <li>Fine-art print licensing</li>
+        </ul>
+        <p class="price">from <b>€1,600</b> / project</p>
+      </article>
+    </div>
+    <figure class="quote">
+      <span class="mark" aria-hidden="true">“</span>
+      <div>
+        <blockquote>Ines waited three mornings for the fog to lift over the vineyard. The picture she got became the cover, the billboard and, honestly, the whole identity of our launch.</blockquote>
+        <cite class="label">Marta Seixas — Creative Director, Casa Moreno</cite>
+      </div>
+    </figure>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="label num">04 / Contact</span>
+          <h2 id="contact-h">Tell me about<br>your <em>project</em>.</h2>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <div class="direct">
+          <p>Commissions, licensing, print sales or just a hello — I read everything and reply within two working days.</p>
+          <a class="big" id="email-link" href="mailto:studio@inesvaler.example">studio@inesvaler.example</a>
+          <dl>
+            <dt class="label">Studio</dt><dd>Rua da Esperança 41, Lisbon</dd>
+            <dt class="label">Phone</dt><dd>+351 000 000 000</dd>
+            <dt class="label">Represented</dt><dd>Worldwide, direct</dd>
+            <dt class="label">Elsewhere</dt><dd><a href="#">Instagram</a> · <a href="#">Behance</a></dd>
+          </dl>
+        </div>
+        <form id="form" novalidate>
+          <div class="field">
+            <label class="label" for="f-name">Your name</label>
+            <input id="f-name" name="name" autocomplete="name" required>
+            <span class="err" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label class="label" for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <span class="err" aria-live="polite"></span>
+          </div>
+          <fieldset class="field full" style="border:0">
+            <legend class="label" style="margin-bottom:.6rem">Type of project</legend>
+            <div class="chips">
+              <label><input type="radio" name="type" value="Campaign" checked><span>Campaign</span></label>
+              <label><input type="radio" name="type" value="Portrait"><span>Portrait</span></label>
+              <label><input type="radio" name="type" value="Architecture"><span>Architecture</span></label>
+              <label><input type="radio" name="type" value="Licensing / Prints"><span>Licensing / Prints</span></label>
+              <label><input type="radio" name="type" value="Something else"><span>Something else</span></label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label class="label" for="f-date">Ideal date</label>
+            <input id="f-date" name="date" type="date">
+            <span class="err"></span>
+          </div>
+          <div class="field">
+            <label class="label" for="f-budget">Budget</label>
+            <select id="f-budget" name="budget">
+              <option>Not sure yet</option>
+              <option>Under €1,000</option>
+              <option>€1,000 – €3,000</option>
+              <option>€3,000 – €8,000</option>
+              <option>€8,000+</option>
+            </select>
+            <span class="err"></span>
+          </div>
+          <div class="field full">
+            <label class="label" for="f-msg">The brief</label>
+            <textarea id="f-msg" name="message" required placeholder="Where, when, what it's for…"></textarea>
+            <span class="err" aria-live="polite"></span>
+          </div>
+          <div class="submit">
+            <span class="label">Replies within 2 working days</span>
+            <button class="btn" type="submit">Send enquiry <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="sent" role="status" tabindex="-1">
+            <h3>Thank you — message ready.</h3>
+            <p>Your email app should open with the enquiry filled in. If it didn't, <a id="mailto-fallback" href="#">click here</a> or write directly to the address on the left.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="label">© <span id="yr"></span> Ines Valer Photography</span>
+  <ul>
+    <li><a class="label" href="#">Instagram</a></li>
+    <li><a class="label" href="#top">Back to top ↑</a></li>
+  </ul>
+</footer>
+
+<dialog id="lb" aria-label="Image viewer">
+  <div class="lb-top">
+    <span class="label" id="lb-count"></span>
+    <button class="lb-close" id="lb-close">Close ✕</button>
+  </div>
+  <div class="lb-stage" id="lb-stage">
+    <canvas id="lb-canvas" role="img"></canvas>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">←</button>
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Next image">→</button>
+  </div>
+  <div class="lb-bot">
+    <span class="lb-title" id="lb-title"></span>
+    <span class="label" id="lb-meta"></span>
+  </div>
+</dialog>
+
+<script>
+(() => {
+/* ---------- Portfolio data (swap painters for <img> tags when real photos are ready) ---------- */
+const WORKS = [
+  {t:"Before the Thaw", loc:"Lofoten, Norway", y:2025, c:"landscape", a:[4,5], k:"land",
+   p:{sky:["#c9d3da","#e8d9c8","#f1c39d"], sun:[.7,.4,"#fff1d8"], hz:.44, far:"#9ba8b5", near:"#1f232a", fog:"#ece3d6", layers:5}},
+  {t:"Salt Hour", loc:"Camargue, France", y:2024, c:"landscape", a:[3,2], k:"sea",
+   p:{sky:["#28324d","#8a6a7d","#eba578"], sun:[.38,.6,"#ffd9a8"], hz:.62, water:["#6d5566","#1b2033"]}},
+  {t:"Ada, Studio IV", loc:"Lisbon", y:2025, c:"portrait", a:[4,5], k:"face",
+   p:{bg:["#6a5444","#17130f"], skin:"#110e0c", rim:"#f3b682", x:.46}},
+  {t:"Concrete Psalm", loc:"Chandigarh, India", y:2023, c:"architecture", a:[2,3], k:"arch",
+   p:{wall:"#dcc9ae", shade:"#8e7559", accent:"#b5502c", fig:"#1c1a18", mode:"windows"}},
+  {t:"Erg Chebbi, 6:12", loc:"Morocco", y:2024, c:"landscape", a:[3,2], k:"dune",
+   p:{sky:["#f6e7cf","#efc49a"], light:"#eab57d", shade:"#8a4a2a", sun:[.82,.24,"#fff3dc"]}},
+  {t:"Noor for Atelier Hale", loc:"Paris", y:2025, c:"editorial", a:[2,3], k:"face",
+   p:{bg:["#cfae8f","#6a4634"], skin:"#28180f", rim:"#ffe4c8", x:.56}},
+  {t:"Blue Dividing", loc:"Faroe Islands", y:2023, c:"landscape", a:[4,5], k:"land",
+   p:{sky:["#111a2d","#2d4365","#7d95ae"], sun:[.28,.32,"#cfdcec"], hz:.5, far:"#4a5d78", near:"#0a0e16", fog:"#7d90a8", layers:4}},
+  {t:"Stairwell, No. 3", loc:"Porto", y:2024, c:"architecture", a:[1,1], k:"arch",
+   p:{wall:"#e7e3dc", shade:"#6c6f75", accent:"#2f5d7c", fig:"#141414", mode:"stairs"}},
+  {t:"Low Tide", loc:"Cornwall, UK", y:2025, c:"landscape", a:[3,2], k:"sea",
+   p:{sky:["#a7b1b6","#d8d3c8","#efe2cc"], sun:[.62,.56,"#fffaf0"], hz:.58, water:["#b0afa7","#4b5358"]}},
+  {t:"Kofi, Off-Duty", loc:"Accra", y:2024, c:"portrait", a:[4,5], k:"face",
+   p:{bg:["#2f4a4a","#0b1313"], skin:"#090b0b", rim:"#a3e3d2", x:.5}},
+  {t:"SS26 — Field Notes", loc:"Copenhagen", y:2025, c:"editorial", a:[3,2], k:"dune",
+   p:{sky:["#eceee8","#cfd8cf"], light:"#bcc6b3", shade:"#4b5a48", sun:[.2,.3,"#ffffff"]}},
+  {t:"Grid & Grace", loc:"Brasília", y:2023, c:"architecture", a:[4,5], k:"arch",
+   p:{wall:"#f0d8c2", shade:"#b06e4c", accent:"#1f3d5a", fig:"#1a1210", mode:"windows"}},
+];
+const HERO = {k:"land", p:{sky:["#2a3550","#7b6b86","#e9a985","#f6d3a8"], sun:[.62,.5,"#fff0d6"], hz:.5, far:"#a88f9a", near:"#141822", fog:"#f0c9a8", layers:6}};
+const ABOUT = {k:"face", p:{bg:["#8a5a3e","#1d1410"], skin:"#140f0c", rim:"#ffc79a", x:.5}};
+const CLIENTS = ["Northbound Journal","Atelier Hale","Casa Moreno","Field & Fold","Tideline Hotels","Studio Ostra","The Long Walk Quarterly","Kiln Outdoor","Meridian Review"];
+
+/* ---------- Utilities ---------- */
+const $ = s => document.querySelector(s);
+const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join()})`; };
+const rgba = (h, a) => `rgba(${hex(h).join()},${a})`;
+function noise1(r){ const pts = Array.from({length:64}, r); pts[63] = pts[0];
+  return x => { x = ((x % 63) + 63) % 63; const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return pts[i] * (1 - u) + pts[i + 1] * u; }; }
+const fbm = (n, x) => n(x) * .55 + n(x * 2.1 + 7) * .28 + n(x * 4.3 + 19) * .17;
+const vgrad = (ctx, y0, y1, stops) => { const g = ctx.createLinearGradient(0, y0, 0, y1); stops.forEach((c, i) => g.addColorStop(i / (stops.length - 1), c)); return g; };
+
+/* ---------- Procedural "photographs" ---------- */
+function sun(ctx, w, h, [x, y, c]){
+  const X = x * w, Y = y * h, R = Math.min(w, h) * .055;
+  const g = ctx.createRadialGradient(X, Y, 0, X, Y, R * 9);
+  g.addColorStop(0, rgba(c, .6)); g.addColorStop(.25, rgba(c, .18)); g.addColorStop(1, rgba(c, 0));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = c; ctx.beginPath(); ctx.arc(X, Y, R, 0, 7); ctx.fill();
+}
+const P = {
+  land(ctx, w, h, r, p){
+    ctx.fillStyle = vgrad(ctx, 0, h * (p.hz + .1), p.sky); ctx.fillRect(0, 0, w, h);
+    sun(ctx, w, h, p.sun);
+    const n = p.layers, step = Math.max(1, w / 320);
+    for (let i = 0; i < n; i++){
+      const t = i / (n - 1), nz = noise1(r), base = h * (p.hz + t * (1 - p.hz) * .78);
+      const amp = h * (.2 - .1 * t) * (.8 + r() * .5), freq = (1.6 + i * 1.2) / w, off = r() * 30;
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (let x = 0; x <= w + step; x += step) ctx.lineTo(x, base - fbm(nz, off + x * freq) * amp);
+      ctx.lineTo(w, h); ctx.closePath(); ctx.fillStyle = mix(p.far, p.near, Math.pow(t, .8)); ctx.fill();
+      if (i < n - 1){
+        const g = ctx.createLinearGradient(0, base - amp * .5, 0, base + h * .06);
+        g.addColorStop(0, rgba(p.fog, 0)); g.addColorStop(1, rgba(p.fog, .42 - .25 * t));
+        ctx.fillStyle = g; ctx.fillRect(0, base - amp * .5, w, h);
+      }
+    }
+  },
+  sea(ctx, w, h, r, p){
+    const hy = h * p.hz;
+    ctx.fillStyle = vgrad(ctx, 0, hy, p.sky); ctx.fillRect(0, 0, w, hy + 1);
+    sun(ctx, w, h, p.sun);
+    ctx.fillStyle = vgrad(ctx, hy, h, p.water); ctx.fillRect(0, hy, w, h - hy);
+    const sx = p.sun[0] * w, sc = p.sun[2];
+    for (let y = hy + 1; y < h; y += Math.max(1.5, h / 260)){
+      const d = (y - hy) / (h - hy);
+      ctx.fillStyle = rgba(sc, (.55 - d * .45) * r());
+      const len = w * (.03 + .16 * d) * (.4 + r());
+      ctx.fillRect(sx - len / 2 + (r() - .5) * w * .04 * (1 + d * 3), y, len, Math.max(1, h / 500) * (1 + d * 2));
+      if (r() < .35){ ctx.fillStyle = rgba(sc, .07 * r()); ctx.fillRect(r() * w, y, w * (.05 + r() * .25), 1 + d * 2); }
+    }
+    ctx.fillStyle = rgba(sc, .35); ctx.fillRect(0, hy - .5, w, Math.max(1, h / 600));
+  },
+  dune(ctx, w, h, r, p){
+    ctx.fillStyle = vgrad(ctx, 0, h * .6, p.sky); ctx.fillRect(0, 0, w, h);
+    sun(ctx, w, h, p.sun);
+    const step = Math.max(1, w / 320);
+    for (let i = 0; i < 5; i++){
+      const t = i / 4, nz = noise1(r), base = h * (.48 + t * .42), ph = r() * 6, off = r() * 30, f = (1.2 + i * .6) * Math.PI;
+      const pts = [];
+      for (let x = 0; x <= w + step; x += step) pts.push([x, base + Math.sin(x / w * f + ph) * h * .05 - fbm(nz, off + x / w * 3) * h * .09]);
+      ctx.beginPath(); ctx.moveTo(0, h); pts.forEach(q => ctx.lineTo(...q)); ctx.lineTo(w, h); ctx.closePath();
+      const lt = mix(p.light, p.shade, t * .35), dk = mix(p.shade, "#1a0f08", t * .35);
+      ctx.fillStyle = vgrad(ctx, base - h * .12, base + h * .22, [lt, dk]); ctx.fill();
+      ctx.beginPath(); pts.forEach((q, j) => j ? ctx.lineTo(...q) : ctx.moveTo(...q));
+      ctx.strokeStyle = rgba(p.sun[2], .55 - t * .3); ctx.lineWidth = Math.max(1, w / 700); ctx.stroke();
+    }
+  },
+  arch(ctx, w, h, r, p){
+    ctx.fillStyle = p.wall; ctx.fillRect(0, 0, w, h);
+    const s = Math.min(w, h);
+    if (p.mode === "stairs"){
+      const n = 9, sw = w / n * .9, sh = h / n * .75;
+      ctx.fillStyle = p.shade; ctx.beginPath(); ctx.moveTo(0, h);
+      for (let i = 0; i <= n; i++){ ctx.lineTo(i * sw, h - i * sh); ctx.lineTo((i + 1) * sw, h - i * sh); }
+      ctx.lineTo((n + 1) * sw, h); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = rgba("#ffffff", .5); ctx.lineWidth = Math.max(1, s / 400);
+      for (let i = 0; i <= n; i++){ ctx.beginPath(); ctx.moveTo(i * sw, h - i * sh); ctx.lineTo((i + 1) * sw, h - i * sh); ctx.stroke(); }
+      ctx.fillStyle = p.accent; ctx.fillRect(w * .78, h * .08, w * .08, h * .3);
+    } else {
+      const cols = 3 + Math.floor(r() * 3), rows = Math.round(cols * h / w) + 1, gw = w / cols, gh = h / rows;
+      for (let c = 0; c < cols; c++) for (let y = 0; y < rows; y++){
+        const x0 = c * gw + gw * .18, y0 = y * gh + gh * .18, ww = gw * .64, hh = gh * .64;
+        ctx.fillStyle = rgba(p.shade.length ? p.shade : "#000000", 1); ctx.fillRect(x0, y0, ww, hh);
+        ctx.fillStyle = rgba("#000000", .35); ctx.fillRect(x0, y0, ww, hh * .18); ctx.fillRect(x0, y0, ww * .14, hh);
+      }
+      const ac = Math.floor(r() * cols), ar = Math.floor(r() * rows);
+      ctx.fillStyle = p.accent; ctx.fillRect(ac * gw + gw * .18, ar * gh + gh * .18, gw * .64, gh * .64);
+    }
+    ctx.fillStyle = "rgba(20,14,10,.3)"; ctx.beginPath();
+    const a = .25 + r() * .3; ctx.moveTo(w * a, 0); ctx.lineTo(w, 0); ctx.lineTo(w, h); ctx.lineTo(w * (a + .45), h); ctx.closePath(); ctx.fill();
+    const fx = w * (.2 + r() * .2), fy = h * .965, fh = s * .07;
+    ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.moveTo(fx - fh * .08, fy); ctx.lineTo(fx + fh * 1.6, fy + fh * .05); ctx.lineTo(fx + fh * .08, fy); ctx.fill();
+    ctx.fillStyle = p.fig; ctx.fillRect(fx - fh * .09, fy - fh * .78, fh * .18, fh * .78);
+    ctx.beginPath(); ctx.arc(fx, fy - fh * .9, fh * .11, 0, 7); ctx.fill();
+  },
+  face(ctx, w, h, r, p){
+    const cx = p.x * w, s = Math.min(w, h);
+    const g = ctx.createRadialGradient(cx - s * .15, h * .3, 0, cx, h * .45, Math.max(w, h) * .8);
+    g.addColorStop(0, p.bg[0]); g.addColorStop(1, p.bg[1]); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    const body = () => {
+      ctx.beginPath(); ctx.ellipse(cx, h * 1.03, s * .44, h * .3, 0, Math.PI, 0); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(cx - s * .065, h * .5); ctx.lineTo(cx + s * .06, h * .5); ctx.lineTo(cx + s * .08, h * .78); ctx.lineTo(cx - s * .09, h * .78); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx, h * .41, s * .13, s * .17, -.1, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + s * .05, h * .41 - s * .16, s * .09, s * .07, .3, 0, 7); ctx.fill();
+    };
+    ctx.save(); ctx.translate(-s * .008, -s * .004); ctx.shadowColor = p.rim; ctx.shadowBlur = s * .05; ctx.fillStyle = p.rim; body(); ctx.restore();
+    ctx.fillStyle = p.skin; body();
+    const sh = ctx.createLinearGradient(cx - s * .3, 0, cx + s * .3, 0);
+    sh.addColorStop(0, rgba(p.rim, .12)); sh.addColorStop(.4, rgba(p.rim, 0));
+    ctx.globalCompositeOperation = "source-atop"; ctx.fillStyle = sh; ctx.fillRect(0, 0, w, h); ctx.globalCompositeOperation = "source-over";
+  }
+};
+function finish(ctx, w, h){
+  const v = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * .3, w / 2, h / 2, Math.hypot(w, h) * .6);
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.38)");
+  ctx.fillStyle = v; ctx.fillRect(0, 0, w, h);
+  const img = ctx.getImageData(0, 0, w, h), d = img.data;
+  for (let i = 0; i < d.length; i += 4){ const n = (Math.random() - .5) * 22; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  ctx.putImageData(img, 0, 0);
+}
+function paint(cv, item, seed, cssW, cssH){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = Math.max(1, Math.round((cssW || cv.clientWidth) * dpr)), H = Math.max(1, Math.round((cssH || cv.clientHeight) * dpr));
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  P[item.k](ctx, W, H, rng(seed), item.p); finish(ctx, W, H);
+}
+
+/* ---------- Grid & filters ---------- */
+const grid = $("#grid"), cats = ["all", ...new Set(WORKS.map(w => w.c))];
+const filters = $("#filters");
+cats.forEach(c => {
+  const b = document.createElement("button");
+  b.type = "button"; b.dataset.cat = c; b.setAttribute("aria-pressed", c === "all");
+  b.innerHTML = `${c}<sup>${c === "all" ? WORKS.length : WORKS.filter(w => w.c === c).length}</sup>`;
+  filters.append(b);
+});
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const cv = e.target, i = +cv.dataset.i; paint(cv, WORKS[i], 1000 + i * 97); io.unobserve(cv);
+}), {rootMargin:"300px"});
+WORKS.forEach((w, i) => {
+  const el = document.createElement("button");
+  el.className = "tile"; el.type = "button"; el.dataset.cat = w.c; el.dataset.i = i;
+  el.setAttribute("aria-label", `Open “${w.t}”, ${w.loc}, ${w.y}`);
+  el.style.animationDelay = (i % 6) * 60 + "ms";
+  el.innerHTML = `<figure><div class="frame" style="aspect-ratio:${w.a[0]}/${w.a[1]}"><canvas data-i="${i}" role="img" aria-label="${w.t} — ${w.c} photograph, ${w.loc}"></canvas><span class="view label">View ↗</span></div>
+    <figcaption><span class="t">${w.t}</span><span class="label">${w.loc.split(",")[0]} · ${w.y}</span></figcaption></figure>`;
+  grid.append(el); io.observe(el.querySelector("canvas"));
+});
+filters.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  filters.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  grid.querySelectorAll(".tile").forEach(t => {
+    const show = b.dataset.cat === "all" || t.dataset.cat === b.dataset.cat;
+    t.hidden = !show; if (show){ t.style.animation = "none"; t.offsetWidth; t.style.animation = ""; }
+  });
+});
+
+/* ---------- Lightbox ---------- */
+const lb = $("#lb"), lbc = $("#lb-canvas"), stage = $("#lb-stage");
+let cur = 0;
+const visible = () => [...grid.querySelectorAll(".tile:not([hidden])")].map(t => +t.dataset.i);
+function show(i){
+  cur = i; const w = WORKS[i], list = visible(), pos = list.indexOf(i);
+  const maxW = stage.clientWidth * .82, maxH = stage.clientHeight * .9, ar = w.a[0] / w.a[1];
+  let cw = maxW, ch = cw / ar; if (ch > maxH){ ch = maxH; cw = ch * ar; }
+  lbc.style.width = cw + "px"; lbc.style.height = ch + "px"; lbc.style.opacity = 0;
+  requestAnimationFrame(() => { paint(lbc, w, 1000 + i * 97, cw, ch); lbc.style.opacity = 1; });
+  lbc.setAttribute("aria-label", `${w.t} — ${w.c} photograph, ${w.loc}`);
+  $("#lb-title").textContent = w.t;
+  $("#lb-meta").textContent = `${w.c} · ${w.loc} · ${w.y}`;
+  $("#lb-count").textContent = `${String(pos + 1).padStart(2, "0")} / ${String(list.length).padStart(2, "0")}`;
+}
+const step = d => { const l = visible(); show(l[(l.indexOf(cur) + d + l.length) % l.length]); };
+grid.addEventListener("click", e => { const t = e.target.closest(".tile"); if (!t) return; lb.showModal(); document.body.style.overflow = "hidden"; show(+t.dataset.i); });
+lb.addEventListener("close", () => { document.body.style.overflow = ""; grid.querySelector(`.tile[data-i="${cur}"]`)?.focus(); });
+$("#lb-close").onclick = () => lb.close();
+$("#lb-prev").onclick = () => step(-1);
+$("#lb-next").onclick = () => step(1);
+lb.addEventListener("keydown", e => { if (e.key === "ArrowRight") step(1); if (e.key === "ArrowLeft") step(-1); });
+let sx = null;
+stage.addEventListener("pointerdown", e => sx = e.clientX);
+stage.addEventListener("pointerup", e => { if (sx !== null && Math.abs(e.clientX - sx) > 50) step(e.clientX < sx ? 1 : -1); sx = null; });
+
+/* ---------- Hero, about, marquee ---------- */
+const heroCv = $("#hero-canvas"), aboutCv = $("#about-canvas");
+const paintStatic = () => { paint(heroCv, HERO, 4242); paint(aboutCv, ABOUT, 77); };
+paintStatic();
+let rt, lastW = innerWidth;
+addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => {
+  if (Math.abs(innerWidth - lastW) < 80) return; lastW = innerWidth; paintStatic(); if (lb.open) show(cur);
+}, 250); });
+const mq = $("#marquee"); [...CLIENTS, ...CLIENTS].forEach(c => { const s = document.createElement("span"); s.textContent = c; mq.append(s); });
+
+const header = $("header.site");
+const onScroll = () => header.classList.toggle("solid", scrollY > innerHeight * .75);
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+$("#yr").textContent = new Date().getFullYear();
+
+/* ---------- Contact form ---------- */
+const form = $("#form"), EMAIL = $("#email-link").getAttribute("href").replace("mailto:", "");
+const rules = {
+  name: v => v.trim().length > 1 || "Please tell me your name.",
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "That email doesn't look quite right.",
+  message: v => v.trim().length > 9 || "A sentence or two about the project, please."
+};
+const check = el => { const res = rules[el.name] ? rules[el.name](el.value) : true, f = el.closest(".field");
+  f.classList.toggle("invalid", res !== true); f.querySelector(".err").textContent = res === true ? "" : res;
+  el.setAttribute("aria-invalid", res !== true); return res === true; };
+form.querySelectorAll("[required]").forEach(el => el.addEventListener("blur", () => check(el)));
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const bad = [...form.querySelectorAll("[required]")].filter(el => !check(el));
+  if (bad.length){ bad[0].focus(); return; }
+  const d = Object.fromEntries(new FormData(form));
+  const body = `Name: ${d.name}\nEmail: ${d.email}\nProject: ${d.type}\nDate: ${d.date || "Flexible"}\nBudget: ${d.budget}\n\n${d.message}`;
+  const href = `mailto:${EMAIL}?subject=${encodeURIComponent(`Enquiry — ${d.type} — ${d.name}`)}&body=${encodeURIComponent(body)}`;
+  $("#mailto-fallback").href = href;
+  form.classList.add("done"); form.querySelector(".sent").focus();
+  location.href = href;
+});
+})();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+
+
+<invoke name="Bash">
+<parameter name="command">cd /data/scratch/ai-sameness/main/work/opus-5.5__P3__r4.a1.mkp6ap_i && python3 -c "
+import re;s=open('index.html').read();open('/tmp/x.js','w').write(re.search(r'<script>(.*)</script>',s,re.S).group(1))" && node --check /tmp/x.js && echo OK</parameter>
+</invoke>
+๏ฟฝOK
+I've built the portfolio as a single file at `index.html`. It has no external dependencies: no image files, web fonts or libraries. I checked that the JavaScript parses without errors, but I haven't opened it in a browser yet, so the layout and generated images are unverified.
+
+**The images:** Because the file must be self-contained, there are no photos in it. Instead, each "photograph" is drawn by code when the page loads. They are stylised scenes: misty mountain ridges, a sunset over the sea, sand dunes, buildings with a small figure and long shadow, and rim-lit portrait silhouettes. Each has film grain and darkened edges. Every image gets its own colour scheme, so the grid looks varied.
+
+**What's on the page**
+- **Header:** sits on top of the opening image, then turns solid once you scroll past it.
+- **Opening section:** a full-screen landscape that slowly drifts, a large name in a serif font, a short intro, and a "booking" note with a pulsing dot.
+- **Work:** 12 fictional projects in a staggered grid, with filter buttons for Landscape, Portrait, Architecture and Editorial (each shows a count). Images are only drawn as they scroll into view.
+- **Image viewer:** opens when you click a picture. It shows a larger version with title, place, year and position (e.g. "03 / 07"). You can move between images with buttons, arrow keys or swiping, and it only steps through the images the current filter is showing.
+- **About:** a dark section with a portrait, bio, three stats and a scrolling strip of client names (it pauses when you hover over it).
+- **Services:** three packages with "from" prices, plus a client quote.
+- **Contact:** a form that checks the fields and tells you what's wrong. When it's valid, it opens the visitor's email program with the enquiry already filled in, because there's no server behind it.
+- **Accessibility:** works with a keyboard, has a "skip to work" link and text descriptions for every image, and turns off animation for visitors who have asked their system for reduced motion.
+
+**To make it real:**
+- **Name and contact details:** "Ines Valer", `studio@inesvaler.example`, the phone number, address and social links are all placeholders.
+- **Photos:** in the `WORKS` list near the top of the `<script>`, put an `<img>` inside each image frame in place of the drawn picture, using the same width-to-height shapes.
+- **Form:** to receive enquiries without relying on the visitor's email program, point the form at a form service such as Formspree.

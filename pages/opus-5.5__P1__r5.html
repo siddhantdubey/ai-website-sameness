@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadence — Project management that keeps time with your team</title>
+<meta name="description" content="Cadence turns scattered work into a steady weekly rhythm. Plan, ship, and review — without the status meetings.">
+<style>
+  :root {
+    --paper: #f6f2ea;
+    --paper-2: #efe9dd;
+    --ink: #1b1a17;
+    --ink-2: #4a463f;
+    --ink-3: #8a8478;
+    --line: #d9d1c2;
+    --signal: #e8572a;
+    --signal-soft: #fbe3d8;
+    --moss: #3f6b4f;
+    --moss-soft: #dde8df;
+    --sky: #2f5d8a;
+    --sky-soft: #dce6f0;
+    --butter: #e9b949;
+    --butter-soft: #f8edcf;
+    --radius: 14px;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  nav.scrolled { border-bottom-color: var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: -0.02em; }
+  .logo-mark { display: flex; gap: 3px; align-items: flex-end; height: 22px; }
+  .logo-mark span { width: 5px; background: var(--ink); border-radius: 2px; }
+  .logo-mark span:nth-child(1) { height: 10px; }
+  .logo-mark span:nth-child(2) { height: 18px; }
+  .logo-mark span:nth-child(3) { height: 22px; background: var(--signal); }
+  .logo-mark span:nth-child(4) { height: 14px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; font-size: 15px; color: var(--ink-2); }
+  .nav-links a { text-decoration: none; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 600 15px/1 var(--sans);
+    padding: 12px 20px; border-radius: 999px;
+    text-decoration: none; cursor: pointer; border: 1px solid transparent;
+    transition: transform .15s, background .15s, box-shadow .15s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: #000; box-shadow: 0 6px 20px -8px rgba(0,0,0,.5); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover { background: var(--paper-2); }
+  .btn-signal { background: var(--signal); color: #fff; }
+  .btn-signal:hover { background: #d44a1f; }
+  .btn-text { padding: 12px 8px; background: none; color: var(--ink-2); }
+  .btn-text:hover { color: var(--ink); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 72px 0 40px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 13px/1 var(--mono); color: var(--ink-2);
+    padding: 7px 12px 7px 8px; border: 1px solid var(--line); border-radius: 999px; background: #fff8;
+  }
+  .eyebrow b { background: var(--signal); color: #fff; padding: 4px 7px; border-radius: 999px; font-weight: 600; }
+  h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(44px, 6.6vw, 88px); line-height: 1.0; letter-spacing: -0.025em;
+    margin: 26px 0 22px; max-width: 13ch;
+  }
+  h1 em { font-style: italic; color: var(--signal); }
+  .hero-sub { font-size: 20px; color: var(--ink-2); max-width: 54ch; }
+  .hero-actions { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; align-items: center; }
+  .hero-note { font-size: 14px; color: var(--ink-3); margin-top: 14px; }
+
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 56px; }
+
+  /* ---------- Board demo ---------- */
+  .board-shell {
+    margin-top: 56px;
+    background: #fffdf8;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: 0 1px 0 #fff inset, 0 30px 60px -30px rgba(60,40,10,.25), 0 8px 20px -12px rgba(60,40,10,.15);
+    overflow: hidden;
+  }
+  .board-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--paper);
+  }
+  .board-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 15px; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); display: block; }
+  .week-pill { font: 500 12px var(--mono); background: var(--ink); color: var(--paper); padding: 4px 9px; border-radius: 6px; }
+  .board-meta { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-2); }
+  .progress { width: 140px; height: 6px; background: var(--paper-2); border-radius: 99px; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--moss); border-radius: 99px; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+  .avatars { display: flex; }
+  .avatars span {
+    width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--paper);
+    margin-left: -7px; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff;
+  }
+
+  .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 18px; min-height: 360px; }
+  .col { background: var(--paper); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px; transition: background .15s, box-shadow .15s; }
+  .col.over { background: var(--signal-soft); box-shadow: 0 0 0 2px var(--signal) inset; }
+  .col-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 6px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .col-head .count { font: 500 12px var(--mono); color: var(--ink-3); }
+  .col-head .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px;
+    font-size: 14px; cursor: grab; user-select: none;
+    transition: transform .15s, box-shadow .15s, opacity .15s;
+  }
+  .card:hover { transform: translateY(-1px); box-shadow: 0 6px 14px -8px rgba(60,40,10,.3); }
+  .card.dragging { opacity: .4; }
+  .card:active { cursor: grabbing; }
+  .card .tag { display: inline-block; font: 600 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; padding: 4px 6px; border-radius: 4px; margin-bottom: 8px; }
+  .card .row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: var(--ink-3); }
+  .card .who { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-weight: 700; color: #fff; }
+  .card.done-card .title { text-decoration: line-through; text-decoration-color: var(--ink-3); color: var(--ink-3); }
+  .t-design { background: var(--signal-soft); color: #a63b17; }
+  .t-eng { background: var(--sky-soft); color: var(--sky); }
+  .t-research { background: var(--butter-soft); color: #8a6612; }
+  .t-ops { background: var(--moss-soft); color: var(--moss); }
+
+  .board-hint { text-align: center; font: 500 13px var(--mono); color: var(--ink-3); margin-top: 16px; }
+  .board-hint span { color: var(--signal); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 140%);
+    background: var(--ink); color: var(--paper); padding: 12px 18px; border-radius: 12px;
+    font-size: 14px; display: flex; gap: 10px; align-items: center; z-index: 100;
+    transition: transform .35s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .toast.show { transform: translate(-50%, 0); }
+
+  /* ---------- Logos ---------- */
+  .logos { padding: 56px 0 24px; text-align: center; }
+  .logos p { font-size: 14px; color: var(--ink-3); margin-bottom: 22px; }
+  .logo-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 52px; opacity: .7; }
+  .logo-row span { font-weight: 700; font-size: 20px; letter-spacing: -0.02em; color: var(--ink-2); }
+  .logo-row span:nth-child(2) { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 23px; }
+  .logo-row span:nth-child(4) { font-family: var(--mono); font-weight: 500; font-size: 17px; }
+  .logo-row span:nth-child(5) { letter-spacing: .18em; font-size: 15px; text-transform: uppercase; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 110px 0; }
+  .section-label { font: 500 13px var(--mono); color: var(--signal); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 18px; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.05; letter-spacing: -0.02em; max-width: 18ch; }
+  h2 em { font-style: italic; }
+  .section-sub { font-size: 18px; color: var(--ink-2); max-width: 56ch; margin-top: 18px; }
+
+  /* Rhythm (the loop) */
+  .loop { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 64px; border-top: 1px solid var(--ink); }
+  .loop-step { padding: 30px 30px 10px 0; position: relative; }
+  .loop-step + .loop-step { padding-left: 30px; border-left: 1px solid var(--line); }
+  .loop-day { font: 500 13px var(--mono); color: var(--ink-3); }
+  .loop-step h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 10px 0 12px; letter-spacing: -0.01em; }
+  .loop-step p { color: var(--ink-2); font-size: 16px; }
+  .loop-step ul { list-style: none; margin-top: 18px; font-size: 14.5px; color: var(--ink-2); }
+  .loop-step li { padding: 7px 0; border-top: 1px dashed var(--line); display: flex; gap: 10px; }
+  .loop-step li::before { content: "→"; color: var(--signal); }
+
+  /* Features bento */
+  .features { background: var(--ink); color: var(--paper); border-radius: 28px; margin: 0 16px; }
+  .features h2 { color: var(--paper); }
+  .features .section-sub { color: #bdb6a8; }
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 60px; }
+  .tile { background: #26241f; border: 1px solid #36332c; border-radius: 18px; padding: 28px; overflow: hidden; position: relative; }
+  .tile h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .tile p { color: #a8a194; font-size: 15px; max-width: 42ch; }
+  .span-4 { grid-column: span 4; } .span-2 { grid-column: span 2; } .span-3 { grid-column: span 3; }
+
+  .viz-timeline { margin-top: 26px; display: grid; gap: 9px; }
+  .tl-row { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 12px; font-size: 12.5px; color: #8f887b; }
+  .tl-track { position: relative; height: 22px; background: repeating-linear-gradient(90deg, #36332c 0 1px, transparent 1px calc(100% / 10)); border-radius: 4px; }
+  .tl-bar { position: absolute; top: 3px; bottom: 3px; border-radius: 4px; }
+
+  .viz-pulse { margin-top: 24px; display: flex; align-items: flex-end; gap: 6px; height: 90px; }
+  .viz-pulse span { flex: 1; background: #3a372f; border-radius: 3px 3px 0 0; transition: height .6s cubic-bezier(.2,.8,.2,1); }
+  .viz-pulse span.hi { background: var(--signal); }
+
+  .kbd-row { margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+  kbd { font: 500 13px var(--mono); background: #36332c; border: 1px solid #4a463d; border-bottom-width: 3px; padding: 6px 10px; border-radius: 7px; color: var(--paper); }
+
+  .big-stat { font-family: var(--serif); font-size: 72px; line-height: 1; color: var(--signal); margin-top: 18px; letter-spacing: -0.03em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .chips span { font-size: 13px; border: 1px solid #4a463d; padding: 6px 11px; border-radius: 99px; color: #cfc8ba; }
+
+  /* Testimonial */
+  .quote-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center; }
+  blockquote { font-family: var(--serif); font-size: clamp(28px, 3.3vw, 42px); line-height: 1.2; letter-spacing: -0.015em; }
+  blockquote::before { content: "“"; display: block; color: var(--signal); font-size: 90px; line-height: .6; margin-bottom: 14px; }
+  .attrib { display: flex; align-items: center; gap: 14px; margin-top: 30px; }
+  .attrib .av { width: 46px; height: 46px; border-radius: 50%; background: var(--moss); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .attrib b { display: block; }
+  .attrib small { color: var(--ink-3); font-size: 14px; }
+  .stats { display: grid; gap: 0; border-top: 1px solid var(--ink); }
+  .stat { padding: 22px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
+  .stat b { font-family: var(--serif); font-weight: 400; font-size: 46px; letter-spacing: -0.02em; }
+  .stat span { color: var(--ink-2); font-size: 15px; text-align: right; max-width: 22ch; }
+
+  /* Pricing */
+  .pricing-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; flex-wrap: wrap; }
+  .toggle { display: inline-flex; background: var(--paper-2); border: 1px solid var(--line); border-radius: 99px; padding: 4px; }
+  .toggle button { font: 600 14px var(--sans); border: 0; background: none; padding: 9px 16px; border-radius: 99px; cursor: pointer; color: var(--ink-2); }
+  .toggle button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  .toggle .save { font: 600 11px var(--mono); color: var(--moss); margin-left: 6px; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 48px; }
+  .plan { background: #fffdf8; border: 1px solid var(--line); border-radius: 20px; padding: 32px; display: flex; flex-direction: column; }
+  .plan.feature { background: var(--ink); color: var(--paper); border-color: var(--ink); position: relative; }
+  .plan.feature .plan-desc, .plan.feature li { color: #c9c2b4; }
+  .badge { position: absolute; top: 20px; right: 20px; font: 600 11px var(--mono); background: var(--signal); color: #fff; padding: 5px 9px; border-radius: 99px; text-transform: uppercase; letter-spacing: .05em; }
+  .plan h3 { font-size: 18px; font-weight: 600; }
+  .plan-desc { font-size: 14.5px; color: var(--ink-2); margin-top: 6px; min-height: 44px; }
+  .price { font-family: var(--serif); font-size: 58px; letter-spacing: -0.03em; margin: 22px 0 4px; line-height: 1; }
+  .price small { font-family: var(--sans); font-size: 14px; color: var(--ink-3); letter-spacing: 0; margin-left: 4px; }
+  .plan.feature .price small { color: #a8a194; }
+  .plan ul { list-style: none; margin: 26px 0 30px; font-size: 14.5px; color: var(--ink-2); flex: 1; }
+  .plan li { padding: 8px 0; display: flex; gap: 10px; align-items: flex-start; }
+  .plan li svg { flex-shrink: 0; margin-top: 4px; }
+  .plan .btn { justify-content: center; width: 100%; }
+  .plan.feature .btn-primary { background: var(--paper); color: var(--ink); }
+
+  /* FAQ */
+  .faq-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 64px; }
+  details { border-top: 1px solid var(--line); padding: 22px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 600; gap: 20px; }
+  summary::-webkit-details-marker { display: none; }
+  summary .plus { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; transition: transform .25s, background .2s; font-weight: 400; }
+  details[open] summary .plus { transform: rotate(45deg); background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  details p { color: var(--ink-2); margin-top: 12px; max-width: 60ch; }
+
+  /* CTA */
+  .cta { text-align: center; padding: 120px 0 130px; position: relative; overflow: hidden; }
+  .cta h2 { margin: 0 auto; max-width: 16ch; font-size: clamp(40px, 5.6vw, 76px); }
+  .cta p { color: var(--ink-2); font-size: 19px; margin: 22px auto 34px; max-width: 46ch; }
+  .signup { display: flex; gap: 8px; justify-content: center; max-width: 460px; margin: 0 auto; background: #fff; border: 1px solid var(--line); padding: 6px; border-radius: 99px; }
+  .signup input { flex: 1; border: 0; outline: 0; font: 16px var(--sans); padding: 0 16px; background: transparent; min-width: 0; color: var(--ink); }
+  .signup:focus-within { border-color: var(--ink); box-shadow: 0 0 0 4px var(--signal-soft); }
+  .form-msg { margin-top: 14px; font-size: 14px; color: var(--ink-3); min-height: 20px; }
+  .metronome { position: absolute; inset: auto 0 0 0; height: 60px; display: flex; justify-content: center; align-items: flex-end; gap: 10px; opacity: .55; pointer-events: none; }
+  .metronome span { width: 4px; background: var(--line); border-radius: 2px; animation: beat 1.6s ease-in-out infinite; }
+  @keyframes beat { 0%,100% { height: 8px; } 50% { height: 46px; background: var(--signal); } }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--line); padding: 56px 0 40px; font-size: 14px; color: var(--ink-2); }
+  .foot-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
+  .foot-grid h4 { font-size: 13px; font-family: var(--mono); font-weight: 500; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+  .foot-grid ul { list-style: none; display: grid; gap: 9px; }
+  .foot-grid a { text-decoration: none; }
+  .foot-grid a:hover { color: var(--ink); text-decoration: underline; }
+  .foot-bottom { display: flex; justify-content: space-between; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; flex-wrap: wrap; gap: 10px; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .nav-links { display: none; }
+    .board { grid-template-columns: repeat(2, 1fr); }
+    .loop { grid-template-columns: 1fr; }
+    .loop-step + .loop-step { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+    .bento { grid-template-columns: 1fr; }
+    .span-4, .span-2, .span-3 { grid-column: auto; }
+    .quote-wrap, .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+    .plans { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .board-meta .progress-wrap { display: none; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 20px; }
+    .board { grid-template-columns: 1fr; }
+    .nav-cta .btn-text { display: none; }
+    section { padding: 80px 0; }
+    .features { margin: 0; border-radius: 0; }
+    .tile { padding: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo" aria-label="Cadence home">
+      <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      Cadence
+    </a>
+    <ul class="nav-links">
+      <li><a href="#rhythm">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-text">Log in</a>
+      <a href="#start" class="btn btn-primary">Start free</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><b>New</b> Weekly Review now writes itself</span>
+    <h1>Work that keeps <em>time</em> with your team.</h1>
+    <p class="hero-sub">Cadence turns a pile of tasks into a steady weekly rhythm: plan on Monday, ship all week, review on Friday. No status meetings, no spreadsheet archaeology.</p>
+    <div class="hero-actions">
+      <a href="#start" class="btn btn-signal">Start your first week
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#rhythm" class="btn btn-ghost">See how it works</a>
+    </div>
+    <p class="hero-note">Free for teams up to 8 · No credit card · Imports from Jira, Trello & Asana</p>
+
+    <div class="board-shell reveal" aria-label="Interactive demo board">
+      <div class="board-top">
+        <div class="board-title">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          Website relaunch
+          <span class="week-pill">WEEK 47</span>
+        </div>
+        <div class="board-meta">
+          <div class="progress-wrap" style="display:flex;align-items:center;gap:10px;">
+            <span id="pct">25% shipped</span>
+            <div class="progress"><span id="bar" style="width:25%"></span></div>
+          </div>
+          <div class="avatars" aria-hidden="true">
+            <span style="background:var(--signal)">MO</span>
+            <span style="background:var(--sky)">JR</span>
+            <span style="background:var(--moss)">AK</span>
+            <span style="background:var(--butter);color:var(--ink)">+3</span>
+          </div>
+        </div>
+      </div>
+      <div class="board" id="board">
+        <div class="col" data-col="backlog">
+          <div class="col-head"><span><i class="dot" style="background:var(--ink-3)"></i>Backlog</span><span class="count"></span></div>
+          <div class="card" draggable="true"><span class="tag t-research">Research</span><div class="title">Interview 5 churned customers</div><div class="row"><span>Thu</span><span class="who" style="background:var(--moss)">AK</span></div></div>
+          <div class="card" draggable="true"><span class="tag t-ops">Ops</span><div class="title">Set up redirect map for old URLs</div><div class="row"><span>Fri</span><span class="who" style="background:var(--sky)">JR</span></div></div>
+        </div>
+        <div class="col" data-col="week">
+          <div class="col-head"><span><i class="dot" style="background:var(--butter)"></i>This week</span><span class="count"></span></div>
+          <div class="card" draggable="true"><span class="tag t-design">Design</span><div class="title">Pricing page — final comps</div><div class="row"><span>Wed</span><span class="who" style="background:var(--signal)">MO</span></div></div>
+          <div class="card" draggable="true"><span class="tag t-eng">Eng</span><div class="title">Migrate blog to new CMS</div><div class="row"><span>Thu</span><span class="who" style="background:var(--sky)">JR</span></div></div>
+        </div>
+        <div class="col" data-col="doing">
+          <div class="col-head"><span><i class="dot" style="background:var(--sky)"></i>In motion</span><span class="count"></span></div>
+          <div class="card" draggable="true"><span class="tag t-eng">Eng</span><div class="title">Hero animation performance pass</div><div class="row"><span>Today</span><span class="who" style="background:var(--moss)">AK</span></div></div>
+        </div>
+        <div class="col" data-col="done">
+          <div class="col-head"><span><i class="dot" style="background:var(--moss)"></i>Shipped</span><span class="count"></span></div>
+          <div class="card done-card" draggable="true"><span class="tag t-design">Design</span><div class="title">New logo lockups</div><div class="row"><span>Mon</span><span class="who" style="background:var(--signal)">MO</span></div></div>
+          <div class="card done-card" draggable="true"><span class="tag t-ops">Ops</span><div class="title">Staging environment</div><div class="row"><span>Tue</span><span class="who" style="background:var(--sky)">JR</span></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="board-hint">↑ This board is live. <span>Drag a card to “Shipped”</span> and watch the week fill up.</p>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="wrap">
+    <p>Keeping time for 4,200+ teams who'd rather build than report</p>
+    <div class="logo-row">
+      <span>Northwind</span><span>Halcyon</span><span>FIELDWORK</span><span>parallax.io</span><span>Ostrava</span><span>Brightline</span>
+    </div>
+  </div>
+</div>
+
+<section id="rhythm">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="section-label">The weekly loop</div>
+      <h2>Most tools track tasks. Cadence tracks <em>momentum.</em></h2>
+      <p class="section-sub">Every project in Cadence runs on a one-week loop. It's short enough to course-correct and long enough to ship something real.</p>
+    </div>
+    <div class="loop reveal">
+      <div class="loop-step">
+        <div class="loop-day">01 — MONDAY</div>
+        <h3>Plan</h3>
+        <p>Pull work from the backlog into the week. Cadence flags overcommitment before it happens, based on what your team actually finished last time.</p>
+        <ul><li>Capacity forecast per person</li><li>One-click carry-over from last week</li><li>Async planning — no meeting required</li></ul>
+      </div>
+      <div class="loop-step">
+        <div class="loop-day">02 — TUE → THU</div>
+        <h3>Ship</h3>
+        <p>Move cards, link PRs, leave notes. Blockers bubble up automatically to the people who can clear them, not to a channel everyone mutes.</p>
+        <ul><li>GitHub, GitLab & Figma sync</li><li>Smart blocker routing</li><li>Focus mode hides everything else</li></ul>
+      </div>
+      <div class="loop-step">
+        <div class="loop-day">03 — FRIDAY</div>
+        <h3>Review</h3>
+        <p>Cadence drafts the weekly review from what actually moved: what shipped, what slipped, and why. Edit it, then send it to stakeholders in one click.</p>
+        <ul><li>Auto-drafted weekly summaries</li><li>Slip analysis with root causes</li><li>Shareable read-only links</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="section-label">Features</div>
+      <h2>Fewer knobs. Better <em>defaults.</em></h2>
+      <p class="section-sub">Everything you need to run projects. Nothing you'll spend a quarter configuring.</p>
+    </div>
+    <div class="bento">
+      <div class="tile span-4 reveal">
+        <h3>Timeline that tells the truth</h3>
+        <p>Gantt-style view that redraws itself from real progress. When a dependency slips, everything downstream shifts, and you see it the same day.</p>
+        <div class="viz-timeline" aria-hidden="true">
+          <div class="tl-row"><span>Research</span><div class="tl-track"><div class="tl-bar" style="left:0;width:24%;background:var(--butter)"></div></div></div>
+          <div class="tl-row"><span>Design</span><div class="tl-track"><div class="tl-bar" style="left:18%;width:34%;background:var(--signal)"></div></div></div>
+          <div class="tl-row"><span>Build</span><div class="tl-track"><div class="tl-bar" style="left:44%;width:40%;background:#6f9ccc"></div></div></div>
+          <div class="tl-row"><span>Launch</span><div class="tl-track"><div class="tl-bar" style="left:82%;width:14%;background:#7fae8c"></div></div></div>
+        </div>
+      </div>
+      <div class="tile span-2 reveal">
+        <h3>Team pulse</h3>
+        <p>A daily read on throughput, without asking anyone to fill in a form.</p>
+        <div class="viz-pulse" id="pulse" aria-hidden="true"></div>
+      </div>
+      <div class="tile span-2 reveal">
+        <h3>Keyboard-first</h3>
+        <p>Create, assign and move work without touching the mouse.</p>
+        <div class="kbd-row"><kbd>C</kbd><kbd>A</kbd><kbd>⌘</kbd><kbd>K</kbd><kbd>→</kbd></div>
+      </div>
+      <div class="tile span-2 reveal">
+        <h3>Meetings saved</h3>
+        <p>Average weekly status meetings eliminated per team after 30 days.</p>
+        <div class="big-stat">3.4</div>
+      </div>
+      <div class="tile span-2 reveal">
+        <h3>Plays well with others</h3>
+        <p>Two-way sync with the tools your team already lives in.</p>
+        <div class="chips"><span>GitHub</span><span>Slack</span><span>Figma</span><span>Linear</span><span>Notion</span><span>Google Cal</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap quote-wrap">
+    <div class="reveal">
+      <blockquote>We replaced two standups and a Friday status deck with Cadence's weekly review. Leadership reads it more closely than they ever read the deck.</blockquote>
+      <div class="attrib">
+        <div class="av" aria-hidden="true">DP</div>
+        <div><b>Dana Park</b><small>Head of Product, Fieldwork</small></div>
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b data-count="38">0</b><span>% more work shipped per week, on average</span></div>
+      <div class="stat"><b data-count="6">0</b><span>hours per person per week back from meetings</span></div>
+      <div class="stat"><b data-count="11">0</b><span>minutes from signup to first planned week</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:20px">
+  <div class="wrap">
+    <div class="pricing-head reveal">
+      <div>
+        <div class="section-label">Pricing</div>
+        <h2>Simple, per-seat, <em>honest.</em></h2>
+      </div>
+      <div class="toggle" role="group" aria-label="Billing period">
+        <button type="button" data-period="monthly">Monthly</button>
+        <button type="button" data-period="annual" class="on">Annual<span class="save">−20%</span></button>
+      </div>
+    </div>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Starter</h3>
+        <p class="plan-desc">For small teams finding their rhythm.</p>
+        <div class="price">$0<small>forever</small></div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Up to 8 members</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited projects & boards</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Weekly loop & reviews</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>3 integrations</li>
+        </ul>
+        <a href="#start" class="btn btn-ghost">Start free</a>
+      </div>
+      <div class="plan feature reveal">
+        <span class="badge">Most teams</span>
+        <h3>Team</h3>
+        <p class="plan-desc">For teams shipping every week, across projects.</p>
+        <div class="price"><span data-monthly="12" data-annual="9.60">$9.60</span><small>/ seat / mo</small></div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--signal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Starter</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--signal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Auto-drafted weekly reviews</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--signal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Timeline & capacity forecasting</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--signal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited integrations</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--signal)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Guest access for clients</li>
+        </ul>
+        <a href="#start" class="btn btn-primary">Start 14-day trial</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Organization</h3>
+        <p class="plan-desc">For many teams, with controls IT will sign off on.</p>
+        <div class="price"><span data-monthly="22" data-annual="17.60">$17.60</span><small>/ seat / mo</small></div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Team</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>SSO / SAML & SCIM</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfolio view across teams</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Audit log & data residency</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" stroke="var(--moss)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated success manager</li>
+        </ul>
+        <a href="#" class="btn btn-ghost">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:20px">
+  <div class="wrap faq-grid">
+    <div class="reveal">
+      <div class="section-label">FAQ</div>
+      <h2>Questions, <em>answered.</em></h2>
+      <p class="section-sub">Something else on your mind? Our team replies within one business day.</p>
+    </div>
+    <div class="reveal">
+      <details open>
+        <summary>Do we have to work in weekly cycles?<span class="plus" aria-hidden="true">+</span></summary>
+        <p>The week is the default because it works for most teams, but you can set any project to run on 2-week cycles, or switch the loop off and use Cadence as a straightforward board and timeline.</p>
+      </details>
+      <details>
+        <summary>How does the auto-drafted review work?<span class="plus" aria-hidden="true">+</span></summary>
+        <p>On Friday, Cadence looks at what moved: cards shipped, PRs merged, dates that slipped, and the comments explaining why. It writes a short summary you can edit before sharing. Nothing gets sent without your approval.</p>
+      </details>
+      <details>
+        <summary>Can we import from our current tool?<span class="plus" aria-hidden="true">+</span></summary>
+        <p>Yes. One-click importers for Jira, Trello, Asana and Linear bring over tasks, assignees, comments and attachments. Most teams are fully moved in under an hour.</p>
+      </details>
+      <details>
+        <summary>Is our data secure?<span class="plus" aria-hidden="true">+</span></summary>
+        <p>Data is encrypted in transit and at rest. Organization plans add SSO, SCIM, audit logs and a choice of EU or US data residency.</p>
+      </details>
+      <details>
+        <summary>What happens when the free plan isn't enough?<span class="plus" aria-hidden="true">+</span></summary>
+        <p>When you add your 9th member we'll ask you to choose a plan. Your data never gets locked or deleted, and you can downgrade at any time.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="start">
+  <div class="wrap reveal">
+    <div class="section-label">Ready when you are</div>
+    <h2>Find your team's <em>rhythm</em> this week.</h2>
+    <p>Set up your first weekly loop in about ten minutes. Free for up to 8 people, for as long as you like.</p>
+    <form class="signup" id="signup" novalidate>
+      <label for="email" style="position:absolute;left:-9999px">Work email</label>
+      <input id="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+      <button class="btn btn-signal" type="submit">Get started</button>
+    </form>
+    <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+  </div>
+  <div class="metronome" id="metronome" aria-hidden="true"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" aria-label="Cadence home">
+          <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          Cadence
+        </a>
+        <p style="margin-top:14px;max-width:32ch;color:var(--ink-3)">Project management that keeps time with your team.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Integrations</a></li><li><a href="#">Changelog</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h4>Resources</h4><ul><li><a href="#">Docs</a></li><li><a href="#">Templates</a></li><li><a href="#">Security</a></li><li><a href="#">Status</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Cadence Labs, Inc.</span>
+      <span><a href="#" style="text-decoration:none">Privacy</a> · <a href="#" style="text-decoration:none">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Sticky nav border
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // ---------- Kanban demo ----------
+  const board = document.getElementById('board');
+  const cols = [...board.querySelectorAll('.col')];
+  const toast = document.getElementById('toast');
+  let dragged = null, toastTimer;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  function update() {
+    cols.forEach(c => c.querySelector('.count').textContent = c.querySelectorAll('.card').length);
+    const total = board.querySelectorAll('.card').length;
+    const done = board.querySelector('[data-col="done"]').querySelectorAll('.card').length;
+    const pct = Math.round(done / total * 100);
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('pct').textContent = pct + '% shipped';
+    return pct;
+  }
+
+  function placeCard(card, col, y) {
+    const after = [...col.querySelectorAll('.card:not(.dragging)')].find(c => {
+      const r = c.getBoundingClientRect();
+      return y < r.top + r.height / 2;
+    });
+    after ? col.insertBefore(card, after) : col.appendChild(card);
+  }
+
+  function finishMove(card, fromCol) {
+    const toCol = card.closest('.col');
+    const isDone = toCol.dataset.col === 'done';
+    card.classList.toggle('done-card', isDone);
+    const pct = update();
+    if (toCol !== fromCol) {
+      if (isDone) showToast(pct === 100 ? '🎉 Everything shipped. Friday review is ready.' : '✓ Shipped: ' + card.querySelector('.title').textContent);
+      else showToast('Moved to ' + toCol.querySelector('.col-head span').textContent.trim());
+    }
+  }
+
+  // Desktop drag & drop
+  board.addEventListener('dragstart', e => {
+    const card = e.target.closest('.card'); if (!card) return;
+    dragged = card; dragged._from = card.closest('.col');
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+  });
+  board.addEventListener('dragend', () => {
+    if (!dragged) return;
+    dragged.classList.remove('dragging');
+    cols.forEach(c => c.classList.remove('over'));
+    finishMove(dragged, dragged._from);
+    dragged = null;
+  });
+  cols.forEach(col => {
+    col.addEventListener('dragover', e => {
+      if (!dragged) return;
+      e.preventDefault();
+      cols.forEach(c => c.classList.toggle('over', c === col));
+      placeCard(dragged, col, e.clientY);
+    });
+  });
+
+  // Touch support (pointer-based fallback)
+  let touchCard = null, touchFrom = null;
+  board.addEventListener('touchstart', e => {
+    const card = e.target.closest('.card'); if (!card) return;
+    touchCard = card; touchFrom = card.closest('.col');
+    card.classList.add('dragging');
+  }, { passive: true });
+  board.addEventListener('touchmove', e => {
+    if (!touchCard) return;
+    e.preventDefault();
+    const t = e.touches[0];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    const col = el && el.closest('.col');
+    cols.forEach(c => c.classList.toggle('over', c === col));
+    if (col) placeCard(touchCard, col, t.clientY);
+  }, { passive: false });
+  board.addEventListener('touchend', () => {
+    if (!touchCard) return;
+    touchCard.classList.remove('dragging');
+    cols.forEach(c => c.classList.remove('over'));
+    finishMove(touchCard, touchFrom);
+    touchCard = null;
+  });
+
+  // Keyboard access: focus a card, press ← / → to move it between columns
+  board.querySelectorAll('.card').forEach(c => { c.tabIndex = 0; c.setAttribute('aria-label', c.querySelector('.title').textContent + '. Use left and right arrow keys to move.'); });
+  board.addEventListener('keydown', e => {
+    const card = e.target.closest('.card');
+    if (!card || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    e.preventDefault();
+    const from = card.closest('.col');
+    const i = cols.indexOf(from) + (e.key === 'ArrowRight' ? 1 : -1);
+    if (i < 0 || i >= cols.length) return;
+    cols[i].appendChild(card);
+    card.focus();
+    finishMove(card, from);
+  });
+
+  update();
+
+  // ---------- Pulse bars ----------
+  const pulse = document.getElementById('pulse');
+  const heights = [30, 45, 38, 60, 52, 70, 48, 82, 65, 90, 74, 95];
+  heights.forEach((h, i) => {
+    const s = document.createElement('span');
+    s.style.height = reduced ? h + '%' : '4%';
+    if (i >= heights.length - 3) s.classList.add('hi');
+    s.dataset.h = h;
+    pulse.appendChild(s);
+  });
+
+  // ---------- Metronome ----------
+  const met = document.getElementById('metronome');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.style.animationDelay = (Math.abs(i - 19.5) * 0.06).toFixed(2) + 's';
+    met.appendChild(s);
+  }
+
+  // ---------- Reveal + counters ----------
+  function countUp(el) {
+    const target = +el.dataset.count;
+    if (reduced) { el.textContent = target; return; }
+    const start = performance.now(), dur = 1200;
+    const step = now => {
+      const p = Math.min((now - start) / dur, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      en.target.querySelectorAll('[data-count]').forEach(countUp);
+      if (en.target.contains(pulse)) pulse.querySelectorAll('span').forEach((s, i) => setTimeout(() => s.style.height = s.dataset.h + '%', i * 50));
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---------- Pricing toggle ----------
+  document.querySelectorAll('.toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.toggle button').forEach(b => b.classList.toggle('on', b === btn));
+      const period = btn.dataset.period;
+      document.querySelectorAll('[data-monthly]').forEach(el => {
+        const v = parseFloat(el.dataset[period]);
+        el.textContent = '$' + (Number.isInteger(v) ? v : v.toFixed(2));
+      });
+    });
+  });
+
+  // ---------- Signup ----------
+  const form = document.getElementById('signup');
+  const msg = document.getElementById('formMsg');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const v = document.getElementById('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      msg.style.color = 'var(--signal)';
+      msg.textContent = 'That email doesn\u2019t look quite right. Mind checking it?';
+      return;
+    }
+    msg.style.color = 'var(--moss)';
+    msg.textContent = 'You\u2019re in. Check ' + v + ' for a link to plan your first week.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

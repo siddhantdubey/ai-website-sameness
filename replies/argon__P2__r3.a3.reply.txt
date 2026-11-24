@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osteria del Vicolo — Neighborhood Trattoria &amp; Wine Bar</title>
+    <meta name="description" content="Hand-rolled pasta, wood-fired specialties, and low-intervention Italian wines in a warm neighborhood setting.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: '#FAF6F0',
+                        linen: '#F2ECE1',
+                        espresso: '#1F1A17',
+                        walnut: '#5C5248',
+                        terracotta: '#9E3B24',
+                        terracottaHover: '#842F1B',
+                        olive: '#4A5D4E',
+                        saffron: '#C89D54',
+                        sandstone: '#E2D9C8',
+                        evening: '#231E1A'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Tactile paper grain overlay */
+        .bg-grain {
+            background-image: radial-gradient(rgba(31, 26, 23, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        /* Editorial menu leader line */
+        .menu-leader {
+            flex-grow: 1;
+            border-bottom: 1px dotted #C7BBAE;
+            margin: 0 12px;
+            position: relative;
+            top: -5px;
+        }
+
+        /* Smooth fade transition for menu tabs */
+        .menu-panel {
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+        }
+        .menu-panel.hidden-panel {
+            display: none;
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D5CBB8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9E3B24;
+        }
+    </style>
+</head>
+<body class="bg-parchment text-espresso font-sans antialiased selection:bg-terracotta selection:text-parchment bg-grain">
+
+    <!-- Top Status Banner -->
+    <div class="bg-espresso text-parchment text-xs py-2 px-4 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span id="open-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="open-status-text" class="font-mono uppercase tracking-wider text-[11px] text-parchment/90">
+                    Tonight's Service: 5:00 PM – 10:30 PM • Walk-ins Welcome at the Bar
+                </span>
+            </div>
+            <div class="hidden sm:flex items-center gap-6 text-parchment/80">
+                <span>248 Via Corta, North Beach</span>
+                <a href="tel:+14155550192" class="hover:text-saffron transition-colors font-mono">(415) 555-0192</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Navigation -->
+    <header id="navbar" class="sticky top-0 z-40 transition-all duration-300 bg-parchment/90 backdrop-blur-md border-b border-sandstone">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Identity -->
+            <a href="#" class="group flex flex-col">
+                <span class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-espresso group-hover:text-terracotta transition-colors">
+                    Osteria del Vicolo
+                </span>
+                <span class="font-mono text-[10px] tracking-[0.22em] uppercase text-walnut -mt-1">
+                    Cucina di Quartiere • Est. 2014
+                </span>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-espresso/85">
+                <a href="#story" class="hover:text-terracotta transition-colors">Our Story</a>
+                <a href="#menu" class="hover:text-terracotta transition-colors">Seasonal Menu</a>
+                <a href="#traditions" class="hover:text-terracotta transition-colors">Daily Rituals</a>
+                <a href="#visit" class="hover:text-terracotta transition-colors">Hours &amp; Location</a>
+            </nav>
+
+            <!-- CTA & Mobile Menu Toggle -->
+            <div class="flex items-center gap-3">
+                <a href="#reserve" class="inline-flex items-center justify-center px-5 py-2.5 text-xs sm:text-sm font-medium tracking-wide text-parchment bg-terracotta hover:bg-terracottaHover rounded-sm transition-all shadow-sm">
+                    Reserve a Table
+                </a>
+                <button id="mobile-menu-btn" aria-label="Toggle Menu" class="md:hidden p-2 text-espresso hover:text-terracotta">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="mobile-menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-linen border-b border-sandstone px-6 py-5 space-y-3">
+            <a href="#story" class="block py-1.5 text-base font-medium text-espresso hover:text-terracotta">Our Story</a>
+            <a href="#menu" class="block py-1.5 text-base font-medium text-espresso hover:text-terracotta">Seasonal Menu</a>
+            <a href="#traditions" class="block py-1.5 text-base font-medium text-espresso hover:text-terracotta">Daily Rituals</a>
+            <a href="#visit" class="block py-1.5 text-base font-medium text-espresso hover:text-terracotta">Hours &amp; Location</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[84vh] flex items-center overflow-hidden bg-evening">
+        <!-- Background Image with Warm Radial Vignette -->
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=2000&q=85" 
+                alt="Candlelit Italian neighborhood restaurant dining room" 
+                class="w-full h-full object-cover object-center opacity-55 scale-105 transition-transform duration-1000"
+            >
+            <div class="absolute inset-0 bg-gradient-to-r from-espresso/90 via-espresso/70 to-espresso/40"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-espresso via-transparent to-espresso/40"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 w-full">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2.5 px-3 py-1 mb-6 border border-saffron/40 bg-espresso/60 backdrop-blur-sm rounded-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-saffron"></span>
+                    <span class="font-mono text-xs uppercase tracking-[0.15em] text-saffron">
+                        Autumn / Winter Harvest Menu
+                    </span>
+                </div>
+
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl text-parchment font-semibold leading-[1.04] tracking-tight mb-6">
+                    Hand-rolled pasta, wood-fired hearth &amp; house wine.
+                </h1>
+
+                <p class="text-lg sm:text-xl text-parchment/85 font-normal leading-relaxed mb-10 max-w-xl">
+                    Tucked along a quiet brick alley in North Beach, Osteria del Vicolo is a neighborhood table built on slow-simmered ragùs, organic semolina extruded every morning, and regional wines poured by the carafe.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#reserve" class="px-7 py-4 bg-terracotta hover:bg-terracottaHover text-parchment font-medium text-sm tracking-wide rounded-sm transition-all shadow-lg">
+                        Book a Table Tonight
+                    </a>
+                    <a href="#menu" class="px-7 py-4 bg-parchment/10 hover:bg-parchment/20 text-parchment border border-parchment/30 backdrop-blur-sm font-medium text-sm tracking-wide rounded-sm transition-all">
+                        Explore the Menu
+                    </a>
+                </div>
+
+                <!-- Micro Credibility Row -->
+                <div class="mt-14 pt-8 border-t border-parchment/15 grid grid-cols-3 gap-6 max-w-lg">
+                    <div>
+                        <p class="font-serif italic text-2xl text-saffron">100% Fresh</p>
+                        <p class="text-xs text-parchment/70 mt-0.5">Pasta rolled by hand each morning</p>
+                    </div>
+                    <div>
+                        <p class="font-serif italic text-2xl text-saffron">90+ Bottles</p>
+                        <p class="text-xs text-parchment/70 mt-0.5">Small-grower Italian cellars</p>
+                    </div>
+                    <div>
+                        <p class="font-serif italic text-2xl text-saffron">Almond Wood</p>
+                        <p class="text-xs text-parchment/70 mt-0.5">Live-fire hearth &amp; brick oven</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story & Philosophy Section -->
+    <section id="story" class="py-20 lg:py-28 border-b border-sandstone">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                
+                <!-- Left Editorial Narrative (7 cols) -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="h-px w-8 bg-terracotta"></span>
+                        <span class="font-mono text-xs uppercase tracking-[0.2em] text-terracotta font-medium">La Nostra Filosofia</span>
+                    </div>
+
+                    <h2 class="font-serif text-4xl sm:text-5xl text-espresso font-semibold leading-[1.12]">
+                        A dining room that feels like an extension of your own kitchen.
+                    </h2>
+
+                    <p class="text-walnut text-base sm:text-lg leading-relaxed">
+                        When siblings Marco and Elena Bellini opened <span class="italic font-serif text-espresso text-xl">Osteria del Vicolo</span> eleven years ago, the promise was simple: never serve a dish that requires pretension to enjoy, and never rush a table that is still talking.
+                    </p>
+
+                    <p class="text-walnut text-base leading-relaxed">
+                        Every morning at 7:00 AM, our sfoglina rolls out sheets of golden egg-yolk dough on maple boards. Our olive oil is pressed by a single family cooperative outside Lucca, and our bread is naturally leavened for 36 hours before hitting the hearth stones.
+                    </p>
+
+                    <!-- Signature & Stamp -->
+                    <div class="pt-4 flex flex-wrap items-center justify-between gap-6 border-t border-sandstone">
+                        <div>
+                            <p class="font-serif italic text-2xl text-espresso">Marco &amp; Elena Bellini</p>
+                            <p class="font-mono text-xs uppercase tracking-wider text-walnut">Proprietors &amp; Kitchen</p>
+                        </div>
+
+                        <!-- Custom SVG Quality Stamp -->
+                        <div class="flex items-center gap-3 bg-linen px-4 py-2.5 rounded-sm border border-sandstone">
+                            <svg class="w-8 h-8 text-terracotta shrink-0" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="18" cy="18" r="15" stroke-dasharray="3 2"/>
+                                <path d="M12 22C14 17 18 13 24 12M14 24C18 22 22 18 24 12" stroke-linecap="round"/>
+                                <circle cx="18" cy="18" r="2" fill="currentColor"/>
+                            </svg>
+                            <div class="text-xs">
+                                <p class="font-semibold text-espresso uppercase tracking-wider font-mono">Fatto a Mano</p>
+                                <p class="text-walnut">Daily from heirloom durum wheat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Asymmetric Collage (6 cols) -->
+                <div class="lg:col-span-6 grid grid-cols-12 gap-4 items-center">
+                    <div class="col-span-7">
+                        <div class="overflow-hidden rounded-sm border border-sandstone shadow-md bg-linen">
+                            <img 
+                                src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=900&q=85" 
+                                alt="Fresh handmade tagliatelle dusted with semolina flour" 
+                                class="w-full h-[380px] sm:h-[440px] object-cover hover:scale-105 transition-transform duration-700"
+                            >
+                        </div>
+                        <p class="mt-2 font-mono text-[11px] text-walnut uppercase tracking-wider">
+                            01 / 40-Yolk Tajarin rolled each morning
+                        </p>
+                    </div>
+                    <div class="col-span-5 space-y-4">
+                        <div class="overflow-hidden rounded-sm border border-sandstone shadow-md bg-linen">
+                            <img 
+                                src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=700&q=80" 
+                                alt="Pouring Italian red wine by candlelight" 
+                                class="w-full h-52 object-cover hover:scale-105 transition-transform duration-700"
+                            >
+                        </div>
+                        <div class="p-5 bg-linen border border-sandstone rounded-sm">
+                            <p class="font-serif italic text-xl text-espresso leading-snug">
+                                “The ragù simmers for six hours so you can stay for three.”
+                            </p>
+                            <p class="font-mono text-[11px] uppercase tracking-wider text-terracotta mt-3">
+                                — San Francisco Chronicle
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Seasonal Menu Section -->
+    <section id="menu" class="py-20 lg:py-28 bg-linen/70 border-b border-sandstone">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-terracotta">La Carta Stagionale</span>
+                <h2 class="font-serif text-4xl sm:text-5xl text-espresso font-semibold mt-2 mb-4">
+                    Tonight’s Kitchen &amp; Cellar Menu
+                </h2>
+                <p class="text-walnut text-base">
+                    Our menu evolves weekly with what arrives from Petaluma farms, Monterey Bay boats, and our trusted importers across Piedmont, Tuscany, and Sicily.
+                </p>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12 border-b border-sandstone pb-6" role="tablist">
+                <button onclick="switchMenuTab('antipasti')" id="tab-antipasti" class="menu-tab active-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-terracotta text-parchment shadow-sm">
+                    Antipasti
+                </button>
+                <button onclick="switchMenuTab('primi')" id="tab-primi" class="menu-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-parchment text-espresso hover:bg-sandstone/60 border border-sandstone">
+                    Primi (Pasta)
+                </button>
+                <button onclick="switchMenuTab('secondi')" id="tab-secondi" class="menu-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-parchment text-espresso hover:bg-sandstone/60 border border-sandstone">
+                    Secondi &amp; Contorni
+                </button>
+                <button onclick="switchMenuTab('dolci')" id="tab-dolci" class="menu-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-parchment text-espresso hover:bg-sandstone/60 border border-sandstone">
+                    Dolci &amp; Vini
+                </button>
+            </div>
+
+            <!-- Paper Menu Sheet Container -->
+            <div class="bg-parchment border border-sandstone rounded-sm p-6 sm:p-10 lg:p-12 shadow-sm relative">
+                <!-- Decorative Corner Marks -->
+                <div class="hidden sm:block absolute top-3 left-3 w-3 h-3 border-t border-l border-terracotta/40"></div>
+                <div class="hidden sm:block absolute top-3 right-3 w-3 h-3 border-t border-r border-terracotta/40"></div>
+                <div class="hidden sm:block absolute bottom-3 left-3 w-3 h-3 border-b border-l border-terracotta/40"></div>
+                <div class="hidden sm:block absolute bottom-3 right-3 w-3 h-3 border-b border-r border-terracotta/40"></div>
+
+                <!-- PANEL 1: ANTIPASTI -->
+                <div id="panel-antipasti" class="menu-panel">
+                    <div class="flex items-baseline justify-between border-b border-sandstone pb-3 mb-8">
+                        <h3 class="font-serif italic text-2xl text-espresso">To Begin &amp; For the Table</h3>
+                        <span class="font-mono text-xs text-walnut uppercase">Served with house focaccia</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Focaccia di Recco al Tartufo</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$16</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Blistered thin unleavened dough filled with crescenza cheese, black truffle honey, flaky sea salt <span class="font-mono text-[11px] text-olive uppercase ml-1">[V]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Burrata Pugliese &amp; Cachi</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$19</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Creamy artisan burrata, roasted Fuyu persimmons, aged 12-year Modena balsamic, toasted pistachios <span class="font-mono text-[11px] text-olive uppercase ml-1">[V, GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Polpo alla Brace</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$22</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Chargrilled Spanish octopus over crushed Yukon potatoes, Taggiasca olives, celery heart, Calabrian chili oil <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Vitello Tonnato Tradizionale</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$20</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Thinly sliced poached pasture-raised veal, silky Ventresca tuna-caper emulsion, crispy fried Pantelleria capers <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Arancini al Ragù Bianco</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$15</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Crisp saffron Carnaroli risotto croquettes, slow-braised heritage pork &amp; fennel heart, Parmigiano snow</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Cicoria &amp; Radicchio Tardivo</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$17</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Castelfranco &amp; Treviso chicories, blood orange, shaved pecorino, toasted walnut &amp; anchovy-garlic vinaigrette <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: PRIMI -->
+                <div id="panel-primi" class="menu-panel hidden-panel">
+                    <div class="flex items-baseline justify-between border-b border-sandstone pb-3 mb-8">
+                        <h3 class="font-serif italic text-2xl text-espresso">Fatto a Mano — Hand-Rolled Daily</h3>
+                        <span class="font-mono text-xs text-walnut uppercase">Gluten-free rigatoni available +$3</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Tagliatelle al Ragù Bolognese</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$26</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Hand-cut egg ribbons, six-hour pork, beef &amp; pancetta ragù, nutmeg, splash of whole milk, 24-month Parmigiano</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Tajarin al Burro e Salvia</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$25</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Piedmontese 40-egg-yolk fine noodles, cultured mountain butter, crispy purple sage, shaved Alba white truffle option <span class="font-mono text-[11px] text-olive uppercase ml-1">[V]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Pappardelle al Cinghiale</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$28</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Wide rustic ribbons, Chianti-braised wild boar shoulder, juniper berries, rosemary, aged Pecorino Toscano</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Agnolotti del Plin</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$27</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Hand-pinched parcels stuffed with roasted guinea hen &amp; savoy cabbage, finished in reduced roasting jus</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Spaghetti alla Chittara ai Ricci</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$31</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Square-cut durum spaghetti, Santa Barbara sea urchin butter, sweet garlic, white wine, Pangrattato crumbs</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Rigatoni alla Norma</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$24</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Bronze-die extruded rigatoni, San Marzano tomato passata, roasted fairy-tale eggplant, grated ricotta salata <span class="font-mono text-[11px] text-olive uppercase ml-1">[V]</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 3: SECONDI -->
+                <div id="panel-secondi" class="menu-panel hidden-panel">
+                    <div class="flex items-baseline justify-between border-b border-sandstone pb-3 mb-8">
+                        <h3 class="font-serif italic text-2xl text-espresso">From the Almond-Wood Hearth</h3>
+                        <span class="font-mono text-xs text-walnut uppercase">Prepared over live embers</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Branzino Intero al Forno</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$36</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Whole wood-roasted Mediterranean sea bass deboned tableside, charred Meyer lemon, fennel pollen, salsa verde <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Pollo al Mattone</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$32</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Crispy brick-pressed Sonoma half chicken, roasted Honeynut squash, Marsala pan drippings, fried rosemary <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Guancia di Manzo Brasata</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$38</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Barolo-braised beef cheek, creamy heirloom Floriani flint corn polenta, gremolata of parsley &amp; horseradish <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Bistecca alla Fiorentina (For Two)</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$115</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">34oz dry-aged prime porterhouse grilled over almond embers, rosemary-infused Lucca olive oil, roasted bone marrow <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Patate Arrosto &amp; Rosmarino</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$12</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Crispy smashed Kennebec potatoes, confit garlic cloves, sea salt <span class="font-mono text-[11px] text-olive uppercase ml-1">[V, GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Broccolini alla Griglia</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$13</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Hearth-charred sweet broccolini, preserved lemon peel, Calabrian chili, toasted almonds <span class="font-mono text-[11px] text-olive uppercase ml-1">[V, GF]</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 4: DOLCI & VINI -->
+                <div id="panel-dolci" class="menu-panel hidden-panel">
+                    <div class="flex items-baseline justify-between border-b border-sandstone pb-3 mb-8">
+                        <h3 class="font-serif italic text-2xl text-espresso">Dolci, Digestivi &amp; Cellar Pours</h3>
+                        <span class="font-mono text-xs text-walnut uppercase">House-infused amari available</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Tiramisù della Casa</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$14</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">House-baked savoiardi biscuits soaked in espresso &amp; Vecchio Florio Marsala, whipped mascarpone zabaglione</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Torta all’Olio d’Oliva</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$14</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Warm citrus &amp; Lucca olive oil cake, whipped mascarpone cream, candied rosemary, blood orange compote</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Panna Cotta al Finocchio</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$13</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Wild fennel pollen panna cotta, poached black mission figs, Saba grape must reduction, pine nut biscotti <span class="font-mono text-[11px] text-olive uppercase ml-1">[GF]</span></p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">Vino della Casa (Quartino / Carafe)</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$16 / $44</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">Choice of organic Montepulciano d’Abruzzo or crisp Friulano poured straight from terracotta casks</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">2019 Barbaresco, Produttori</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$22 gls</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">100% Nebbiolo from Piedmont. Dried rose petals, wild cherry, supple tannins — ideal with tajarin or ragù</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline">
+                                <h4 class="font-serif text-xl font-semibold text-espresso">2022 Etna Bianco, Benanti</h4>
+                                <span class="menu-leader"></span>
+                                <span class="font-mono text-sm font-medium text-espresso">$17 gls</span>
+                            </div>
+                            <p class="text-sm text-walnut mt-1">100% Carricante grown on volcanic slopes in Sicily. High-altitude salinity, lemon blossom, crisp minerality</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Footer Note -->
+                <div class="mt-10 pt-6 border-t border-sandstone flex flex-wrap items-center justify-between gap-4 text-xs text-walnut">
+                    <span><strong class="font-mono text-olive">[V]</strong> Vegetarian &nbsp;•&nbsp; <strong class="font-mono text-olive">[GF]</strong> Gluten-Free</span>
+                    <span>A 5% SF Healthy Workforce Mandate surcharge is added to all checks. Corkage $30 per 750ml bottle.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Neighborhood Traditions Banner -->
+    <section id="traditions" class="py-20 lg:py-24 bg-evening text-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+                <div>
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-saffron">Riti di Quartiere</span>
+                    <h2 class="font-serif text-4xl sm:text-5xl font-semibold mt-2">
+                        Weekly Neighborhood Rituals
+                    </h2>
+                </div>
+                <p class="text-parchment/75 max-w-md text-sm sm:text-base">
+                    A real neighborhood trattoria belongs to its regulars. Join us for the traditions that mark the rhythm of our week.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="p-8 bg-white/[0.03] border border-parchment/15 rounded-sm flex flex-col justify-between hover:border-saffron/50 transition-colors">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="font-mono text-xs uppercase tracking-widest text-saffron px-2.5 py-1 bg-saffron/10 rounded-sm">Tue – Fri • 4:30 – 6:00 PM</span>
+                            <span class="font-serif italic text-parchment/50 text-lg">01</span>
+                        </div>
+                        <h3 class="font-serif text-3xl font-semibold mb-3">L’Ora dell’Aperitivo</h3>
+                        <p class="text-parchment/75 text-sm leading-relaxed">
+                            Grab a stool at the marble bar after work. Every Campari Spritz, Americano, or glass of Franciacorta comes with a complimentary wooden board of warm focaccia, Castelvetrano olives, and mortadella.
+                        </p>
+                    </div>
+                    <p class="mt-8 pt-4 border-t border-parchment/10 font-mono text-xs text-saffron uppercase tracking-wider">
+                        No reservations needed at the bar
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-8 bg-white/[0.03] border border-parchment/15 rounded-sm flex flex-col justify-between hover:border-saffron/50 transition-colors">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="font-mono text-xs uppercase tracking-widest text-saffron px-2.5 py-1 bg-saffron/10 rounded-sm">Every Sunday • From 5:00 PM</span>
+                            <span class="font-serif italic text-parchment/50 text-lg">02</span>
+                        </div>
+                        <h3 class="font-serif text-3xl font-semibold mb-3">Sunday Nonna Supper</h3>
+                        <p class="text-parchment/75 text-sm leading-relaxed">
+                            Our wood oven bakes a limited 24 portions of 12-layer Lasagna Verde alla Bolognese alongside a family-style bowl of bitter greens and a carafe of barbera for $45 per guest.
+                        </p>
+                    </div>
+                    <p class="mt-8 pt-4 border-t border-parchment/10 font-mono text-xs text-saffron uppercase tracking-wider">
+                        Sells out early — note lasagna when booking
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-8 bg-white/[0.03] border border-parchment/15 rounded-sm flex flex-col justify-between hover:border-saffron/50 transition-colors">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="font-mono text-xs uppercase tracking-widest text-saffron px-2.5 py-1 bg-saffron/10 rounded-sm">Nightly • After 9:00 PM</span>
+                            <span class="font-serif italic text-parchment/50 text-lg">03</span>
+                        </div>
+                        <h3 class="font-serif text-3xl font-semibold mb-3">Late-Night Cacio e Pepe</h3>
+                        <p class="text-parchment/75 text-sm leading-relaxed">
+                            For night owls, industry neighbors, and post-theater diners: a steaming bowl of hand-rolled tonnarelli cacio e pepe and a glass of cellar red at the counter for $26.
+                        </p>
+                    </div>
+                    <p class="mt-8 pt-4 border-t border-parchment/10 font-mono text-xs text-saffron uppercase tracking-wider">
+                        Kitchen open until 10:30 PM (11 PM Fri–Sat)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation & Visit Split Section -->
+    <section id="reserve" class="py-20 lg:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+                
+                <!-- Left: Interactive Reservation Form (7 cols) -->
+                <div class="lg:col-span-7 bg-linen border border-sandstone rounded-sm p-6 sm:p-10 shadow-sm">
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-terracotta">Prenotazioni</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-espresso font-semibold mt-1 mb-2">
+                        Reserve Your Table
+                    </h2>
+                    <p class="text-walnut text-sm mb-8">
+                        We hold two-thirds of our dining room for reservations and save the full marble bar and patio counter for neighborhood walk-ins every evening.
+                    </p>
+
+                    <form id="reservation-form" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Guests -->
+                            <div>
+                                <label for="res-guests" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Party Size</label>
+                                <select id="res-guests" required class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-3 text-sm text-espresso focus:outline-none focus:border-terracotta">
+                                    <option value="2 Guests" selected>2 Guests</option>
+                                    <option value="1 Guest">1 Guest (Bar / Table)</option>
+                                    <option value="3 Guests">3 Guests</option>
+                                    <option value="4 Guests">4 Guests</option>
+                                    <option value="5 Guests">5 Guests</option>
+                                    <option value="6 Guests">6 Guests</option>
+                                    <option value="Large Party (7-10)">7–10 Guests (Family Table)</option>
+                                </select>
+                            </div>
+
+                            <!-- Date -->
+                            <div>
+                                <label for="res-date" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Date</label>
+                                <input type="date" id="res-date" required class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-2.5 text-sm text-espresso focus:outline-none focus:border-terracotta">
+                            </div>
+
+                            <!-- Seating Area -->
+                            <div>
+                                <label for="res-area" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Seating Preference</label>
+                                <select id="res-area" class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-3 text-sm text-espresso focus:outline-none focus:border-terracotta">
+                                    <option value="Main Dining Room">Main Dining Room</option>
+                                    <option value="Chef's Pasta Counter">Chef’s Pasta Counter</option>
+                                    <option value="Olive Tree Courtyard">Heated Olive Courtyard</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Time Slot Pills -->
+                        <div>
+                            <label class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Available Seating Times</label>
+                            <input type="hidden" id="res-time" value="7:15 PM">
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="time-slots">
+                                <button type="button" onclick="selectTimeSlot(this, '5:15 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all">
+                                    5:15 PM
+                                </button>
+                                <button type="button" onclick="selectTimeSlot(this, '5:45 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all">
+                                    5:45 PM
+                                </button>
+                                <button type="button" onclick="selectTimeSlot(this, '6:30 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all">
+                                    6:30 PM
+                                </button>
+                                <button type="button" onclick="selectTimeSlot(this, '7:15 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-terracotta bg-terracotta text-parchment rounded-sm transition-all">
+                                    7:15 PM
+                                </button>
+                                <button type="button" onclick="selectTimeSlot(this, '8:00 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all">
+                                    8:00 PM
+                                </button>
+                                <button type="button" onclick="selectTimeSlot(this, '8:45 PM')" class="time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all">
+                                    8:45 PM
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Guest Contact -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <label for="res-name" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Full Name</label>
+                                <input type="text" id="res-name" required placeholder="Elena Rossi" class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-2.5 text-sm text-espresso placeholder:text-walnut/50 focus:outline-none focus:border-terracotta">
+                            </div>
+                            <div>
+                                <label for="res-phone" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Phone or Email</label>
+                                <input type="text" id="res-phone" required placeholder="(415) 555-0148" class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-2.5 text-sm text-espresso placeholder:text-walnut/50 focus:outline-none focus:border-terracotta">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="res-notes" class="block font-mono text-xs uppercase tracking-wider text-espresso mb-2">Special Notes / Allergies / Sunday Lasagna</label>
+                            <input type="text" id="res-notes" placeholder="Celebrating an anniversary, reserve 2 portions of Sunday Lasagna, etc." class="w-full bg-parchment border border-sandstone rounded-sm px-3.5 py-2.5 text-sm text-espresso placeholder:text-walnut/50 focus:outline-none focus:border-terracotta">
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-terracotta hover:bg-terracottaHover text-parchment font-medium text-sm tracking-wide rounded-sm transition-all shadow-sm">
+                            Confirm Table Reservation
+                        </button>
+                    </form>
+
+                    <!-- Confirmation Receipt State (Hidden until submit) -->
+                    <div id="reservation-success" class="hidden mt-6 p-6 bg-parchment border-l-4 border-olive rounded-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <span class="font-mono text-xs uppercase tracking-widest text-olive font-semibold">Tavolo Confermato • We Look Forward to Hosting You</span>
+                                <h3 class="font-serif text-2xl text-espresso font-semibold mt-1" id="confirm-headline">Table Reserved</h3>
+                                <p class="text-sm text-walnut mt-2" id="confirm-details"></p>
+                            </div>
+                            <button onclick="resetReservationForm()" class="text-xs font-mono underline text-terracotta hover:text-espresso shrink-0">
+                                Modify
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Location, Hours & Illustrated Alleyway Map (5 cols) -->
+                <div id="visit" class="lg:col-span-5 space-y-8">
+                    <div>
+                        <span class="font-mono text-xs uppercase tracking-[0.2em] text-terracotta">Dove Siamo</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl text-espresso font-semibold mt-1">
+                            Hours &amp; Neighborhood Guide
+                        </h2>
+                    </div>
+
+                    <!-- Illustrated Architectural Map Card -->
+                    <div class="bg-linen border border-sandstone rounded-sm p-5">
+                        <div class="bg-parchment border border-sandstone rounded-sm p-4 relative overflow-hidden">
+                            <svg class="w-full h-44 text-espresso" viewBox="0 0 400 180" fill="none">
+                                <!-- Background blocks -->
+                                <rect x="10" y="10" width="130" height="65" fill="#EFE8DC" stroke="#D5CBB8"/>
+                                <rect x="165" y="10" width="225" height="65" fill="#EFE8DC" stroke="#D5CBB8"/>
+                                <rect x="10" y="105" width="130" height="65" fill="#EFE8DC" stroke="#D5CBB8"/>
+                                <rect x="165" y="105" width="225" height="65" fill="#EFE8DC" stroke="#D5CBB8"/>
+                                
+                                <!-- Street Labels -->
+                                <text x="200" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#5C5248" letter-spacing="2">COLUMBUS AVE</text>
+                                <text x="155" y="145" font-family="JetBrains Mono, monospace" font-size="8" fill="#5C5248" transform="rotate(-90 155 145)" letter-spacing="1.5">VIA CORTA</text>
+
+                                <!-- Restaurant Pin -->
+                                <circle cx="245" cy="52" r="16" fill="#9E3B24" fill-opacity="0.15"/>
+                                <circle cx="245" cy="52" r="6" fill="#9E3B24"/>
+                                <text x="260" y="49" font-family="Cormorant Garamond, serif" font-weight="700" font-size="14" fill="#1F1A17">Osteria del Vicolo</text>
+                                <text x="260" y="61" font-family="JetBrains Mono, monospace" font-size="8" fill="#9E3B24">248 VIA CORTA ALLEY</text>
+                            </svg>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between text-xs text-walnut">
+                            <span>248 Via Corta (off Columbus Ave), North Beach</span>
+                            <a href="https://maps.google.com" target="_blank" rel="noopener" class="font-mono uppercase text-terracotta hover:underline">Get Directions →</a>
+                        </div>
+                    </div>
+
+                    <!-- Hours Table -->
+                    <div class="space-y-3 border-t border-b border-sandstone py-6 text-sm">
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-espresso">Tuesday – Thursday</span>
+                            <span class="font-mono text-walnut">5:00 PM – 10:00 PM</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-espresso">Friday – Saturday</span>
+                            <span class="font-mono text-walnut">5:00 PM – 11:00 PM</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-espresso">Sunday Supper</span>
+                            <span class="font-mono text-walnut">4:30 PM – 9:30 PM</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-espresso">Aperitivo at the Bar</span>
+                            <span class="font-mono text-terracotta">Tue–Fri, 4:30 PM – 6:00 PM</span>
+                        </div>
+                        <div class="flex justify-between py-1 text-walnut/70">
+                            <span>Monday</span>
+                            <span class="font-mono">Closed (Riposo)</span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Contact & Parking -->
+                    <div class="grid grid-cols-2 gap-4 text-xs text-walnut">
+                        <div>
+                            <p class="font-mono uppercase text-espresso font-medium mb-1">Telephone &amp; Wine Desk</p>
+                            <p><a href="tel:+14155550192" class="hover:text-terracotta">(415) 555-0192</a></p>
+                            <p><a href="mailto:ciao@osteriadelvicolo.com" class="hover:text-terracotta">ciao@osteriadelvicolo.com</a></p>
+                        </div>
+                        <div>
+                            <p class="font-mono uppercase text-espresso font-medium mb-1">Arrival &amp; Transit</p>
+                            <p>Validated garage parking 1 block south at Vallejo St. Bicycle racks in alley.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-espresso text-parchment/80 border-t border-white/10 py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+            <div>
+                <p class="font-serif text-2xl text-parchment font-semibold">Osteria del Vicolo</p>
+                <p class="text-xs text-parchment/60 mt-1">
+                    248 Via Corta, North Beach, San Francisco • Handcrafted Italian Cooking Since 2014
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-6 text-xs font-mono uppercase tracking-wider">
+                <a href="#story" class="hover:text-saffron transition-colors">Story</a>
+                <a href="#menu" class="hover:text-saffron transition-colors">Menu</a>
+                <a href="#traditions" class="hover:text-saffron transition-colors">Rituals</a>
+                <a href="#reserve" class="hover:text-saffron transition-colors">Reservations</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // 1. Mobile Navigation Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // 2. Menu Category Tab Switching
+        function switchMenuTab(category) {
+            const categories = ['antipasti', 'primi', 'secondi', 'dolci'];
+            categories.forEach(cat => {
+                const panel = document.getElementById(`panel-${cat}`);
+                const tab = document.getElementById(`tab-${cat}`);
+                if (cat === category) {
+                    panel.classList.remove('hidden-panel');
+                    tab.className = 'menu-tab active-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-terracotta text-parchment shadow-sm';
+                } else {
+                    panel.classList.add('hidden-panel');
+                    tab.className = 'menu-tab px-5 py-2.5 rounded-sm font-mono text-xs uppercase tracking-widest transition-all bg-parchment text-espresso hover:bg-sandstone/60 border border-sandstone';
+                }
+            });
+        }
+
+        // 3. Time Slot Selection
+        function selectTimeSlot(buttonEl, timeText) {
+            document.getElementById('res-time').value = timeText;
+            document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                btn.className = 'time-slot-btn py-2.5 px-2 text-xs font-mono border border-sandstone bg-parchment text-espresso hover:border-terracotta rounded-sm transition-all';
+            });
+            buttonEl.className = 'time-slot-btn py-2.5 px-2 text-xs font-mono border border-terracotta bg-terracotta text-parchment rounded-sm transition-all';
+        }
+
+        // 4. Default Today's Date & Reservation Submission
+        const dateInput = document.getElementById('res-date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+        dateInput.min = today;
+
+        const resForm = document.getElementById('reservation-form');
+        const resSuccess = document.getElementById('reservation-success');
+
+        resForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const guests = document.getElementById('res-guests').value;
+            const dateVal = document.getElementById('res-date').value;
+            const timeVal = document.getElementById('res-time').value;
+            const areaVal = document.getElementById('res-area').value;
+            const nameVal = document.getElementById('res-name').value;
+            const notesVal = document.getElementById('res-notes').value;
+
+            document.getElementById('confirm-headline').textContent = `Grazie, ${nameVal}!`;
+            document.getElementById('confirm-details').textContent = 
+                `We have reserved a table for ${guests} on ${dateVal} at ${timeVal} in the ${areaVal}.${notesVal ? ' Kitchen note: "' + notesVal + '".' : ''} A confirmation SMS has been sent.`;
+
+            resForm.classList.add('hidden');
+            resSuccess.classList.remove('hidden');
+        });
+
+        function resetReservationForm() {
+            resSuccess.classList.add('hidden');
+            resForm.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

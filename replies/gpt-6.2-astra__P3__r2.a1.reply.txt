@@ -1,0 +1,200 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f5ef">
+<title>Mara Vale — Freelance Photographer</title>
+<style>
+*{box-sizing:border-box}
+:root{--paper:#f7f5ef;--ink:#24251f;--muted:#63645a;--rule:#cccac0;--accent:#a5482e}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "Helvetica Neue",Arial,sans-serif}
+main,header,footer{width:min(1380px,90vw);margin:auto}
+header,nav,.section-head,.caption,.hero-foot,footer{display:flex;align-items:center;justify-content:space-between;gap:20px}
+header{padding:22px 0;border-bottom:1px solid var(--rule)}
+.brand{font:italic 32px Georgia,serif;letter-spacing:-3px}
+a{color:inherit;text-decoration:none}
+nav{gap:clamp(16px,3vw,48px);font-size:14px}
+nav a:hover,.contact:hover{text-decoration:underline;text-underline-offset:5px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+h1,h2,h3,p,figure{margin:0}
+h1,h2,h3,.hero-title{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+.intro{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;padding:clamp(38px,5vw,80px) 0 30px}
+.eyebrow,.meta,.counter{font:11px/1.5 "Courier New",monospace;letter-spacing:.12em;text-transform:uppercase}
+.eyebrow{color:var(--accent)}
+h1{font-size:clamp(64px,9.6vw,150px);line-height:1;letter-spacing:-.075em;margin-left:-.055em}
+.intro p{max-width:230px;margin-bottom:7px;color:var(--muted)}
+.hero{position:relative;background:#47525a;color:white;isolation:isolate}
+.hero-art,.card-art{display:block;width:100%;height:100%}
+.hero-art{height:clamp(345px,36vw,530px)}
+.hero::after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#151a1ae0);pointer-events:none;z-index:0}
+.hero-foot{position:absolute;z-index:1;inset:auto 4% 7%;align-items:flex-end}
+.hero-title{font-size:clamp(36px,5vw,76px);letter-spacing:-.045em;line-height:1.14}
+.controls{display:flex;align-items:center;gap:8px}
+.counter{margin-right:10px}
+button{font:inherit;cursor:pointer;color:inherit}
+.arrow{width:44px;height:44px;border:1px solid #ffffff8a;background:#2224;border-radius:50%;font-size:20px}
+.arrow:hover{background:#fff;color:var(--ink)}
+section{scroll-margin-top:24px}
+#work,#about{padding-top:clamp(46px,6vw,96px)}
+.section-head{margin-bottom:22px;align-items:baseline}
+h2{font-size:clamp(38px,4.2vw,64px);line-height:1.12;letter-spacing:-.055em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2vw}
+.thumb{display:block;width:100%;padding:0;border:0;background:#c5bdb0;overflow:hidden;aspect-ratio:1.24}
+.card-art{transition:transform .5s}
+.thumb:hover .card-art{transform:scale(1.035)}
+.caption{margin-top:12px;gap:8px}
+h3{font-size:clamp(22px,2vw,32px);letter-spacing:-.035em}
+.meta{color:var(--muted)}
+.about-inner{border-top:1px solid var(--rule);padding:40px 0 55px;display:grid;grid-template-columns:1fr 2fr;gap:25px}
+.about-copy{max-width:650px}
+.about-copy p{font:clamp(22px,2.3vw,35px)/1.35 Georgia,serif;letter-spacing:-.025em}
+.contact{display:inline-block;margin-top:20px;color:var(--accent)}
+footer{border-top:1px solid var(--rule);padding:20px 0 32px;color:var(--muted);font-size:13px}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+dialog{width:min(1000px,94vw);padding:12px;border:0;background:var(--paper);color:var(--ink)}
+dialog::backdrop{background:#141715d9}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px}
+.close{background:none;border:0;font-size:26px;width:44px;height:44px}
+.large-art{display:block;width:100%;max-height:72vh;aspect-ratio:2/1;background:#343834}
+@media(max-width:700px){
+header{padding:14px 0}.intro{display:block;padding:36px 0 22px}.intro p{max-width:none;margin:12px 0 0;font-size:14px}
+.hero-foot{align-items:flex-start;flex-direction:column;gap:16px}.hero-art{height:390px}
+.grid{grid-template-columns:1fr;gap:30px}.thumb{aspect-ratio:1.7}.about-inner{grid-template-columns:1fr}
+.section-head .meta{font-size:10px}.caption{margin-top:8px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card-art{transition:none}}
+</style>
+</head>
+<body>
+<!-- Embedded landscape studies keep the portfolio available offline. -->
+<svg class="defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs>
+  <linearGradient id="sky" x2=".1" y2="1" gradientUnits="objectBoundingBox">
+    <stop stop-color="#677c88"/><stop offset=".56" stop-color="#c6bfb2"/><stop offset="1" stop-color="#ead0af"/>
+  </linearGradient>
+  <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#bbbcb0"/><stop offset=".4" stop-color="#809695"/><stop offset="1" stop-color="#445d61"/></linearGradient>
+  <linearGradient id="dune" x2=".9" y2=".8"><stop stop-color="#eed0a2"/><stop offset=".55" stop-color="#bc8053"/><stop offset="1" stop-color="#814e36"/></linearGradient>
+  <linearGradient id="ice" x2="0" y2="1"><stop stop-color="#d9ddda"/><stop offset="1" stop-color="#879b9e"/></linearGradient>
+  <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".64" numOctaves="3" stitchTiles="stitch"/></filter>
+  <filter id="rough" x="-5%" y="-8%" width="110%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".032 .075" numOctaves="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="9"/></filter>
+  <g id="texture"><path fill="#888" filter="url(#grain)" opacity=".23" d="M0 0h1200v600H0z"/></g>
+  <symbol id="coast" viewBox="0 0 1200 600">
+    <path fill="url(#sky)" d="M0 0h1200v600H0z"/>
+    <path fill="#899798" opacity=".6" d="M0 328q109-45 194-29t179 12q92-35 159-23t148 40z"/>
+    <path fill="url(#sea)" d="M0 323h1200v277H0z"/>
+    <g fill="none" stroke="#e4e1cf" opacity=".65" filter="url(#rough)">
+      <path d="M-20 354q222-12 447-2t480-3M45 380q178-11 315-4m54-4q140-2 265-9M-20 413q130-14 267-9t239-8M89 455q119-17 218-10m91-13 84-6M-20 500q116-20 217-18"/>
+    </g>
+    <g filter="url(#rough)">
+      <path fill="#454e48" d="m1205 136-88 14-61 32-85 12-58 38-77 15-71 36-59 8-36 24-101 17 58 15 167-3 76 16 335-13z"/>
+      <path fill="#6b715a" d="m1205 132-94 12-54 29-90 17-57 39-78 13-71 39-61 7-39 26-97 17 95-4 109-27 89-10 91-42 91-9 53-30 112-13z"/>
+      <path fill="#333e3a" d="m1205 271-149 32-56 55-103 26-94 52-142 23-106 45-111 20-118 76h879z"/>
+      <path fill="#60664e" d="m1205 260-157 38-58 52-113 32-79 45-150 27-103 42-109 24-111 65 103-35 150-23 102-47 153-18 81-40 127-31 55-42 109-19z"/>
+    </g>
+    <use href="#texture"/>
+  </symbol>
+  <symbol id="desert" viewBox="0 0 1200 600">
+    <path fill="#d7c3a9" d="M0 0h1200v600H0z"/>
+    <path fill="#ba9982" d="m0 306 147-44 104 18 171-58 197 54 139-24 190 40 252-48v356H0z"/>
+    <path fill="url(#dune)" d="M0 323q183 14 378-39t378-11q242 55 444-15v342H0z"/>
+    <path fill="#a76d4c" d="M0 490q225-121 499-124 240-2 441-67-194 117-409 145T0 580z"/>
+    <path fill="url(#dune)" d="M0 523q260-121 514-99 393 35 686-72v248H0z"/>
+    <use href="#texture"/>
+  </symbol>
+  <symbol id="alpine" viewBox="0 0 1200 600">
+    <path fill="url(#ice)" d="M0 0h1200v600H0z"/>
+    <g filter="url(#rough)">
+      <path fill="#819092" d="m0 344 172-131 91 51 155-89 156 112 169-151 89 72 89-48 279 142v298H0z"/>
+      <path fill="#536366" d="m0 426 198-103 163-61 69-82 63 42 79 72 102-42 75-112 115 126 75-34 261 120v248H0z"/>
+      <path fill="#d9ded9" d="m296 302 70-48 64-80 64 44 64 67-70-44-19 12-39-53-14 44-27-1-22 29zm350-11 101-158 122 133-67-47-18 5-35-61-18 56-20 2z"/>
+      <path fill="#465957" d="m0 327 159 39 137 69 173 49 170-31 148-49 195-36 218-95v327H0z"/>
+    </g>
+    <path fill="url(#sea)" d="M0 497q199-13 425-4t424-10q156-13 351-6v123H0z"/>
+    <use href="#texture"/>
+  </symbol>
+</defs>
+</svg>
+
+<header id="top">
+  <a href="#top" class="brand" aria-label="Mara Vale, home">mv.</a>
+  <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><a href="mailto:studio@maravale.example">Contact ↗</a></nav>
+</header>
+<main>
+  <div class="intro">
+    <div><span class="eyebrow">Independent photographer</span><h1>Mara Vale</h1></div>
+    <p>Landscape and travel photography from the Pacific Northwest.</p>
+  </div>
+
+  <figure class="hero" aria-label="Featured series">
+    <svg class="hero-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="hero-description">
+      <title id="hero-description">Green headlands above the grey Pacific at dusk</title>
+      <use id="hero-image" href="#coast" width="1200" height="600"/>
+    </svg>
+    <figcaption class="hero-foot">
+      <div aria-live="polite"><span class="eyebrow" style="color:#fff">Featured series</span><div id="hero-title" class="hero-title">Where the Land Ends</div></div>
+      <div class="controls"><span class="counter" id="counter">01 / 03</span><button class="arrow" id="prev" aria-label="Previous series">←</button><button class="arrow" id="next" aria-label="Next series">→</button></div>
+    </figcaption>
+  </figure>
+
+  <section id="work">
+    <div class="section-head"><h2>Selected work</h2><span class="meta">2023 — 2025</span></div>
+    <div class="grid">
+      <figure><button class="thumb" data-index="0" aria-label="View Where the Land Ends"><svg class="card-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#coast" width="1200" height="600"/></svg></button><figcaption class="caption"><h3>Where the Land Ends</h3><span class="meta">Oregon</span></figcaption></figure>
+      <figure><button class="thumb" data-index="1" aria-label="View Dry Country"><svg class="card-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#desert" width="1200" height="600"/></svg></button><figcaption class="caption"><h3>Dry Country</h3><span class="meta">Nevada</span></figcaption></figure>
+      <figure><button class="thumb" data-index="2" aria-label="View Above the Treeline"><svg class="card-art" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#alpine" width="1200" height="600"/></svg></button><figcaption class="caption"><h3>Above the Treeline</h3><span class="meta">Alaska</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section id="about"><div class="about-inner">
+    <h2>About Mara</h2>
+    <div class="about-copy"><p>I’m a freelance photographer based in Portland, Oregon. I follow the same stretches of coast and high desert through the seasons, often returning for a single frame.</p><a class="contact" href="mailto:studio@maravale.example">Get in touch about a commission ↗</a></div>
+  </div></section>
+</main>
+<footer><span>© Mara Vale</span><a href="#top">Back to top ↑</a></footer>
+
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="dialog-head"><h3 id="viewer-title"></h3><button class="close" aria-label="Close image">×</button></div>
+  <svg class="large-art" viewBox="0 0 1200 600" role="img" aria-labelledby="viewer-description"><title id="viewer-description"></title><use id="viewer-image" width="1200" height="600"/></svg>
+</dialog>
+<script>
+const series = [
+  ["coast", "Where the Land Ends", "Green headlands above the grey Pacific at dusk"],
+  ["desert", "Dry Country", "Long shadows across overlapping copper-colored dunes"],
+  ["alpine", "Above the Treeline", "Snow-streaked peaks rising behind a quiet alpine lake"]
+];
+let current = 0;
+function step(direction) {
+  current = (current + direction + series.length) % series.length;
+  const [id, title, description] = series[current];
+  document.querySelector("#hero-image").setAttribute("href", "#" + id);
+  document.querySelector("#hero-title").textContent = title;
+  document.querySelector("#hero-description").textContent = description;
+  document.querySelector("#counter").textContent = "0" + (current + 1) + " / 03";
+}
+document.querySelector("#prev").onclick = () => step(-1);
+document.querySelector("#next").onclick = () => step(1);
+const viewer = document.querySelector("#viewer");
+document.querySelectorAll(".thumb").forEach(button => {
+  button.onclick = () => {
+    const [id, title, description] = series[Number(button.dataset.index)];
+    document.querySelector("#viewer-title").textContent = title;
+    document.querySelector("#viewer-description").textContent = description;
+    document.querySelector("#viewer-image").setAttribute("href", "#" + id);
+    viewer.showModal();
+  };
+});
+viewer.querySelector(".close").onclick = () => viewer.close();
+viewer.onclick = event => {
+  if (event.target !== viewer) return;
+  const box = viewer.getBoundingClientRect();
+  if (event.clientX < box.left || event.clientX > box.right ||
+      event.clientY < box.top || event.clientY > box.bottom) viewer.close();
+};
+</script>
+<!-- Sample portfolio identity, illustrated landscapes, and placeholder contact address. -->
+</body>
+</html>
+```

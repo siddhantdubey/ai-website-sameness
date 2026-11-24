@@ -1,0 +1,1012 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plumb — Project planning that does the arithmetic</title>
+<meta name="description" content="Plumb is project planning that understands how your work connects. Slip a task and every dependent date updates on the spot.">
+<style>
+  :root {
+    --paper: #f4f1ea;
+    --sheet: #faf8f3;
+    --ink: #17211d;
+    --muted: #5a645d;
+    --rule: rgba(23, 33, 29, .16);
+    --rule-strong: rgba(23, 33, 29, .55);
+    --accent: #c4391f;
+    --on-accent: #fff;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    --label: 190px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #111613;
+      --sheet: #171d19;
+      --ink: #ebe7dc;
+      --muted: #9aa39b;
+      --rule: rgba(235, 231, 220, .16);
+      --rule-strong: rgba(235, 231, 220, .5);
+      --accent: #f26a4b;
+      --on-accent: #111613;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 17px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  h1, h2, h3, p, ul, figure, blockquote { margin: 0; padding: 0; }
+  ul { list-style: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+  .mono {
+    font: 500 12px/1.4 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .muted { color: var(--muted); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 13px 22px;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    background: var(--ink); color: var(--paper);
+    font: 600 15px/1 var(--sans);
+    text-decoration: none; cursor: pointer;
+    transition: transform .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: none; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.small { padding: 9px 14px; font-size: 14px; }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 600 24px/1 var(--serif);
+    letter-spacing: -.01em;
+    text-decoration: none;
+  }
+  .logo svg { width: 16px; height: 26px; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a, .nav-right a.text {
+    font-size: 15px; text-decoration: none;
+  }
+  .nav-links a:hover, .nav-right a.text:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 72px 0 40px; }
+  .hero-top {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 56px;
+  }
+  h1 {
+    font: 500 clamp(2.7rem, 6.4vw, 5.4rem)/1 var(--serif);
+    letter-spacing: -.025em;
+    text-wrap: balance;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-side p { font-size: 1.12rem; max-width: 42ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .hero-note { margin-top: 14px; font-size: 14px; color: var(--muted); }
+
+  /* ---------- Sheet (interactive schedule) ---------- */
+  .sheet {
+    background: var(--sheet);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+  }
+  .sheet-bar {
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .readout {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    gap: 36px;
+    align-items: end;
+    padding: 22px 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .readout dt { margin-bottom: 6px; color: var(--muted); }
+  .readout dd { margin: 0; }
+  .readout dl { margin: 0; }
+  .r-date { font: 500 2.1rem/1 var(--serif); letter-spacing: -.01em; white-space: nowrap; }
+  .r-status { font: 600 15px/1.3 var(--sans); }
+  .r-status.late { color: var(--accent); }
+  .r-path { font-size: 14px; line-height: 1.4; }
+
+  .tries {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .chip {
+    padding: 7px 12px;
+    border: 1px dashed var(--rule-strong);
+    border-radius: 2px;
+    background: none; color: inherit;
+    font: 500 14px/1 var(--sans);
+    cursor: pointer;
+  }
+  .chip:hover { border-style: solid; }
+  .chip:disabled { opacity: .4; cursor: default; border-style: dashed; }
+
+  .gantt { padding: 0 18px 18px; }
+  .g-head {
+    display: grid;
+    grid-template-columns: var(--label) 1fr;
+    padding-top: 14px;
+  }
+  .g-weeks { display: grid; grid-template-columns: repeat(6, 1fr); }
+  .g-weeks span { padding: 0 0 8px 6px; color: var(--muted); border-left: 1px solid var(--rule); }
+  .g-body { position: relative; border-top: 1px solid var(--rule-strong); isolation: isolate; }
+  .g-row {
+    display: grid;
+    grid-template-columns: var(--label) 1fr;
+    height: 44px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .g-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14.5px; white-space: nowrap; overflow: hidden;
+    padding-right: 10px;
+  }
+  .who {
+    flex: none;
+    width: 24px; height: 24px;
+    display: grid; place-items: center;
+    border: 1px solid var(--rule-strong); border-radius: 50%;
+    font: 500 9.5px/1 var(--mono);
+  }
+  .who.none { visibility: hidden; }
+  .g-track {
+    position: relative;
+    background: linear-gradient(to right, var(--rule) 1px, transparent 1px) 0 0 / calc(100% / 6) 100%;
+  }
+  .g-links {
+    position: absolute; top: 0; bottom: 0; right: 0; left: var(--label);
+    width: calc(100% - var(--label)); height: 100%;
+    pointer-events: none; z-index: 1;
+    overflow: visible;
+  }
+  .g-links path {
+    fill: none;
+    stroke: var(--ink); stroke-opacity: .45; stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .g-links path.crit { stroke: var(--accent); stroke-opacity: 1; stroke-width: 1.5; }
+
+  .bar {
+    position: absolute; top: 9px; height: 25px; z-index: 2;
+    display: flex; align-items: center;
+    padding-left: 7px;
+    background: var(--ink); color: var(--sheet);
+    border-radius: 2px;
+    font: 500 11px/1 var(--mono);
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none; -webkit-user-select: none;
+    overflow: hidden;
+  }
+  .bar.crit { background: var(--accent); color: var(--on-accent); }
+  .bar.dragging { cursor: grabbing; }
+  .bar:focus-visible { outline-offset: 2px; }
+  .slack {
+    position: absolute; top: 21px; z-index: 2;
+    height: 0;
+    border-top: 1px dashed var(--rule-strong);
+    pointer-events: none;
+  }
+  .slack::after {
+    content: ""; position: absolute; right: 0; top: -5px;
+    height: 9px; border-right: 1px solid var(--rule-strong);
+  }
+  .slack span {
+    position: absolute; left: 100%; top: -8px; margin-left: 7px;
+    font: 500 10.5px/1.4 var(--mono); color: var(--muted); white-space: nowrap;
+    background: var(--sheet); padding: 0 3px;
+  }
+  .diamond {
+    position: absolute; top: 14px; z-index: 3;
+    width: 15px; height: 15px;
+    background: var(--accent);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .ms-date {
+    position: absolute; top: 12px; z-index: 3;
+    margin-right: 15px; padding: 0 5px;
+    background: var(--sheet);
+    font: 600 12px/20px var(--mono); color: var(--accent); white-space: nowrap;
+  }
+  .g-baseline {
+    position: absolute; top: -22px; bottom: 0; z-index: 0;
+    left: calc(var(--label) + (100% - var(--label)) * 23 / 30);
+    border-left: 1px dashed var(--rule-strong);
+    display: none;
+  }
+  .g-baseline span {
+    position: absolute; top: 0; right: 6px;
+    font: 500 10.5px/1.4 var(--mono); color: var(--muted); white-space: nowrap;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .slipped .g-baseline { display: block; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 88px 0; }
+  .sec-head {
+    display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end;
+    margin-bottom: 44px;
+  }
+  .sec-head .mono { color: var(--muted); display: block; margin-bottom: 14px; }
+  h2 {
+    font: 500 clamp(2rem, 4vw, 3.1rem)/1.05 var(--serif);
+    letter-spacing: -.02em;
+    text-wrap: balance;
+  }
+
+  /* ---------- Features ---------- */
+  .panels {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+  }
+  .panel { padding: 30px 30px 34px; display: flex; flex-direction: column; }
+  .panel:nth-child(odd) { border-right: 1px solid var(--ink); }
+  .panel:nth-child(-n+2) { border-bottom: 1px solid var(--ink); }
+  .panel .mono { color: var(--muted); }
+  .panel h3 { font: 500 1.6rem/1.15 var(--serif); letter-spacing: -.01em; margin: 10px 0 10px; }
+  .panel p { color: var(--muted); max-width: 46ch; }
+  .viz {
+    margin-top: 28px; flex: 1;
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    padding: 20px;
+    min-height: 190px;
+  }
+
+  /* float viz */
+  .mini-row { display: grid; grid-template-columns: 92px 1fr; align-items: center; height: 38px; font-size: 13.5px; }
+  .mini-track { position: relative; height: 100%; border-left: 1px solid var(--rule); }
+  .mini-track .bar { top: 8px; height: 22px; cursor: default; }
+  .mini-track .slack { top: 19px; }
+  .viz-note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+
+  /* digest viz */
+  .digest { font: 13px/1.7 var(--mono); }
+  .digest .d-head { color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-size: 11.5px; }
+  .digest strong { display: block; font: 500 1.25rem/1.3 var(--serif); margin: 6px 0 10px; }
+  .digest li { padding-left: 1.4em; text-indent: -1.4em; }
+  .digest li::before { content: "— "; color: var(--muted); }
+  .digest mark { background: none; color: var(--accent); font-weight: 600; }
+
+  /* workload viz */
+  .load li { display: grid; grid-template-columns: 84px 1fr 40px; gap: 12px; align-items: center; height: 34px; font-size: 13.5px; }
+  .meter { position: relative; height: 12px; background: linear-gradient(var(--rule), var(--rule)) left center / 100% 1px no-repeat; }
+  .meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); border-radius: 1px; }
+  .meter::after { content: ""; position: absolute; left: 80%; top: -6px; bottom: -6px; border-left: 1px dashed var(--rule-strong); }
+  .load .over i { background: var(--accent); }
+  .load b { font: 500 12px/1 var(--mono); text-align: right; }
+  .load .over b { color: var(--accent); }
+
+  /* board viz */
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .col-h { display: flex; justify-content: space-between; color: var(--muted); padding-bottom: 8px; border-bottom: 1px solid var(--rule-strong); margin-bottom: 10px; }
+  .card { border: 1px solid var(--rule-strong); border-radius: 2px; padding: 9px 10px; margin-bottom: 8px; font-size: 12.5px; line-height: 1.35; background: var(--paper); }
+  .card small { display: block; margin-top: 5px; font: 500 10.5px/1 var(--mono); color: var(--muted); }
+  .card.crit { border-color: var(--accent); }
+  .card.crit small { color: var(--accent); }
+
+  /* ---------- Quote ---------- */
+  .quote { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .quote blockquote {
+    font: 500 clamp(1.5rem, 3vw, 2.3rem)/1.25 var(--serif);
+    letter-spacing: -.012em;
+    max-width: 26em;
+    text-wrap: pretty;
+  }
+  .quote figcaption { margin-top: 26px; font-size: 15px; color: var(--muted); }
+  .quote figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Pricing ---------- */
+  .billing { display: inline-flex; border: 1px solid var(--ink); border-radius: 2px; justify-self: end; }
+  .billing button {
+    padding: 9px 16px; border: 0; background: none; color: inherit;
+    font: 500 14px/1 var(--sans); cursor: pointer;
+  }
+  .billing button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--ink); border-radius: 2px; }
+  .plan { padding: 30px; display: flex; flex-direction: column; }
+  .plan + .plan { border-left: 1px solid var(--ink); }
+  .plan.pick { background: var(--sheet); }
+  .plan-name { display: flex; justify-content: space-between; align-items: center; }
+  .plan-name h3 { font: 500 1.6rem/1 var(--serif); }
+  .plan-name .mono { color: var(--accent); }
+  .price { margin: 22px 0 6px; font: 500 3.2rem/1 var(--serif); letter-spacing: -.02em; }
+  .price small { font: 400 14px/1 var(--sans); color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .plan > p { color: var(--muted); font-size: 15px; min-height: 3.1em; }
+  .plan ul { margin: 22px 0 28px; border-top: 1px solid var(--rule); flex: 1; }
+  .plan li { padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: grid; grid-template-columns: 5fr 7fr; gap: 48px; }
+  .faq details { border-top: 1px solid var(--rule-strong); }
+  .faq details:last-child { border-bottom: 1px solid var(--rule-strong); }
+  .faq summary {
+    display: flex; justify-content: space-between; gap: 20px;
+    padding: 20px 0; cursor: pointer; list-style: none;
+    font: 500 1.2rem/1.3 var(--serif);
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font: 400 1.3rem/1 var(--mono); color: var(--muted); }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { padding: 0 0 22px; color: var(--muted); max-width: 58ch; }
+
+  /* ---------- CTA ---------- */
+  .cta { padding: 96px 0; border-top: 1px solid var(--ink); }
+  .cta-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; }
+  .cta h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); }
+  .signup { display: flex; gap: 10px; }
+  .signup input {
+    flex: 1; min-width: 0;
+    padding: 13px 14px;
+    border: 1px solid var(--ink); border-radius: 2px;
+    background: var(--sheet); color: var(--ink);
+    font: 16px/1.2 var(--sans);
+  }
+  .signup input::placeholder { color: var(--muted); }
+  .signup-msg { margin-top: 12px; font-size: 14px; color: var(--muted); min-height: 1.5em; }
+
+  /* ---------- Footer (title block) ---------- */
+  footer { padding-bottom: 40px; }
+  .titleblock {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    border: 1px solid var(--ink); border-radius: 2px;
+    font-size: 14px;
+  }
+  .titleblock > div { padding: 18px 20px; }
+  .titleblock > div + div { border-left: 1px solid var(--ink); }
+  .titleblock .mono { color: var(--muted); display: block; margin-bottom: 10px; }
+  .titleblock a { display: block; text-decoration: none; padding: 3px 0; }
+  .titleblock a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .hero-top, .sec-head, .faq, .cta-grid { grid-template-columns: 1fr; gap: 28px; }
+    .billing { justify-self: start; }
+    .panels, .plans { grid-template-columns: 1fr; }
+    .panel:nth-child(odd) { border-right: 0; }
+    .panel:not(:last-child) { border-bottom: 1px solid var(--ink); }
+    .plan + .plan { border-left: 0; border-top: 1px solid var(--ink); }
+    .plan > p { min-height: 0; }
+    .readout { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .readout .r-path-wrap { grid-column: 1 / -1; }
+    .titleblock { grid-template-columns: 1fr 1fr; }
+    .titleblock > div:nth-child(3) { border-left: 0; }
+    .titleblock > div:nth-child(n+3) { border-top: 1px solid var(--ink); }
+  }
+  @media (max-width: 640px) {
+    :root { --label: 104px; }
+    body { font-size: 16px; }
+    .wrap { padding: 0 18px; }
+    .nav-links, .nav-right a.text { display: none; }
+    .hero { padding-top: 48px; }
+    section { padding: 64px 0; }
+    .who, .slack span, .bar span { display: none; }
+    .bar { padding: 0; }
+    .g-label { font-size: 13px; white-space: normal; line-height: 1.2; }
+    .gantt, .readout, .tries, .sheet-bar { padding-left: 12px; padding-right: 12px; }
+    .gantt { padding-bottom: 12px; }
+    .sheet-bar .hint { display: none; }
+    .signup { flex-direction: column; }
+    .board { gap: 8px; }
+    .viz { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav class="nav" aria-label="Main">
+    <a class="logo" href="#top" aria-label="Plumb home">
+      <svg viewBox="0 0 16 26" aria-hidden="true"><path d="M8 0v11" stroke="currentColor" stroke-width="1.5"/><path d="M2 11h12l-6 15z" fill="currentColor"/></svg>
+      Plumb
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+    </div>
+    <div class="nav-right">
+      <a class="text" href="#start">Sign in</a>
+      <a class="btn small" href="#start">Start free</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ================= Hero ================= -->
+  <div class="wrap hero">
+    <div class="hero-top">
+      <h1>Move one deadline. See what <em>else</em> moves.</h1>
+      <div class="hero-side">
+        <p>Plumb is project planning that understands how your work connects. When a task slips, every dependent date updates on the spot, and you can see which slips threaten the launch and which ones don't.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#start">Start a free plan</a>
+          <a class="btn ghost" href="#pricing">See pricing</a>
+        </div>
+        <p class="hero-note">Free for teams of five. No card needed.</p>
+      </div>
+    </div>
+
+    <div class="sheet" id="demo">
+      <div class="sheet-bar mono">
+        <span>A-01 · Website relaunch · Schedule</span>
+        <span class="hint muted">Live demo — drag a bar, or focus it and press ← →</span>
+      </div>
+
+      <div class="readout">
+        <dl>
+          <dt class="mono">Launch</dt>
+          <dd class="r-date" id="rDate">Thu 4 Feb</dd>
+        </dl>
+        <dl>
+          <dt class="mono">Against plan</dt>
+          <dd class="r-status" id="rStatus" aria-live="polite">On plan</dd>
+        </dl>
+        <dl class="r-path-wrap">
+          <dt class="mono">Critical path</dt>
+          <dd class="r-path" id="rPath"></dd>
+        </dl>
+        <button class="btn ghost small" id="rReset" type="button" disabled>Reset</button>
+      </div>
+
+      <div class="tries">
+        <span class="muted">Try it:</span>
+        <button class="chip" type="button" data-try="review">Design review runs 3 days late</button>
+        <button class="chip" type="button" data-try="copy">Copy runs 3 days late</button>
+      </div>
+
+      <div class="gantt">
+        <div class="g-head">
+          <span></span>
+          <div class="g-weeks mono" id="gWeeks"></div>
+        </div>
+        <div class="g-body" id="gBody">
+          <div class="g-baseline"><span>Planned</span></div>
+        </div>
+        <noscript><p style="padding:16px 0 0">The interactive schedule needs JavaScript.</p></noscript>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Features ================= -->
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="mono">A-02 · What it does</span>
+          <h2>A plan that keeps itself honest.</h2>
+        </div>
+        <p class="muted">Most tools store your dates. Plumb works them out from durations, dependencies and who is free, so the schedule on screen is always the one you are actually on.</p>
+      </div>
+
+      <div class="panels">
+        <article class="panel">
+          <span class="mono">01</span>
+          <h3>Float you can see</h3>
+          <p>Every task shows how far it can slip before it touches the delivery date. You stop chasing the late things that don't matter.</p>
+          <div class="viz" aria-hidden="true">
+            <div class="mini-row"><span>Illustration</span>
+              <div class="mini-track">
+                <div class="bar" style="left:6%;width:34%"><span>6d</span></div>
+                <div class="slack" style="left:40%;width:34%"><span>6d float</span></div>
+              </div>
+            </div>
+            <div class="mini-row"><span>Front end</span>
+              <div class="mini-track">
+                <div class="bar crit" style="left:6%;width:56%"><span>10d</span></div>
+              </div>
+            </div>
+            <div class="mini-row"><span>Legal sign-off</span>
+              <div class="mini-track">
+                <div class="bar" style="left:30%;width:16%"><span>3d</span></div>
+                <div class="slack" style="left:46%;width:16%"><span>3d float</span></div>
+              </div>
+            </div>
+            <p class="viz-note">Red has no room. Everything else shows its margin.</p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <span class="mono">02</span>
+          <h3>A Monday digest, already written</h3>
+          <p>Plumb summarises what moved last week, why it moved and what it did to the date, then sends it to the people who ask.</p>
+          <div class="viz">
+            <div class="digest">
+              <span class="d-head">Mon 08:00 · Weekly digest</span>
+              <strong>Website relaunch</strong>
+              <ul>
+                <li>3 tasks moved last week.</li>
+                <li>Launch holds at <mark>Thu 4 Feb</mark>.</li>
+                <li>Build is now on the critical path. Tomás has 0 days of float.</li>
+                <li>Copy can slip 5 more days before it matters.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <span class="mono">03</span>
+          <h3>Workload without the spreadsheet</h3>
+          <p>See each person's week against their real capacity, across every project. Reassign a task and the schedule recalculates.</p>
+          <div class="viz">
+            <ul class="load" aria-label="Hours booked this week, against a 40 hour capacity">
+              <li><span>Ines K.</span><div class="meter"><i style="width:64%"></i></div><b>32h</b></li>
+              <li class="over"><span>Tomás S.</span><div class="meter"><i style="width:92%"></i></div><b>46h</b></li>
+              <li><span>Jun L.</span><div class="meter"><i style="width:76%"></i></div><b>38h</b></li>
+              <li><span>Mo O.</span><div class="meter"><i style="width:40%"></i></div><b>20h</b></li>
+            </ul>
+            <p class="viz-note">Dashed line marks 40 hours. Tomás is 6 over.</p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <span class="mono">04</span>
+          <h3>Board, list or timeline</h3>
+          <p>The people doing the work can stay in a simple board. It is the same data as the timeline, so nobody updates anything twice.</p>
+          <div class="viz" aria-hidden="true">
+            <div class="board">
+              <div>
+                <div class="col-h mono"><span>To do</span><span>4</span></div>
+                <div class="card">Pricing page copy<small>JL · 3d float</small></div>
+                <div class="card">Redirect map<small>TS · 5d float</small></div>
+              </div>
+              <div>
+                <div class="col-h mono"><span>Doing</span><span>2</span></div>
+                <div class="card crit">Checkout build<small>TS · Critical</small></div>
+                <div class="card">Icon set<small>IK · 6d float</small></div>
+              </div>
+              <div>
+                <div class="col-h mono"><span>Done</span><span>7</span></div>
+                <div class="card">User interviews<small>MO</small></div>
+                <div class="card">Wireframes<small>IK</small></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Quote ================= -->
+  <section class="quote">
+    <div class="wrap">
+      <figure>
+        <blockquote>“We used to find out about slips in the retro. Now the date moves on screen the moment someone says they need two more days, and we deal with it in the same meeting.”</blockquote>
+        <figcaption><b>Rania Aziz</b> · Head of Delivery, Northwind Studio</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= Pricing ================= -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="mono">A-03 · Pricing</span>
+          <h2>Priced per person, with no seat minimums.</h2>
+        </div>
+        <div class="billing" role="group" aria-label="Billing period">
+          <button type="button" data-bill="m" aria-pressed="false">Monthly</button>
+          <button type="button" data-bill="y" aria-pressed="true">Yearly · save 20%</button>
+        </div>
+      </div>
+
+      <div class="plans">
+        <div class="plan">
+          <div class="plan-name"><h3>Crew</h3></div>
+          <div class="price">$0</div>
+          <p>For small teams running a few projects at a time.</p>
+          <ul>
+            <li>Up to 5 people</li>
+            <li>3 active projects</li>
+            <li>Dependencies and critical path</li>
+            <li>Board, list and timeline views</li>
+          </ul>
+          <a class="btn ghost" href="#start">Start free</a>
+        </div>
+        <div class="plan pick">
+          <div class="plan-name"><h3>Studio</h3><span class="mono">Most teams</span></div>
+          <div class="price"><span data-m="$9" data-y="$7">$7</span><small>per person / month</small></div>
+          <p>For teams that share people across several projects.</p>
+          <ul>
+            <li>Unlimited people and projects</li>
+            <li>Workload across projects</li>
+            <li>Weekly digests</li>
+            <li>GitHub, Slack and calendar sync</li>
+          </ul>
+          <a class="btn" href="#start">Try Studio for 30 days</a>
+        </div>
+        <div class="plan">
+          <div class="plan-name"><h3>Firm</h3></div>
+          <div class="price"><span data-m="$19" data-y="$15">$15</span><small>per person / month</small></div>
+          <p>For organisations that need oversight and controls.</p>
+          <ul>
+            <li>Everything in Studio</li>
+            <li>Portfolio view and baselines</li>
+            <li>SSO and audit log</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btn ghost" href="#start">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap faq">
+      <div>
+        <span class="mono muted" style="display:block;margin-bottom:14px">A-04 · Questions</span>
+        <h2>Before you move a whole team over.</h2>
+      </div>
+      <div>
+        <details open>
+          <summary>Can we bring our existing projects in?</summary>
+          <p>Yes. Import from a CSV or a spreadsheet and Plumb maps your columns to tasks, owners and dates. Dependencies come across if your file has them, and you can draw the rest in the timeline.</p>
+        </details>
+        <details>
+          <summary>We run sprints. Does this still fit?</summary>
+          <p>It does. Plan the sprint in the board view and keep the longer roadmap in the timeline. They share the same tasks, so a sprint that runs over shows up against the release date straight away.</p>
+        </details>
+        <details>
+          <summary>What happens when we outgrow the free plan?</summary>
+          <p>Nothing is locked or deleted. You will be asked to upgrade when you add a sixth person or a fourth active project, and archived projects never count towards the limit.</p>
+        </details>
+        <details>
+          <summary>Can we get our data out again?</summary>
+          <p>Any time, on every plan. Export a project or your whole workspace as CSV or JSON, including dependencies and history.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="start">
+    <div class="wrap cta-grid">
+      <h2>Find out today what your real date is.</h2>
+      <div>
+        <form class="signup" id="signup" novalidate>
+          <label for="email" style="position:absolute;left:-9999px">Work email</label>
+          <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+          <button class="btn" type="submit">Start free</button>
+        </form>
+        <p class="signup-msg" id="signupMsg" aria-live="polite">Free for five people. Set up your first plan in about ten minutes.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="titleblock">
+    <div>
+      <span class="mono">Project</span>
+      <a class="logo" href="#top" style="display:inline-flex">
+        <svg viewBox="0 0 16 26" aria-hidden="true"><path d="M8 0v11" stroke="currentColor" stroke-width="1.5"/><path d="M2 11h12l-6 15z" fill="currentColor"/></svg>
+        Plumb
+      </a>
+      <p class="muted" style="margin-top:10px">Planning that keeps the work true.<br>© 2026 Plumb Labs</p>
+    </div>
+    <div>
+      <span class="mono">Product</span>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#demo">Live demo</a>
+    </div>
+    <div>
+      <span class="mono">Company</span>
+      <a href="#">About</a>
+      <a href="#">Changelog</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <span class="mono">Legal</span>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Security</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---------- Interactive schedule ---------- */
+  var DAYS = 30, MAX = 29, PLAN = 23;
+  var TASKS = [
+    { id: 'research', name: 'Research',       who: 'MO', dur: 4, deps: [] },
+    { id: 'wire',     name: 'Wireframes',     who: 'IK', dur: 5, deps: ['research'] },
+    { id: 'review',   name: 'Design review',  who: 'IK', dur: 2, deps: ['wire'] },
+    { id: 'build',    name: 'Build',          who: 'TS', dur: 8, deps: ['review'] },
+    { id: 'qa',       name: 'QA',             who: 'RA', dur: 4, deps: ['build'] },
+    { id: 'copy',     name: 'Copy & content', who: 'JL', dur: 6, deps: ['research'] },
+    { id: 'prep',     name: 'Launch prep',    who: 'JL', dur: 5, deps: ['copy'] },
+    { id: 'launch',   name: 'Launch',         who: '',   dur: 0, deps: ['qa', 'prep'], milestone: true }
+  ];
+  var ROW = {};
+  TASKS.forEach(function (t, i) { ROW[t.id] = i; });
+
+  var WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var START = Date.UTC(2027, 0, 4); // a Monday
+
+  function dateOf(day) { // working-day index -> Date
+    return new Date(START + (Math.floor(day / 5) * 7 + day % 5) * 864e5);
+  }
+  function fmt(day, short) {
+    var d = dateOf(day);
+    var s = d.getUTCDate() + ' ' + MO[d.getUTCMonth()];
+    return short ? s : WD[d.getUTCDay()] + ' ' + s;
+  }
+  function pct(v) { return (v / DAYS * 100) + '%'; }
+
+  function schedule(delays) {
+    var es = {}, ef = {}, lf = {}, slack = {}, i, t;
+    for (i = 0; i < TASKS.length; i++) {
+      t = TASKS[i];
+      var s = 0;
+      t.deps.forEach(function (d) { s = Math.max(s, ef[d]); });
+      es[t.id] = s + (delays[t.id] || 0);
+      ef[t.id] = es[t.id] + t.dur;
+    }
+    var end = ef.launch;
+    for (i = TASKS.length - 1; i >= 0; i--) {
+      t = TASKS[i];
+      var latest = end;
+      TASKS.forEach(function (sx) {
+        if (sx.deps.indexOf(t.id) > -1) {
+          latest = Math.min(latest, lf[sx.id] - sx.dur - (delays[sx.id] || 0));
+        }
+      });
+      lf[t.id] = latest;
+      slack[t.id] = latest - ef[t.id];
+    }
+    return { es: es, ef: ef, slack: slack, end: end };
+  }
+
+  var body = document.getElementById('gBody');
+  var weeks = document.getElementById('gWeeks');
+  var rDate = document.getElementById('rDate');
+  var rStatus = document.getElementById('rStatus');
+  var rPath = document.getElementById('rPath');
+  var rReset = document.getElementById('rReset');
+  var delays = {};
+  var els = {};
+  var links = [];
+
+  for (var w = 0; w < 6; w++) {
+    var sp = document.createElement('span');
+    sp.textContent = fmt(w * 5, true);
+    weeks.appendChild(sp);
+  }
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'g-links');
+  svg.setAttribute('viewBox', '0 0 ' + DAYS + ' ' + TASKS.length);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  body.appendChild(svg);
+
+  TASKS.forEach(function (t) {
+    var row = document.createElement('div');
+    row.className = 'g-row';
+    var label = document.createElement('div');
+    label.className = 'g-label';
+    var who = document.createElement('span');
+    who.className = 'who' + (t.who ? '' : ' none');
+    who.textContent = t.who;
+    label.appendChild(who);
+    label.appendChild(document.createTextNode(t.name));
+    var track = document.createElement('div');
+    track.className = 'g-track';
+    row.appendChild(label);
+    row.appendChild(track);
+    body.appendChild(row);
+
+    var e = { track: track };
+    if (t.milestone) {
+      e.date = document.createElement('div');
+      e.date.className = 'ms-date';
+      e.diamond = document.createElement('div');
+      e.diamond.className = 'diamond';
+      track.appendChild(e.date);
+      track.appendChild(e.diamond);
+    } else {
+      e.slack = document.createElement('div');
+      e.slack.className = 'slack';
+      e.slackText = document.createElement('span');
+      e.slack.appendChild(e.slackText);
+      e.bar = document.createElement('div');
+      e.bar.className = 'bar';
+      e.bar.tabIndex = 0;
+      e.bar.setAttribute('role', 'slider');
+      e.bar.setAttribute('aria-label', t.name + ' delay in working days');
+      e.bar.setAttribute('aria-valuemin', '0');
+      var txt = document.createElement('span');
+      txt.textContent = t.dur + 'd';
+      e.bar.appendChild(txt);
+      track.appendChild(e.slack);
+      track.appendChild(e.bar);
+      bindBar(t, e);
+    }
+    els[t.id] = e;
+
+    t.deps.forEach(function (d) {
+      var p = document.createElementNS(NS, 'path');
+      svg.appendChild(p);
+      links.push({ from: d, to: t.id, el: p });
+    });
+  });
+
+  function setDelay(id, v) {
+    v = Math.max(0, v);
+    var trial = {};
+    for (var k in delays) trial[k] = delays[k];
+    trial[id] = v;
+    while (v > 0 && schedule(trial).end > MAX) { v--; trial[id] = v; }
+    delays = trial;
+    render();
+  }
+
+  function bindBar(t, e) {
+    var drag = null;
+    e.bar.addEventListener('pointerdown', function (ev) {
+      if (ev.button) return;
+      e.bar.setPointerCapture(ev.pointerId);
+      drag = { x: ev.clientX, d: delays[t.id] || 0, w: e.track.clientWidth / DAYS };
+      e.bar.classList.add('dragging');
+    });
+    e.bar.addEventListener('pointermove', function (ev) {
+      if (!drag) return;
+      setDelay(t.id, drag.d + Math.round((ev.clientX - drag.x) / drag.w));
+    });
+    function stop() { drag = null; e.bar.classList.remove('dragging'); }
+    e.bar.addEventListener('pointerup', stop);
+    e.bar.addEventListener('pointercancel', stop);
+    e.bar.addEventListener('keydown', function (ev) {
+      var d = delays[t.id] || 0;
+      if (ev.key === 'ArrowRight' || ev.key === 'ArrowUp') setDelay(t.id, d + 1);
+      else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown') setDelay(t.id, d - 1);
+      else if (ev.key === 'Home') setDelay(t.id, 0);
+      else return;
+      ev.preventDefault();
+    });
+  }
+
+  function render() {
+    var s = schedule(delays);
+    var path = [];
+    var anyDelay = false;
+
+    TASKS.forEach(function (t) {
+      var e = els[t.id];
+      var d = delays[t.id] || 0;
+      if (d) anyDelay = true;
+      if (t.milestone) {
+        e.diamond.style.left = pct(s.es[t.id]);
+        e.date.style.right = (100 - s.es[t.id] / DAYS * 100) + '%';
+        e.date.textContent = fmt(s.end);
+        return;
+      }
+      var crit = s.slack[t.id] === 0;
+      if (crit) path.push(t.name);
+      e.bar.style.left = pct(s.es[t.id]);
+      e.bar.style.width = pct(t.dur);
+      e.bar.classList.toggle('crit', crit);
+      e.bar.setAttribute('aria-valuenow', d);
+      e.bar.setAttribute('aria-valuemax', d + (MAX - s.end));
+      e.bar.setAttribute('aria-valuetext',
+        'Starts ' + fmt(s.es[t.id]) + ', ' +
+        (d ? 'pushed ' + d + (d === 1 ? ' day' : ' days') : 'no delay') + ', ' +
+        (crit ? 'on the critical path' : s.slack[t.id] + ' days of float'));
+      e.slack.style.display = crit ? 'none' : '';
+      e.slack.style.left = pct(s.ef[t.id]);
+      e.slack.style.width = pct(s.slack[t.id]);
+      e.slackText.textContent = s.slack[t.id] + 'd float';
+    });
+
+    links.forEach(function (l) {
+      var x1 = s.ef[l.from], y1 = ROW[l.from] + 0.5;
+      var x2 = s.es[l.to],   y2 = ROW[l.to] + 0.5;
+      l.el.setAttribute('d', 'M' + x1 + ' ' + y1 + 'V' + y2 + 'H' + x2);
+      var crit = s.slack[l.from] === 0 && s.slack[l.to] === 0 &&
+                 s.es[l.to] - (delays[l.to] || 0) === x1;
+      l.el.setAttribute('class', crit ? 'crit' : '');
+    });
+
+    var diff = s.end - PLAN;
+    rDate.textContent = fmt(s.end);
+    rStatus.classList.toggle('late', diff > 0);
+    rStatus.textContent = diff > 0
+      ? '+' + diff + ' working ' + (diff === 1 ? 'day' : 'days')
+      : (anyDelay ? 'Launch holds. Float absorbed it.' : 'On plan');
+    rPath.textContent = path.join(' → ');
+    rReset.disabled = !anyDelay;
+    body.classList.toggle('slipped', diff > 0);
+  }
+
+  rReset.addEventListener('click', function () { delays = {}; render(); });
+  document.querySelectorAll('[data-try]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      delays = {};
+      setDelay(b.getAttribute('data-try'), 3);
+    });
+  });
+  render();
+
+  /* ---------- Pricing toggle ---------- */
+  var billBtns = document.querySelectorAll('[data-bill]');
+  billBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var mode = b.getAttribute('data-bill');
+      billBtns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.querySelectorAll('.price [data-m]').forEach(function (p) {
+        p.textContent = p.getAttribute('data-' + mode);
+      });
+    });
+  });
+
+  /* ---------- Signup form (front end only) ---------- */
+  var form = document.getElementById('signup');
+  var msg = document.getElementById('signupMsg');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var input = form.elements.email;
+    if (!input.value || !input.checkValidity()) {
+      msg.textContent = 'Enter a work email address, like you@company.com.';
+      input.focus();
+      return;
+    }
+    msg.textContent = 'Thanks. Check ' + input.value + ' for a link to set up your workspace.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>
+```
+
+This is a landing page for a fictional product I called Plumb, built as one HTML file with no external fonts, images or scripts. I had no way to open it in a browser here, so it is untested; give it a quick look before you rely on it.
+
+The centrepiece is a live schedule in the hero: dragging a task bar (or using the arrow keys on a focused bar) recalculates the dependent dates, the critical path and the launch date. Below it are four feature panels, a testimonial, pricing with a monthly/yearly toggle, an FAQ, and a signup form. It adapts to mobile widths and follows the system light or dark setting.
+
+Things to replace before this goes anywhere real:
+- **Name and copy:** "Plumb", the testimonial, the people's names and the prices are all placeholders I invented.
+- **Signup form:** it validates the email and shows a confirmation message, but it sends nothing anywhere.
+- **Footer links:** About, Changelog, Contact and the legal links point to `#`.

@@ -1,0 +1,550 @@
+
+<invoke name="Write">
+<parameter name="file_path">/data/scratch/ai-sameness/main/work/fable-5.2__P5__r1.a1.p2lfdxod/index.html</parameter>
+<parameter name="content"><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tack: project management that remembers the original plan</title>
+<meta name="description" content="Tack keeps the plan you agreed to next to the plan you have now, so you can see when a project started slipping and why.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ffd53d'/%3E%3Ccircle cx='16' cy='12' r='7' fill='%2316150f'/%3E%3Cpath d='M16 18v9' stroke='%2316150f' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#16150f;
+  --yellow:#ffd53d;
+  --paper:#ffffff;
+  --wash:#f4f2ea;
+  --line:#e2dfd3;
+  --mute:#676457;
+  --base:#b4b0a0;
+  --late:#cf3217;
+  --sans:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font:17px/1.55 var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+::selection{background:var(--yellow);color:var(--ink)}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2.5px}
+:focus-visible{outline:2.5px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+h1,h2,h3,p{margin:0}
+h2{font-size:clamp(1.7rem,3.3vw,2.5rem);line-height:1.06;letter-spacing:-.032em;font-weight:700;text-wrap:balance}
+section[id]{scroll-margin-top:24px}
+
+.btn{display:inline-block;background:var(--ink);color:#fff;font-weight:600;font-size:16px;line-height:1;padding:16px 22px;border-radius:5px;text-decoration:none;border:1.5px solid var(--ink);transition:background .15s,color .15s}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn.sm{padding:11px 15px;font-size:15px}
+
+/* ---------- hero ---------- */
+.hero{background:var(--yellow)}
+.nav{display:flex;align-items:center;gap:30px;padding:22px 0}
+.logo{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:22px;letter-spacing:-.03em;text-decoration:none;margin-right:auto}
+.logo svg{width:20px;height:20px;transform:rotate(24deg)}
+.nav a:not(.btn):not(.logo){font-size:15.5px;text-decoration:none}
+.nav a:not(.btn):not(.logo):hover{text-decoration:underline}
+
+h1{font-size:clamp(2.3rem,5.5vw,4.1rem);line-height:1;letter-spacing:-.042em;font-weight:700;margin-top:clamp(40px,8vh,84px)}
+h1 span{display:block;text-wrap:balance}
+.lede{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px 48px;margin-top:30px}
+.lede p{max-width:33em;font-size:1.12rem;line-height:1.5}
+.cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cta small{font-size:14px;line-height:1.35;max-width:13em}
+
+/* ---------- timeline mock ---------- */
+.tl{--t:77;--lab:250px;position:relative;margin:54px 0 -150px;background:#fff;border:1.5px solid var(--ink);border-radius:8px;box-shadow:0 30px 60px -30px rgba(22,21,15,.45);overflow:hidden;font-size:14px;line-height:1.3}
+.tl-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.tl-title{font-weight:700;font-size:15px}
+.tl-status{color:var(--mute)}
+.tl-status em{font-style:normal;font-weight:700;color:var(--late);margin-left:6px}
+.seg{display:inline-flex;margin-left:auto;border:1.5px solid var(--ink);border-radius:5px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;padding:7px 12px;border:0;background:#fff;color:var(--ink);cursor:pointer}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.tl-scroll{overflow-x:auto}
+.tl-grid{min-width:780px}
+.tl-weeks,.row{display:grid;grid-template-columns:var(--lab) 1fr}
+.tl-weeks{border-bottom:1px solid var(--line);font-size:12px;color:var(--mute)}
+.weeks{display:grid;grid-template-columns:repeat(11,1fr)}
+.weeks span{padding:8px 0 8px 6px;border-left:1px solid var(--line);white-space:nowrap}
+.weeks .now{color:var(--ink);font-weight:700;border-left-color:var(--ink)}
+.row+.row{border-top:1px solid var(--line)}
+.task{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px 0 18px;font-weight:600}
+.task i{font-style:normal;font-weight:400;font-size:13px;color:var(--mute)}
+.track{position:relative;height:46px;background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:calc(100% / 11) 100%}
+.track::after{content:"";position:absolute;top:0;bottom:0;left:calc(42 / var(--t) * 100%);width:2px;margin-left:-.5px;background:var(--ink);transition:opacity .3s}
+.ghost,.bar{position:absolute;border-radius:3px}
+.ghost{top:10px;height:4px;background:var(--base);left:calc(var(--ps) / var(--t) * 100%);width:calc(var(--pd) / var(--t) * 100%);transition:opacity .4s .5s}
+.bar{top:18px;height:18px;background:var(--ink);border:1.5px solid var(--ink);left:calc(var(--as) / var(--t) * 100%);width:calc(var(--ad) / var(--t) * 100%);
+  transition:left .9s cubic-bezier(.6,0,.2,1),width .9s cubic-bezier(.6,0,.2,1),background-color .5s;transition-delay:calc(var(--i) * 70ms)}
+.bar.active{background:var(--yellow)}
+.bar.todo{background:#fff}
+.bar.ms{width:14px;height:14px;top:20px;border-radius:1px;transform:translateX(-50%) rotate(45deg)}
+.ghost.ms{width:9px;height:9px;top:7px;border-radius:1px;transform:translateX(-50%) rotate(45deg)}
+.slip{position:absolute;top:18px;line-height:18px;left:calc((var(--as) + var(--ad)) / var(--t) * 100% + 8px);font-size:12.5px;font-weight:700;color:var(--late);font-variant-numeric:tabular-nums;white-space:nowrap;transition:opacity .35s 1s}
+.slip.after-ms{left:calc(var(--as) / var(--t) * 100% + 16px)}
+.slip .why{font:italic 400 14px/18px var(--serif);margin-left:12px}
+.tl-foot{padding:12px 18px;border-top:1px solid var(--line);color:var(--mute);font-size:13.5px}
+.tl-foot b{color:var(--ink);font-weight:600}
+
+.tl[data-mode="plan"] .bar{left:calc(var(--ps) / var(--t) * 100%);width:calc(var(--pd) / var(--t) * 100%);background:var(--ink)}
+.tl[data-mode="plan"] .bar.ms{width:14px}
+.tl[data-mode="plan"] .ghost,
+.tl[data-mode="plan"] .slip{opacity:0;transition-delay:0s;transition-duration:.15s}
+.tl[data-mode="plan"] .track::after{opacity:0}
+.tl[data-mode="plan"] .weeks .now{color:inherit;font-weight:400;border-left-color:var(--line)}
+.tl[data-mode="plan"] .weeks .now b{display:none}
+.weeks .now b{font-weight:inherit}
+.tl[data-mode="plan"] .if-now,.tl[data-mode="now"] .if-plan{display:none}
+
+/* ---------- who uses it ---------- */
+.who{padding:226px 0 84px}
+.who p{font-size:clamp(1.2rem,2.1vw,1.5rem);line-height:1.38;letter-spacing:-.012em;max-width:31em}
+.who p span{color:var(--mute)}
+
+/* ---------- features ---------- */
+.feat{display:grid;grid-template-columns:5fr 6fr;gap:40px 72px;padding:68px 0;border-top:1.5px solid var(--ink);align-items:start}
+.feat p{margin-top:18px;max-width:27em}
+.feat p+p{margin-top:12px}
+.frag{border:1.5px solid var(--ink);border-radius:7px;background:#fff;font-size:14.5px;line-height:1.4;overflow:hidden}
+.frag-head{display:flex;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.frag-head b{font-weight:700}
+.frag-head span{color:var(--mute)}
+
+.hist{list-style:none;margin:0;padding:0}
+.hist li{padding:15px 18px}
+.hist li+li{border-top:1px solid var(--line)}
+.hist .dates{display:flex;gap:10px;align-items:baseline;font-weight:600;font-variant-numeric:tabular-nums}
+.hist .dates s{color:var(--mute);font-weight:400}
+.hist .dates em{font-style:normal;color:var(--late);font-weight:700;font-size:13px;margin-left:auto}
+.hist q{display:block;margin:6px 0 4px;font:italic 16px/1.4 var(--serif);quotes:"\201C" "\201D"}
+.hist cite{font-style:normal;color:var(--mute);font-size:13px}
+.hist .orig{color:var(--mute)}
+
+.chain{padding:8px 18px 6px}
+.chain div{display:flex;gap:9px;align-items:baseline;padding:8px 0;margin-left:calc(var(--n) * 24px)}
+.chain div::before{content:"\21B3";color:var(--base);flex:none}
+.chain div:first-child::before{content:none}
+.chain b{font-weight:600}
+.chain span{color:var(--mute);margin-left:auto;white-space:nowrap;font-size:13.5px}
+.chain .end{background:var(--yellow);padding:8px 10px;border-radius:4px;margin-right:-10px}
+.chain .end::before{color:var(--ink)}
+.chain .end span{color:var(--ink)}
+.frag-foot{padding:12px 18px;border-top:1px solid var(--line);color:var(--mute);font-size:13.5px}
+
+.mail{font:13px/1.6 var(--mono)}
+.mail .hdr{padding:13px 18px;border-bottom:1px solid var(--line);color:var(--mute)}
+.mail .hdr b{color:var(--ink);font-weight:600}
+.mail .body{padding:16px 18px 18px}
+.mail h3{font:inherit;font-weight:700;margin-top:14px}
+.mail h3:first-child{margin-top:0}
+.mail .body p{margin:0;padding-left:2ch;max-width:none}
+.mail .body p.r{color:var(--mute);padding-left:4ch}
+
+/* ---------- left out ---------- */
+.out{background:var(--wash);padding:92px 0}
+.out .wrap{display:grid;grid-template-columns:5fr 6fr;gap:40px 72px}
+.out .intro p{margin-top:18px;max-width:25em}
+.out ul{list-style:none;margin:0;padding:0}
+.out li{padding:19px 0;border-top:1px solid var(--ink)}
+.out li:last-child{border-bottom:1px solid var(--ink)}
+.out li s{display:block;font-weight:700;font-size:1.12rem;letter-spacing:-.012em;text-decoration-thickness:2px;text-decoration-color:var(--late)}
+.out li span{display:block;margin-top:4px;color:var(--mute)}
+
+/* ---------- quote ---------- */
+.quote{padding:104px 0}
+.quote blockquote{margin:0;max-width:19em;font:400 clamp(1.6rem,3.5vw,2.6rem)/1.2 var(--serif);letter-spacing:-.012em}
+.quote figure{margin:0}
+.quote figcaption{margin-top:24px;font-size:15.5px;color:var(--mute)}
+.quote figcaption b{color:var(--ink);font-weight:600}
+
+/* ---------- pricing ---------- */
+.pricing{padding:0 0 96px}
+.pricing .inner{border-top:1.5px solid var(--ink);padding-top:60px}
+.plans{display:grid;grid-template-columns:1fr 1fr;margin-top:38px}
+.plan{padding:4px 48px 4px 0}
+.plan+.plan{border-left:1px solid var(--ink);padding-left:48px}
+.plan h3{font-size:1rem;font-weight:700}
+.price{font-size:clamp(2.8rem,6vw,4.2rem);font-weight:700;letter-spacing:-.045em;line-height:1;margin:12px 0 16px}
+.price small{font-size:1rem;font-weight:400;letter-spacing:0;color:var(--mute);margin-left:6px}
+.plan p{max-width:25em}
+.plan .btn{margin-top:22px}
+.plan .btn.ghosted{background:transparent;color:var(--ink)}
+.plan .btn.ghosted:hover{background:var(--ink);color:#fff}
+.fine{margin-top:44px;color:var(--mute);max-width:36em;font-size:15.5px}
+
+/* ---------- faq ---------- */
+.faq{padding:0 0 110px}
+.faq .wrap>div{display:grid;grid-template-columns:5fr 6fr;gap:32px 72px;border-top:1.5px solid var(--ink);padding-top:60px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-child{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:17px 34px 17px 0;font-weight:600;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:13px;font-size:22px;font-weight:400;line-height:1.3}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{padding:0 34px 20px 0;color:#3b392f}
+
+/* ---------- close ---------- */
+.close{background:var(--ink);color:#fff;padding:96px 0 0}
+.close h2{font-size:clamp(2rem,4.6vw,3.5rem);letter-spacing:-.04em;max-width:13em}
+.close>.wrap>p{margin-top:20px;max-width:30em;color:#d5d2c4;font-size:1.08rem}
+.close .cta{margin-top:32px}
+.close .btn{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.close .btn:hover{background:transparent;color:var(--yellow)}
+.close .cta small{color:#a8a595}
+.close :focus-visible{outline-color:var(--yellow)}
+footer{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;margin-top:96px;padding:24px 0 30px;border-top:1px solid #3a382e;font-size:14px;color:#a8a595}
+footer .logo{color:#fff;font-size:18px;margin-right:0}
+footer .logo svg{width:16px;height:16px}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-left:auto}
+footer nav a{text-decoration:none}
+footer nav a:hover{color:#fff;text-decoration:underline}
+
+@media (max-width:860px){
+  .feat,.out .wrap,.faq .wrap>div{grid-template-columns:1fr}
+  .feat{padding:52px 0}
+  .who{padding:210px 0 64px}
+  .out{padding:68px 0}
+  .quote{padding:76px 0}
+  .nav .opt{display:none}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 18px}
+  .nav{gap:18px}
+  .tl{--lab:176px;margin-top:40px}
+  .tl-grid{min-width:680px}
+  .task i{display:none}
+  .seg{margin-left:0}
+  .plans{grid-template-columns:1fr}
+  .plan{padding:0 0 36px}
+  .plan+.plan{border-left:0;border-top:1px solid var(--ink);padding:36px 0 0}
+  .chain div{margin-left:calc(var(--n) * 12px);flex-wrap:wrap}
+  .chain span{margin-left:0}
+  footer nav{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main">
+      <a class="logo" href="#" aria-label="Tack home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="6.5" fill="currentColor"/><path d="M12 14v8.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+        Tack
+      </a>
+      <a class="opt" href="#how">How it works</a>
+      <a class="opt" href="#pricing">Pricing</a>
+      <a class="opt" href="#">Changelog</a>
+      <a href="#">Log in</a>
+      <a class="btn sm" href="#pricing">Try it free</a>
+    </nav>
+
+    <h1><span>Projects slip one day at a time.</span> <span>Tack shows you which day.</span></h1>
+
+    <div class="lede">
+      <p>Tack keeps the plan you agreed to next to the plan you have now. When a date moves, you can see who moved it, why, and everything it pushed.</p>
+      <div class="cta">
+        <a class="btn" href="#pricing">Start a project</a>
+        <small>Free for teams of five or fewer. No card.</small>
+      </div>
+    </div>
+
+    <figure class="tl" id="tl" data-mode="now" aria-label="Example Tack timeline for a wholesale portal relaunch, comparing the original plan with today">
+      <div class="tl-head">
+        <span class="tl-title">Wholesale portal relaunch</span>
+        <span class="tl-status if-plan">Launch 22 Apr</span>
+        <span class="tl-status if-now">Launch 8 May <em>16 days late</em></span>
+        <div class="seg" role="group" aria-label="Timeline view">
+          <button type="button" data-set="plan" aria-pressed="false">The plan, 3 Mar</button>
+          <button type="button" data-set="now" aria-pressed="true">Today, 14 Apr</button>
+        </div>
+      </div>
+
+      <div class="tl-scroll">
+        <div class="tl-grid">
+          <div class="tl-weeks" aria-hidden="true">
+            <span></span>
+            <div class="weeks">
+              <span>3 Mar</span><span>10</span><span>17</span><span>24</span><span>31</span><span>7 Apr</span><span class="now">14<b> · today</b></span><span>21</span><span>28</span><span>5 May</span><span>12</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="task">Pricing rules sign-off <i>Ines</i></div>
+            <div class="track" style="--ps:0;--pd:5;--as:0;--ad:16;--i:0">
+              <span class="ghost"></span><span class="bar"></span>
+              <span class="slip">+11d<span class="why">&larr; the 16 days started here</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="task">Catalogue import <i>Tomasz</i></div>
+            <div class="track" style="--ps:7;--pd:12;--as:16;--ad:17;--i:1">
+              <span class="ghost"></span><span class="bar"></span><span class="slip">+14d</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="task">Checkout flow <i>Priya</i></div>
+            <div class="track" style="--ps:14;--pd:19;--as:21;--ad:26;--i:2">
+              <span class="ghost"></span><span class="bar active"></span><span class="slip">+14d</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="task">Trade account migration <i>Dele</i></div>
+            <div class="track" style="--ps:28;--pd:12;--as:49;--ad:11;--i:3">
+              <span class="ghost"></span><span class="bar todo"></span><span class="slip">+20d</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="task">QA with pilot customers <i>Marit</i></div>
+            <div class="track" style="--ps:42;--pd:5;--as:60;--ad:6;--i:4">
+              <span class="ghost"></span><span class="bar todo"></span><span class="slip">+19d</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="task">Launch</div>
+            <div class="track" style="--ps:50;--pd:0;--as:66;--ad:0;--i:5">
+              <span class="ghost ms"></span><span class="bar ms todo"></span><span class="slip after-ms">+16d</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <figcaption class="tl-foot">
+        <span class="if-plan">The plan as agreed on 3 March. Nothing has moved yet.</span>
+        <span class="if-now"><b>First slip:</b> pricing rules were due 7 Mar and signed off 18 Mar. The thin grey lines are where each task was supposed to be.</span>
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<section class="who">
+  <div class="wrap">
+    <p>About 2,100 teams plan their work in Tack. Most have between 6 and 40 people. <span>Studios, agencies, in-house product teams, two boatbuilders and one very organised parish council.</span></p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+
+    <article class="feat">
+      <div>
+        <h2>Every date remembers where it used to be.</h2>
+        <p>Move a due date and Tack asks for one line on why. The old date stays on the timeline, and the reason stays on the task.</p>
+        <p>Six weeks later nobody has to piece the story together from chat logs.</p>
+      </div>
+      <div class="frag" aria-label="Example: due date history for a task">
+        <div class="frag-head"><b>Checkout flow</b><span>Priya · due 18 Apr</span></div>
+        <ul class="hist">
+          <li>
+            <div class="dates"><s>11 Apr</s> &rarr; 18 Apr <em>+7d</em></div>
+            <q>Added the trade-credit payment step after the pilot call.</q>
+            <cite>Ines, 2 Apr</cite>
+          </li>
+          <li>
+            <div class="dates"><s>4 Apr</s> &rarr; 11 Apr <em>+7d</em></div>
+            <q>Catalogue import landed late. Can't test with real SKUs until it's in.</q>
+            <cite>Priya, 20 Mar</cite>
+          </li>
+          <li class="orig">Planned on 3 Mar to finish 4 Apr.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="feat">
+      <div>
+        <h2>Late work points at whatever is holding it up.</h2>
+        <p>A task can be waiting on one thing: another task, or a person. Tack follows that chain to the end and tells you whose desk it's on.</p>
+        <p>Usually it's one desk. Usually that person already knows, and is glad somebody else can finally see it.</p>
+      </div>
+      <div class="frag" aria-label="Example: what the launch is waiting on">
+        <div class="frag-head"><b>What is Launch waiting on?</b><span>8 May</span></div>
+        <div class="chain">
+          <div style="--n:0"><b>Launch</b><span>8 May</span></div>
+          <div style="--n:1"><b>QA with pilot customers</b><span>Marit</span></div>
+          <div style="--n:2"><b>Trade account migration</b><span>Dele</span></div>
+          <div class="end" style="--n:3"><b>Checkout flow</b><span>Priya, since 24 Mar</span></div>
+        </div>
+        <div class="frag-foot">Two tasks and the launch can't start until this one is done.</div>
+      </div>
+    </article>
+
+    <article class="feat">
+      <div>
+        <h2>One email on Monday. That's the reporting.</h2>
+        <p>At 8am everyone on the project gets the same short email: what finished, what moved and why, what's happening this week.</p>
+        <p>The people who never open Tack, and there are always a few, still know what's going on.</p>
+      </div>
+      <div class="frag mail" aria-label="Example: the Monday email">
+        <div class="hdr">
+          <div>From: Tack &lt;monday@tack.example&gt;</div>
+          <div>Subject: <b>Wholesale portal: launch is now 8 May</b></div>
+        </div>
+        <div class="body">
+          <h3>Finished last week</h3>
+          <p>Catalogue import (Tomasz), 14 days after plan</p>
+          <h3>Moved</h3>
+          <p>Checkout flow: 11 Apr &rarr; 18 Apr</p>
+          <p class="r">"Added the trade-credit payment step after the pilot call." Ines</p>
+          <p>Launch: 6 May &rarr; 8 May</p>
+          <h3>This week</h3>
+          <p>Checkout flow continues (Priya)</p>
+          <p>Trade account migration starts 21 Apr, after checkout</p>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="out">
+  <div class="wrap">
+    <div class="intro">
+      <h2>Small on purpose.</h2>
+      <p>We've said no to a lot of feature requests. These are the ones we get asked about most, so you can find out now instead of during your trial.</p>
+    </div>
+    <ul>
+      <li><s>Story points and velocity charts</s><span>Estimate in days. Then you can compare the estimate to the days it took.</span></li>
+      <li><s>Custom statuses and workflows</s><span>A task hasn't started, has started, or is done.</span></li>
+      <li><s>Fourteen views of the same list</s><span>There's a timeline and there's a list. Both are fast.</span></li>
+      <li><s>An AI that writes your updates</s><span>The one-line reason for a moved date is written by the person who moved it. That's the whole value of it.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="wrap">
+    <figure>
+      <blockquote>&ldquo;It turned out our launches were late because of sign-offs, never because of the build. I'd have bet money on the opposite.&rdquo;</blockquote>
+      <figcaption><b>Marit Solheim</b>, operations lead at a 22-person homeware wholesaler</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="inner">
+      <h2>Two plans.</h2>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price">$0</div>
+          <p>Up to five people and two active projects. Timeline, date history and the Monday email are all included.</p>
+          <a class="btn ghosted" href="#">Start free</a>
+        </div>
+        <div class="plan">
+          <h3>Team</h3>
+          <div class="price">$6<small>per person, per month</small></div>
+          <p>Unlimited projects. Guests such as clients and contractors can view and comment, and you don't pay for them.</p>
+          <a class="btn" href="#">Start a 30-day trial</a>
+        </div>
+      </div>
+      <p class="fine">Pay yearly and two months are free. There is no enterprise plan. If you're past 150 people, Tack is probably too small for you and we'll tell you so.</p>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <div>
+      <h2>Questions people ask before signing up</h2>
+      <div>
+        <details>
+          <summary>Can we import what we already have?</summary>
+          <p>Yes, by CSV from Trello, Asana, Jira and Linear. Owners and due dates come across. Date history from before the import doesn't, so your plan starts on the day you import.</p>
+        </details>
+        <details>
+          <summary>What if the original plan was simply wrong?</summary>
+          <p>Reset it. An admin can set the plan to today's dates whenever the old one stops being useful. The previous plan is kept and you can still look at it.</p>
+        </details>
+        <details>
+          <summary>Can clients see why things moved?</summary>
+          <p>Guests see the timeline and get the Monday email. Any reason can be marked internal, and guests see the new date without the note.</p>
+        </details>
+        <details>
+          <summary>Where does our data live?</summary>
+          <p>In Frankfurt, backed up daily. You can export everything as CSV or JSON at any time, including after you cancel.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<section class="close">
+  <div class="wrap">
+    <h2>Start with the project that's already late.</h2>
+    <p>Import it, set the plan to what you first promised, and see where the days went. It takes about twenty minutes.</p>
+    <div class="cta">
+      <a class="btn" href="#pricing">Start a project</a>
+      <small>Free for teams of five or fewer.</small>
+    </div>
+
+    <footer>
+      <a class="logo" href="#" aria-label="Tack home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="6.5" fill="currentColor"/><path d="M12 14v8.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+        Tack
+      </a>
+      <span>Made by six people in Leeds and Gdańsk.</span>
+      <nav aria-label="Footer">
+        <a href="#">Changelog</a>
+        <a href="#">Status</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">hello@tack.example</a>
+      </nav>
+    </footer>
+  </div>
+</section>
+
+<script>
+(function () {
+  var tl = document.getElementById('tl');
+  var buttons = tl.querySelectorAll('.seg button');
+  var timer;
+
+  function setMode(mode) {
+    tl.dataset.mode = mode;
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.set === mode));
+    });
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      clearTimeout(timer);
+      setMode(b.dataset.set);
+    });
+  });
+
+  // Open on the original plan, then let it slide to today.
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setMode('plan');
+    timer = setTimeout(function () { setMode('now'); }, 1500);
+  }
+})();
+</script>
+</body>
+</html>
+</parameter>
+</invoke>
+I built the landing page as `index.html` in the working directory: one file, no external requests, system fonts only. I haven't opened it in a browser, so the layout is unchecked visually.
+
+The page is for a made-up product called Tack, whose pitch is that it keeps the original plan next to the current one so you can see when a project started slipping.
+
+- **Hero:** a yellow band with a working timeline mock. It opens on the original plan, then slides to today's dates with the slip marked on each task; the two buttons switch between them.
+- **Features:** three sections, each with its own small piece of UI (a due-date history, a "waiting on" chain, the Monday email) rather than icon cards.
+- **Rest of the page:** a "Small on purpose" list of things the product doesn't do, one quote, two-plan pricing, a short FAQ and a closing call to action.
+
+Everything about the product is placeholder: the name, the customer count, the testimonial, the prices and the footer details are all invented. All buttons and links point to `#`.

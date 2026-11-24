@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slipway — Project management that knows your launch date</title>
+<meta name="description" content="Slipway is project management for teams that ship. Plan the work, see who's carrying what, and get a launch forecast that updates every time a task moves.">
+<style>
+:root{
+  --paper:#f4f0e6;
+  --paper-2:#ebe5d6;
+  --ink:#17233b;
+  --ink-soft:#4a556b;
+  --rule:rgba(23,35,59,.16);
+  --rule-strong:rgba(23,35,59,.55);
+  --signal:#e4572e;
+  --signal-dark:#b93f1b;
+  --brass:#b98a2f;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --wrap:1120px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.wrap{width:min(var(--wrap),100% - 48px);margin-inline:auto}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--paper);padding:8px 14px;z-index:99}
+.skip:focus{left:8px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1.5px solid var(--ink);background:transparent;text-decoration:none;font-weight:600;font-size:15px;border-radius:2px;transition:transform .15s,box-shadow .15s,background .15s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.btn-primary{background:var(--signal);border-color:var(--ink);color:#fff}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-ink:hover{box-shadow:4px 4px 0 var(--signal)}
+.btn-sm{padding:9px 16px;font-size:14px}
+
+/* Nav */
+header.nav{position:sticky;top:0;z-index:20;background:rgba(244,240,230,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:66px;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:-.01em}
+.nav-links{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:15px}
+.nav-links a{text-decoration:none;padding:4px 0;border-bottom:1.5px solid transparent}
+.nav-links a:hover{border-color:var(--signal)}
+.nav-cta{display:flex;align-items:center;gap:18px;font-size:15px}
+.nav-cta .signin{text-decoration:none}
+.nav-cta .signin:hover{text-decoration:underline}
+@media (max-width:820px){.nav-links,.nav-cta .signin{display:none}}
+
+/* Hero */
+.hero{position:relative;padding:76px 0 0;overflow:hidden;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:56px 56px;background-position:center top}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 75% 60% at 50% 30%,var(--paper) 35%,rgba(244,240,230,0) 100%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero-copy{max-width:860px}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(42px,7.2vw,88px);line-height:.98;letter-spacing:-.025em;margin:18px 0 26px}
+.hero h1 em{font-style:italic;color:var(--signal);font-weight:500}
+.hero .lede{font-size:clamp(18px,2vw,21px);max-width:600px;color:var(--ink-soft)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:34px}
+.hero-note{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-top:16px}
+
+/* Demo */
+.demo{margin-top:60px;background:#fbf9f3;border:1.5px solid var(--ink);border-bottom:0;border-radius:6px 6px 0 0;box-shadow:10px 10px 0 rgba(23,35,59,.12)}
+.demo-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;border-bottom:1.5px solid var(--ink)}
+.demo-title{display:flex;align-items:baseline;gap:12px}
+.demo-title strong{font-family:var(--serif);font-size:20px}
+.tabs{display:flex;border:1.5px solid var(--ink);border-radius:2px;overflow:hidden}
+.tabs button{border:0;background:transparent;padding:7px 15px;font-size:13.5px;font-weight:600;border-right:1.5px solid var(--ink)}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.forecast{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule);background:var(--paper)}
+.forecast-date{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.1}
+.forecast-delta{font-family:var(--mono);font-size:12.5px;padding:5px 10px;border-radius:2px;border:1.5px solid var(--ink);white-space:nowrap}
+.forecast-delta.ahead{background:var(--ink);color:var(--paper)}
+.forecast-delta.behind{background:var(--signal);color:#fff}
+.meter{height:10px;border:1.5px solid var(--ink);border-radius:2px;background:#fff;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ink);width:0;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.meter-wrap .label{display:flex;justify-content:space-between;margin-bottom:6px}
+.demo-body{padding:20px;min-height:372px}
+.demo-hint{font-family:var(--mono);font-size:12px;color:var(--ink-soft);padding:0 20px 16px}
+.demo-hint b{color:var(--signal-dark);font-weight:600}
+@media (max-width:640px){.forecast{grid-template-columns:1fr auto}.meter-wrap{grid-column:1/-1;order:3}}
+
+/* Timeline view */
+.tl-scroll{overflow-x:auto}
+.tl{min-width:680px}
+.tl-head,.tl-row{display:grid;grid-template-columns:168px 1fr;align-items:center}
+.tl-weeks{display:grid;grid-template-columns:repeat(8,1fr);font-family:var(--mono);font-size:11px;color:var(--ink-soft);border-bottom:1px solid var(--rule-strong);padding-bottom:6px}
+.tl-weeks span{padding-left:4px;border-left:1px solid var(--rule)}
+.tl-rows{position:relative}
+.tl-row{height:42px;border-bottom:1px dashed var(--rule)}
+.tl-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
+.tl-track{display:grid;grid-template-columns:repeat(40,1fr);height:100%;align-items:center}
+.bar{height:24px;border:1.5px solid var(--ink);border-radius:2px;padding:0 8px;font-family:var(--mono);font-size:11px;text-align:left;white-space:nowrap;overflow:hidden;transition:background .2s,transform .15s}
+.bar:hover{transform:translateY(-2px)}
+.is-done{background:var(--ink);color:var(--paper)}
+.is-doing{background:repeating-linear-gradient(-45deg,var(--signal) 0 7px,#ee7650 7px 14px);color:#fff}
+.is-todo{background:transparent;border-style:dashed;color:var(--ink)}
+.tl-overlay{position:absolute;top:0;bottom:0;left:168px;right:0;pointer-events:none}
+.marker{position:absolute;top:-4px;bottom:0;width:0;border-left:1.5px solid var(--ink);transition:left .45s cubic-bezier(.2,.8,.2,1)}
+.marker span{position:absolute;top:-22px;left:-1.5px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;background:var(--ink);color:var(--paper);white-space:nowrap}
+.marker.today{border-left-style:dotted;border-color:var(--ink-soft)}
+.marker.today span{background:transparent;color:var(--ink-soft);top:auto;bottom:-20px;padding-left:4px}
+.marker.fc{border-color:var(--signal)}
+.marker.fc span{background:var(--signal);color:#fff;top:auto;bottom:-20px}
+.marker.flip span{left:auto;right:0}
+.tl-pad{padding:26px 0 24px}
+
+/* Board view */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.col{border:1.5px solid var(--ink);border-radius:2px;background:var(--paper);min-height:300px}
+.col-head{display:flex;justify-content:space-between;padding:10px 12px;border-bottom:1.5px solid var(--ink)}
+.col-cards{padding:10px;display:grid;gap:8px}
+.card{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--ink);border-radius:2px;padding:10px 12px;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--ink)}
+.card b{display:block;font-size:14px}
+.card small{font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+.card.is-done-c b{text-decoration:line-through;text-decoration-thickness:1.5px}
+.card.is-doing-c{border-left:6px solid var(--signal)}
+@media (max-width:640px){.board{grid-template-columns:1fr}.col{min-height:0}}
+
+/* List view */
+.list{border-top:1.5px solid var(--ink)}
+.li{display:grid;grid-template-columns:92px 1fr auto auto;gap:16px;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:11px 6px;font-size:14.5px}
+.li:hover{background:var(--paper)}
+.pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:3px 0;border:1.5px solid var(--ink);border-radius:2px}
+.li .who{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--mono);font-size:10.5px;background:#fff}
+.li .days{font-family:var(--mono);font-size:12px;color:var(--ink-soft);min-width:52px;text-align:right}
+.li b{font-weight:600}
+
+/* Logos */
+.logos{border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);background:var(--paper-2)}
+.logos-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 36px;padding:22px 0}
+.logos ul{display:flex;flex-wrap:wrap;gap:12px 40px;list-style:none;margin:0;padding:0;font-size:19px;color:var(--ink);opacity:.8}
+.logos li:nth-child(1){font-family:var(--serif);font-style:italic;font-weight:700}
+.logos li:nth-child(2){font-family:var(--mono);letter-spacing:.2em;font-size:15px;align-self:center}
+.logos li:nth-child(3){font-weight:800;letter-spacing:-.03em}
+.logos li:nth-child(4){font-family:var(--serif);letter-spacing:.14em;font-size:16px;align-self:center}
+.logos li:nth-child(5){font-weight:300;letter-spacing:.04em}
+
+/* Sections */
+section{padding:104px 0}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:54px}
+.sec-head h2,.h2{font-family:var(--serif);font-size:clamp(32px,4.4vw,54px);line-height:1.04;letter-spacing:-.02em;margin-top:14px}
+.sec-head p{color:var(--ink-soft);max-width:460px}
+@media (max-width:760px){section{padding:72px 0}.sec-head{grid-template-columns:1fr;gap:16px;margin-bottom:36px}}
+
+/* Features */
+.feat{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink)}
+.feat article{padding:34px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;gap:14px;background:#fbf9f3}
+.feat article:nth-child(2n){border-right:0}
+.feat article:nth-last-child(-n+2){border-bottom:0}
+.feat h3{font-family:var(--serif);font-size:26px;line-height:1.15;letter-spacing:-.01em}
+.feat p{color:var(--ink-soft);font-size:16px}
+.feat .num{font-family:var(--mono);font-size:12px;color:var(--signal-dark)}
+.vig{margin-top:auto;padding-top:18px}
+.vig-box{border:1.5px solid var(--ink);background:var(--paper);border-radius:2px;padding:16px;min-height:132px}
+.load{display:grid;gap:9px;font-family:var(--mono);font-size:11.5px}
+.load div{display:grid;grid-template-columns:54px 1fr 40px;gap:10px;align-items:center}
+.load i{display:block;height:12px;background:var(--ink);border-radius:1px}
+.load .over i{background:var(--signal)}
+.load .over span:last-child{color:var(--signal-dark);font-weight:700}
+.digest{font-family:var(--mono);font-size:12px;line-height:1.75;margin:0;white-space:pre-wrap;color:var(--ink)}
+.digest mark{background:var(--signal);color:#fff;padding:0 4px}
+@media (max-width:760px){.feat{grid-template-columns:1fr}.feat article{border-right:0;border-bottom:1.5px solid var(--ink)!important;padding:26px}.feat article:last-child{border-bottom:0!important}}
+
+/* How it works */
+.how{background:var(--ink);color:var(--paper)}
+.how .label{color:rgba(244,240,230,.6)}
+.how .sec-head p{color:rgba(244,240,230,.72)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1.5px solid rgba(244,240,230,.4);counter-reset:s}
+.steps li{list-style:none;padding:28px 28px 8px 0;border-right:1px solid rgba(244,240,230,.2);margin-right:28px;counter-increment:s}
+.steps li:last-child{border-right:0;margin-right:0}
+.steps li::before{content:"0" counter(s);font-family:var(--serif);font-style:italic;font-size:56px;line-height:1;color:var(--signal);display:block;margin-bottom:18px}
+.steps h3{font-family:var(--serif);font-size:25px;margin-bottom:8px}
+.steps p{color:rgba(244,240,230,.72);font-size:16px}
+.steps{margin:0;padding:0}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.steps li{border-right:0;margin-right:0;border-bottom:1px solid rgba(244,240,230,.2);padding:26px 0}.steps li:last-child{border-bottom:0}}
+
+/* Quote */
+.quote{padding:112px 0}
+.quote-in{display:grid;grid-template-columns:auto 1fr;gap:36px}
+.quote-mark{font-family:var(--serif);font-size:150px;line-height:.75;color:var(--signal)}
+blockquote{margin:0}
+blockquote p{font-family:var(--serif);font-size:clamp(25px,3.3vw,40px);line-height:1.22;letter-spacing:-.012em;max-width:880px}
+blockquote footer{margin-top:28px;display:flex;align-items:center;gap:14px;font-size:15px}
+blockquote footer span{color:var(--ink-soft)}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--mono);font-size:13px}
+@media (max-width:640px){.quote-in{grid-template-columns:1fr;gap:0}.quote-mark{font-size:96px}}
+
+/* Pricing */
+.pricing{background:var(--paper-2);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.bill{display:inline-flex;border:1.5px solid var(--ink);border-radius:2px;overflow:hidden;background:#fbf9f3;justify-self:end;align-self:end}
+.bill button{border:0;background:transparent;padding:9px 16px;font-size:14px;font-weight:600}
+.bill button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.bill small{font-family:var(--mono);font-size:11px;color:var(--signal);margin-left:4px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.plan{background:#fbf9f3;border:1.5px solid var(--ink);border-radius:2px;padding:30px;display:flex;flex-direction:column;gap:18px}
+.plan.pick{background:var(--ink);color:var(--paper);box-shadow:8px 8px 0 var(--signal);transform:translateY(-10px)}
+.plan.pick .label,.plan.pick .per{color:rgba(244,240,230,.65)}
+.plan h3{font-family:var(--serif);font-size:28px}
+.price{display:flex;align-items:baseline;gap:8px}
+.price strong{font-family:var(--serif);font-size:54px;line-height:1;letter-spacing:-.02em}
+.per{font-size:14px;color:var(--ink-soft)}
+.plan ul{list-style:none;margin:0;padding:18px 0 0;border-top:1px solid var(--rule);display:grid;gap:10px;font-size:15px}
+.plan.pick ul{border-color:rgba(244,240,230,.25)}
+.plan li{padding-left:22px;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:.62em;width:11px;height:1.5px;background:var(--signal)}
+.plan .btn{justify-content:center;margin-top:6px}
+.plan.pick .btn{background:var(--signal);color:#fff;border-color:var(--paper)}
+.plan.pick .btn:hover{box-shadow:4px 4px 0 var(--paper)}
+@media (max-width:860px){.plans{grid-template-columns:1fr}.plan.pick{transform:none}.bill{justify-self:start}}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:56px}
+.faq-list{border-top:1.5px solid var(--ink)}
+details{border-bottom:1px solid var(--rule-strong)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;align-items:center;padding:20px 0;font-family:var(--serif);font-size:21px;font-weight:700}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);font-weight:400;font-size:22px;color:var(--signal);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 40px 22px 0;color:var(--ink-soft)}
+@media (max-width:760px){.faq-grid{grid-template-columns:1fr;gap:28px}}
+
+/* CTA + footer */
+.cta{padding:0 0 104px}
+.cta-box{border:1.5px solid var(--ink);background:var(--signal);color:#fff;padding:clamp(36px,6vw,72px);display:grid;grid-template-columns:1.4fr auto;gap:32px;align-items:center;box-shadow:10px 10px 0 var(--ink)}
+.cta-box h2{font-family:var(--serif);font-size:clamp(32px,4.6vw,58px);line-height:1.02;letter-spacing:-.02em}
+.cta-box p{margin-top:14px;max-width:480px;opacity:.92}
+.cta-box .btn{background:var(--ink);color:var(--paper);border-color:var(--ink);font-size:16px;padding:16px 26px}
+.cta-box .btn:hover{box-shadow:4px 4px 0 var(--paper)}
+@media (max-width:760px){.cta-box{grid-template-columns:1fr}}
+footer.site{border-top:1.5px solid var(--ink);padding:44px 0 36px;font-size:14.5px}
+.foot{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:32px}
+.foot p{color:var(--ink-soft);max-width:280px;margin-top:12px}
+.foot h4{margin:0 0 12px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--ink-soft)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+@media (max-width:760px){.foot{grid-template-columns:1fr 1fr}.foot>div:first-child{grid-column:1/-1}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#" aria-label="Slipway home">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <path d="M2 25 L28 12" stroke="#17233b" stroke-width="2" fill="none"/>
+        <path d="M7 19.5 L22 12 L20 6 L9 11.5 Z" fill="#e4572e" stroke="#17233b" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M2 28 H28" stroke="#17233b" stroke-width="2"/>
+      </svg>
+      Slipway
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <a class="signin" href="#">Sign in</a>
+      <a class="btn btn-ink btn-sm" href="#pricing">Start free</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="label">Project management for teams that ship</span>
+      <h1>Every project has a launch day. <em>Know yours.</em></h1>
+      <p class="lede">Slipway turns your team's tasks into a live launch forecast. Move a card, and the date moves with it — so nobody finds out about a slip in the status meeting.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#pricing">Start free — no card needed <span aria-hidden="true">→</span></a>
+        <a class="btn" href="#demo">Try the live demo below</a>
+      </div>
+      <p class="hero-note">Free for crews of up to 5 · Imports from Jira, Trello, Asana and CSV</p>
+    </div>
+
+    <div class="demo" id="demo" aria-label="Interactive product demo">
+      <div class="demo-bar">
+        <div class="demo-title">
+          <strong>Harbor app v2.0</strong>
+          <span class="label">7 tasks · 4 people</span>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Project views">
+          <button role="tab" aria-selected="true" data-view="timeline">Timeline</button>
+          <button role="tab" aria-selected="false" data-view="board">Board</button>
+          <button role="tab" aria-selected="false" data-view="list">List</button>
+        </div>
+      </div>
+      <div class="forecast" aria-live="polite">
+        <div>
+          <div class="label">Launch forecast</div>
+          <div class="forecast-date" id="fcDate">—</div>
+        </div>
+        <div class="meter-wrap">
+          <div class="label"><span>Work complete</span><span id="fcPct">0%</span></div>
+          <div class="meter"><i id="fcBar"></i></div>
+        </div>
+        <div class="forecast-delta" id="fcDelta">—</div>
+      </div>
+      <div class="demo-body" id="demoBody" role="tabpanel"></div>
+      <p class="demo-hint"><b>Go on, click a task.</b> Each click advances it: to do → in progress → done. Watch the forecast re-plan.</p>
+    </div>
+  </div>
+</div>
+
+<div class="logos">
+  <div class="wrap logos-in">
+    <span class="label">Launching on Slipway</span>
+    <ul aria-label="Customers">
+      <li>Marlowe &amp; Finch</li>
+      <li>NORTHGATE</li>
+      <li>tidewater</li>
+      <li>OKAFOR LABS</li>
+      <li>Brightline</li>
+    </ul>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="label">What's on board</span>
+        <h2>Four tools that answer one question: are we going to make it?</h2>
+      </div>
+      <p>Most trackers are good at storing tasks and bad at telling you what they add up to. Slipway does the adding up.</p>
+    </div>
+
+    <div class="feat">
+      <article>
+        <span class="num">01 / Forecast</span>
+        <h3>A launch date that re-plans itself</h3>
+        <p>Slipway reads remaining work, team capacity and your actual pace, then projects a finish date. It updates the moment anything changes.</p>
+        <div class="vig"><div class="vig-box">
+          <svg viewBox="0 0 320 100" width="100%" role="img" aria-label="Chart of forecast date converging on target over time">
+            <line x1="0" y1="30" x2="320" y2="30" stroke="#17233b" stroke-width="1" stroke-dasharray="4 4"/>
+            <text x="0" y="22" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10" fill="#4a556b">TARGET · DEC 18</text>
+            <polyline points="0,88 40,74 80,80 120,58 160,62 200,44 240,40 280,32" fill="none" stroke="#17233b" stroke-width="2"/>
+            <polyline points="280,32 320,25" fill="none" stroke="#e4572e" stroke-width="2" stroke-dasharray="3 3"/>
+            <circle cx="280" cy="32" r="5" fill="#e4572e" stroke="#17233b" stroke-width="1.5"/>
+          </svg>
+        </div></div>
+      </article>
+
+      <article>
+        <span class="num">02 / Dependencies</span>
+        <h3>See what's blocking what</h3>
+        <p>Link tasks once. When an upstream task slips, everything downstream shifts and the owners hear about it before it hurts.</p>
+        <div class="vig"><div class="vig-box">
+          <svg viewBox="0 0 320 100" width="100%" role="img" aria-label="Diagram of linked tasks, one blocked">
+            <path d="M84 28 H118 V72 H150" fill="none" stroke="#17233b" stroke-width="1.5"/>
+            <path d="M84 28 H150" fill="none" stroke="#17233b" stroke-width="1.5"/>
+            <path d="M234 72 H262" fill="none" stroke="#e4572e" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <rect x="1" y="14" width="83" height="28" fill="#17233b"/>
+            <rect x="150" y="14" width="84" height="28" fill="#fbf9f3" stroke="#17233b" stroke-width="1.5"/>
+            <rect x="150" y="58" width="84" height="28" fill="#e4572e" stroke="#17233b" stroke-width="1.5"/>
+            <rect x="262" y="58" width="56" height="28" fill="none" stroke="#17233b" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10">
+              <text x="10" y="32" fill="#f4f0e6">API spec</text>
+              <text x="159" y="32" fill="#17233b">Web client</text>
+              <text x="159" y="76" fill="#fff">Sync +3d</text>
+              <text x="271" y="76" fill="#17233b">Beta</text>
+            </g>
+          </svg>
+        </div></div>
+      </article>
+
+      <article>
+        <span class="num">03 / Workload</span>
+        <h3>Know who's carrying too much</h3>
+        <p>Capacity is set per person, per week. Slipway flags overload before you assign the task, not after someone burns out.</p>
+        <div class="vig"><div class="vig-box">
+          <div class="load" role="img" aria-label="Workload by person: Mina 70%, Jules 85%, Anika 125%, Tomas 55%">
+            <div><span>Mina</span><i style="width:56%"></i><span>70%</span></div>
+            <div><span>Jules</span><i style="width:68%"></i><span>85%</span></div>
+            <div class="over"><span>Anika</span><i style="width:100%"></i><span>125%</span></div>
+            <div><span>Tomas</span><i style="width:44%"></i><span>55%</span></div>
+          </div>
+        </div></div>
+      </article>
+
+      <article>
+        <span class="num">04 / Digest</span>
+        <h3>Status updates that write themselves</h3>
+        <p>Every Friday, stakeholders get a plain-language summary: what shipped, what slipped, and what the date is now. No slides required.</p>
+        <div class="vig"><div class="vig-box">
+<pre class="digest">Week 47 — Harbor app v2.0
+Shipped   Onboarding flow, design audit
+At risk   <mark>Offline sync (+3 days)</mark>
+Forecast  Dec 16, two days ahead</pre>
+        </div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="label">How it works</span>
+        <h2>From first plank to open water in an afternoon.</h2>
+      </div>
+      <p>A slipway is the ramp a ship is built on and launched from. Yours takes about twenty minutes to set up.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>Lay the keel</h3>
+        <p>Import your backlog or start from a template. Set a target date and tell Slipway who's on the crew.</p>
+      </li>
+      <li>
+        <h3>Build the hull</h3>
+        <p>Work in the view you like — timeline, board or list. They're the same data, so nobody has to keep two tools in sync.</p>
+      </li>
+      <li>
+        <h3>Launch</h3>
+        <p>Watch the forecast close in on the target. When they meet, break the bottle. Then archive the project and start the next.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="wrap quote-in">
+    <div class="quote-mark" aria-hidden="true">“</div>
+    <blockquote>
+      <p>We used to learn a release was late about a week before it was due. Now the date drifts on Tuesday, we talk about it on Tuesday, and it's fixed by Thursday.</p>
+      <footer>
+        <div class="avatar" aria-hidden="true">RO</div>
+        <div><strong>Renata Okafor</strong><br><span>Head of Delivery, Okafor Labs</span></div>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="label">Pricing</span>
+        <h2>Pay per person. Stop whenever.</h2>
+      </div>
+      <div class="bill" role="group" aria-label="Billing period">
+        <button type="button" data-bill="monthly" aria-pressed="false">Monthly</button>
+        <button type="button" data-bill="annual" aria-pressed="true">Annual <small>−20%</small></button>
+      </div>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <span class="label">For small crews</span>
+        <h3>Dinghy</h3>
+        <div class="price"><strong>$0</strong><span class="per">forever, up to 5 people</span></div>
+        <ul>
+          <li>3 active projects</li>
+          <li>Timeline, board and list views</li>
+          <li>Launch forecast</li>
+          <li>CSV import and export</li>
+        </ul>
+        <a class="btn" href="#">Start free</a>
+      </div>
+
+      <div class="plan pick">
+        <span class="label">Most teams pick this</span>
+        <h3>Schooner</h3>
+        <div class="price"><strong data-monthly="$10" data-annual="$8">$8</strong><span class="per">per person / month<span data-billnote>, billed yearly</span></span></div>
+        <ul>
+          <li>Unlimited projects</li>
+          <li>Dependencies and workload</li>
+          <li>Friday digest for stakeholders</li>
+          <li>Jira, GitHub and Slack integrations</li>
+          <li>Guest access for clients</li>
+        </ul>
+        <a class="btn" href="#">Try free for 14 days</a>
+      </div>
+
+      <div class="plan">
+        <span class="label">For many teams at once</span>
+        <h3>Fleet</h3>
+        <div class="price"><strong data-monthly="$20" data-annual="$16">$16</strong><span class="per">per person / month<span data-billnote>, billed yearly</span></span></div>
+        <ul>
+          <li>Everything in Schooner</li>
+          <li>Portfolio view across projects</li>
+          <li>SSO and audit log</li>
+          <li>Custom fields and permissions</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn" href="#">Talk to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap faq-grid">
+    <div>
+      <span class="label">Questions</span>
+      <h2 class="h2">Asked before boarding.</h2>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>How does the forecast actually work?</summary>
+        <p>Slipway adds up the estimated work left, divides it by the capacity your team really has (accounting for time off and other projects), and adjusts for how your past estimates compared with reality. No estimates yet? It starts from task counts and sharpens as you go.</p>
+      </details>
+      <details>
+        <summary>Can we bring our existing projects?</summary>
+        <p>Yes. There are one-click importers for Jira, Trello and Asana, plus CSV for everything else. Assignees, due dates, statuses and comments come across.</p>
+      </details>
+      <details>
+        <summary>Do clients and stakeholders need a paid seat?</summary>
+        <p>No. Guests can view projects, comment and receive the Friday digest for free on Schooner and Fleet. You only pay for people who own or edit tasks.</p>
+      </details>
+      <details>
+        <summary>What happens to our data if we leave?</summary>
+        <p>You can export everything to CSV or JSON at any time, on any plan. After cancellation we keep your workspace for 30 days in case you change your mind, then delete it.</p>
+      </details>
+      <details>
+        <summary>Is there a discount for nonprofits and schools?</summary>
+        <p>Schooner is half price for registered nonprofits and free for classrooms. Write to us from your organisation's address and we'll set it up.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<div class="cta">
+  <div class="wrap">
+    <div class="cta-box">
+      <div>
+        <h2>Your next launch already has a date. Go and find out what it is.</h2>
+        <p>Import a project and see its forecast in under twenty minutes. Free for crews of five or fewer.</p>
+      </div>
+      <a class="btn" href="#pricing">Start free <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#">Slipway</a>
+        <p>Project management that tells you when you'll actually ship.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Integrations</a></li><li><a href="#">Changelog</a></li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul><li><a href="#faq">FAQ</a></li><li><a href="#">Docs</a></li><li><a href="#">Status</a></li><li><a href="#">Security</a></li></ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Slipway Software</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ---- Demo data: 8 work weeks starting Mon Nov 2, 2026; 40 workday columns ----
+  var START = new Date(2026, 10, 2);
+  var TODAY_IDX = 16;   // Tue Nov 24
+  var TARGET_IDX = 34;  // Fri Dec 18
+  var CREW_PACE = 2;    // effective task-days cleared per workday
+  var ORDER = ['todo', 'doing', 'done'];
+  var NAMES = { todo: 'To do', doing: 'In progress', done: 'Done' };
+
+  var tasks = [
+    { name: 'Design system audit', who: 'MO', start: 0,  days: 6,  status: 'done'  },
+    { name: 'Onboarding flow',     who: 'JR', start: 4,  days: 9,  status: 'done'  },
+    { name: 'Billing migration',   who: 'AK', start: 10, days: 12, status: 'doing' },
+    { name: 'Offline sync',        who: 'TS', start: 12, days: 14, status: 'doing' },
+    { name: 'Beta invite wave',    who: 'MO', start: 22, days: 8,  status: 'todo'  },
+    { name: 'App store assets',    who: 'JR', start: 24, days: 6,  status: 'todo'  },
+    { name: 'Launch checklist',    who: 'AK', start: 29, days: 5,  status: 'todo'  }
+  ];
+
+  var view = 'timeline';
+  var body = document.getElementById('demoBody');
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function dateAt(idx) { // workday index -> Date
+    var d = new Date(START);
+    d.setDate(d.getDate() + Math.floor(idx / 5) * 7 + (idx % 5));
+    return d;
+  }
+  function fmt(d) { return MONTHS[d.getMonth()] + ' ' + d.getDate(); }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function stats() {
+    var total = 0, left = 0;
+    tasks.forEach(function (t) {
+      total += t.days;
+      left += t.status === 'todo' ? t.days : t.status === 'doing' ? t.days / 2 : 0;
+    });
+    var idx = TODAY_IDX + Math.ceil(left / CREW_PACE);
+    return { pct: Math.round((1 - left / total) * 100), idx: idx, left: left };
+  }
+
+  function renderForecast() {
+    var s = stats();
+    var delta = Math.round((dateAt(TARGET_IDX) - dateAt(s.idx)) / 864e5);
+    var el = document.getElementById('fcDelta');
+    document.getElementById('fcDate').textContent = s.left === 0 ? 'Ready to launch' : fmt(dateAt(s.idx));
+    document.getElementById('fcPct').textContent = s.pct + '%';
+    document.getElementById('fcBar').style.width = s.pct + '%';
+    el.className = 'forecast-delta' + (delta > 0 ? ' ahead' : delta < 0 ? ' behind' : '');
+    el.textContent = delta > 0 ? delta + (delta === 1 ? ' day' : ' days') + ' ahead of Dec 18'
+                   : delta < 0 ? -delta + (delta === -1 ? ' day' : ' days') + ' behind Dec 18'
+                   : 'Right on target';
+    return s;
+  }
+
+  function label(t) { return esc(t.name) + ', ' + NAMES[t.status] + '. Click to advance.'; }
+
+  function timeline(s) {
+    var weeks = '';
+    for (var w = 0; w < 8; w++) weeks += '<span>' + fmt(dateAt(w * 5)) + '</span>';
+    var rows = tasks.map(function (t, i) {
+      return '<div class="tl-row"><div class="tl-name">' + esc(t.name) + '</div><div class="tl-track">' +
+        '<button class="bar is-' + t.status + '" data-i="' + i + '" aria-label="' + label(t) + '" style="grid-column:' +
+        (t.start + 1) + ' / span ' + t.days + '">' + t.who + ' · ' + NAMES[t.status] + '</button></div></div>';
+    }).join('');
+    var pos = function (idx) { return Math.min(100, (idx + 0.5) / 40 * 100) + '%'; };
+    var fcIdx = Math.min(s.idx, 39);
+    return '<div class="tl-scroll"><div class="tl tl-pad">' +
+      '<div class="tl-head"><div></div><div class="tl-weeks">' + weeks + '</div></div>' +
+      '<div class="tl-rows">' + rows +
+      '<div class="tl-overlay">' +
+        '<div class="marker today" style="left:' + pos(TODAY_IDX) + '"><span>Today</span></div>' +
+        '<div class="marker flip" style="left:' + pos(TARGET_IDX) + '"><span>Target</span></div>' +
+        (s.left > 0 ? '<div class="marker fc' + (fcIdx > 30 ? ' flip' : '') + '" style="left:' + pos(fcIdx) + '"><span>Forecast</span></div>' : '') +
+      '</div></div></div></div>';
+  }
+
+  function board() {
+    return '<div class="board">' + ORDER.map(function (st) {
+      var cards = tasks.map(function (t, i) {
+        return t.status !== st ? '' :
+          '<button class="card is-' + st + '-c" data-i="' + i + '" aria-label="' + label(t) + '"><b>' + esc(t.name) +
+          '</b><small>' + t.who + ' · ' + t.days + ' days</small></button>';
+      }).join('');
+      var n = tasks.filter(function (t) { return t.status === st; }).length;
+      return '<div class="col"><div class="col-head label"><span>' + NAMES[st] + '</span><span>' + n + '</span></div>' +
+        '<div class="col-cards">' + cards + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  function list() {
+    return '<div class="list">' + tasks.map(function (t, i) {
+      return '<button class="li" data-i="' + i + '" aria-label="' + label(t) + '">' +
+        '<span class="pill is-' + t.status + '">' + NAMES[t.status] + '</span>' +
+        '<b>' + esc(t.name) + '</b><span class="who">' + t.who + '</span>' +
+        '<span class="days">' + t.days + ' days</span></button>';
+    }).join('') + '</div>';
+  }
+
+  function render(focusIdx) {
+    var s = renderForecast();
+    body.innerHTML = view === 'timeline' ? timeline(s) : view === 'board' ? board() : list();
+    if (focusIdx != null) {
+      var el = body.querySelector('[data-i="' + focusIdx + '"]');
+      if (el) el.focus();
+    }
+  }
+
+  body.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-i]');
+    if (!b) return;
+    var t = tasks[+b.dataset.i];
+    t.status = ORDER[(ORDER.indexOf(t.status) + 1) % 3];
+    render(+b.dataset.i);
+  });
+
+  document.querySelectorAll('.tabs button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      view = btn.dataset.view;
+      document.querySelectorAll('.tabs button').forEach(function (b) {
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      render();
+    });
+  });
+
+  render();
+
+  // ---- Pricing toggle ----
+  document.querySelectorAll('.bill button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.dataset.bill;
+      document.querySelectorAll('.bill button').forEach(function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      document.querySelectorAll('.price strong[data-monthly]').forEach(function (p) {
+        p.textContent = p.dataset[mode];
+      });
+      document.querySelectorAll('[data-billnote]').forEach(function (n) {
+        n.textContent = mode === 'annual' ? ', billed yearly' : ', billed monthly';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

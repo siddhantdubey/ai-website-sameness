@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Forchetta is a neighborhood Italian restaurant serving handmade pasta, seasonal plates, and Italian wine in Brooklyn.">
+  <meta name="theme-color" content="#f8f2e5">
+  <title>Forchetta | Neighborhood Italian in Brooklyn</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f2e5;
+      --ink: #272a21;
+      --muted: #595748;
+      --red: #942f26;
+      --green: #263c30;
+      --line: #c8baa5;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 1rem/1.65 var(--sans);
+    }
+    a { color: inherit; text-underline-offset: .22em; }
+    a:hover { text-decoration-thickness: .14em; }
+    :focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+    h1, h2, p { margin: 0; }
+    h1, h2 { font-family: var(--serif); font-weight: 400; line-height: 1; }
+    .wrap { width: min(100% - 3rem, 74rem); margin-inline: auto; }
+    .eyebrow {
+      font-size: .73rem;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .skip {
+      position: absolute;
+      top: .5rem;
+      left: .75rem;
+      z-index: 2;
+      padding: .5rem 1rem;
+      background: var(--paper);
+      transform: translateY(-150%);
+    }
+    .skip:focus { transform: translateY(0); }
+
+    .site-header { border-bottom: 1px solid var(--line); }
+    .header-inner, .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .9rem 2rem;
+      padding-block: 1.15rem;
+    }
+    .wordmark {
+      font: italic 1.65rem/1 var(--serif);
+      text-decoration: none;
+    }
+    nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
+    nav a { font-size: .88rem; font-weight: 700; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: stretch;
+      min-height: 34rem;
+    }
+    .hero-copy {
+      align-self: center;
+      padding: clamp(3rem, 8vw, 7rem) clamp(1rem, 5vw, 5rem) clamp(3rem, 8vw, 7rem) 0;
+    }
+    .hero .eyebrow { color: var(--red); }
+    h1 {
+      margin-block: .2em .23em;
+      font-size: clamp(3.5rem, 8.3vw, 8rem);
+      letter-spacing: -.065em;
+    }
+    .hero-copy > p:not(.eyebrow) {
+      max-width: 29ch;
+      font: clamp(1.25rem, 2.3vw, 1.65rem)/1.35 var(--serif);
+    }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.4rem; margin-top: 1.65rem; }
+    .button {
+      display: inline-block;
+      padding: .65rem 1.1rem;
+      border: 1px solid transparent;
+      background: var(--red);
+      color: white;
+      font-size: .88rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+    .button:hover { background: #75221b; }
+    .button:focus-visible { outline-color: var(--red); }
+    .text-link { font-size: .88rem; font-weight: 750; }
+
+    .hero-art {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: clamp(2rem, 6vw, 5rem);
+      background-color: #e7c8a6;
+      background-image:
+        repeating-linear-gradient(0deg, #a044342e 0 24px, transparent 24px 48px),
+        repeating-linear-gradient(90deg, #a044343b 0 24px, transparent 24px 48px);
+    }
+    .plate {
+      display: grid;
+      width: min(100%, 27rem);
+      aspect-ratio: 1;
+      place-items: center;
+      padding: 13%;
+      border: 2px solid #b9a383;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, #f7ebd2 0 64%, #c5a785 64.5% 65%, transparent 65.5%),
+        radial-gradient(circle, #fff4df 0 69%, #8c3028 69.5% 70%, #fff4df 70.5% 73%, #8c3028 73.5% 74%, #fff4df 74.5%);
+      box-shadow: 0 16px 30px #4d29184d, inset 0 0 12px #7b604866;
+      transform: rotate(-12deg);
+    }
+    .pasta-art {
+      width: 96%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 33% 36%, #526236 0 3%, transparent 3.5%),
+        radial-gradient(ellipse at 68% 59%, #526236 0 3%, transparent 3.5%),
+        radial-gradient(ellipse at 44% 72%, #354b2f 0 2.5%, transparent 3%),
+        repeating-radial-gradient(ellipse at 42% 49%, #ac592e 0 2px, #e8a64e 3px 6px, #f6ce78 7px 9px, #bf6d38 10px 11px);
+      box-shadow: 0 5px 10px #813a2944;
+    }
+
+    .menu { border-top: 1px solid var(--line); padding-block: clamp(3rem, 7vw, 6rem); }
+    .section-heading { margin-top: .25rem; font-size: clamp(2.5rem, 5vw, 4.5rem); letter-spacing: -.045em; }
+    .menu .eyebrow { color: var(--red); }
+    .dishes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .dishes li { border-top: 1px solid var(--line); padding-top: .85rem; }
+    .dish-title { display: flex; align-items: baseline; justify-content: space-between; gap: .65rem; }
+    .dish-title h3 { margin: 0; font: 1.25rem/1.25 var(--serif); }
+    .price { font-size: .88rem; font-weight: 700; }
+    .dishes p { margin-top: .4rem; color: var(--muted); font-size: .9rem; }
+
+    .visit { padding-block: clamp(3rem, 7vw, 6rem); background: var(--green); color: var(--paper); }
+    .visit-inner {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr;
+      align-items: start;
+      gap: 1.75rem 2.5rem;
+    }
+    .visit h3 { margin: 0 0 .4rem; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+    .visit address { font-style: normal; }
+    .visit address a { display: inline-block; margin-top: .45rem; }
+    .hours { margin: 0; }
+    .hours div + div { margin-top: .45rem; }
+    .hours dd { margin: 0; }
+    .footer-inner { color: var(--muted); font-size: .84rem; }
+
+    @media (max-width: 48rem) {
+      .hero { grid-template-columns: 1fr; min-height: 0; }
+      .hero-copy { padding-right: 0; }
+      .hero-art { padding-block: 2rem; }
+      .plate { width: min(100%, 19rem); }
+      .menu { margin-top: 2.5rem; }
+      .visit-inner { grid-template-columns: 1fr 1fr; }
+      .visit-inner > div:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 34rem) {
+      .wrap { width: calc(100% - 2rem); }
+      .dishes, .visit-inner { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="#top">Forchetta</a>
+      <nav aria-label="Main navigation">
+        <a href="#menu">Menu</a>
+        <a href="#visit">Hours &amp; location</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Neighborhood Italian · Brooklyn</p>
+        <h1 id="hero-title">Forchetta</h1>
+        <p>Handmade pasta, seasonal plates, and a good bottle of Italian wine.</p>
+        <div class="actions">
+          <a class="button" href="tel:+17185550146">Call to reserve</a>
+          <a class="text-link" href="#menu">Explore the menu</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="plate"><div class="pasta-art"></div></div>
+      </div>
+    </section>
+
+    <section class="wrap menu" id="menu" aria-labelledby="menu-title">
+      <p class="eyebrow">Menu highlights</p>
+      <h2 class="section-heading" id="menu-title">From the kitchen</h2>
+      <ul class="dishes" role="list">
+        <li>
+          <div class="dish-title"><h3>Burrata &amp; Roasted Peppers</h3><span class="price">$16</span></div>
+          <p>Basil, aged balsamic, and grilled sourdough</p>
+        </li>
+        <li>
+          <div class="dish-title"><h3>Rigatoni alla Vodka</h3><span class="price">$24</span></div>
+          <p>Tomato, Calabrian chili, cream, and pecorino</p>
+        </li>
+        <li>
+          <div class="dish-title"><h3>House Tiramisù</h3><span class="price">$11</span></div>
+          <p>Espresso, mascarpone, and dark cocoa</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <div class="wrap visit-inner">
+        <div>
+          <p class="eyebrow">Hours &amp; location</p>
+          <h2 class="section-heading" id="visit-title">Come by for dinner</h2>
+        </div>
+        <div>
+          <h3>Find us</h3>
+          <address>
+            124 Court Street<br>
+            Brooklyn, NY 11201<br>
+            <a href="tel:+17185550146">(718) 555-0146</a>
+          </address>
+        </div>
+        <div>
+          <h3>Dinner hours</h3>
+          <dl class="hours">
+            <div><dt>Tuesday–Thursday &amp; Sunday</dt><dd>5–9 pm</dd></div>
+            <div><dt>Friday &amp; Saturday</dt><dd>5–10 pm</dd></div>
+            <div><dt>Monday</dt><dd>Closed</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span class="wordmark">Forchetta</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+</body>
+</html>
