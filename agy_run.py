@@ -7,7 +7,7 @@ A failed page gets one rerun in a fresh session.
 
   agy_run.py --name main
 """
-import argparse, json, subprocess, sys, time
+import argparse, json, re, subprocess, sys, time
 from pathlib import Path
 import gen
 
@@ -23,13 +23,29 @@ for k, v in gen.PROMPTS.items():
 
 jobs = [json.loads(l) for l in (base / "jobs.jsonl").read_text().splitlines()]
 jobs = [j for j in jobs if gen.MODELS[j["model"]][0] == "gemini"]
+QUOTA = "Usage Limit Reached"
+
+
+def is_quota(path):
+    """A reply that is only the account's usage-limit notice never reached the model."""
+    try:
+        t = path.read_text()
+    except Exception:
+        return False
+    return QUOTA in t[:300] and "<html" not in t.lower()
+
+
+deadline = time.time() + 20 * 3600
 for j in jobs:
     jid = j["id"]
-    for attempt in (1, 2):
+    while time.time() < deadline:
         if (base / "pages" / f"{jid}.html").exists():
             break
-        if len(list((base / "raw").glob(f"{jid}.a*.reply.txt"))) >= 2:
+        prior = sorted((base / "raw").glob(f"{jid}.a*.reply.txt"))
+        real = [x for x in prior if not is_quota(x)]  # usage-limit notices do not use up an attempt
+        if len(real) >= 2:
             break
+        attempt = len(list(agy.glob(f"{jid}.a*.summary.json"))) + 1
         tag = f"{jid}.a{attempt}"
         out = agy / f"{tag}.reply.txt"
         t0 = time.time()
@@ -40,6 +56,16 @@ for j in jobs:
         (agy / f"{tag}.summary.json").write_text(p.stdout)
         (agy / f"{tag}.err").write_text(p.stderr)
         tool = sorted(Path(str(out) + ".toolfiles").glob("*.html")) if Path(str(out) + ".toolfiles").exists() else []
+        if not tool and is_quota(out):
+            m = re.search(r"reset in (?:(\d+) hours?,? ?)?(?:(\d+) minutes?,? ?)?(?:(\d+) seconds?)?", out.read_text())
+            wait = (int(m.group(1) or 0) * 3600 + int(m.group(2) or 0) * 60 + int(m.group(3) or 0)) if m else 900
+            wait = min(max(wait, 60) + 90, 6 * 3600)
+            with open(base / "agy_log.jsonl", "a") as f:
+                f.write(json.dumps({"id": jid, "attempt": attempt, "quota": True, "wait_s": wait,
+                                    "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}) + "\n")
+            print(f"[{time.strftime('%H:%M:%S')}] {tag} usage limit, waiting {wait}s", flush=True)
+            time.sleep(wait)
+            continue
         if tool:
             src, kept = tool[0], "first create_file payload"
         elif out.exists() and out.stat().st_size:
