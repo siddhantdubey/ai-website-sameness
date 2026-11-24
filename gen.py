@@ -52,7 +52,7 @@ def claude_cmd(model, prompt, arm):
     cmd = ["claude", "-p", prompt, "--model", model,
            "--setting-sources", "", "--strict-mcp-config", "--tools", "",
            "--disable-slash-commands", "--no-session-persistence",
-           "--output-format", "json"]
+           "--output-format", "stream-json", "--verbose"]
     if arm == "minimal":
         cmd += ["--system-prompt", MIN_SYS]
     return cmd, dict(os.environ)
@@ -83,7 +83,9 @@ def extract_html(text):
     docs = [f for f in fences if re.search(r"<html|<!doctype", f, re.I)]
     if docs:
         return max(docs, key=len).strip() + "\n", "fence"
-    m = re.search(r"(<!doctype html.*</html>|<html.*</html>)", text, re.S | re.I)
+    # first complete document: a model may write it out once (often inside a pretend
+    # file-write call when it has no tools) and then again or summarise it afterwards
+    m = re.search(r"(<!doctype html.*?</html>|<html.*?</html>)", text, re.S | re.I)
     if m:
         return m.group(1).strip() + "\n", "bare"
     return None, "no-html"
@@ -94,7 +96,7 @@ def run_one(job, base):
     vendor, model = MODELS[job["model"]]
     prompt = PROMPTS[job["prompt"]]
     last = None
-    for attempt in (1, 2):
+    for attempt in range(job.get("first_attempt", 1), job.get("first_attempt", 1) + job.get("attempts_left", 2)):
         workdir = Path(tempfile.mkdtemp(prefix=f"{jid}.a{attempt}.", dir=base / "work"))
         if vendor == "claude":
             cmd, env = claude_cmd(model, prompt, job["arm"])
@@ -120,15 +122,26 @@ def run_one(job, base):
         (base / "raw" / f"{tag}.stderr").write_text(err)
         reply = ""
         if vendor == "claude":
-            try:
-                d = json.loads(out)
-                reply = d.get("result") or ""
-                rec["usage"] = {k: v for k, v in (d.get("usage") or {}).items() if "tokens" in k}
-                rec["num_turns"] = d.get("num_turns")
-                rec["is_error"] = d.get("is_error")
-                rec["models_used"] = list((d.get("modelUsage") or {}).keys())
-            except Exception as ex:
-                rec["parse_error"] = str(ex)
+            # capture v2: every text block the model emitted, in order. v1 kept only the
+            # final block ("result"), which dropped pages written inside a pretend file-write.
+            rec["capture_v"] = 2
+            texts = []
+            for line in out.splitlines():
+                try:
+                    e = json.loads(line)
+                except Exception:
+                    continue
+                if e.get("type") == "assistant":
+                    for c in (e.get("message") or {}).get("content", []):
+                        if c.get("type") == "text":
+                            texts.append(c.get("text") or "")
+                elif e.get("type") == "result":
+                    rec["usage"] = {k: v for k, v in (e.get("usage") or {}).items() if "tokens" in k}
+                    rec["num_turns"] = e.get("num_turns")
+                    rec["is_error"] = e.get("is_error")
+                    rec["models_used"] = list((e.get("modelUsage") or {}).keys())
+            reply = "\n".join(texts)
+            rec["text_blocks"] = len(texts)
         else:
             lp = workdir / "last.txt"
             reply = lp.read_text() if lp.exists() else ""
@@ -227,11 +240,15 @@ def main():
         return
 
     done = {p.stem for p in (base / "pages").glob("*.html")}
-    tried = {}
+    tried, counted = {}, {}
     if (base / "runlog.jsonl").exists():
         for l in (base / "runlog.jsonl").read_text().splitlines():
             r = json.loads(l)
             tried[r["id"]] = max(tried.get(r["id"], 0), r["attempt"])
+            # Claude attempts made with capture v1 that "failed" were capture failures on our
+            # side (the page was produced but not saved), so they do not use up the two attempts.
+            if not (r.get("vendor") == "claude" and not r.get("ok") and r.get("capture_v") != 2):
+                counted[r["id"]] = counted.get(r["id"], 0) + 1
 
     if a.action == "status":
         print(f"jobs={len(jobs)} pages={len(done)}")
@@ -242,8 +259,11 @@ def main():
 
     vendors = a.vendor.split(",")
     # a job that already used both attempts is not tried again
-    todo = [j for j in jobs if j["id"] not in done and tried.get(j["id"], 0) < 2
+    todo = [j for j in jobs if j["id"] not in done and counted.get(j["id"], 0) < 2
             and MODELS[j["model"]][0] in vendors]
+    for j in todo:
+        j["first_attempt"] = tried.get(j["id"], 0) + 1
+        j["attempts_left"] = 2 - counted.get(j["id"], 0)
     print(f"running {len(todo)} jobs, workers={a.workers}", flush=True)
     with ThreadPoolExecutor(a.workers) as ex:
         list(ex.map(lambda j: run_one(j, base), todo))
